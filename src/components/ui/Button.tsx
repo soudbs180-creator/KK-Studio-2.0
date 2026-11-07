@@ -47,20 +47,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "16px": "kk-button--16",
     };
 
-    const iconSizeMap: Record<ButtonHeightTier, number> = {
-      "44px": 20,
-      "40px": 20,
-      "32px": 16,
-      "24px": 16,
-      "16px": 12,
-    };
+    const isIconOnly = children === undefined || children === null;
+    const iconSizeMap: Record<ButtonHeightTier, number> = isIconOnly
+      ? {
+          "44px": 28,
+          "40px": 24,
+          "32px": 16,
+          "24px": 16,
+          "16px": 12,
+        }
+      : {
+          "44px": 20,
+          "40px": 16,
+          "32px": 16,
+          "24px": 16,
+          "16px": 12,
+        };
 
     const iconSize = iconSizeMap[heightTier];
 
     const classNames = [
       "kk-button",
       tierClassMap[heightTier],
-      children === undefined || children === null ? "kk-button--icon" : "",
+      isIconOnly ? "kk-button--icon" : "",
       `kk-button--${variant}`,
       isPill ? "kk-button--pill" : "",
       shouldDecouple ? "kk-button--decoupled-hit" : "",

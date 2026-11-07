@@ -1,10 +1,14 @@
+import {
+  localChatModelPackages,
+  localVideoModelPackages,
+} from "../../domain/localModelPackages.ts";
 import type { LocalHardwareReport } from "../../domain/localModelRecommendations.ts";
 import { detectLocalHardware } from "./localHardware.ts";
 
 export type HardwareCapabilityTier = "ultra" | "standard" | "lite" | "cpu-only";
 
 export interface TaskIntent {
-  type: "chat" | "storyboard" | "image" | "upscale" | "outpaint";
+  type: "chat" | "storyboard" | "image" | "video" | "upscale" | "outpaint";
   qualityPreference?: "speed" | "balanced" | "quality";
   contextTokensNeeded?: number;
 }
@@ -24,6 +28,19 @@ export interface AdaptiveSchedulingResult {
 }
 
 const GiB = 1024 ** 3;
+
+const ULTRA_CHAT_PACKAGE =
+  localChatModelPackages.find((pkg) => pkg.id === "qwen3.8-27b-ud-q4-k-m") ??
+  localChatModelPackages[2]!;
+const STANDARD_CHAT_PACKAGE =
+  localChatModelPackages.find((pkg) => pkg.id === "qwen3.5-9b-q4-k-m") ??
+  localChatModelPackages[0]!;
+const LITE_CHAT_PACKAGE =
+  localChatModelPackages.find((pkg) => pkg.id === "qwen3.5-4b-q4-k-m") ??
+  localChatModelPackages[1]!;
+const DEFAULT_VIDEO_PACKAGE =
+  localVideoModelPackages.find((pkg) => pkg.defaultMode) ??
+  localVideoModelPackages[0]!;
 
 export function evaluateHardwareTier(report: LocalHardwareReport): {
   tier: HardwareCapabilityTier;
@@ -65,30 +82,15 @@ export function evaluateHardwareTier(report: LocalHardwareReport): {
     };
   }
 
-  if (bestDedicatedVramBytes >= 20 * GiB) {
-    return {
-      tier: "ultra",
-      bestDedicatedVramBytes,
-      bestFreeVramBytes,
-      usableRamBytes,
-      availableRamBytes,
-      hasCuda,
-    };
-  }
-
-  if (bestDedicatedVramBytes >= 8 * GiB) {
-    return {
-      tier: "standard",
-      bestDedicatedVramBytes,
-      bestFreeVramBytes,
-      usableRamBytes,
-      availableRamBytes,
-      hasCuda,
-    };
-  }
+  const tier: HardwareCapabilityTier =
+    bestDedicatedVramBytes >= 20 * GiB
+      ? "ultra"
+      : bestDedicatedVramBytes >= 8 * GiB
+        ? "standard"
+        : "lite";
 
   return {
-    tier: "lite",
+    tier,
     bestDedicatedVramBytes,
     bestFreeVramBytes,
     usableRamBytes,
@@ -108,6 +110,98 @@ export function evaluateVramWatermarkRisk(
   return "low";
 }
 
+function resolveExternalBridgeRoute(
+  intent: TaskIntent,
+  tier: HardwareCapabilityTier,
+  watermarkRisk: "low" | "medium" | "critical",
+  hasExternalBridge: (tool: "topaz" | "photoshop") => boolean,
+): AdaptiveSchedulingResult | null {
+  if (intent.type === "upscale" && hasExternalBridge("topaz")) {
+    return {
+      tier,
+      executionTarget: "external-bridge",
+      recommendedModelId: "topaz-gigapixel-ai",
+      modelName: "Topaz Gigapixel AI (External Pro Bridge)",
+      vramWatermarkRisk: watermarkRisk,
+      autoOffloadToCpu: false,
+      summary: "检测到本机 Topaz Gigapixel，自动路由至外部专业高清放大通道。",
+    };
+  }
+  if (intent.type === "outpaint" && hasExternalBridge("photoshop")) {
+    return {
+      tier,
+      executionTarget: "external-bridge",
+      recommendedModelId: "adobe-photoshop-uxp",
+      modelName: "Adobe Photoshop Generative Expand (External Bridge)",
+      vramWatermarkRisk: watermarkRisk,
+      autoOffloadToCpu: false,
+      summary: "检测到本机 Adobe Photoshop，自动路由至专业扩图通道。",
+    };
+  }
+  return null;
+}
+
+function resolveCriticalVramFallback(
+  hw: ReturnType<typeof evaluateHardwareTier>,
+): AdaptiveSchedulingResult {
+  if (hw.availableRamBytes >= 12 * GiB) {
+    return {
+      tier: hw.tier,
+      executionTarget: "local-cpu",
+      recommendedModelId: LITE_CHAT_PACKAGE.id,
+      modelName: `${LITE_CHAT_PACKAGE.name} (CPU Offload Fallback)`,
+      quantizationRecommended: "q4_k_m",
+      vramWatermarkRisk: "critical",
+      autoOffloadToCpu: true,
+      fallbackReason:
+        "显存空闲不足 15%，触发防 OOM 保护，平滑切换至内存/CPU 推理。",
+      summary: "显存紧张，自适应转为 CPU 降级推理，保障宿主进程稳定不崩溃。",
+    };
+  }
+  return {
+    tier: hw.tier,
+    executionTarget: "cloud-gateway",
+    recommendedModelId: "cloud-gemini-flash",
+    modelName: "Cloud Gemini 2.5 Flash Gateway",
+    vramWatermarkRisk: "critical",
+    autoOffloadToCpu: false,
+    fallbackReason: "本机显存与可用内存均处于极高水位，平滑转移至云端网关。",
+    summary: "系统硬件资源高压，无感切换至云端网关完成任务。",
+  };
+}
+
+function resolveVideoRoute(
+  hw: ReturnType<typeof evaluateHardwareTier>,
+  watermarkRisk: "low" | "medium" | "critical",
+): AdaptiveSchedulingResult {
+  if (
+    hw.bestDedicatedVramBytes >= DEFAULT_VIDEO_PACKAGE.declaredMinVramBytes &&
+    hw.usableRamBytes >= DEFAULT_VIDEO_PACKAGE.declaredMinRamBytes
+  ) {
+    return {
+      tier: hw.tier,
+      executionTarget: "local-gpu",
+      recommendedModelId: DEFAULT_VIDEO_PACKAGE.id,
+      modelName: DEFAULT_VIDEO_PACKAGE.name,
+      quantizationRecommended: "fp16",
+      vramBudgetBytes: DEFAULT_VIDEO_PACKAGE.declaredMinVramBytes,
+      vramWatermarkRisk: watermarkRisk,
+      autoOffloadToCpu: false,
+      summary: "本机显存与内存满足本地视频工作流要求，匹配 MiniMax H3 方案。",
+    };
+  }
+  return {
+    tier: hw.tier,
+    executionTarget: "cloud-gateway",
+    recommendedModelId: "cloud-video-gateway",
+    modelName: "Cloud Video Generation Gateway",
+    vramWatermarkRisk: watermarkRisk,
+    autoOffloadToCpu: false,
+    fallbackReason: "本机显存或系统内存低于本地视频模型最低要求，自动转云端。",
+    summary: "本地硬件未达视频生成门槛，路由至云端视频通道。",
+  };
+}
+
 export function scheduleAdaptiveExecution(
   intent: TaskIntent,
   report: LocalHardwareReport,
@@ -119,122 +213,84 @@ export function scheduleAdaptiveExecution(
     hw.bestDedicatedVramBytes,
   );
 
-  // 1. External specialized software bridge routing (Topaz / PS)
-  if (intent.type === "upscale" && hasExternalBridge("topaz")) {
-    return {
-      tier: hw.tier,
-      executionTarget: "external-bridge",
-      recommendedModelId: "topaz-gigapixel-ai",
-      modelName: "Topaz Gigapixel AI (External Pro Bridge)",
-      vramWatermarkRisk: watermarkRisk,
-      autoOffloadToCpu: false,
-      summary: "检测到本机 Topaz Gigapixel，自动路由至外部专业高清放大通道。",
-    };
-  }
+  const bridgeRoute = resolveExternalBridgeRoute(
+    intent,
+    hw.tier,
+    watermarkRisk,
+    hasExternalBridge,
+  );
+  if (bridgeRoute) return bridgeRoute;
 
-  if (intent.type === "outpaint" && hasExternalBridge("photoshop")) {
-    return {
-      tier: hw.tier,
-      executionTarget: "external-bridge",
-      recommendedModelId: "adobe-photoshop-uxp",
-      modelName: "Adobe Photoshop Generative Expand (External Bridge)",
-      vramWatermarkRisk: watermarkRisk,
-      autoOffloadToCpu: false,
-      summary: "检测到本机 Adobe Photoshop，自动路由至专业扩图通道。",
-    };
-  }
-
-  // 2. Critical VRAM pressure fallback: prevent OOM crash
   if (watermarkRisk === "critical" && hw.tier !== "cpu-only") {
-    // If RAM is plenty, offload to CPU, else route to cloud gateway
-    if (hw.availableRamBytes >= 12 * GiB) {
-      return {
-        tier: hw.tier,
-        executionTarget: "local-cpu",
-        recommendedModelId: "qwen2.5-7b-instruct-q4_k_m-cpu",
-        modelName: "Qwen 2.5 7B Instruct (CPU Offload Fallback)",
-        quantizationRecommended: "q4_k_m",
-        vramWatermarkRisk: "critical",
-        autoOffloadToCpu: true,
-        fallbackReason:
-          "显存空闲不足 15%，触发防 OOM 保护，平滑切换至内存/CPU 推理。",
-        summary: "显存紧张，自适应转为 CPU 降级推理，保障宿主进程稳定不崩溃。",
-      };
-    }
-    return {
-      tier: hw.tier,
-      executionTarget: "cloud-gateway",
-      recommendedModelId: "cloud-gemini-flash",
-      modelName: "Cloud Gemini 2.5 Flash Gateway",
-      vramWatermarkRisk: "critical",
-      autoOffloadToCpu: false,
-      fallbackReason: "本机显存与可用内存均处于极高水位，平滑转移至云端网关。",
-      summary: "系统硬件资源高压，无感切换至云端网关完成任务。",
-    };
+    return resolveCriticalVramFallback(hw);
   }
 
-  // 3. Normal Tier Routing
+  if (intent.type === "video") {
+    return resolveVideoRoute(hw, watermarkRisk);
+  }
+
   switch (hw.tier) {
     case "ultra": {
-      // 24GB+ VRAM: 32B/72B or FP16 models
       if (intent.type === "image") {
         return {
           tier: "ultra",
           executionTarget: "local-gpu",
-          recommendedModelId: "flux1-dev-fp16",
-          modelName: "FLUX.1 [dev] FP16",
+          recommendedModelId: "qwen-image-2.1-turbo",
+          modelName: "Qwen-Image-2.1-Turbo (Local GPU)",
           quantizationRecommended: "fp16",
           vramBudgetBytes: 18 * GiB,
           vramWatermarkRisk: watermarkRisk,
           autoOffloadToCpu: false,
           summary:
-            "检测到 24GB+ 旗舰显存，匹配最高画质 FLUX.1 [dev] 顶配方案。",
+            "检测到 20GB+ 旗舰显存，匹配本地 Qwen-Image-2.1-Turbo 高画质方案。",
         };
       }
       return {
         tier: "ultra",
         executionTarget: "local-gpu",
-        recommendedModelId: "qwen2.5-32b-instruct-q8_0",
-        modelName: "Qwen 2.5 32B Instruct (Q8_0 High-Precision)",
-        quantizationRecommended: "q8_0",
-        vramBudgetBytes: 22 * GiB,
+        recommendedModelId: ULTRA_CHAT_PACKAGE.id,
+        modelName: ULTRA_CHAT_PACKAGE.name,
+        quantizationRecommended: "q4_k_m",
+        vramBudgetBytes:
+          ULTRA_CHAT_PACKAGE.mainBytes + ULTRA_CHAT_PACKAGE.visionBytes + GiB,
         vramWatermarkRisk: watermarkRisk,
         autoOffloadToCpu: false,
         summary:
-          "检测到旗舰硬件，匹配 32B Q8 高精度大模型，释放完整逻辑理解能力。",
+          "检测到旗舰硬件，匹配 27B 本地多模态大模型，释放完整逻辑理解能力。",
       };
     }
 
     case "standard": {
-      // 8-16GB VRAM: 14B Q4_K_M or SDXL Turbo
       if (intent.type === "image") {
         return {
           tier: "standard",
-          executionTarget: "local-gpu",
-          recommendedModelId: "sdxl-turbo-q8",
-          modelName: "SDXL Turbo (8-bit Quantized)",
-          quantizationRecommended: "q8_0",
-          vramBudgetBytes: 7 * GiB,
+          executionTarget: "cloud-gateway",
+          recommendedModelId: "cloud-imagen-3-fast",
+          modelName: "Cloud Imagen 3 Fast Gateway",
           vramWatermarkRisk: watermarkRisk,
           autoOffloadToCpu: false,
-          summary: "检测到 8-16GB 主流显存，匹配 SDXL Turbo 高速平衡方案。",
+          fallbackReason:
+            "主流显存优先保障本地多模态推理，高清图像扩散交由云端网关。",
+          summary: "检测到 8-20GB 主流显存，图像任务由云端高速通道承接。",
         };
       }
       return {
         tier: "standard",
         executionTarget: "local-gpu",
-        recommendedModelId: "qwen2.5-14b-instruct-q4_k_m",
-        modelName: "Qwen 2.5 14B Instruct (Q4_K_M)",
+        recommendedModelId: STANDARD_CHAT_PACKAGE.id,
+        modelName: STANDARD_CHAT_PACKAGE.name,
         quantizationRecommended: "q4_k_m",
-        vramBudgetBytes: 9 * GiB,
+        vramBudgetBytes:
+          STANDARD_CHAT_PACKAGE.mainBytes +
+          STANDARD_CHAT_PACKAGE.visionBytes +
+          GiB,
         vramWatermarkRisk: watermarkRisk,
         autoOffloadToCpu: false,
-        summary: "主流硬件配置，匹配 14B Q4_K_M 黄金均衡模型，兼顾速度与智力。",
+        summary: "主流硬件配置，匹配 9B Q4_K_M 黄金均衡模型，兼顾速度与智力。",
       };
     }
 
     case "lite": {
-      // < 8GB VRAM: 7B Q4_K_M or Cloud Gateway for image
       if (intent.type === "image" || intent.type === "upscale") {
         return {
           tier: "lite",
@@ -251,19 +307,19 @@ export function scheduleAdaptiveExecution(
       return {
         tier: "lite",
         executionTarget: "local-gpu",
-        recommendedModelId: "qwen2.5-7b-instruct-q4_k_m",
-        modelName: "Qwen 2.5 7B Instruct (Q4_K_M)",
+        recommendedModelId: LITE_CHAT_PACKAGE.id,
+        modelName: LITE_CHAT_PACKAGE.name,
         quantizationRecommended: "q4_k_m",
-        vramBudgetBytes: 4.5 * GiB,
+        vramBudgetBytes:
+          LITE_CHAT_PACKAGE.mainBytes + LITE_CHAT_PACKAGE.visionBytes + GiB,
         vramWatermarkRisk: watermarkRisk,
         autoOffloadToCpu: false,
-        summary: "轻量配置，匹配 7B Q4_K_M 极致敏捷模型，低显存零卡顿运行。",
+        summary: "轻量配置，匹配 4B Q4_K_M 极致敏捷模型，低显存零卡顿运行。",
       };
     }
 
     case "cpu-only":
     default: {
-      // No GPU or Web fallback
       return {
         tier: "cpu-only",
         executionTarget: "cloud-gateway",

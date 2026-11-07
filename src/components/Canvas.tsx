@@ -23,7 +23,7 @@ import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
 import "../styles/canvas-layers.css";
 import { ImageCompareProvider as ImageCompareProvider } from "../features/compare/index.ts";
-import { ImageCompareControls as ImageCompareControls } from "../features/compare/index.ts";
+import ImageCompareControls from "./compare/ImageCompareControls.tsx";
 import { useCanvasGestures } from "./canvas/useCanvasGestures";
 import { useCanvasGroups } from "./canvas/useCanvasGroups";
 import { useCanvasReferenceFrames } from "./canvas/useCanvasReferenceFrames";

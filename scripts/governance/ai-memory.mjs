@@ -33,7 +33,7 @@ function readLatestMemory(domainArg) {
   }
   const content = fs.readFileSync(targetPath, "utf8");
   const entries = content.split(
-    /\n(?=## \[\d{4}-\d{2}-\d{2}|### \[\d{4}-\d{2}-\d{2})/,
+    /\r?\n(?=## \[\d{4}-\d{2}-\d{2}|### \[\d{4}-\d{2}-\d{2})/,
   );
   const latest = entries.length > 1 ? entries[1] : entries[0];
 
@@ -62,10 +62,11 @@ function writeMemory(domainArg, title, items, agent = "AI Agent") {
   const timeStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
   const block = `\n## [${timeStr}] ${title}\n- **执行 Agent**：${agent}\n${items.map((it) => `- ${it}`).join("\n")}\n`;
   const content = fs.readFileSync(targetPath, "utf8");
-  const dividerIdx = content.indexOf("\n---\n");
-  if (dividerIdx !== -1) {
-    const head = content.slice(0, dividerIdx + 5);
-    const rest = content.slice(dividerIdx + 5);
+  const dividerMatch = /\r?\n---\r?\n/.exec(content);
+  if (dividerMatch) {
+    const splitPos = dividerMatch.index + dividerMatch[0].length;
+    const head = content.slice(0, splitPos);
+    const rest = content.slice(splitPos);
     fs.writeFileSync(targetPath, head + block + rest, "utf8");
   } else {
     fs.writeFileSync(targetPath, block + content, "utf8");

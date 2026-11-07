@@ -13,23 +13,9 @@ export const FoldbackExpandedDrawer: React.FC<{
     <div
       id={contentId}
       data-testid="foldback-expanded-content"
-      style={{
-        marginTop: "12px",
-        paddingTop: "10px",
-        borderTop: "1px dashed var(--border-subtle, rgba(255, 255, 255, 0.1))",
-      }}
+      className="agent-foldback-expanded-content"
     >
-      <div
-        style={{
-          padding: "6px 10px",
-          borderRadius: "4px",
-          background: "rgba(99, 102, 241, 0.08)",
-          border: "1px solid rgba(99, 102, 241, 0.2)",
-          fontSize: "11px",
-          color: "#a5b4fc",
-          marginBottom: "8px",
-        }}
-      >
+      <div className="agent-foldback-isolation-banner">
         🔒 <strong>沙箱上下文隔离保护</strong>
         {stats
           ? `：已安全归档 ${stats.intermediateTurns} 轮内部工具调用与分析步骤。`
@@ -37,31 +23,11 @@ export const FoldbackExpandedDrawer: React.FC<{
       </div>
 
       {hasStructuredData && (
-        <div style={{ marginTop: "8px" }}>
-          <div
-            style={{
-              fontSize: "11px",
-              fontWeight: 600,
-              color: "var(--text-secondary, #cbd5e1)",
-              marginBottom: "4px",
-            }}
-          >
-            结构化数据产物:
-          </div>
+        <div className="agent-foldback-structured-block">
+          <div className="agent-foldback-structured-title">结构化数据产物:</div>
           <pre
             data-testid="foldback-structured-data"
-            style={{
-              margin: 0,
-              padding: "8px 10px",
-              borderRadius: "4px",
-              background: "rgba(0, 0, 0, 0.3)",
-              border: "1px solid rgba(255, 255, 255, 0.06)",
-              fontSize: "11px",
-              fontFamily: "monospace",
-              overflowX: "auto",
-              color: "#cbd5e1",
-              maxHeight: "240px",
-            }}
+            className="agent-foldback-structured-pre"
           >
             {JSON.stringify(result.structuredData, null, 2)}
           </pre>
@@ -71,15 +37,7 @@ export const FoldbackExpandedDrawer: React.FC<{
       {result.error && (
         <div
           data-testid="foldback-error-box"
-          style={{
-            marginTop: "8px",
-            padding: "8px 10px",
-            borderRadius: "4px",
-            background: "rgba(239, 68, 68, 0.1)",
-            border: "1px solid rgba(239, 68, 68, 0.3)",
-            color: "#fca5a5",
-            fontSize: "11px",
-          }}
+          className="agent-foldback-error-box"
         >
           ⚠️ <strong>异常原因:</strong> {result.error}
         </div>
@@ -88,13 +46,7 @@ export const FoldbackExpandedDrawer: React.FC<{
       {stats && (
         <div
           data-testid="foldback-execution-stats"
-          style={{
-            marginTop: "8px",
-            display: "flex",
-            gap: "16px",
-            fontSize: "11px",
-            color: "var(--text-tertiary, #94a3b8)",
-          }}
+          className="agent-foldback-execution-stats"
         >
           <span>耗时: {stats.durationMs}ms</span>
           <span>执行轮次: {stats.intermediateTurns} 轮</span>

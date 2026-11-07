@@ -1,13 +1,10 @@
 // Public contract entry for feature: image-edit
 export { default as ColorInstruction } from "./ColorInstruction.tsx";
 export { imageResultContext } from "./context.ts";
-export { default as EditComposer } from "./EditComposer.tsx";
 export { createImageEditRuntime } from "./editTasks.ts";
 export type { ImageEditAssets, ImageEditRequest } from "./editTasks.ts";
 export { EDIT_COLORS, default as EditToolbar } from "./EditToolbar.tsx";
 export { default as ImageCanvasLayers } from "./ImageCanvasLayers.tsx";
-export { default as ImageEditor } from "./ImageEditor.tsx";
-export { default as ImageLightbox } from "./ImageLightbox.tsx";
 export { default as ImageLightboxStage } from "./ImageLightboxStage.tsx";
 export {
   ImageEditMappingError,
@@ -66,7 +63,13 @@ export {
   readImageEditSnapshot,
 } from "./snapshot.ts";
 export type { ImageEditContext, ImageEditSnapshot } from "./snapshot.ts";
-export { useAvailableImageHeight } from "./useAvailableImageHeight.ts";
+export {
+  handleEditorKeyDown,
+  hasEditInstruction,
+  tagColor,
+  useAvailableImageHeight,
+  useInitialEditReferences,
+} from "./useAvailableImageHeight.ts";
 export { default as ImageCapabilityDialog } from "./ImageCapabilityDialog.tsx";
 export { default as ImageCapabilityActions } from "./ImageCapabilityActions.tsx";
 export { useImageViewport } from "./useImageViewport.ts";

@@ -140,6 +140,7 @@ export interface AgentActivityDetail {
   turnStatus?: string;
   rows?: Array<{ label: string; value: string }>;
   files?: Array<{ path: string; action: string }>;
+  foldback?: unknown;
 }
 
 export interface AgentActivityItem {

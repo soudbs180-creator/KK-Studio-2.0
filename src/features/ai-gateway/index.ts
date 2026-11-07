@@ -84,7 +84,17 @@ export { ChannelRegistry } from "./channels/registry.ts";
 
 export { supportsOperation } from "./channels/registry.ts";
 
-export type { ChannelIndexEntry } from "./channels/registry.ts";
+export type {
+  ChannelIndexEntry,
+  ChannelRegistration,
+} from "./channels/registry.ts";
+
+export {
+  ARK_BASE_URL,
+  ArkConfigurationError,
+  doubaoAdapter,
+  isArkEndpointId,
+} from "./channels/doubao.ts";
 
 export {
   bumpGatewayCursor,

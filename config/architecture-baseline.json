@@ -7,19 +7,8 @@
       "items": []
     },
     "R2": {
-      "count": 10,
-      "items": [
-        "src/features/canvas/useCanvasHistory.ts => src/components/canvas/useCanvasHistory.ts",
-        "src/features/compare/CompareImageButton.tsx => src/components/UiIcon.tsx",
-        "src/features/compare/ImageCompareDialog.tsx => src/components/Modal.tsx",
-        "src/features/image-edit/EditComposer.tsx => src/components/ComposerTextarea.tsx",
-        "src/features/image-edit/EditComposer.tsx => src/components/ModelPickerMenu.tsx",
-        "src/features/image-edit/EditComposer.tsx => src/components/UiIcon.tsx",
-        "src/features/image-edit/EditComposer.tsx => src/components/nodes/referenceUpload.ts",
-        "src/features/image-edit/EditComposer.tsx => src/components/useDismissible.ts",
-        "src/features/image-edit/ImageEditor.tsx => src/components/nodes/GenerationAction.tsx",
-        "src/features/image-edit/ImageLightbox.tsx => src/components/Modal.tsx"
-      ]
+      "count": 0,
+      "items": []
     },
     "R3": {
       "count": 0,
@@ -34,11 +23,8 @@
       "items": []
     },
     "R6": {
-      "count": 2,
-      "items": [
-        "src/domain/modelProvider.ts => src/runtime/storage-contract.ts",
-        "src/domain/settings.ts => src/runtime/storage-contract.ts"
-      ]
+      "count": 0,
+      "items": []
     },
     "R7": {
       "count": 0,

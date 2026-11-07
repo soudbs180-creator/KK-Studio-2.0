@@ -1,4 +1,4 @@
-import { useImageCompare } from "./ImageCompareProvider";
+import { useImageCompare } from "../../features/compare/index.ts";
 import ImageCompareDialog from "./ImageCompareDialog";
 
 export default function ImageCompareControls() {

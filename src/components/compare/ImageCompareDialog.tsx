@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import Modal from "../../components/Modal";
-import type { CompareImage } from "./imageCompare";
+import Modal from "../Modal";
+import type { CompareImage } from "../../features/compare/index.ts";
 
 const SOURCE_LABEL: Record<CompareImage["source"], string> = {
   local: "本地图片",

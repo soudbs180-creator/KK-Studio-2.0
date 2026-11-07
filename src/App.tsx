@@ -57,7 +57,7 @@ import {
 } from "./features/agent/index.ts";
 import "./features/plugins/index.ts";
 import { getOrCreateGlobalBridge } from "./features/extensions/index.ts";
-import { ImageLightbox as ImageLightbox } from "./features/image-edit/index.ts";
+import ImageLightbox from "./components/image-edit/ImageLightbox.tsx";
 import CreationStorageNotice from "./components/CreationStorageNotice";
 import { createProjectCanvas } from "./domain/projectCanvas";
 import {

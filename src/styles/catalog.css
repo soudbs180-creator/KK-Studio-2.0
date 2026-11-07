@@ -219,7 +219,7 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  color: #ef6d6d;
+  color: var(--kk-like-start);
 }
 .saved-copy {
   padding: 8px;

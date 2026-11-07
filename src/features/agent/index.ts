@@ -254,6 +254,7 @@ export {
   createWorkspaceEscapeGuard,
   createSecretLeakGuard,
   createDestructiveCommandGuard,
+  createMcpStdioCommandGuard,
 } from "./preInvocation.ts";
 export type { WorkspaceGuardOptions } from "./preInvocation.ts";
 

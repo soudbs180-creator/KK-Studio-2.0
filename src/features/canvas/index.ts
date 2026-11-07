@@ -9,6 +9,12 @@ export {
   serializeFloorplanFile,
 } from "./floorplanFile.ts";
 export {
+  clampHistoryLimit,
+  truncateCanvasHistoryPast,
+  getEffectiveLimit,
+  useCanvasHistory,
+} from "./useCanvasHistory.ts";
+export {
   visibleModules,
   toggleModule,
   moduleCopy,

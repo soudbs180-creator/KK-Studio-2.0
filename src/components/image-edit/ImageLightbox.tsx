@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
-import Modal from "../../components/Modal.tsx";
+import Modal from "../Modal.tsx";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import {
   CanvasImageCommandContext,
   CanvasImageNodeContext,
 } from "../../runtime/canvasCommandRuntime.tsx";
+import {
+  ImageLightboxStage,
+  useAvailableImageHeight,
+} from "../../features/image-edit/index.ts";
 import ImageEditor from "./ImageEditor.tsx";
-import ImageLightboxStage from "./ImageLightboxStage.tsx";
-
-import { useAvailableImageHeight } from "./useAvailableImageHeight.ts";
 
 export default function ImageLightbox({
   source,
@@ -148,71 +149,59 @@ export default function ImageLightbox({
                 </div>
                 <a
                   className="ui-button"
+                  download={`${current.title}.png`}
                   href={current.preview ?? current.result?.src}
-                  download={`${current.title}.${/^data:image\/jpeg;/.test(current.preview ?? current.result?.src ?? "") ? "jpg" : /^data:image\/webp;/.test(current.preview ?? current.result?.src ?? "") ? "webp" : /^data:image\/gif;/.test(current.preview ?? current.result?.src ?? "") ? "gif" : "png"}`}
                 >
-                  下载素材
+                  下载
                 </a>
-                <button
-                  className="ui-button"
-                  aria-label="重绘当前图片"
-                  onClick={() => setEditing(true)}
-                >
-                  重绘
-                </button>
-                <button
-                  className="ui-button"
-                  disabled={
-                    !task ||
-                    !command?.regenerateTask ||
-                    command.tasks.some((task) =>
-                      ["queued", "running"].includes(task.status),
-                    )
-                  }
-                  title={
-                    !task
-                      ? "本地原件没有生成任务，请使用重绘"
-                      : "按原任务快照生成新候选"
-                  }
-                  onClick={() => {
-                    if (task) command?.regenerateTask?.(task.id);
-                  }}
-                >
-                  重新生成
-                </button>
-                <button
-                  className="ui-button is-danger"
-                  disabled={!command?.deleteItem}
-                  onClick={() => setConfirmDelete(true)}
-                >
-                  删除图片
-                </button>
-              </footer>
-              {confirmDelete && (
-                <div role="alert">
-                  删除当前画布图片？原件仍保留在素材库。
+                {current.assetId && (
                   <button
                     className="ui-button"
-                    onClick={() => setConfirmDelete(false)}
+                    onClick={() => setEditing(true)}
                   >
-                    保留图片
+                    编辑
                   </button>
+                )}
+                {command?.regenerateTask && task && (
                   <button
-                    className="ui-button is-danger"
+                    className="ui-button"
                     onClick={() => {
-                      command?.deleteItem?.(current.id);
-                      const index = related.findIndex(
-                          (item) => item.id === current.id,
-                        ),
-                        next = related[index + 1] ?? related[index - 1];
-                      if (next) select(next.id);
-                      else onClose();
+                      command.regenerateTask?.(task.id);
+                      onClose();
                     }}
                   >
-                    确认删除图片
+                    再次生成
                   </button>
-                </div>
-              )}
+                )}
+                {command?.deleteItem &&
+                  (confirmDelete ? (
+                    <>
+                      <span>确定删除？</span>
+                      <button
+                        className="ui-button is-danger"
+                        onClick={() => {
+                          command.deleteItem?.(current.id);
+                          onClose();
+                        }}
+                      >
+                        确认删除
+                      </button>
+                      <button
+                        className="ui-button"
+                        onClick={() => setConfirmDelete(false)}
+                      >
+                        取消
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="ui-button"
+                      onClick={() => setConfirmDelete(true)}
+                    >
+                      删除
+                    </button>
+                  ))}
+              </footer>
             </>
           )}
         </CanvasImageNodeContext.Provider>

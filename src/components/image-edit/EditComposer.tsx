@@ -1,32 +1,24 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import ComposerTextarea from "../../components/ComposerTextarea.tsx";
-import ModelPickerMenu from "../../components/ModelPickerMenu.tsx";
-import UiIcon from "../../components/UiIcon.tsx";
-import { VoiceInputButton } from "../speech/index.ts";
-import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
-import { useDismissible } from "../../components/useDismissible.ts";
+import ComposerTextarea from "../ComposerTextarea.tsx";
+import ModelPickerMenu from "../ModelPickerMenu.tsx";
+import UiIcon from "../UiIcon.tsx";
+import { VoiceInputButton } from "../../features/speech/index.ts";
+import { readReferenceImages } from "../nodes/referenceUpload.ts";
+import { useDismissible } from "../useDismissible.ts";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
-import { selectedModelLabel } from "../models/index.ts";
-import type { ModelSelection } from "../models/index.ts";
+import { selectedModelLabel } from "../../features/models/index.ts";
+import type { ModelSelection } from "../../features/models/index.ts";
 import { CanvasImageCommandContext } from "../../runtime/canvasCommandRuntime.tsx";
-import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
-function tagColor(color: string) {
-  return (
-    "#" +
-    color
-      .slice(1)
-      .match(/../g)!
-      .map((c) =>
-        Math.round(parseInt(c, 16) * 0.65)
-          .toString(16)
-          .padStart(2, "0"),
-      )
-      .join("")
-  );
-}
+import {
+  nextColorLabel,
+  tagColor,
+  type MaskDocument,
+  type MaskRegion,
+} from "../../features/image-edit/index.ts";
+
 export default function EditComposer({
   source,
   document,

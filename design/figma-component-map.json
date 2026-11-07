@@ -75,7 +75,7 @@
       },
       "tokens": ["--kk-icon-button", "--kk-radius-control"],
       "status": "FIGMA_READY",
-      "notes": "Four tiers: 24 (16 glyph), 32 (16 glyph, 8px radius), 40 (20 glyph), 44 (touch hit). Square 8px radius."
+      "notes": "2026-11-07 live source verified: 24 tier (1841:280 -> 1841:283 16x16 glyph), 32 tier (47:5465 -> 551:6428 16x16 glyph), 40 tier (489:2405 -> 551:6754 24x24 glyph), 44 tier (69:2826 -> 551:7041 28x28 glyph). Square 8px radius."
     },
     {
       "id": "ui-icon",

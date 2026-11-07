@@ -1,83 +1,35 @@
-import { useContext, useEffect, useState, type KeyboardEvent } from "react";
+import { useContext, useState } from "react";
 import {
   CanvasImageCommandContext,
   useCanvasImageGeneration,
 } from "../../runtime/canvasCommandRuntime.tsx";
-
-import { GenerationStatus } from "../../components/nodes/GenerationAction.tsx";
+import { GenerationStatus } from "../nodes/GenerationAction.tsx";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
-import { useImageModelCapabilities } from "../models/index.ts";
-import ImageCanvasLayers from "./ImageCanvasLayers.tsx";
+import { useImageModelCapabilities } from "../../features/models/index.ts";
 import {
+  EDIT_COLORS,
+  EditToolbar,
+  ImageCanvasLayers,
+  ImageCapabilityDialog,
+  RegionPromptOverlay,
+  RegionRetryList,
+  handleEditorKeyDown,
+  hasEditInstruction,
   maskBounds,
-  type MaskDocument,
+  useImageViewport,
+  useInitialEditReferences,
+  useMaskDocument,
+  useMaskDrawing,
+  validateEdit,
+  type ImageTool,
   type MaskRegion,
   type Point,
-} from "./mask.ts";
-import RegionRetryList from "./RegionRetryList.tsx";
-import { validateEdit } from "./validateEdit.ts";
-
-import EditComposer from "./EditComposer.tsx";
-import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
-import ImageCapabilityDialog from "./ImageCapabilityDialog.tsx";
+} from "../../features/image-edit/index.ts";
 import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
-import RegionPromptOverlay from "./RegionPromptOverlay.tsx";
-import { useImageViewport, type ImageTool } from "./useImageViewport.ts";
-import { useMaskDocument } from "./useMaskDocument.ts";
-import { useMaskDrawing } from "./useMaskDrawing.ts";
-
-function useInitialEditReferences(
-  source: CanvasCollectionItem,
-  onError: (msg: string) => void,
-) {
-  const command = useContext(CanvasImageCommandContext);
-  const [references, setReferences] = useState<CanvasReference[]>([]);
-  useEffect(() => {
-    const controller = new AbortController();
-    void Promise.all(
-      (source.imageEditReferenceIds ?? []).map(async (id) => {
-        const asset = await command?.assets?.read(id);
-        if (!asset) throw new Error("草稿参考图原件缺失，请重新导入。");
-        return { assetId: id, title: "重绘参考图", preview: asset.preview };
-      }),
-    )
-      .then((refs) => {
-        if (!controller.signal.aborted) setReferences(refs);
-      })
-      .catch((error: unknown) => {
-        if (!controller.signal.aborted)
-          onError(error instanceof Error ? error.message : "参考图无法读取。");
-      });
-    return () => controller.abort();
-  }, [source.assetId]);
-  return [references, setReferences] as const;
-}
-
-function handleEditorKeyDown(
-  e: KeyboardEvent<HTMLDivElement>,
-  loading: boolean,
-  onHistory: (action: "undo" | "redo") => void,
-): void {
-  if (
-    (e.ctrlKey || e.metaKey) &&
-    e.key.toLowerCase() === "z" &&
-    !(e.target instanceof HTMLInputElement) &&
-    !(e.target instanceof HTMLTextAreaElement)
-  ) {
-    e.preventDefault();
-    if (!loading) onHistory(e.shiftKey ? "redo" : "undo");
-  }
-}
-
-function hasEditInstruction(document: MaskDocument, prompt: string): boolean {
-  return (
-    Boolean(prompt.trim()) ||
-    document.regions.some((r) => Boolean(r.instruction?.trim()))
-  );
-}
+import EditComposer from "./EditComposer.tsx";
 
 export default function ImageEditor({
   source,

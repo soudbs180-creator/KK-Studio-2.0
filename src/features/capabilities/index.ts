@@ -38,5 +38,7 @@ export type {
   ExternalActionType,
   ExternalActionRequest,
   ExternalActionResult,
+  ExternalBridgeExecutorResult,
+  ExternalBridgeProbeOptions,
   SoftwareInstallationProfile,
 } from "./externalBridge.ts";

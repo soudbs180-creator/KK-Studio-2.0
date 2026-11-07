@@ -1,216 +1,28 @@
 {
-  "src/components/agent/AgentFoldbackCard.tsx": {
-    "colors": {
-      "rgba(255, 255, 255, 0.1)": 1,
-      "rgba(30, 32, 40, 0.75)": 1,
-      "#e2e8f0": 1,
-      "rgba(99, 102, 241, 0.15)": 1,
-      "#818cf8": 1,
-      "rgba(99, 102, 241, 0.3)": 1,
-      "#94a3b8": 2,
-      "#10b981": 1,
-      "rgba(16, 185, 129, 0.08)": 1,
-      "rgba(16, 185, 129, 0.2)": 1,
-      "rgba(255, 255, 255, 0.15)": 1,
-      "#cbd5e1": 1,
-      "#f1f5f9": 1
-    },
-    "lucide": []
-  },
-  "src/components/agent/FoldbackSummaryParts.tsx": {
-    "colors": {
-      "rgba(16, 185, 129, 0.12)": 1,
-      "#10b981": 1,
-      "rgba(16, 185, 129, 0.3)": 1,
-      "rgba(245, 158, 11, 0.12)": 1,
-      "#f59e0b": 1,
-      "rgba(245, 158, 11, 0.3)": 1,
-      "rgba(239, 68, 68, 0.12)": 1,
-      "#ef4444": 1,
-      "rgba(239, 68, 68, 0.3)": 1,
-      "#94a3b8": 1,
-      "rgba(255, 255, 255, 0.06)": 1,
-      "rgba(255, 255, 255, 0.12)": 1,
-      "#38bdf8": 1
-    },
-    "lucide": []
-  },
-  "src/components/agent/FoldbackExpandedDrawer.tsx": {
-    "colors": {
-      "rgba(255, 255, 255, 0.1)": 1,
-      "rgba(99, 102, 241, 0.08)": 1,
-      "rgba(99, 102, 241, 0.2)": 1,
-      "#a5b4fc": 1,
-      "#cbd5e1": 2,
-      "rgba(0, 0, 0, 0.3)": 1,
-      "rgba(255, 255, 255, 0.06)": 1,
-      "rgba(239, 68, 68, 0.1)": 1,
-      "rgba(239, 68, 68, 0.3)": 1,
-      "#fca5a5": 1,
-      "#94a3b8": 1
-    },
-    "lucide": []
-  },
-  "src/components/assets/AssetPanel.tsx": {
-    "colors": {},
-    "lucide": ["ArrowLeft", "Plus", "Upload", "X"]
-  },
   "src/components/assets/assets.css": {
-    "colors": {
-      "#333": 2
-    },
+    "colors": {},
     "lucide": [],
     "rawPx": 217
   },
-  "src/components/canvas/CanvasNodeItem.tsx": {
-    "colors": {},
-    "lucide": []
-  },
-  "src/components/canvas/TaskPanel.tsx": {
-    "colors": {},
-    "lucide": ["ClipboardList"]
-  },
-  "src/components/Canvas.tsx": {
-    "colors": {
-      "#0a0a0a": 1
-    },
-    "lucide": []
-  },
-  "src/components/CatalogPanel.tsx": {
-    "colors": {},
-    "lucide": ["X"]
-  },
-  "src/components/CollectionPage.tsx": {
-    "colors": {},
-    "lucide": ["ArrowUpRight", "Heart", "LayoutGrid", "List", "Search", "Star"]
-  },
-  "src/components/ConversationPanel.tsx": {
-    "colors": {},
-    "lucide": [
-      "ArrowUp",
-      "Box",
-      "Copy",
-      "MessageCircle",
-      "Mic",
-      "PanelRightClose",
-      "Plus",
-      "Puzzle",
-      "Trash2"
-    ]
-  },
-  "src/components/InfoPanel.tsx": {
-    "colors": {},
-    "lucide": ["X"]
-  },
-  "src/components/LibraryPage.tsx": {
-    "colors": {},
-    "lucide": [
-      "ArrowUpRight",
-      "Folder",
-      "GitBranch",
-      "Plus",
-      "Puzzle",
-      "Search"
-    ]
-  },
-  "src/components/nodes/CreationComposer.tsx": {
-    "colors": {},
-    "lucide": ["Heart", "Plus", "Square"]
-  },
-  "src/components/nodes/ImageCreationNode.tsx": {
-    "colors": {},
-    "lucide": ["Image", "Upload"]
-  },
-  "src/components/SavedPane.tsx": {
-    "colors": {},
-    "lucide": ["Heart", "Star"]
-  },
-  "src/components/SearchPage.tsx": {
-    "colors": {
-      "#8b9dc3": 1,
-      "#f5a623": 1,
-      "#e85d75": 1,
-      "#9b8cff": 1
-    },
-    "lucide": [
-      "ArrowUpRight",
-      "Folder",
-      "Heart",
-      "Puzzle",
-      "Search",
-      "Star",
-      "X"
-    ]
-  },
-  "src/components/settings/AppUpdatePage.tsx": {
-    "colors": {},
-    "lucide": []
-  },
-  "src/components/settings/ProviderModelCatalog.tsx": {
-    "colors": {},
-    "lucide": []
-  },
-  "src/components/settings/ProfileUsagePage.tsx": {
-    "colors": {},
-    "lucide": []
-  },
-  "src/components/settings/SettingsPanel.tsx": {
-    "colors": {},
-    "lucide": ["X"]
-  },
-  "src/components/Sidebar.tsx": {
-    "colors": {},
-    "lucide": ["ArrowUpRight", "ChevronDown", "Folder"]
-  },
-  "src/components/StartComposer.tsx": {
-    "colors": {},
-    "lucide": []
-  },
   "src/styles/canvas-navigation.css": {
-    "colors": {
-      "#0003": 2,
-      "#111": 1,
-      "#444": 1,
-      "#777": 1,
-      "#858585": 1
-    },
+    "colors": {},
     "lucide": [],
-    "rawPx": 70
+    "rawPx": 33
   },
   "src/styles/catalog.css": {
-    "colors": {
-      "#ef6d6d": 2
-    },
+    "colors": {},
     "lucide": [],
     "rawPx": 94
   },
   "src/styles/generation-count.css": {
-    "colors": {
-      "#d9d9d9": 2
-    },
+    "colors": {},
     "lucide": [],
     "rawPx": 21
   },
   "src/styles/workspace.css": {
-    "colors": {
-      "#363636": 1,
-      "#d99500": 1,
-      "#292929": 1,
-      "#0c9568": 1,
-      "#d4e8e0": 1,
-      "#202020": 1,
-      "#0008": 1,
-      "#aaa3ff": 1,
-      "rgba(0, 0, 0, 0.3)": 1,
-      "#4b4b4b": 2,
-      "#707070": 5,
-      "#313131": 2,
-      "#808080": 2,
-      "#f5a623": 2,
-      "#e85d75": 2
-    },
+    "colors": {},
     "lucide": [],
-    "rawPx": 702
+    "rawPx": 688
   },
   "src/components/settings/plugin-manager.css": {
     "colors": {},
@@ -220,7 +32,7 @@
   "src/components/settings/settings.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 452
+    "rawPx": 443
   },
   "src/styles/account-popup.css": {
     "colors": {},
@@ -255,7 +67,7 @@
   "src/styles/canvas-hud.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 143
+    "rawPx": 128
   },
   "src/styles/canvas-layers.css": {
     "colors": {},
@@ -265,12 +77,12 @@
   "src/styles/canvas-tools.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 69
+    "rawPx": 63
   },
   "src/styles/catalog-pages.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 212
+    "rawPx": 205
   },
   "src/styles/comfy-workflow.css": {
     "colors": {},
@@ -285,7 +97,7 @@
   "src/styles/conversation-panel.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 109
+    "rawPx": 88
   },
   "src/styles/demo-results.css": {
     "colors": {},
@@ -379,7 +191,7 @@
       "#e6e6e6": 1,
       "#0008": 1
     },
-    "rawPx": 16
+    "rawPx": 15
   },
   "src/styles/image-edit.css": {
     "colors": {},
@@ -409,7 +221,7 @@
   "src/styles/node-menu.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 42
+    "rawPx": 38
   },
   "src/styles/page-templates.css": {
     "colors": {},
@@ -429,7 +241,7 @@
   "src/styles/responsive-content.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 101
+    "rawPx": 96
   },
   "src/styles/responsive.css": {
     "colors": {},
@@ -444,7 +256,7 @@
   "src/styles/sidebar.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 157
+    "rawPx": 142
   },
   "src/styles/stage-workbench.css": {
     "colors": {},

@@ -13,11 +13,22 @@ import { RouterWorkerEngine } from "./router.ts";
 import { WorkerPoolManager } from "./workerSession.ts";
 import { ThreePhaseFlowCoordinator } from "./threePhaseFlow.ts";
 import { ToolRegistry } from "./toolRegistry.ts";
-import { SecurityHookEngine, createSecretLeakGuard } from "./preInvocation.ts";
+import {
+  SecurityHookEngine,
+  createMcpStdioCommandGuard,
+  createSecretLeakGuard,
+} from "./preInvocation.ts";
 import {
   StatuslineBroadcaster,
   type StatuslineListener,
 } from "./statuslineIpc.ts";
+import {
+  DelegationPipeline,
+  type SandboxExecutionOptions,
+  type SubagentFoldbackResult,
+  type SubagentTaskBrief,
+  type SubagentTurnHandler,
+} from "./delegation/index.ts";
 
 export interface AgentOpExecutionContext {
   signal: AbortSignal;
@@ -39,6 +50,30 @@ export class AgentToolRuntime {
   readonly #router = new RouterWorkerEngine();
   readonly #workers = new WorkerPoolManager(3);
   readonly #statusline = new StatuslineBroadcaster();
+  readonly #delegation = new DelegationPipeline({ defaultMaxConcurrency: 3 });
+  #lastFoldback: SubagentFoldbackResult | null = null;
+
+  get delegationPipeline(): DelegationPipeline {
+    return this.#delegation;
+  }
+
+  get lastFoldbackResult(): SubagentFoldbackResult | null {
+    return this.#lastFoldback;
+  }
+
+  async dispatchSubagent(
+    brief: SubagentTaskBrief,
+    customTurnHandler?: SubagentTurnHandler,
+    options?: SandboxExecutionOptions,
+  ): Promise<SubagentFoldbackResult> {
+    const result = await this.#delegation.dispatchTask(
+      brief,
+      customTurnHandler,
+      options,
+    );
+    this.#lastFoldback = result;
+    return result;
+  }
 
   constructor(options: RuntimeOptions) {
     this.#options = options;
@@ -160,6 +195,7 @@ export class AgentToolRuntime {
       ticketId = ticket.ticketId;
       const security = new SecurityHookEngine();
       security.addHook(createSecretLeakGuard());
+      security.addHook(createMcpStdioCommandGuard());
       security.addHook(() => {
         assertCurrent();
         return { allow: true };
@@ -209,7 +245,9 @@ export class AgentToolRuntime {
         );
         emit("failed", 1, receipt.tasks?.length);
       } else {
-        worker.complete(`已执行 ${receipt.applied.length} 项画布操作`);
+        this.#lastFoldback = worker.complete(
+          `已执行 ${receipt.applied.length} 项画布操作`,
+        );
         flow.completeExecution();
         emit("completed", 1, receipt.tasks?.length);
       }

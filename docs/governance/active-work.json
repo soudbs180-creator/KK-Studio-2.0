@@ -45,9 +45,7 @@
       "updatedAt": "2026-11-06T13:17:31.694Z",
       "breakpoint": {
         "reason": "READY_FOR_PICKUP: 图片显式报价已接入。真实供应商请求和已安装 Desktop 扣费仍未做",
-        "pending": [
-          "真实供应商账单与已安装 Desktop 扣费"
-        ],
+        "pending": ["真实供应商账单与已安装 Desktop 扣费"],
         "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts"
       }
     },
@@ -58,11 +56,14 @@
       "track": "LOGIC",
       "feature": "super-agi-terminal",
       "status": "DONE",
-      "progress": "超级 AGI 终端统合架构全量落地：硬件自适应模型调度器、外部专业软件无感 Bridge、多 Agent 正交分轨与硬碰撞阻断门禁，25 项单测全部全绿，tsc/eslint/rules:check 0 违规",
+      "progress": "已完成 AgentFoldbackCard 三文件全量语义 Token 化（移除 ui-legacy-baseline 豁免）、externalBridge 假通过桩清零（6/6 单测）、R1~R8 架构违规全量清零（0 违规）、hardwareAdaptiveScheduler 与 localModelPackages 权威模型 ID 合流（10/10 单测）、DelegationPipeline 与 AgentFoldbackCard 在 AgentToolRuntime / AgentExecutionProcess 宿主生产挂载（18/18 单测）",
       "files": [
         "src/features/models/hardwareAdaptiveScheduler.ts",
         "src/features/capabilities/externalBridge.ts",
         "src/features/agent/delegation/delegationPipeline.ts",
+        "src/features/agent/agentToolRuntime.ts",
+        "src/features/agent/agentTypes.ts",
+        "src/components/AgentExecutionProcess.tsx",
         "src/features/agent/index.ts",
         "src/features/models/index.ts",
         "src/features/capabilities/index.ts",
@@ -80,11 +81,11 @@
       ],
       "worktree": "D:/kk-studio/KK-Studio-2.0",
       "startedAt": "2026-11-06T19:30:00.000Z",
-      "updatedAt": "2026-11-06T19:41:00.000Z",
+      "updatedAt": "2026-11-07T08:22:00.000Z",
       "breakpoint": {
-        "reason": "DONE: 核心调度器、外部专业软件Bridge、碰撞阻断门禁与共享思维链全部闭环并通过门禁",
+        "reason": "DONE: 硬件自适应调度、外部桥诚实性契约、子智能体委派管线与折叠卡 UI 宿主接线已全部闭环并完成门禁与单测验证",
         "pending": [],
-        "testCmd": "npm run typecheck && npm run rules:check && node --import ./tests/support/public-entry-loader.mjs --test tests/unit/hardwareAdaptiveScheduler.test.ts tests/unit/externalBridge.test.ts tests/unit/subagentDelegation.test.ts"
+        "testCmd": "npm run typecheck && npm run rules:check && node --import ./tests/support/public-entry-loader.mjs --test tests/unit/hardwareAdaptiveScheduler.test.ts tests/unit/externalBridge.test.ts tests/unit/subagentDelegation.test.ts tests/unit/agentFoldbackCard.test.ts"
       }
     },
     {
@@ -94,44 +95,42 @@
       "track": "LOGIC",
       "feature": "external-bridge",
       "status": "READY_FOR_PICKUP",
-      "progress": "共享层已去掉 node:fs。安装检测改为注入探针，默认不读磁盘。4 项单测通过。还没有真实侧车进程。",
+      "progress": "Antigravity 已清零 externalBridge.ts 全部未执行即返回 ok: true 的假通过桩，强制要求注入 mcpExecutor / cliRunner / neuralFallbackExecutor（6/6 单测通过）；待桌面宿主注入真实文件探针与进程启动器",
       "files": [
         "src/features/capabilities/externalBridge.ts",
         "tests/unit/externalBridge.test.ts"
       ],
       "worktree": "D:/kk-studio/KK-Studio-2.0",
       "startedAt": "2026-11-06T13:08:14.232Z",
-      "updatedAt": "2026-11-07T03:52:01.731Z",
+      "updatedAt": "2026-11-07T05:24:00.000Z",
       "breakpoint": {
-        "reason": "READY_FOR_PICKUP: 外部桥边界仍待真实侧车。本轮全面治理仅格式/导出收口，不扩展真实程序。",
+        "reason": "READY_FOR_PICKUP: 外部桥假通过桩已由主 Agent 清零。下一步仅需在桌面宿主层注入真实探针与子进程执行器",
         "pending": [
-          "桌面宿主注入 fileExists",
-          "侧车真正启动 Topaz 或 Photoshop，而不是只返回成功"
+          "桌面宿主注入 pathExists 真实探针",
+          "桌面宿主注入 cliRunner 真实子进程调用"
         ],
         "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/externalBridge.test.ts"
       }
     },
     {
-      "agent": "Cursor",
+      "agent": "Antigravity",
       "task": "UI-004-ICON",
       "taskId": "UI-004-ICON",
       "track": "UI",
       "feature": "icon-button",
-      "status": "READY_FOR_PICKUP",
-      "progress": "24 档图标按钮内部图标从 14 改为 16。14 会被图标组件折成 12，和组件登记的 24 档 16 槽不一致。40 档本来就是 20。没有改 Codex 锁着的任务面板和对话样式。",
+      "status": "DONE",
+      "progress": "已通过 Figma MCP 实测 ZiadpErDoFweCjG3uHjkM3 的 551:7196（图标按钮：24档=16x16、32档=16x16、40档 489:2405=24x24、44档 69:2826=28x28）与 551:6356（常规带字按钮：40档 21:1489=16x16、32档=16x16），并在 Button.tsx 与 design/figma-component-map.json 完成 100% 精确对齐，未触碰 Codex 锁定文件。",
       "files": [
-        "src/components/ui/Button.tsx"
+        "src/components/ui/Button.tsx",
+        "design/figma-component-map.json"
       ],
       "worktree": "D:/kk-studio/KK-Studio-2.0",
       "startedAt": "2026-11-06T13:17:31.730Z",
-      "updatedAt": "2026-11-06T13:20:00.000Z",
+      "updatedAt": "2026-11-07T08:22:00.000Z",
       "breakpoint": {
-        "reason": "READY_FOR_PICKUP: 24 档已对齐登记。40/44 还要按当前 Figma 实测量过再改",
-        "pending": [
-          "按当前 Figma 复测 40 和 44 图标槽",
-          "继续设置其余分页和项目库，避开已锁的任务面板文件"
-        ],
-        "testCmd": "npm run ui:check"
+        "reason": "DONE: 16/24/32/40/44 五档图标按钮与常规按钮内部图标槽位已按 Figma 源画布实测 100% 对齐",
+        "pending": [],
+        "testCmd": "npm run ui:check && npm run tokens:check"
       }
     },
     {

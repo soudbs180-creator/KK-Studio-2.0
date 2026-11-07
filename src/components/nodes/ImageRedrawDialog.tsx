@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import Modal from "../Modal";
 import { CanvasImageNodeContext } from "../../features/creation/index.ts";
-import { ImageEditor as ImageEditor } from "../../features/image-edit/index.ts";
+import ImageEditor from "../image-edit/ImageEditor.tsx";
 import type { CanvasReference } from "../../domain/canvasItems";
 import { useAvailableImageHeight } from "../../features/image-edit/index.ts";
 

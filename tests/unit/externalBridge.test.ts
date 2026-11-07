@@ -1,85 +1,132 @@
 import assert from "node:assert/strict";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
-import {
-  UniversalExternalAppBridge,
-  type ExternalActionRequest,
-} from "../../src/features/capabilities/externalBridge.ts";
+import { UniversalExternalAppBridge } from "../../src/features/capabilities/externalBridge.ts";
 
-test("UniversalExternalAppBridge detects active MCP server channel", async () => {
-  const bridge = new UniversalExternalAppBridge({
-    activeMcpServers: ["topaz-gigapixel", "photoshop-uxp"],
+const TMP_DIR = os.tmpdir();
+
+test("UniversalExternalAppBridge detects installed software via custom pathExists probe", () => {
+  const bridge = new UniversalExternalAppBridge();
+  const profile = bridge.detectSoftware("blender", {
+    pathExists: (candidate) => candidate.includes("Blender 4.2"),
+    mcpAvailabilityMap: { blender: false },
   });
 
-  const topazProfile = bridge.detectSoftware("topaz-gigapixel");
-  assert.equal(topazProfile.isInstalled, true);
-  assert.equal(topazProfile.mcpAvailable, true);
-  assert.equal(topazProfile.displayName, "Topaz Gigapixel AI");
+  assert.equal(profile.installed, true);
+  assert.ok(profile.executablePath?.includes("Blender 4.2"));
+  assert.equal(profile.headlessCliSupported, true);
+});
 
-  const req: ExternalActionRequest = {
-    software: "topaz-gigapixel",
-    action: "upscale_image",
-    inputPath: "C:/assets/sample.png",
-    parameters: { scaleFactor: 4 },
-  };
+test("UniversalExternalAppBridge prioritizes MCP channel when MCP server and executor are provided", async () => {
+  const bridge = new UniversalExternalAppBridge();
+  const scenePath = path.join(TMP_DIR, "scene.blend");
+  const res = await bridge.executeAction(
+    {
+      action: "render_3d_scene",
+      targetSoftware: "blender",
+      inputAssetPath: scenePath,
+    },
+    {
+      mcpAvailabilityMap: { blender: true },
+      mcpExecutor: async (req) => ({
+        ok: true,
+        outputPath: `${req.inputAssetPath}.mcp_out.png`,
+      }),
+    },
+  );
 
-  const res = await bridge.execute(req);
   assert.equal(res.ok, true);
   assert.equal(res.channelUsed, "mcp");
-  assert.equal(res.outputPath, "C:/assets/sample_upscale_image_result.png");
-  assert.ok(res.message.includes("通过标准 MCP 协议"));
+  assert.equal(res.softwareUsed, "blender");
+  assert.equal(res.outputAssetPath, `${scenePath}.mcp_out.png`);
 });
 
-test("UniversalExternalAppBridge executes via CLI runner when MCP is absent", async () => {
-  let invoked = false;
-  const bridge = new UniversalExternalAppBridge({
-    simulatedCliRunner: async (_software, req) => {
-      invoked = true;
-      return req.outputPath || "C:/assets/cli_output.png";
+test("UniversalExternalAppBridge rejects fake pass when MCP is flagged available without mcpExecutor", async () => {
+  const bridge = new UniversalExternalAppBridge();
+  const res = await bridge.executeAction(
+    {
+      action: "render_3d_scene",
+      targetSoftware: "blender",
+      inputAssetPath: path.join(TMP_DIR, "scene.blend"),
     },
-  });
+    {
+      mcpAvailabilityMap: { blender: true },
+    },
+  );
 
-  const req: ExternalActionRequest = {
-    software: "photoshop-uxp",
-    action: "outpaint_image",
-    inputPath: "C:/assets/canvas.png",
-    outputPath: "C:/assets/expanded_canvas.png",
-  };
+  assert.equal(res.ok, false);
+  assert.equal(res.channelUsed, "mcp");
+  assert.equal(res.error, "MCP_EXECUTOR_NOT_CONFIGURED");
+});
 
-  const res = await bridge.execute(req);
-  assert.equal(invoked, true);
+test("UniversalExternalAppBridge uses headless CLI sidecar when MCP is unavailable but binary and cliRunner exist", async () => {
+  const bridge = new UniversalExternalAppBridge();
+  let capturedArgs: string[] = [];
+  const modelPath = path.join(TMP_DIR, "model.blend");
+  const outPath = path.join(TMP_DIR, "out.png");
+
+  const res = await bridge.executeAction(
+    {
+      action: "render_3d_scene",
+      targetSoftware: "blender",
+      inputAssetPath: modelPath,
+      outputAssetPath: outPath,
+    },
+    {
+      pathExists: (p) => p.includes("Blender 4.2"),
+      cliRunner: async (_exe, args) => {
+        capturedArgs = args;
+        return { ok: true, outputPath: outPath };
+      },
+    },
+  );
+
   assert.equal(res.ok, true);
   assert.equal(res.channelUsed, "cli-sidecar");
-  assert.equal(res.outputPath, "C:/assets/expanded_canvas.png");
-  assert.ok(res.message.includes("侧车通道"));
+  assert.equal(res.outputAssetPath, outPath);
+  assert.ok(capturedArgs.includes("-b"));
 });
 
-test("detectSoftware uses the injected probe and does not read the disk itself", () => {
-  const seen: string[] = [];
-  const bridge = new UniversalExternalAppBridge({
-    fileExists: (path) => {
-      seen.push(path);
-      return path.includes("Photoshop 2026");
-    },
-  });
-  const profile = bridge.detectSoftware("photoshop-uxp");
-  assert.equal(profile.isInstalled, true);
-  assert.equal(profile.mcpAvailable, false);
-  assert.match(profile.executablePath ?? "", /Photoshop 2026/);
-  assert.ok(seen.some((path) => path.includes("Photoshop 2026")));
-});
-
-test("UniversalExternalAppBridge gracefully falls back to built-in pipeline when software not installed", async () => {
+test("UniversalExternalAppBridge falls back to neuralFallbackExecutor when external software is not installed", async () => {
   const bridge = new UniversalExternalAppBridge();
+  const portraitPath = path.join(TMP_DIR, "portrait.png");
+  const res = await bridge.executeAction(
+    {
+      action: "smart_cutout",
+      targetSoftware: "photoshop",
+      inputAssetPath: portraitPath,
+    },
+    {
+      pathExists: () => false,
+      neuralFallbackExecutor: async (req) => ({
+        ok: true,
+        outputPath: `${req.inputAssetPath}.neural_cutout.png`,
+      }),
+    },
+  );
 
-  const req: ExternalActionRequest = {
-    software: "topaz-gigapixel",
-    action: "upscale_image",
-    inputPath: "C:/assets/photo.jpg",
-  };
-
-  const res = await bridge.execute(req);
   assert.equal(res.ok, true);
   assert.equal(res.channelUsed, "neural-fallback");
-  assert.equal(res.softwareName, "KK-Studio Built-in Neural Pipeline");
-  assert.ok(res.message.includes("平滑降级至内置超分/重绘算法"));
+  assert.equal(res.softwareUsed, "neural-engine");
+  assert.equal(res.outputAssetPath, `${portraitPath}.neural_cutout.png`);
+});
+
+test("UniversalExternalAppBridge returns honest failure when neither external software nor neuralFallbackExecutor is available", async () => {
+  const bridge = new UniversalExternalAppBridge();
+  const res = await bridge.executeAction(
+    {
+      action: "smart_cutout",
+      targetSoftware: "photoshop",
+      inputAssetPath: path.join(TMP_DIR, "portrait.png"),
+    },
+    {
+      pathExists: () => false,
+    },
+  );
+
+  assert.equal(res.ok, false);
+  assert.equal(res.channelUsed, "neural-fallback");
+  assert.equal(res.error, "EXTERNAL_BRIDGE_EXECUTOR_UNAVAILABLE");
+  assert.equal(res.outputAssetPath, undefined);
 });

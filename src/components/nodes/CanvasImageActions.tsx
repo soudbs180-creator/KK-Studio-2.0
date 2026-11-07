@@ -6,7 +6,7 @@ import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems";
-import { CompareImageButton as CompareImageButton } from "../../features/compare/index.ts";
+import CompareImageButton from "../compare/CompareImageButton.tsx";
 import UiIcon from "../UiIcon";
 import ImageSelectionToolbar from "../canvas/ImageSelectionToolbar";
 import ImageRedrawDialog from "./ImageRedrawDialog";

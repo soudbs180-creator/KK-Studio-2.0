@@ -144,7 +144,7 @@ async function harness(gestureActive = false) {
   };
   const exports: { useCanvasHistory?: typeof useCanvasHistory } = {};
   const source = await readFile(
-    new URL("../../src/components/canvas/useCanvasHistory.ts", import.meta.url),
+    new URL("../../src/features/canvas/useCanvasHistory.ts", import.meta.url),
     "utf8",
   );
   runInNewContext(

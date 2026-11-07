@@ -3,6 +3,11 @@ import type {
   PreInvocationDecision,
   PreInvocationContext,
 } from "../../domain/agentWorkflow.ts";
+import {
+  isAllowedStdioCommand,
+  mcpServerConfigV2Schema,
+  validateStdioEnv,
+} from "../mcp/index.ts";
 
 /**
  * PreInvocation Security Hook Engine.
@@ -245,6 +250,73 @@ const DESTRUCTIVE_COMMAND_PATTERNS: Array<{ pattern: RegExp; reason: string }> =
 /**
  * Creates a security hook to intercept destructive terminal commands.
  */
+/**
+ * Creates a security hook to intercept destructive terminal commands.
+ */
+export function createMcpStdioCommandGuard(): PreInvocationHook {
+  return (
+    tool: string,
+    args: Record<string, unknown>,
+  ): PreInvocationDecision => {
+    const normalizedTool = tool.toLowerCase();
+    const isMcpStdioTool =
+      normalizedTool === "mcp_stdio_spawn" ||
+      normalizedTool === "mcp_register_server" ||
+      args.transport === "stdio" ||
+      args.transport === "streamable_http";
+
+    if (!isMcpStdioTool) {
+      return { allow: true };
+    }
+
+    if (
+      typeof args.command === "string" &&
+      !isAllowedStdioCommand(args.command)
+    ) {
+      return {
+        allow: false,
+        reason: `MCP stdio command rejected by whitelist: "${args.command}"`,
+      };
+    }
+
+    if (
+      args.env !== undefined &&
+      typeof args.env === "object" &&
+      args.env !== null &&
+      !Array.isArray(args.env)
+    ) {
+      const envRecord: Record<string, string> = {};
+      for (const [key, value] of Object.entries(args.env)) {
+        envRecord[key] = String(value ?? "");
+      }
+      const envProblems = validateStdioEnv({
+        transport: "stdio",
+        command: typeof args.command === "string" ? args.command : "node",
+        args: [],
+        env: envRecord,
+      });
+      if (envProblems.length > 0) {
+        return {
+          allow: false,
+          reason: envProblems.join("; "),
+        };
+      }
+    }
+
+    if (args.transport === "stdio" || args.transport === "streamable_http") {
+      const parsed = mcpServerConfigV2Schema.safeParse(args);
+      if (!parsed.success) {
+        return {
+          allow: false,
+          reason: parsed.error.issues.map((issue) => issue.message).join("; "),
+        };
+      }
+    }
+
+    return { allow: true };
+  };
+}
+
 export function createDestructiveCommandGuard(): PreInvocationHook {
   return (
     tool: string,

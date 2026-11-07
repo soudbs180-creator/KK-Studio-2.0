@@ -1,7 +1,6 @@
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
-import { compareImage } from "./imageCompare";
-import { useImageCompare } from "./ImageCompareProvider";
-import UiIcon from "../../components/UiIcon";
+import { compareImage, useImageCompare } from "../../features/compare/index.ts";
+import UiIcon from "../UiIcon";
 
 export default function CompareImageButton({
   item,

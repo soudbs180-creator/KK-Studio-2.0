@@ -3,7 +3,7 @@ import type {
   DemoResult,
   CanvasCollectionItem,
 } from "../../domain/canvasItems";
-import { ImageLightbox as ImageLightbox } from "../../features/image-edit/index.ts";
+import ImageLightbox from "../image-edit/ImageLightbox.tsx";
 import Modal from "../Modal";
 import UiIcon from "../UiIcon";
 

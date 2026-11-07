@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { planLocalModelDownloads } from "../../src/domain/localModelPackages.ts";
 import {
   evaluateHardwareTier,
   evaluateVramWatermarkRisk,
@@ -80,7 +81,7 @@ test("evaluateVramWatermarkRisk correctly classifies low, medium and critical ri
   assert.equal(evaluateVramWatermarkRisk(1 * GiB, 8 * GiB), "critical");
 });
 
-test("scheduleAdaptiveExecution matches 32B model and FLUX FP16 on Ultra hardware", () => {
+test("scheduleAdaptiveExecution matches canonical 27B package and Qwen-Image on Ultra hardware", () => {
   const report = createMockReport({
     vramDedicated: 24 * GiB,
     vramFree: 22 * GiB,
@@ -89,14 +90,24 @@ test("scheduleAdaptiveExecution matches 32B model and FLUX FP16 on Ultra hardwar
   const chatResult = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(chatResult.tier, "ultra");
   assert.equal(chatResult.executionTarget, "local-gpu");
-  assert.equal(chatResult.recommendedModelId, "qwen2.5-32b-instruct-q8_0");
+  assert.equal(chatResult.recommendedModelId, "qwen3.8-27b-ud-q4-k-m");
+  assert.ok(
+    planLocalModelDownloads([chatResult.recommendedModelId]).downloadBytes > 0,
+  );
 
   const imageResult = scheduleAdaptiveExecution({ type: "image" }, report);
   assert.equal(imageResult.executionTarget, "local-gpu");
-  assert.equal(imageResult.recommendedModelId, "flux1-dev-fp16");
+  assert.equal(imageResult.recommendedModelId, "qwen-image-2.1-turbo");
+
+  const videoResult = scheduleAdaptiveExecution({ type: "video" }, report);
+  assert.equal(videoResult.executionTarget, "local-gpu");
+  assert.equal(videoResult.recommendedModelId, "minimax-h3-16g-hifi-fl2va");
+  assert.ok(
+    planLocalModelDownloads([videoResult.recommendedModelId]).downloadBytes > 0,
+  );
 });
 
-test("scheduleAdaptiveExecution matches 14B model and SDXL Turbo on Standard hardware", () => {
+test("scheduleAdaptiveExecution matches canonical 9B package on Standard hardware", () => {
   const report = createMockReport({
     vramDedicated: 12 * GiB,
     vramFree: 10 * GiB,
@@ -104,13 +115,17 @@ test("scheduleAdaptiveExecution matches 14B model and SDXL Turbo on Standard har
 
   const chatResult = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(chatResult.tier, "standard");
-  assert.equal(chatResult.recommendedModelId, "qwen2.5-14b-instruct-q4_k_m");
+  assert.equal(chatResult.recommendedModelId, "qwen3.5-9b-q4-k-m");
+  assert.ok(
+    planLocalModelDownloads([chatResult.recommendedModelId]).downloadBytes > 0,
+  );
 
   const imageResult = scheduleAdaptiveExecution({ type: "image" }, report);
-  assert.equal(imageResult.recommendedModelId, "sdxl-turbo-q8");
+  assert.equal(imageResult.executionTarget, "cloud-gateway");
+  assert.equal(imageResult.recommendedModelId, "cloud-imagen-3-fast");
 });
 
-test("scheduleAdaptiveExecution routes image generation to Cloud on Lite hardware to prevent OOM", () => {
+test("scheduleAdaptiveExecution matches canonical 4B package and routes image to Cloud on Lite hardware", () => {
   const report = createMockReport({
     vramDedicated: 6 * GiB,
     vramFree: 5 * GiB,
@@ -118,7 +133,10 @@ test("scheduleAdaptiveExecution routes image generation to Cloud on Lite hardwar
 
   const chatResult = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(chatResult.tier, "lite");
-  assert.equal(chatResult.recommendedModelId, "qwen2.5-7b-instruct-q4_k_m");
+  assert.equal(chatResult.recommendedModelId, "qwen3.5-4b-q4-k-m");
+  assert.ok(
+    planLocalModelDownloads([chatResult.recommendedModelId]).downloadBytes > 0,
+  );
 
   const imageResult = scheduleAdaptiveExecution({ type: "image" }, report);
   assert.equal(imageResult.executionTarget, "cloud-gateway");
@@ -127,14 +145,18 @@ test("scheduleAdaptiveExecution routes image generation to Cloud on Lite hardwar
 test("scheduleAdaptiveExecution triggers anti-OOM watermark protection under critical VRAM pressure", () => {
   const report = createMockReport({
     vramDedicated: 24 * GiB,
-    vramFree: 1 * GiB, // critically low
-    availableRam: 32 * GiB, // ample RAM
+    vramFree: 1 * GiB,
+    availableRam: 32 * GiB,
   });
 
   const result = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(result.vramWatermarkRisk, "critical");
   assert.equal(result.autoOffloadToCpu, true);
   assert.equal(result.executionTarget, "local-cpu");
+  assert.equal(result.recommendedModelId, "qwen3.5-4b-q4-k-m");
+  assert.ok(
+    planLocalModelDownloads([result.recommendedModelId]).downloadBytes > 0,
+  );
   assert.ok(result.fallbackReason?.includes("防 OOM 保护"));
 });
 

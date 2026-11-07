@@ -44,9 +44,6 @@ export const LEGACY_PILL_FILES = new Set([
 ]);
 
 export const LEGACY_INLINE_RADIUS_FILES = new Set([
-  "src/components/agent/AgentFoldbackCard.tsx",
-  "src/components/agent/FoldbackSummaryParts.tsx",
-  "src/components/agent/FoldbackExpandedDrawer.tsx",
   "src/components/ConversationChatTabs.tsx",
 ]);
 

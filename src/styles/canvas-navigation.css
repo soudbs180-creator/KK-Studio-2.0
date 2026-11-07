@@ -102,7 +102,7 @@
   border: 1.197px solid var(--border-default);
   border-radius: 26.298px;
   background: var(--bg-card);
-  box-shadow: 0 8px 20px #0003;
+  box-shadow: var(--ui-shadow);
   max-height: var(--canvas-menu-available-height);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -171,26 +171,26 @@
   border: 1.197px solid var(--border-default);
   border-radius: 11.965px;
   background: var(--bg-card);
-  box-shadow: 0 8px 20px #0003;
+  box-shadow: var(--ui-shadow);
 }
 .minimap-surface {
   position: relative;
   width: 120.847px;
   height: 111.275px;
-  background: #111;
+  background: var(--kk-bg-app);
   border-radius: 2px;
 }
 .minimap-node {
   position: absolute;
-  background: #444;
+  background: var(--kk-border-default);
   border-radius: 2px;
 }
 .minimap-node:hover,
 .minimap-node:focus-visible {
-  background: #777;
+  background: var(--kk-border-control);
 }
 .minimap-empty {
-  color: #858585;
+  color: var(--kk-border-control);
   font-size: 10px;
 }
 @media (max-width: 800px) {

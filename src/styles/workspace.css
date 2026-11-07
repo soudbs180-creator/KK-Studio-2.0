@@ -385,7 +385,7 @@
   width: 25px;
   height: 25px;
   border-radius: 8px;
-  background: #d99500;
+  background: var(--ui-project-thumbnail);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -404,7 +404,7 @@
   height: 12px;
 }
 .project-folder {
-  background: #292929;
+  background: var(--kk-border-subtle);
 }
 .project-folder-empty {
   display: block;
@@ -650,7 +650,7 @@
 .canvas-node.is-dragging {
   z-index: 4;
   cursor: grabbing;
-  filter: drop-shadow(0 14px 24px #0008);
+  filter: drop-shadow(0 14px 24px var(--kk-shadow-color));
 }
 .canvas-node.is-selected {
   z-index: 5;
@@ -769,7 +769,7 @@
   border-radius: 8px;
   padding: 0;
   display: block;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--ui-shadow);
 }
 .task-panel-heading {
   position: absolute;
@@ -1489,7 +1489,7 @@
   border-radius: 10px;
 }
 .parameter-menu > small {
-  color: #707070;
+  color: var(--kk-text-tertiary);
   font-size: 8px;
   font-weight: 500;
   line-height: 1.2;
@@ -1541,13 +1541,13 @@
   border: 1px solid var(--border-default);
 }
 .parameter-menu .ratio-btn.active {
-  background: #313131;
-  border-color: #808080;
+  background: var(--kk-choice-selected-bg);
+  border-color: var(--kk-border-control);
 }
 .ratio-box {
   width: 20px;
   height: 20px;
-  border: 1px solid #707070;
+  border: 1px solid var(--kk-border-control);
   border-radius: 3px;
 }
 .ratio-box[data-ratio="1:1"] {
@@ -1625,7 +1625,7 @@
 }
 .ratio-btn small {
   font-size: 8px;
-  color: #707070;
+  color: var(--kk-text-tertiary);
   font-weight: 500;
 }
 .generation-feedback {
@@ -1673,7 +1673,7 @@
   display: grid;
   place-content: center;
   justify-items: center;
-  color: #707070;
+  color: var(--kk-text-tertiary);
 }
 .video-placeholder small {
   display: none;
@@ -1688,7 +1688,7 @@
   position: absolute;
   left: 578px;
   width: 132px;
-  border: 2px solid #363636;
+  border: 2px solid var(--kk-border-default);
   z-index: 0;
 }
 .connector-one {
@@ -2132,7 +2132,7 @@
   text-align: center;
   font-size: 10px;
   padding-top: 7px;
-  color: #4b4b4b;
+  color: var(--kk-text-tertiary);
 }
 .chat-reopen {
   position: absolute;
@@ -2444,12 +2444,12 @@
   padding-top: 2px;
 }
 .star-icon {
-  color: #f5a623;
-  fill: #f5a623;
+  color: var(--kk-star-start);
+  fill: var(--kk-star-start);
 }
 .heart-icon {
-  color: #e85d75;
-  fill: #e85d75;
+  color: var(--kk-like-start);
+  fill: var(--kk-like-start);
 }
 .arrow-icon {
   color: var(--text-tertiary);
