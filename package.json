@@ -88,7 +88,10 @@
     "figma:audit:pull": "node scripts/figma-audit/cli.mjs pull",
     "figma:audit:diff": "node scripts/figma-audit/cli.mjs diff",
     "figma:audit:list": "node scripts/figma-audit/cli.mjs list",
-    "test:pixel": "npm run design:build && node node_modules/@playwright/test/cli.js test --config design/preview/playwright.pixel.config.ts"
+    "test:pixel": "npm run design:build && node node_modules/@playwright/test/cli.js test --config design/preview/playwright.pixel.config.ts",
+    "mem:search": "node scripts/governance/memsearch.mjs search",
+    "mem:expand": "node scripts/governance/memsearch.mjs expand",
+    "mem:index": "node scripts/governance/memsearch.mjs index"
   },
   "engines": {
     "node": ">=24"
