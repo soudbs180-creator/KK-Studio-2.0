@@ -1658,7 +1658,7 @@
     "code": [
       "src/features/compare/imageCompare.ts",
       "src/features/compare/ImageCompareProvider.tsx",
-      "src/features/compare/ImageCompareDialog.tsx",
+      "src/components/compare/ImageCompareDialog.tsx",
       "src/components/Canvas.tsx"
     ],
     "tests": [

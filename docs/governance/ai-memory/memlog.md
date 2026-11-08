@@ -5,6 +5,13 @@
 
 ---
 
+## [2026-11-08 22:05] PR83 verify 早退根因：FEAT-036 路径登记
+- **执行 Agent**：Hosted verify 在 Run repository verification 仅 31s 即失败；复现为 check-features：FEAT-036 仍登记已迁走的 src/features/compare/ImageCompareDialog.tsx。
+- 已将 features.registry.json 纠正为 src/components/compare/ImageCompareDialog.tsx；干净 HEAD 下 features 门禁由 1 violation → 0。
+- 下一步：提交并推送审查分支，等待 PR #83 Hosted verify 重跑。
+- --agent
+- Cursor
+
 ## [2026-11-07 21:11] 阶段三深度优化与上云验收：业务 CSS 硬编码颜色 100% 清零、UI 豁免基线大瘦身与推送审查分支
 
 - **执行 Agent**：Antigravity (Primary Governance & Review Agent)

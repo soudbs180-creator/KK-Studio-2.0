@@ -5,6 +5,32 @@
 
 ---
 
+## [2026-11-08 01:53] UI-004 FEAT-036 登记修正 2026-11-08
+- **执行 Agent**：Codex
+- 发现并最小修正 docs/features/features.registry.json 中 FEAT-036 的旧路径（src/features/compare/ImageCompareDialog.tsx → src/components/compare/ImageCompareDialog.tsx）。随后 npm run features:check、npm run lint、imageCompare 单测 3/3、image-compare 浏览器 2/2 均通过。UI-004 的剩余限制仍是 Figma pixel baseline 缺失与正式 SHA 独审未完成；真实 API/Provider 继续暂缓。
+
+## [2026-11-08 01:50] UI-004 功能扫描补记 2026-11-08
+- **执行 Agent**：Codex
+- 在上一条本地 CLI/fixture 扫描后又完成 114 个浏览器用例（旧卡片、首屏懒加载、搜索、聊天迁移、伴随服务格式、创建边界、能力模型菜单与动效），本轮浏览器执行总数更新为 704，704 pass，0 fail，0 skip；其中 API/Provider 相关仅使用 Playwright 本地 route fixture，未连真实服务。证据 output/ui004-20261108/function-sweep.json 与 verification.json。
+
+## [2026-11-08 01:45] UI-004 全功能本地 CLI/fixture 扫描 2026-11-08
+- **执行 Agent**：Codex
+- 通过 Figma 同状态证据后，按本地优先规则完成逐功能回归：浏览器 590 次执行 590 通过；shell/home/sidebar/settings、canvas/composer/assets/projects、CLI/local-service/plugins/workbench、data/settings/layout/contracts 均为 0 失败；npm test 2766（2746 pass/20 环境 skip）、test:e2e 312 pass、test:agent 205 pass/2 权限 skip、gateway 69 pass、local companion smoke/test、plugins、design preview、Tauri cargo check 均通过。真实 API Key、OAuth、远程 MCP、公网来源、真实 Provider/计费/分享/安装升级均按用户要求暂缓；test:pixel 因无 Figma baseline 仅 partial。features:check/lint 仍被 FEAT-036 缺失 src/features/compare/ImageCompareDialog.tsx 阻断；未修改产品源码。证据：output/ui004-20261108/function-sweep.json。
+
+## [2026-11-08 01:20] UI-004 Tauri 窗口验收补记 2026-11-08
+- **执行 Agent**：Codex
+- 通过现源码 npm run client:dev 启动 KK Studio 2.1.66 Tauri 窗口；侧栏展开、Skill 选项卡、模型菜单 Escape、设置延迟加载、网络与代理页均通过。
+- Native 读取现有本地项目列表，未创建、删除或覆盖项目；设置面板延迟加载约2.5秒后正常，未将首次加载占位误判为失败。
+- UI-004 仍保留完整六态同尺寸视觉、像素基线和正式独立SHA审查限制。
+
+## [2026-11-08 01:14] UI-004 MCP 同状态验收 2026-11-08
+- **执行 Agent**：Codex
+- Figma MCP 只读回读 9:3、9:818、47:184、437:64052、9:157、1092:18030；展开侧栏稳定帧为292px，267.5px仅为过渡中间帧。
+- 1421开发态实测首页、Skill、模型菜单、生成数量、侧栏、设置网络与项目库，并保存output/ui004-20261108截图；读取保护保留，未清空或覆盖数据。
+- 1423生产预览定向浏览器回归66/66通过，覆盖Figma壳几何、首页目录、设置、侧栏多视口、任务列表热区与任务工作台状态。
+- 移动390px实测模型、更多创作选项、生成数量及设置分级导航；UI-004仍需Native/Tauri窗口、完整六态同屏视觉与正式SHA独审后才能关闭。
+- 验证：npm run build、typecheck、rules:check、ui:check均通过；ui:check的审美扫描267项为advisory，不作为视觉验收结论。
+
 
 ## [2026-11-06T11:04:54.001Z] UI-004 MCP当前回执（非全量完成）
 - Codex：MCP-only视觉修正26定向PASS，typecheck/UI/Token/规则/build通过；Figma源437:64052说明先改并回读，字体/三封面/hero原SVG已按9:3落本地，真实CDP确认loaded。
