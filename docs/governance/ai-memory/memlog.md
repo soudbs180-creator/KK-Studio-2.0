@@ -5,6 +5,13 @@
 
 ---
 
+## [2026-11-08 23:12] PR83 verify 第二失败：lightbox 重绘按钮契约回归
+- **执行 Agent**：features 路径修复后 Hosted verify 跑满约 31 分钟仍失败；本地 test:ui 复现 962 pass / 1 fail：image-edit archived lightbox 找不到『重绘当前图片』。
+- 根因：04278bfb 迁 ImageLightbox 时把 aria-label=重绘当前图片 / 文案『重绘』误改成『编辑』。
+- 已恢复按钮契约，定向 image-edit.spec.ts:949 通过；准备推送重跑 Hosted verify。
+- --agent
+- Cursor
+
 ## [2026-11-08 22:05] PR83 verify 早退根因：FEAT-036 路径登记
 - **执行 Agent**：Hosted verify 在 Run repository verification 仅 31s 即失败；复现为 check-features：FEAT-036 仍登记已迁走的 src/features/compare/ImageCompareDialog.tsx。
 - 已将 features.registry.json 纠正为 src/components/compare/ImageCompareDialog.tsx；干净 HEAD 下 features 门禁由 1 violation → 0。

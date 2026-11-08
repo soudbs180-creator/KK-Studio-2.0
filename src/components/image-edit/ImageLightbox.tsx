@@ -157,9 +157,10 @@ export default function ImageLightbox({
                 {current.assetId && (
                   <button
                     className="ui-button"
+                    aria-label="重绘当前图片"
                     onClick={() => setEditing(true)}
                   >
-                    编辑
+                    重绘
                   </button>
                 )}
                 {command?.regenerateTask && task && (
