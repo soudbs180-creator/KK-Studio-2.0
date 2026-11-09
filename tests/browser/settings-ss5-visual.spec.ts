@@ -1,21 +1,10 @@
-import fs from "node:fs";
-import path from "node:path";
-import { expect, test, type TestInfo } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import {
   SETTINGS_NAV_GROUPS,
   SETTINGS_SECTIONS,
   type SettingsTier,
 } from "../../src/components/settings/SettingsSectionData";
 import { showSettingsCategories, selectSettingsSection } from "./helpers";
-
-function resolveScreenshotPath(testInfo: TestInfo, filename: string): string {
-  const envDir = process.env.KK_SS5_SCREENSHOT_DIR?.trim();
-  if (envDir) {
-    fs.mkdirSync(envDir, { recursive: true });
-    return path.join(envDir, filename);
-  }
-  return testInfo.outputPath(filename);
-}
 
 test.describe("设置页三层结构与全分类极小化视觉走查", () => {
   test("桌面视口 1200px: 走查三层分组与 11 个分类，验证无横向溢出、无空容器、关键控件可见不重叠", async (
@@ -54,7 +43,7 @@ test.describe("设置页三层结构与全分类极小化视觉走查", () => {
 
     // 截图保存桌面初始首屏（常用/通用设置）
     await page.screenshot({
-      path: resolveScreenshotPath(testInfo, "desktop-00-initial-essentials.png"),
+      path: testInfo.outputPath("desktop-00-initial-essentials.png"),
       fullPage: false,
     });
 
@@ -118,8 +107,7 @@ test.describe("设置页三层结构与全分类极小化视觉走查", () => {
 
       // 截图存证（先截图，确保无论断言是否通过都有截图）
       await page.screenshot({
-        path: resolveScreenshotPath(
-          testInfo,
+        path: testInfo.outputPath(
           `desktop-${expectedTier}-${sectionItem.id}.png`,
         ),
         fullPage: false,
@@ -243,7 +231,7 @@ test.describe("设置页三层结构与全分类极小化视觉走查", () => {
 
     // 截图保存移动端分类导航抽屉
     await page.screenshot({
-      path: resolveScreenshotPath(testInfo, "mobile-00-categories.png"),
+      path: testInfo.outputPath("mobile-00-categories.png"),
       fullPage: false,
     });
 
@@ -295,8 +283,7 @@ test.describe("设置页三层结构与全分类极小化视觉走查", () => {
 
       // 截图保存移动端分类详情
       await page.screenshot({
-        path: resolveScreenshotPath(
-          testInfo,
+        path: testInfo.outputPath(
           `mobile-${expectedTier}-${sectionItem.id}.png`,
         ),
         fullPage: false,

@@ -213,6 +213,8 @@ async function harness(options: Options = {}) {
           if (name.includes("geminiCliAdapter"))
             return { normalizeGeminiBridgeUrl: (url: string) => url };
           if (name.includes("integrations/nativeCli")) return native;
+          if (name === "./SettingsInfoHint")
+            return { default: "InfoHint", __esModule: true };
           const resolved = [".tsx", ".ts"]
             .map((extension) =>
               path.resolve(path.dirname(file), name + extension),

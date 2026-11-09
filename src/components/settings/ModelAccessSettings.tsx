@@ -16,7 +16,7 @@ import OAuthAccessPanel from "./OAuthAccessPanel";
 import NativeCliControls from "./NativeCliControls";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 import GatewayConsole from "./GatewayConsole";
-
+import ChannelPanelIntro from "./ChannelPanelIntro";
 export const CHANNELS = [
   {
     id: "official",
@@ -54,10 +54,8 @@ export const CHANNELS = [
     desc: "完全在本地计算机运行的开源模型引擎，数据隐私安全，零网络调用。",
   },
 ] as const;
-
 export type ChannelId = (typeof CHANNELS)[number]["id"];
 export type Method = ChannelId | "codex";
-
 /**
  * OAuth 账号授权渠道与占位面板尚未接入后端会话，默认不渲染。
  * 如需调试可通过环境变量 KK_SHOW_UNFINISHED_OAUTH=1 控制。
@@ -65,11 +63,9 @@ export type Method = ChannelId | "codex";
 const SHOW_UNFINISHED_OAUTH =
   typeof process !== "undefined" &&
   process.env?.KK_SHOW_UNFINISHED_OAUTH === "1";
-
 const VISIBLE_CHANNELS = SHOW_UNFINISHED_OAUTH
   ? CHANNELS
   : CHANNELS.filter((ch) => ch.id !== "oauth");
-
 export default function ModelAccessSettings({
   onFeedback,
   active = true,
@@ -88,11 +84,11 @@ export default function ModelAccessSettings({
       : !SHOW_UNFINISHED_OAUTH && initialMethod === "oauth"
         ? "official"
         : initialMethod;
-  const [currentChannel, setCurrentChannel] = useState<ChannelId>(defaultChannel);
+  const [currentChannel, setCurrentChannel] =
+    useState<ChannelId>(defaultChannel);
   const [cliTool, setCliTool] = useState<"codex" | "gemini" | "codebuddy">(
     initialMethod === "codex" ? "codex" : "gemini",
   );
-
   const agent = useSyncExternalStore(
     agentConnection.subscribe,
     agentConnection.getState,
@@ -101,7 +97,6 @@ export default function ModelAccessSettings({
     desktopAgentLifecycle.subscribe,
     desktopAgentLifecycle.getState,
   );
-
   const [apiSaving, setApiSaving] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
   const [codeBuddyBusy, setCodeBuddyBusy] = useState(false);
@@ -109,7 +104,6 @@ export default function ModelAccessSettings({
   const [nativeCliBusy, setNativeCliBusy] = useState(false);
   const [codeBuddyMounted, setCodeBuddyMounted] = useState(false);
   const [focusGoogle, setFocusGoogle] = useState(false);
-
   const busy =
     apiSaving ||
     googleBusy ||
@@ -118,9 +112,7 @@ export default function ModelAccessSettings({
     nativeCliBusy ||
     agent.status === "connecting" ||
     lifecycle.pending;
-
   useLayoutEffect(() => setBusy(active && busy), [active, busy, setBusy]);
-
   const googlePanel = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!focusGoogle || currentChannel !== "official") return;
@@ -130,14 +122,12 @@ export default function ModelAccessSettings({
       ?.focus({ preventScroll: true });
     setFocusGoogle(false);
   }, [focusGoogle, currentChannel]);
-
   const channelInfo =
     CHANNELS.find((c) => c.id === currentChannel) ?? VISIBLE_CHANNELS[0];
   const cliActive = active && currentChannel === "cli";
   const apiVisible = ["official", "relay", "local"].includes(currentChannel);
   const apiChannel = useRef<ChannelId>("official");
   if (apiVisible) apiChannel.current = currentChannel;
-
   return (
     <div className="model-access-settings ccswitch-layout">
       <nav className="model-access-channel-nav" aria-label="模型接入渠道导航">
@@ -178,13 +168,8 @@ export default function ModelAccessSettings({
           ))}
         </div>
       </nav>
-
       <main className="model-access-main-content">
-        <div className="channel-panel-intro">
-          <h3 className="panel-title">{channelInfo.title}</h3>
-          <p className="panel-desc">{channelInfo.desc}</p>
-        </div>
-
+        <ChannelPanelIntro channel={channelInfo} />
         {/* 1. Official, 2. Relay, 5. Local */}
         {
           <section
@@ -220,7 +205,6 @@ export default function ModelAccessSettings({
             }
           </section>
         }
-
         {/* 3. OAuth */}
         {SHOW_UNFINISHED_OAUTH && currentChannel === "oauth" && (
           <section
@@ -231,7 +215,6 @@ export default function ModelAccessSettings({
             <OAuthAccessPanel hidden={false} />
           </section>
         )}
-
         {/* 4. CLI */}
         {
           <section
@@ -265,7 +248,6 @@ export default function ModelAccessSettings({
                 </button>
               ))}
             </div>
-
             {cliTool === "codex" && (
               <div className="cli-tool-panel">
                 <AgentConnectionSettings onFeedback={onFeedback} />

@@ -112,6 +112,8 @@ async function harness(loadFails = false) {
                 }),
             }),
           };
+        if (name === "./SettingsInfoHint")
+          return { default: "InfoHint", __esModule: true };
         throw new Error("Unexpected import " + name);
       },
     },

@@ -1,17 +1,11 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createAgentApi } from "../../features/agent/index.ts";
-import { agentConnection } from "../../features/agent/index.ts";
+import { agentConnection, createAgentApi } from "../../features/agent/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 import useSettingsBusy from "./useSettingsBusy";
-type ConnectionState =
-  | "disconnected"
-  | "loading"
-  | "load-error"
-  | "empty"
-  | "editing"
-  | "saved"
-  | "verified"
-  | "cancelled";
+import type { ConnectionState } from "./codeBuddyConnectionState";
+import SettingsInfoHint from "./SettingsInfoHint";
+const CODEBUDDY_DESCRIPTION =
+  "Codex 可把短文案、标签或摘要交给本机 CodeBuddy CLI，设计判断与画布操作仍由 Codex 负责。测试会使用 CodeBuddy 账号额度。";
 /** A bounded text delegation path; Codex remains the primary Agent. */
 export default function CodeBuddyConnectionSettings({
   onFeedback,
@@ -216,14 +210,18 @@ export default function CodeBuddyConnectionSettings({
           className={`settings-status-dot ${status === "verified" ? "is-online" : connected ? "is-pending" : "is-offline"}`}
           aria-hidden="true"
         />
-        <h3>
-          CodeBuddy 委派<span className="settings-version-tag">可选</span>
-        </h3>
+        <div className="settings-title-row">
+          <h3>
+            CodeBuddy 委派<span className="settings-version-tag">可选</span>
+          </h3>
+          <SettingsInfoHint
+            id="codebuddy-delegation"
+            label="查看 CodeBuddy 委派说明"
+          >
+            {CODEBUDDY_DESCRIPTION}
+          </SettingsInfoHint>
+        </div>
       </div>
-      <p>
-        Codex 可把短文案、标签或摘要交给本机 CodeBuddy
-        CLI，设计判断与画布操作仍由 Codex 负责。测试会使用 CodeBuddy 账号额度。
-      </p>
       <div className="settings-network-field">
         <label htmlFor="codebuddy-cli-path">CodeBuddy CLI 路径</label>
         <input

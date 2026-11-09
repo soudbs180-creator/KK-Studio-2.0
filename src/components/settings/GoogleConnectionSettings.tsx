@@ -3,16 +3,12 @@ import { loadApiKey } from "../../features/creation/index.ts";
 import {
   createGoogleInteractions,
   GOOGLE_API_BASE,
-} from "../../features/agent/index.ts";
-import {
   GOOGLE_CREDENTIAL_REF,
   getGoogleCredential,
   readGoogleCliPreference,
   saveGoogleApiKeyConnection,
   writeGoogleCliPreference,
-} from "../../features/agent/index.ts";
-import { googleAgentConnection } from "../../features/agent/index.ts";
-import {
+  googleAgentConnection,
   geminiCliStatus,
   geminiCliStatusMessage,
   type GeminiCliStatus,
@@ -240,12 +236,14 @@ export default function GoogleConnectionSettings({
       className="settings-network-row settings-agent-card"
       aria-label="Google Gemini 配置"
     >
-      <h3>
-        Google Gemini
-        <span className="settings-version-tag">
-          {cli ? "仅对话" : "对话与生图"}
-        </span>
-      </h3>
+      <div className="settings-title-row">
+        <h3>
+          Google Gemini
+          <span className="settings-version-tag">
+            {cli ? "仅对话" : "对话与生图"}
+          </span>
+        </h3>
+      </div>
       {mode === "all" && (
         <GoogleLoginModeChoice
           cli={cli}

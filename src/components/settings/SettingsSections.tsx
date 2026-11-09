@@ -15,6 +15,9 @@ import type { SkillRegistry } from "../../features/skills/index.ts";
 import ExtensionsSettings, { type ExtensionsTab } from "./ExtensionsSettings";
 import ShortcutsPanel from "../ShortcutsPanel";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
+import SettingsInfoHint, {
+  isLongSettingsDescription,
+} from "./SettingsInfoHint";
 export { SETTINGS_SECTIONS } from "./SettingsSectionData";
 export type { SettingsSection } from "./SettingsSectionData";
 
@@ -48,12 +51,25 @@ export default function SettingsSections({
   workflows,
 }: SettingsSectionsProps) {
   const item = SETTINGS_SECTIONS.find((entry) => entry.id === section);
+  const longDescription = isLongSettingsDescription(item?.description)
+    ? item.description
+    : undefined;
   return (
     <div hidden={!active} data-settings-tier={getSettingsTier(section)}>
       {active && (
-        <h2 className="settings-page-title" id="settings-section-title">
-          {item?.label}
-        </h2>
+        <div className="settings-page-title-row">
+          <h2 className="settings-page-title" id="settings-section-title">
+            {item?.label}
+          </h2>
+          {longDescription && (
+            <SettingsInfoHint
+              id={`section-${section}`}
+              label={`查看${item?.label ?? "当前页面"}说明`}
+            >
+              {longDescription}
+            </SettingsInfoHint>
+          )}
+        </div>
       )}
       {section === "network" ? (
         <details className="settings-usage-guide" data-figma-node="214:703">
@@ -71,7 +87,8 @@ export default function SettingsSections({
           <p>{item?.description}</p>
         </details>
       ) : (
-        item?.description && (
+        item?.description &&
+        !longDescription && (
           <p className="settings-section-intro settings-page-description">
             {item.description}
           </p>

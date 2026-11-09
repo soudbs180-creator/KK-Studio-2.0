@@ -3,6 +3,7 @@ import LocalHardwareSettings from "./LocalHardwareSettings";
 import LocalWorkflowSettings, {
   type LocalWorkflowAccess,
 } from "./LocalWorkflowSettings";
+import SettingsInfoHint from "./SettingsInfoHint";
 
 export default function ModelAccessApiPanel({
   method,
@@ -32,11 +33,16 @@ export default function ModelAccessApiPanel({
       <div hidden={method !== "local"} className="settings-detail-stack">
         <LocalHardwareSettings />
         <LocalWorkflowSettings workflows={workflows} />
-        <h3 className="settings-detail-label">已启动的本地对话服务</h3>
-        <p className="settings-section-intro">
-          连接已启动的 llama.cpp、LM Studio 或 Ollama，默认无需 API Key。ComfyUI
-          可在画布工作流节点选择目录启动，并在这里保存连接。
-        </p>
+        <div className="settings-title-row">
+          <h3 className="settings-detail-label">已启动的本地对话服务</h3>
+          <SettingsInfoHint
+            id="local-chat-service"
+            label="查看本地对话服务说明"
+          >
+            连接已启动的 llama.cpp、LM Studio 或 Ollama，默认无需 API
+            Key。ComfyUI 可在画布工作流节点选择目录启动，并在这里保存连接。
+          </SettingsInfoHint>
+        </div>
       </div>
       <ModelProviderSettings
         scope={scope}

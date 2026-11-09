@@ -5,6 +5,10 @@
 
 ---
 
+## [2026-11-10 02:09] 设置页层级与说明收敛
+- **执行 Agent**：Codex
+- TASK-SETTINGS-INFO-HIERARCHY-20261110 已完成：按 Figma 47:185/47:184/65:735/69:997 回读实现标题后 info 提示、模型接入/网络/CLI 层级与留白；状态 PASS，报告 D:/kk-studio/output/settings-info-hierarchy-20261110/verification.md；工作树 D:/kk-studio/.worktrees/TASK-SETTINGS-INFO-HIERARCHY-20261110，分支 feat/TASK-SETTINGS-INFO-HIERARCHY-20261110；待独立审查，审核通过后由老大批准再合回主线。
+
 ## [2026-11-09 19:07] ph1-r8-rename 治理清零 (R8 同名与 vendor 测试位置)
 - **执行 Agent**：Antigravity
 - src/features/account/types.ts 改名 accountTypes.ts，src/features/agent-dispatch/types.ts 改名 dispatchTypes.ts
