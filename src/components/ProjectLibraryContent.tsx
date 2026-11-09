@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UiIcon from "./UiIcon";
+import { InlineSelect } from "./ui";
 import type { CreationProject } from "../features/creation/index.ts";
 import type { ProjectLibraryActions } from "../features/projects/index.ts";
 import { sidebarProjectItem } from "../features/projects/index.ts";
@@ -96,22 +97,22 @@ export default function ProjectLibraryContent({
       <div className="project-library-group-controls">
         <label>
           项目分组{" "}
-          <select
-            aria-label="筛选项目分组"
+          <InlineSelect
+            label="筛选项目分组"
             value={groupId}
-            onChange={(event) => {
-              setGroupId(event.target.value);
+            options={[
+              { value: "all", label: "全部项目" },
+              { value: "ungrouped", label: "未分组" },
+              ...groups.map((group) => ({
+                value: group.id,
+                label: group.name,
+              })),
+            ]}
+            onChange={(next) => {
+              setGroupId(next);
               setGroupDraft(null);
             }}
-          >
-            <option value="all">全部项目</option>
-            <option value="ungrouped">未分组</option>
-            {groups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
+          />
         </label>
         {selectedGroup && !trash && (
           <>
@@ -198,7 +199,7 @@ export default function ProjectLibraryContent({
       {!visible.length && (
         <div className="catalog-empty" role="status">
           <span className="catalog-empty-mark" aria-hidden="true">
-            ⌕
+            <UiIcon name="folder" size={24} />
           </span>
           <p>
             {search

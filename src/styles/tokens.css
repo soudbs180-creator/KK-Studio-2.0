@@ -51,6 +51,14 @@
   /* Current Figma desktop titlebar 4056:145206: exact gap and left inset. */
   --kk-dimension-37: 37px;
   --kk-dimension-19: 19px;
+  /* 2026-11-09 Figma ZiadpErDoFweCjG3uHjkM3 frames that are not on the 4px scale. */
+  --kk-dimension-13: 13px; /* home composer inset, 712:77477 */
+  --kk-dimension-52: 52px; /* settings stepper value track, 655:142643 */
+  --kk-dimension-134: 134px; /* settings stepper, 655:142641 */
+  --kk-dimension-152: 152px; /* read-protection toast height, 655:141126 */
+  --kk-dimension-158: 158px; /* home composer frame, 9:3 */
+  --kk-dimension-288: 288px; /* canvas bottom toolbar, 9:818 */
+  --kk-dimension-488: 488px; /* read-protection toast width, 655:141126 */
 
   /* --- 1.4 圆角数值轴（Figma 治理页：4 / 8 / 10 / Full；容器档另行注册） --- */
   --kk-radius-0: 0;
@@ -193,7 +201,7 @@
   --kk-control-surface-selected: #252525;
   /* Figma control/selected (1514:88998), for persistent choice groups. */
   --kk-choice-selected-bg: #333333;
-  --kk-generation-count-trigger-w: 40px;
+  --kk-generation-count-trigger-w: 21px;
   --kk-generation-count-trigger-h: 32px;
   --kk-generation-count-trigger-touch-w: 52px;
   --kk-generation-count-trigger-touch-h: 44px;
@@ -281,7 +289,41 @@
   --kk-settings-heading-weight: var(--kk-font-weight-title);
   --kk-settings-copy-font: var(--kk-font-caption);
   --kk-settings-copy-line: var(--kk-line-caption);
+  --kk-settings-copy-weight: var(--kk-font-weight-body);
   --kk-settings-copy-gap: var(--kk-space-1);
+  --kk-settings-row-title-font: var(--kk-font-body);
+  --kk-settings-row-title-line: var(--kk-line-body);
+  /* 655:142609 is KK/字阶/16-Medium. Dark axis is 460, not Regular 360. */
+  --kk-settings-row-title-weight: var(--kk-font-weight-body-strong);
+  --kk-settings-nav-pad-top: var(--kk-space-3);
+  --kk-settings-nav-pad-x: var(--kk-space-5);
+  --kk-settings-nav-pad-bottom: var(--kk-space-2);
+  --kk-settings-stepper-w: var(--kk-dimension-134);
+  --kk-settings-stepper-h: var(--kk-control-h-md);
+  --kk-settings-stepper-pad: var(--kk-space-1);
+  --kk-settings-stepper-gap: var(--kk-space-hair);
+  --kk-settings-stepper-radius: var(--kk-radius-control);
+  --kk-settings-stepper-value-w: var(--kk-dimension-52);
+  --kk-settings-stepper-value-font: var(--kk-font-body);
+  --kk-settings-stepper-value-line: var(--kk-line-body);
+  --kk-settings-stepper-value-weight: var(--kk-font-weight-body-strong);
+  --kk-settings-action-radius: var(--kk-radius-control);
+  --kk-settings-action-bg: var(--kk-control-surface-idle);
+  --kk-settings-action-fg: var(--kk-text-secondary);
+  --kk-settings-action-border: var(--kk-border-default);
+  --kk-select-hug-h: var(--kk-control-h-md);
+  --kk-select-hug-pad: var(--kk-space-1);
+  --kk-select-hug-gap: var(--kk-space-1);
+  --kk-select-hug-font: var(--kk-font-caption);
+  --kk-select-hug-line: var(--kk-line-caption);
+  --kk-select-hug-weight: var(--kk-font-weight-body-strong);
+  --kk-select-hug-radius: var(--kk-radius-control);
+  --kk-select-hug-icon: var(--kk-button-icon-sm);
+  --kk-composer-frame-h: var(--kk-dimension-158);
+  --kk-composer-pad: var(--kk-dimension-13);
+  --kk-canvas-bottom-toolbar-w: var(--kk-dimension-288);
+  --kk-storage-notice-w: var(--kk-dimension-488);
+  --kk-storage-notice-min-h: var(--kk-dimension-152);
   --kk-settings-general-height: var(--kk-settings-general-shell-height);
   --kk-settings-control-pad: var(--kk-space-1);
   /* Current Figma network47:926 / groups655:143029/036/046 / command143044. */
@@ -399,6 +441,13 @@
   --kk-tabs-h: var(--kk-menu-item-h);
   --kk-tabs-gap: var(--kk-space-4);
   --kk-tabs-text: var(--kk-text-secondary);
+  --kk-tabs-weight: var(--kk-font-weight-body);
+  --kk-titlebar-menu-weight: var(--kk-font-weight-body);
+  --kk-generation-count-font: var(--kk-font-caption);
+  --kk-generation-count-line: var(--kk-line-caption);
+  --kk-generation-count-weight: var(--kk-font-weight-body);
+  --kk-home-tab-pad: var(--kk-space-4);
+  --kk-home-chip-offset: calc(var(--kk-space-5) + var(--kk-space-3));
   --kk-tabs-text-active: var(--kk-text-primary);
   --kk-tabs-indicator-w: var(--kk-space-5);
   --kk-tabs-indicator-h: var(--kk-border-width-focus);

@@ -32,7 +32,7 @@
   padding: 0 var(--kk-space-2);
   border-radius: var(--kk-radius-full);
   color: var(--kk-text-primary);
-  font-weight: var(--kk-font-weight-body-strong);
+  font-weight: var(--kk-titlebar-menu-weight);
 }
 
 .app .desktop-titlebar .menu-popover {

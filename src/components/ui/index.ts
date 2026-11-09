@@ -7,6 +7,9 @@ export * from "./Input";
 export { default as Select } from "./Select";
 export * from "./Select";
 
+export { default as InlineSelect } from "./InlineSelect";
+export * from "./InlineSelect";
+
 export { default as Badge } from "./Badge";
 export * from "./Badge";
 

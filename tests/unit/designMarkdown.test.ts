@@ -64,10 +64,9 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // Current Figma47:926 adds network aliases; 4056:145206 titlebar gap/inset;
-  // canvas view toggle slot width pinned at 116px (--kk-canvas-view-slot-width).
+  // 2026-11-09 Figma 47:184 settings controls, 9:818 toolbar 288, count trigger 21.
   const approvedHash =
-    "7f46df7566ab4a5e4037cad8d53760bda58cc160ddd19a28b5d3f1b0f2242d87";
+    "2b20a781bdc69d5bd48e51ef7a388c6b8582f42da63edada452bfa39d0929010";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,

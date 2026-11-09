@@ -169,7 +169,8 @@
   z-index: 60;
   left: var(--ui-space-4);
   bottom: calc(var(--ui-toolbar-h) + var(--ui-space-4));
-  max-width: min(680px, calc(100% - 32px));
+  width: min(100%, var(--kk-storage-notice-w));
+  min-height: var(--kk-storage-notice-min-h);
   display: flex;
   flex-wrap: wrap;
   align-items: center;

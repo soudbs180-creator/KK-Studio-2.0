@@ -178,7 +178,7 @@ export default function TopBar({
         title="搜索"
         onClick={() => onOpen("search")}
       >
-        <UiIcon name="search" size={28} />
+        <UiIcon name="search" size={12} />
       </button>
       <button
         className="mobile-project-switch"
@@ -186,7 +186,7 @@ export default function TopBar({
         title="切换项目"
         onClick={() => onOpen("projects")}
       >
-        <UiIcon name="archive" size={28} />
+        <UiIcon name="archive" size={12} />
       </button>
       <button
         className="mobile-settings"
@@ -194,7 +194,7 @@ export default function TopBar({
         title="打开设置"
         onClick={() => onOpen("settings")}
       >
-        <UiIcon name="settings" size={28} />
+        <UiIcon name="settings" size={12} />
       </button>
       <ExtensionSlot id="titlebar.actions" />
       {desktop ? (
