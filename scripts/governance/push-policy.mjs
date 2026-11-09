@@ -18,6 +18,21 @@ function git(cwd, args) {
   });
 }
 
+function githubRequest(url, init = {}) {
+  const credential = spawnSync("git", ["credential", "fill"], {
+    input: "protocol=https\nhost=github.com\n\n",
+    encoding: "utf8",
+    stdio: ["pipe", "pipe", "ignore"],
+  });
+  const token =
+    credential.status === 0
+      ? credential.stdout.match(/^password=(.+)$/m)?.[1]
+      : undefined;
+  const headers = new Headers(init.headers);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  return fetch(url, { ...init, headers });
+}
+
 function isAncestor(cwd, older, newer) {
   return git(cwd, ["merge-base", "--is-ancestor", older, newer]).status === 0;
 }
@@ -100,7 +115,7 @@ export function evaluatePush(
 export async function collectMergedTopicTips(
   input,
   remoteUrl,
-  request = fetch,
+  request = githubRequest,
 ) {
   const remote =
     /^(?:https:\/\/github\.com\/|git@github\.com:)([\w.-]+)\/([\w.-]+?)(?:\.git)?$/.exec(
