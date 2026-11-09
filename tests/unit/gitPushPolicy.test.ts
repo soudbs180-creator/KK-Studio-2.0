@@ -207,6 +207,41 @@ test("malformed input, missing objects and unsupported namespaces cannot open th
   );
 });
 
+test("a verified merged PR permits only its exact topic tip and never stable refs or tags", (t) => {
+  const { repo, initial } = fixture(t);
+  const mergedTips = new Map([["refs/heads/fix/merged", initial]]);
+  assert.equal(
+    evaluatePush(`(delete) ${zero} refs/heads/fix/merged ${initial}`, {
+      cwd: repo,
+      mergedTips,
+    }).ok,
+    true,
+  );
+  assert.equal(
+    evaluatePush(`(delete) ${zero} refs/heads/fix/merged ${"a".repeat(40)}`, {
+      cwd: repo,
+      mergedTips,
+    }).ok,
+    false,
+  );
+  for (const ref of [
+    "refs/heads/main",
+    "refs/heads/master",
+    "refs/heads/release/v2",
+    "refs/heads/archive/recovery",
+    "refs/heads/backup/local",
+    "refs/tags/v1",
+  ]) {
+    assert.equal(
+      evaluatePush(`(delete) ${zero} ${ref} ${initial}`, {
+        cwd: repo,
+        mergedTips: new Map([[ref, initial]]),
+      }).ok,
+      false,
+    );
+  }
+});
+
 test("installer preserves other hooks, is idempotent, changes no config and rejects modified installed files", (t) => {
   const { repo } = fixture(t, false);
   const hooks = path.join(repo, ".git", "hooks");
@@ -433,3 +468,36 @@ for (const changed of [
     );
   });
 }
+
+test("explicit policy upgrade preserves the reviewed old policy and keeps real push protection", (t) => {
+  const { repo, remote, initial } = fixture(t);
+  const target = path.join(repo, ".git/hooks/kk-studio-push-policy.mjs");
+  const legacy = fs.readFileSync(
+    path.join(projectRoot, "tests/fixtures/git-guards/push-policy-v1.mjs"),
+  );
+  fs.writeFileSync(target, legacy);
+  assert.notEqual(install(repo).status, 0);
+  const config = fs.readFileSync(path.join(repo, ".git/config"));
+  const result = install(repo, testEnv, ["--upgrade-reviewed-policy"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(fs.readFileSync(`${target}.kk-studio-v1.bak`), legacy);
+  assert.deepEqual(fs.readFileSync(path.join(repo, ".git/config")), config);
+  assert.equal(install(repo).status, 0);
+  const tip = commit(repo, "after policy upgrade");
+  rejected(repo, ["origin", "HEAD:refs/heads/main"], /Direct push/);
+  assert.equal(remoteRef(remote, "refs/heads/main"), initial);
+  git(repo, "push", "-q", "origin", "HEAD:refs/heads/fix/policy-upgraded");
+  assert.equal(remoteRef(remote, "refs/heads/fix/policy-upgraded"), tip);
+});
+
+test("policy upgrade refuses a modified policy without changing it", (t) => {
+  const { repo } = fixture(t);
+  const target = path.join(repo, ".git/hooks/kk-studio-push-policy.mjs");
+  fs.appendFileSync(target, "\n// user change\n");
+  const before = fs.readFileSync(target);
+  assert.notEqual(
+    install(repo, testEnv, ["--upgrade-reviewed-policy"]).status,
+    0,
+  );
+  assert.deepEqual(fs.readFileSync(target), before);
+});
