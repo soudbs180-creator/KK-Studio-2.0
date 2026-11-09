@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-UI-FIGMA-ALIGN-20261109 | 按现行 Figma 收紧设置页和已核对的界面差异 | PARTIAL | 未完成 | P1 | none | Cursor | 等 delivery 通过后由人验收视觉；不要把未验的 Desktop 和浅色六态标成完成。 |
 | TASK-SYNC-LOCAL-MAIN-20261106 | 主线审查分支全面治理与门禁收口 | PARTIAL | 进行中 | P0 | none | Cursor | 等待PR83 Hosted verify全绿后，再做正式SHA独审；不擅自合并 |
 | TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap |
 | TASK-ORG-6 | 推广历史E2证据外置 | PARTIAL | 进行中 | P1 | TASK-ORG-5 | root | 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁 |
@@ -228,6 +229,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | PARTIAL | 进行中 | P0 | none | root | 本地752f7dbd已承接，当前PR83尚未合origin/main；复用已有实现，只补当前SHA完整verify、Desktop与正式独审，不重开/重复合并旧树；未授权合并或删除。 |
 | TASK-DEEP-WATER-20261105 | 第二阶段B1–B5与A1–A3深水区补齐 | IN_PROGRESS | 进行中 | P0 | TASK-E2E-WIRING-20261104 | root | 完成当前整合候选完整verify、Desktop来源收据及独审；保留外部模型/用户验收边界，不重做已存在B1–B5；六支柱原型helper不冒充生产接线。 |
 | TASK-RULES-005 | AI铁律卡片RULES.md与Figma组件三层Token化治理重构 | DONE | 已完成 | P0 | none | root | 已完成合流并推送 |
+
+## TASK-UI-FIGMA-ALIGN-20261109 — 按现行 Figma 收紧设置页和已核对的界面差异
+
+- Goal: 设置页和 2026-11-09 审核里已核对的差异按 Figma ZiadpErDoFweCjG3uHjkM3 对齐，不改待确认项。
+- Scope: 设置通用页控件、首页输入框与数量、顶栏页签、侧栏图标、项目库搜索与空状态、画布底栏宽度。不改模型名、侧栏分组功能按钮、手机设置整页。
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-11-09-figma-ui-align/intent.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 1440×1000 说明文字 12/16，步进器 134×32，项目库搜索框高 40，画布底栏宽 288; typecheck、lint、ui:check 通过; 第 9、12、17、21、22 条保持不动
+- Branch: `cursor/figma-ui-align-0414`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/components/settings, src/components/ui/InlineSelect.tsx, src/styles, design/figma-component-map.json, docs/changes/2026-11-09-figma-ui-align
+- Verification: PARTIAL — Web Vite 1421 上 1440×1000 实测说明 12/16、步进器 134×32、搜索框高 40、底栏 288×52。Desktop、浅色六态和真实项目悬停未验。
+- Evidence: [docs/changes/2026-11-09-figma-ui-align/verification.md](../../docs/changes/2026-11-09-figma-ui-align/verification.md)
+- Next action: 等 delivery 通过后由人验收视觉；不要把未验的 Desktop 和浅色六态标成完成。
+- Last verified: 2026-11-09
+- Updated: 2026-11-09
 
 ## TASK-SYNC-LOCAL-MAIN-20261106 — 主线审查分支全面治理与门禁收口
 
