@@ -34,7 +34,7 @@ export default function CompactAppMenu({
         aria-haspopup="menu"
         onClick={() => setOpen(!open)}
       >
-        <UiIcon name="more" size={28} />
+        <UiIcon name="more" size={12} />
       </button>
       {open && (
         <div className="compact-app-popover" role="menu" aria-label="应用功能">

@@ -1,5 +1,46 @@
 [
   {
+    "id": "TASK-UI-FIGMA-ALIGN-20261109",
+    "title": "按现行 Figma 收紧设置页和已核对的界面差异",
+    "goal": "设置页和 2026-11-09 审核里已核对的差异按 Figma ZiadpErDoFweCjG3uHjkM3 对齐，不改待确认项。",
+    "scope": "设置通用页控件、首页输入框与数量、顶栏页签、侧栏图标、项目库搜索与空状态、画布底栏宽度。不改模型名、侧栏分组功能按钮、手机设置整页。",
+    "acceptance": [
+      "1440×1000 说明文字 12/16，步进器 134×32，项目库搜索框高 40，画布底栏宽 288",
+      "typecheck、lint、ui:check 通过",
+      "第 9、12、17、21、22 条保持不动"
+    ],
+    "dependencies": [],
+    "owner": "Cursor",
+    "ownerRole": "implementation-integrator",
+    "branch": "cursor/figma-ui-align-0414",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "cc222004d8b3104357854d9c6b7a331d0c52a869",
+    "affectedModules": [
+      "src/components/settings",
+      "src/components/ui/InlineSelect.tsx",
+      "src/styles",
+      "design/figma-component-map.json",
+      "docs/changes/2026-11-09-figma-ui-align"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-11-09-figma-ui-align/verification.md"
+    ],
+    "verification": "Web Vite 1421 上 1440×1000 实测说明 12/16、步进器 134×32、搜索框高 40、底栏 288×52。Desktop、浅色六态和真实项目悬停未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-11-09",
+    "lastVerified": "2026-11-09",
+    "nextAction": "等 delivery 通过后由人验收视觉；不要把未验的 Desktop 和浅色六态标成完成。",
+    "requirementRefs": [
+      "docs/changes/2026-11-09-figma-ui-align/intent.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-SYNC-LOCAL-MAIN-20261106",
     "title": "主线审查分支全面治理与门禁收口",
     "goal": "把本地dirty与门禁修复推上审查分支，让PR83可重跑并保持账本/锁表事实准确；不合并main",

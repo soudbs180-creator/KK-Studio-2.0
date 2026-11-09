@@ -180,7 +180,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 7f46df7566ab4a5e4037cad8d53760bda58cc160ddd19a28b5d3f1b0f2242d87
+  sha256: 2b20a781bdc69d5bd48e51ef7a388c6b8582f42da63edada452bfa39d0929010
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -265,6 +265,27 @@ x-kk-studio:
           important: false
         - property: --kk-dimension-19
           value: 19px
+          important: false
+        - property: --kk-dimension-13
+          value: 13px
+          important: false
+        - property: --kk-dimension-52
+          value: 52px
+          important: false
+        - property: --kk-dimension-134
+          value: 134px
+          important: false
+        - property: --kk-dimension-152
+          value: 152px
+          important: false
+        - property: --kk-dimension-158
+          value: 158px
+          important: false
+        - property: --kk-dimension-288
+          value: 288px
+          important: false
+        - property: --kk-dimension-488
+          value: 488px
           important: false
         - property: --kk-radius-0
           value: "0"
@@ -614,7 +635,7 @@ x-kk-studio:
           value: "#333333"
           important: false
         - property: --kk-generation-count-trigger-w
-          value: 40px
+          value: 21px
           important: false
         - property: --kk-generation-count-trigger-h
           value: 32px
@@ -838,8 +859,107 @@ x-kk-studio:
         - property: --kk-settings-copy-line
           value: var(--kk-line-caption)
           important: false
+        - property: --kk-settings-copy-weight
+          value: var(--kk-font-weight-body)
+          important: false
         - property: --kk-settings-copy-gap
           value: var(--kk-space-1)
+          important: false
+        - property: --kk-settings-row-title-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-settings-row-title-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-settings-row-title-weight
+          value: var(--kk-font-weight-body-strong)
+          important: false
+        - property: --kk-settings-nav-pad-top
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-settings-nav-pad-x
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-settings-nav-pad-bottom
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-stepper-w
+          value: var(--kk-dimension-134)
+          important: false
+        - property: --kk-settings-stepper-h
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-settings-stepper-pad
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-settings-stepper-gap
+          value: var(--kk-space-hair)
+          important: false
+        - property: --kk-settings-stepper-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-settings-stepper-value-w
+          value: var(--kk-dimension-52)
+          important: false
+        - property: --kk-settings-stepper-value-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-settings-stepper-value-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-settings-stepper-value-weight
+          value: var(--kk-font-weight-body-strong)
+          important: false
+        - property: --kk-settings-action-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-settings-action-bg
+          value: var(--kk-control-surface-idle)
+          important: false
+        - property: --kk-settings-action-fg
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-settings-action-border
+          value: var(--kk-border-default)
+          important: false
+        - property: --kk-select-hug-h
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-select-hug-pad
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-select-hug-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-select-hug-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-select-hug-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-select-hug-weight
+          value: var(--kk-font-weight-body-strong)
+          important: false
+        - property: --kk-select-hug-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-select-hug-icon
+          value: var(--kk-button-icon-sm)
+          important: false
+        - property: --kk-composer-frame-h
+          value: var(--kk-dimension-158)
+          important: false
+        - property: --kk-composer-pad
+          value: var(--kk-dimension-13)
+          important: false
+        - property: --kk-canvas-bottom-toolbar-w
+          value: var(--kk-dimension-288)
+          important: false
+        - property: --kk-storage-notice-w
+          value: var(--kk-dimension-488)
+          important: false
+        - property: --kk-storage-notice-min-h
+          value: var(--kk-dimension-152)
           important: false
         - property: --kk-settings-general-height
           value: var(--kk-settings-general-shell-height)
@@ -1152,6 +1272,27 @@ x-kk-studio:
           important: false
         - property: --kk-tabs-text
           value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-tabs-weight
+          value: var(--kk-font-weight-body)
+          important: false
+        - property: --kk-titlebar-menu-weight
+          value: var(--kk-font-weight-body)
+          important: false
+        - property: --kk-generation-count-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-generation-count-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-generation-count-weight
+          value: var(--kk-font-weight-body)
+          important: false
+        - property: --kk-home-tab-pad
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-home-chip-offset
+          value: calc(var(--kk-space-5) + var(--kk-space-3))
           important: false
         - property: --kk-tabs-text-active
           value: var(--kk-text-primary)

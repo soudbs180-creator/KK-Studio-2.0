@@ -55,9 +55,12 @@ export default function CreationParameterControl({
           </span>
         ) : (
           <span>
-            {parameters?.imageSize
-              ? `${parameters.imageSize} · ${ratio}`
-              : "自适应尺寸"}
+            {`${ratio || "自适应"} · ${
+              parameters.imageSize ||
+              (parameters.quality && parameters.quality !== "自适应"
+                ? parameters.quality
+                : "1K")
+            } · 最小`}
           </span>
         )}
       </button>

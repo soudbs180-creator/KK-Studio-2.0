@@ -598,7 +598,7 @@
   gap: var(--ui-space-2);
   width: min(320px, 100%);
   min-width: 0;
-  height: var(--ui-input-height);
+  height: var(--kk-input-large-h);
   padding: 0 var(--ui-space-3);
   border: var(--ui-border-width) solid var(--border-control);
   border-radius: var(--ui-radius-control);
@@ -899,14 +899,20 @@
   margin-block: var(--kk-space-3);
 }
 .project-library-group-controls input,
-.project-library-group-controls select {
+.project-library-group-controls .kk-inline-select {
   min-width: 0;
   max-width: 100%;
-  height: var(--kk-input-h);
   color: var(--kk-text-primary);
-  background: var(--kk-bg-input);
-  border: 1px solid var(--kk-border-subtle);
+  background: var(--kk-bg-elevated);
+  border: var(--kk-border-width) solid var(--kk-border-default);
   border-radius: var(--kk-radius-control);
+  font-size: var(--kk-select-hug-font);
+  font-weight: var(--kk-select-hug-weight);
+  line-height: var(--kk-select-hug-line);
+}
+.project-library-group-controls input {
+  height: var(--kk-input-h);
+  background: var(--kk-bg-input);
 }
 .catalog-folder-mark {
   font-size: 54px;
@@ -921,8 +927,13 @@
   font-size: 18px;
 }
 .catalog-empty-mark {
-  font-size: 34px;
-  line-height: 1;
+  display: grid;
+  place-items: center;
+  width: var(--kk-icon-glyph-lg);
+  height: var(--kk-icon-glyph-lg);
+  margin-inline: auto;
+  font-size: var(--kk-icon-glyph-lg);
+  line-height: var(--kk-icon-glyph-lg);
 }
 .project-library-card > strong,
 .project-library-card > span {
@@ -1181,7 +1192,7 @@
   border: 0;
   background: transparent;
   color: var(--text-primary);
-  font-weight: var(--kk-font-weight-subtitle);
+  font-weight: var(--kk-tabs-weight);
 }
 .catalog-page-actions > button {
   min-height: 44px;
@@ -1225,9 +1236,10 @@
   width: 100%;
   text-align: center;
 }
-.project-library-action:disabled {
-  opacity: 1;
-  color: var(--kk-text-tertiary);
+.catalog-empty-mark .ui-icon {
+  width: var(--kk-icon-glyph-lg);
+  height: var(--kk-icon-glyph-lg);
+  color: var(--kk-text-secondary);
 }
 @media (max-width: 767px) {
   .catalog-page-tabs button {

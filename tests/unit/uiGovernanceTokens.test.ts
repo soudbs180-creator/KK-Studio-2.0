@@ -71,7 +71,7 @@ test("Figma mapping dimensions are exposed as shared component tokens", () => {
     "--kk-canvas-browser-switch-w: 144px",
     "--kk-icon-glyph-xl: 28px",
     "--kk-icon-glyph-xxl: 32px",
-    "--kk-generation-count-trigger-w: 40px",
+    "--kk-generation-count-trigger-w: 21px",
     "--kk-generation-count-trigger-touch-w: 52px",
     "--kk-material-panel-width: 748px",
     "--kk-material-panel-compact-width: 308px",

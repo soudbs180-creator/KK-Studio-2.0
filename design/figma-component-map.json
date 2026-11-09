@@ -415,6 +415,42 @@
       "tokens": ["--kk-bg-app", "--kk-text-primary", "--kk-control"],
       "status": "FIGMA_READY",
       "notes": "2026-11-06 light106:5650/dark770:97841 current context/variables: settings groups flat; theme controls idle/selected,R8,48h. Existing native JSON compiler retained; other palette roles, typography/full-page pixels and physical-device acceptance are not claimed. Advanced design-state conflict preserves current business controls."
+    },
+    {
+      "id": "settings-inline-select",
+      "name": "贴内容下拉 / Hug Dropdown",
+      "figma": {
+        "page": "04-desktop",
+        "nodeId": "655:142612"
+      },
+      "local": {
+        "paths": [
+          "src/components/ui/InlineSelect.tsx",
+          "src/styles/workspace.css",
+          "src/styles/tokens.css"
+        ]
+      },
+      "tokens": ["--kk-select-hug"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-09 read 47:184 / 655:142612: h32, pad4, gap4, radius8, 12/16 Medium, 12px chevron, width hugs the selected label. Native select stays for value and keyboard. Hover/focus/disabled consume the shell. Selected N/A on the closed control. Active is the open platform list."
+    },
+    {
+      "id": "settings-stepper",
+      "name": "设置步进器 / Settings Stepper",
+      "figma": {
+        "page": "04-desktop",
+        "nodeId": "655:142641"
+      },
+      "local": {
+        "paths": [
+          "src/components/settings/SettingsStepper.tsx",
+          "src/components/settings/settings.css",
+          "src/styles/tokens.css"
+        ]
+      },
+      "tokens": ["--kk-settings-stepper"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-09 read 655:142641: outer 134x32, value 16/24 Medium (dark 460), glyphs 16. Hover/active/focus/disabled on the step buttons. Selected N/A."
     }
   ]
 }

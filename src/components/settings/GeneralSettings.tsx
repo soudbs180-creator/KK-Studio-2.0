@@ -6,7 +6,8 @@ import { appPlatform, appVersion } from "../../runtime/appInfo";
 import { SettingRow, SettingsToggle } from "./SettingsControls";
 import AppUpdateSettings from "./AppUpdateSettings";
 import GeneralAdvancedPreferences from "./GeneralAdvancedPreferences";
-import { Button } from "../ui";
+import SettingsStepper from "./SettingsStepper";
+import { Button, InlineSelect } from "../ui";
 
 interface GeneralSettingsProps {
   preferences: SettingsPreferences;
@@ -47,52 +48,38 @@ export default function GeneralSettings({
             外观与语言
           </h3>
           <SettingRow id="language" title="语言" description="">
-            <select
-              className="settings-select"
-              aria-labelledby="language-label"
+            <InlineSelect
+              labelledBy="language-label"
               value="zh-CN"
               disabled
               title="当前默认提供简体中文界面"
-            >
-              <option value="zh-CN">简体中文 (zh-CN)</option>
-            </select>
+              options={[{ value: "zh-CN", label: "简体中文 (zh-CN)" }]}
+            />
           </SettingRow>
 
           <SettingRow id="theme" title="主题外观" description="">
-            <select
-              className={`settings-select${preferences.theme === "dark" ? " is-dark-theme" : ""}`}
-              aria-labelledby="theme-label"
+            <InlineSelect
+              labelledBy="theme-label"
               value={preferences.theme}
-              onChange={(event) =>
-                onChange({
-                  theme: event.target.value as SettingsPreferences["theme"],
-                })
-              }
-            >
-              <option value="dark">深色 (Dark)</option>
-              <option value="light">浅色 (Light)</option>
-              <option value="system">跟随系统 (System)</option>
-            </select>
+              options={[
+                { value: "dark", label: "深色 (Dark)" },
+                { value: "light", label: "浅色 (Light)" },
+                { value: "system", label: "跟随系统 (System)" },
+              ]}
+              onChange={(theme) => onChange({ theme })}
+            />
           </SettingRow>
 
           <SettingRow id="accent" title="强调色" description="">
-            <select
-              className="settings-select"
-              aria-labelledby="accent-label"
-              aria-describedby="accent-description"
+            <InlineSelect
+              labelledBy="accent-label"
               value={preferences.accent}
-              onChange={(event) =>
-                onChange({
-                  accent: event.target.value as SettingsPreferences["accent"],
-                })
-              }
-            >
-              {ACCENT_PRESETS.map(({ id, label }) => (
-                <option key={id} value={id}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              options={ACCENT_PRESETS.map(({ id, label }) => ({
+                value: id,
+                label,
+              }))}
+              onChange={(accent) => onChange({ accent })}
+            />
           </SettingRow>
         </section>
         <section
@@ -120,46 +107,16 @@ export default function GeneralSettings({
             title="画布历史步数"
             description="画布撤销 / 重做的可撤回步数（范围 5~100 步，默认 20 步）"
           >
-            <div className="settings-stepper-wrap">
-              <button
-                type="button"
-                className="settings-stepper-btn"
-                aria-label="减少步数"
-                onClick={() => {
-                  const current = preferences.historyLimit ?? 20;
-                  onChange({ historyLimit: Math.max(5, current - 5) });
-                }}
-              >
-                −
-              </button>
-              <input
-                type="number"
-                id="historyLimit"
-                className="settings-stepper-input"
-                aria-labelledby="historyLimit-label"
-                aria-describedby="historyLimit-description"
-                min={5}
-                max={100}
-                value={preferences.historyLimit ?? 20}
-                onChange={(event) => {
-                  const val = parseInt(event.target.value, 10);
-                  if (!isNaN(val)) {
-                    onChange({ historyLimit: Math.max(5, Math.min(100, val)) });
-                  }
-                }}
-              />
-              <button
-                type="button"
-                className="settings-stepper-btn"
-                aria-label="增加步数"
-                onClick={() => {
-                  const current = preferences.historyLimit ?? 20;
-                  onChange({ historyLimit: Math.min(100, current + 5) });
-                }}
-              >
-                +
-              </button>
-            </div>
+            <SettingsStepper
+              id="historyLimit"
+              value={preferences.historyLimit ?? 20}
+              min={5}
+              max={100}
+              step={5}
+              labelledBy="historyLimit-label"
+              describedBy="historyLimit-description"
+              onChange={(historyLimit) => onChange({ historyLimit })}
+            />
           </SettingRow>
 
           <div
@@ -221,7 +178,7 @@ export default function GeneralSettings({
           <SettingRow
             id="tray"
             title="系统托盘图标"
-            description="在系统任务栏托盘常驻显示应用图标，便于后台唤起"
+            description="关闭窗口后仍可从托盘打开"
           >
             <SettingsToggle
               id="tray"
@@ -233,7 +190,7 @@ export default function GeneralSettings({
           <SettingRow
             id="sleep"
             title="防止系统休眠"
-            description="在执行批量生图或长耗时 Agent 任务时阻止系统进入待机状态"
+            description="长任务执行时保持系统唤醒"
           >
             <SettingsToggle
               id="sleep"
@@ -245,7 +202,7 @@ export default function GeneralSettings({
           <SettingRow
             id="autostart"
             title="开机自启动"
-            description="计算机开机登录后在后台自动静默启动服务"
+            description="登录后在后台启动"
           >
             <SettingsToggle
               id="autostart"
