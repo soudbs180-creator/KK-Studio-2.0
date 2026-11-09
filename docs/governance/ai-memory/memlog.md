@@ -5,6 +5,64 @@
 
 ---
 
+## [2026-11-09 19:07] ph1-r8-rename 治理清零 (R8 同名与 vendor 测试位置)
+- **执行 Agent**：Antigravity
+- src/features/account/types.ts 改名 accountTypes.ts，src/features/agent-dispatch/types.ts 改名 dispatchTypes.ts
+- vendor/canvas-agent/src/config/tools.test.ts 移至 tests/canvas-agent/config-tools.test.ts 并修正导入与路径
+- 更新 AccountProvider, LocalAccountProvider, account/index, budgetGate, quotaSignals, quotaSignals.test, package.json 引用
+- Select-String 验证全仓旧引用 0 残留；check-governance 验证 R8=0, Governance 违规清零 (0 violations)
+- npm run typecheck 退出 0；1.1套件 86 测试全过；budgetGate/quotaSignals/localAccountProvider 单测全过；canvas-agent 214 测试全绿
+
+## [2026-11-09 16:27] ph1-ss1-hide-rest 设置减负隐藏剩余半成品
+- **执行 Agent**：Antigravity
+- 隐藏 AppUpdatePage 禁用检查更新、未检查卡片、安装记录卡片、自动更新开关，保留当前版本与外链
+- 隐藏 ModelAccessSettings 中 oauth 渠道 tab 与 OAuthAccessPanel 占位面板，保留 5 渠道底层导出定义
+- 隐藏 LocalHardwareSettings 安装服务未接入按钮与 LocalVideoPackages 未验收视频模型包挂载
+- 新增 tests/unit/settingsRestHidden.test.ts 单测，全量 2859 测试全绿（退出码 0），typecheck 0 错误
+- 报告归档至 D:\kk-studio\output\ph1-ss1-hide-rest-20261109\report.md
+
+## [2026-11-09 16:21] ph1-B-workbench
+- **执行 Agent**：Cursor
+- --task
+- ph1-B-workbench / hide workbench prototype
+- --summary
+- 工作台去PROTOTYPE徽章；Planner/Export/Share默认flag关不渲染；队列保留；接A的featureFlags；新增Visibility纯函数+4单测；typecheck/eslint/单测0；报告output/ph1-B-workbench-20261109/
+
+## [2026-11-09 16:10] Cursor
+- **执行 Agent**：--task
+- ph1-A-local-account / hide-batch-a
+- --summary
+- 批次A：featureFlags + LocalAccountProvider；侧栏/设置个人主页与套餐改为本地登录可用；导航保留；typecheck与相关单测0；全量lint被Codex configAgent脏文件挡住；报告与截图在 output/hide-batch-a-20261109/
+
+## [2026-11-09 01:43] TASK-CLOSURE-20261109 本地有界修复与当前桌面快照续验
+- **执行 Agent**：Codex
+- 用户五阶段顺序已落入docs/changes/2026-11-09-local-closure；不推倒架构，不前置Astra/登录计费，不做无权限真实Provider/生产/退役。初始222任务记录保持原语义，新增PARTIAL总任务后223；42功能真实度不升级。
+- 本轮修复：恢复首写前校验所有目标素材记录，含Windows大小写，失败四类原件保全；Browser导入保留合法origins/非法拒绝；body-parser2.4.0及必要qs6.16.1；当前vendor101指纹，固定上游SHA仍UNKNOWN，5包公告未清零。
+- 验证：组合verify-02退出0，unit2771/20skip、Agent205/2skip、browser963/1skip、design9；pixel缺基线skip。storage92、Rust318/1ignore、本机服务HTTP重启恢复和production smoke通过。产品快照df597194/treeb71d9d22正式独立只读SHA审查PASS，新安装包receipt通过。
+- 桌面：NativeTaskHost11/11、官方BAT最终38/38且3次启动通过，合成凭据清理完成。桌面测试后补当前CLI子页和v3活动聊天权威，脚本SHA e3a2ac95...单独审查，未冒充包含于产品快照。BAT1-4轮原失败保留。
+- 保全：已存在2.1.42安装，登记/EXE/快捷方式前后哈希不变；未跑NSIS安装升级卸载，签名NotSigned，干净机/全六态像素/真实厂商/真机/Hosted新候选/main仍未完成。主checkout保留dirty/暂存，3隔离树未合并未删。回执：容器output/closure-20261109/README.md。
+
+## [2026-11-09 00:46] WORKSPACE-DOCS-20261109 补充检查与文档入口修正
+- **执行 Agent**：Codex
+- 范围仅目录与文档：本轮修改 docs/README.md、docs/reference/figma-pixel-baselines.md 及本条交接。修正旧 .verification/.workbuddy 入口、移动端目录说明、worktree依赖路由和像素基线链接；未改产品代码。
+- 检查通过：现行Markdown156份；额外reference15份、superpowers23份；文档命令726份、快照3文档、治理222任务、R1-R8为0。实际目录检查35项存量、0新增；上轮直接运行仅导出模块的目录验证说法已在新审计记录勘误，旧回执保留。
+- 历史21份文档有100处缺失目标引用、2组重复历史文本；临时目录合计约15.86GiB、test-results约1.27GiB，仅盘点未迁删。独立上下文复核两份工作区文档无阻断，SHA256记录在 followup/review.json；不冒称新提交审批。
+- 仍在 chore/sync-local-main-20261106 / cc222004，修改未提交；未改其他任务账本/状态，未测试应用/真实Provider/像素/原生设备，未合并或发布。结论：容器 docs/05-references/audits-archive/2026-11-09-workspace-followup-audit.md；证据：容器 output/workspace-organization-20261109/followup/。
+
+## [2026-11-09 00:38] WORKSPACE-DOCS-20261109 容器目录与文档整理
+- **执行 Agent**：Codex
+- 范围：用户选择目录与文档整理。容器根与五类参考导航已对齐，reference 索引覆盖19目录；未接管其他产品任务。
+- 根 PROJECT.md 改为兼容入口，原文按字节保存到容器 docs/05-references/historical-plans/project-plan-2026-11-04.md；SHA-256 ce80b02a5139b4e1872d4fc5371a8a5e255def79f40b8b9bab42fba6bd9e83c8。
+- 验证：容器23份Markdown本地文件目标零问题、15份参考文档已索引；主仓 markdown/index/rules/layout 检查通过。旧14个dirty文件哈希在追加本条前一致，旧未跟踪目录仅比对状态。
+- 基线保持 chore/sync-local-main-20261106 / cc222004；本条仅追加交接。未改产品源码、配置和其他台账；未清理临时文件/证据/分支，未测试应用、提交、合并、推送或发布。回执：容器 output/workspace-organization-20261109/README.md。
+
+## [2026-11-08 23:46] HEAD cc222004 验收绑定（未推送）
+- **执行 Agent**：本机 CHINAMI-1T5FB2A 确认分支 chore/sync-local-main-20261106 / HEAD cc222004d8b3104357854d9c6b7a331d0c52a869 / tree b038990988b1bbef754e1b917f1594368de7ecd6。
+- 本地：typecheck/lint/ui PASS；已提交 memsearch Prettier FAIL（解释 Hosted verify ~294s 早退）；排除未跟踪 FEAT-037 草稿后 unit 2749 pass/0 fail/20 skip。
+- Hosted：quality verify FAIL、windows-release/git-guards/delivery/governance/mobile SUCCESS。WINDOWS-ENTRY-RECOVERY-003 仍 TODO：fa78ed12 不在 HEAD/main；未修。证据 output/head-acceptance-20261108/acceptance-receipt.json。未 commit/push。
+- --agent
+- Cursor
+
 ## [2026-11-08 23:12] PR83 verify 第二失败：lightbox 重绘按钮契约回归
 - **执行 Agent**：features 路径修复后 Hosted verify 跑满约 31 分钟仍失败；本地 test:ui 复现 962 pass / 1 fail：image-edit archived lightbox 找不到『重绘当前图片』。
 - 根因：04278bfb 迁 ImageLightbox 时把 aria-label=重绘当前图片 / 文案『重绘』误改成『编辑』。

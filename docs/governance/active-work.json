@@ -45,7 +45,9 @@
       "updatedAt": "2026-11-06T13:17:31.694Z",
       "breakpoint": {
         "reason": "READY_FOR_PICKUP: 图片显式报价已接入。真实供应商请求和已安装 Desktop 扣费仍未做",
-        "pending": ["真实供应商账单与已安装 Desktop 扣费"],
+        "pending": [
+          "真实供应商账单与已安装 Desktop 扣费"
+        ],
         "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts"
       }
     },
@@ -226,6 +228,46 @@
           "不合并main直到必需检查全绿"
         ],
         "testCmd": "npm run typecheck && npm run lint && npm test && npm run format:check"
+      }
+    },
+    {
+      "agent": "Codex",
+      "task": "TASK-CLOSURE-20261109",
+      "taskId": "TASK-CLOSURE-20261109",
+      "track": "LOGIC",
+      "feature": "storage-closure",
+      "status": "PARTIAL",
+      "files": [
+        "src/features/local-service/store.ts",
+        "src/features/local-service/migration.ts",
+        "tests/unit/companionRestoreTargetProtection.test.ts",
+        "tests/unit/localServiceMigrationOrigins.test.ts",
+        "src-tauri/src/project_package.rs",
+        "src-tauri/src/project_package_companion.rs",
+        "src-tauri/src/project_package_companion_tests.rs",
+        "src/features/projects/ProjectPackageActions.tsx",
+        "tests/unit/projectPackageActions.test.ts",
+        "tests/fixtures/companion-backup-v1",
+        "docs/features/feat-037-web-local-service.md",
+        "docs/changes/2026-11-09-companion-backup-import",
+        "src-tauri/src/chat_migration_value.rs",
+        "src-tauri/src/project_package_failure_tests.rs",
+        "tests/browser/project-package.spec.ts"
+      ],
+      "worktree": "D:/kk-studio/.worktrees/TASK-STORAGE-CLOSURE-20261109",
+      "startedAt": "2026-11-08T17:03:19.815Z",
+      "updatedAt": "2026-11-09T02:20:48.247Z",
+      "progress": "续接ADR-021：复用桌面项目包原子恢复导入Node备份，先真实格式fixtures与拒绝/回滚测试；保留此前验收和未完成边界。",
+      "breakpoint": {
+        "reason": "PARTIAL: bounded local fixes verified; broader storage/security and external acceptance remain",
+        "pending": [
+          "跨格式显式导入与真实版本接线",
+          "剩余公告暴露与固定上游身份",
+          "Hosted/main、受保护的安装生命周期/签名/干净机",
+          "全页六态/像素与已授权外部生成验收"
+        ],
+        "testCmd": "npm run verify",
+        "evidence": "docs/changes/2026-11-09-local-closure/verification.md"
       }
     }
   ]

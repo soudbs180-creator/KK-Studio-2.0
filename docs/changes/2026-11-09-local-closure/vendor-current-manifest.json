@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-11-08T17:05:49.056Z",
+  "kind": "local-working-tree-vendor-inventory",
+  "sourceHead": "cc222004d8b3104357854d9c6b7a331d0c52a869",
+  "fixedUpstreamCommit": "UNKNOWN",
+  "referenceCommit": "e6d0911e9d509d00150eaab02f9ca05be94ffc46",
+  "notice": "Current local file identities only; reference commit and KK introduction commit do not prove fixed upstream identity. Generated dependencies/dist/runtime data excluded by Git rules.",
+  "files": [
+    {
+      "file": "vendor/README.md",
+      "bytes": 3548,
+      "sha256": "b2c19b05162ae2b668f3b8c2b51d7ce2df2e87268cec655825373bb7055892a4"
+    },
+    {
+      "file": "vendor/canvas-agent/LICENSE",
+      "bytes": 1088,
+      "sha256": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "file": "vendor/canvas-agent/README.md",
+      "bytes": 6587,
+      "sha256": "83fabead93db2e18ee022171d72b45e7a17589826132e73cfebec1b74175e03b"
+    },
+    {
+      "file": "vendor/canvas-agent/UPSTREAM.md",
+      "bytes": 3123,
+      "sha256": "4287ad2cf7fc797dc02c5d089fe2fb2cd8c84b73af9c5b3e77bde1f3f9a9a113"
+    },
+    {
+      "file": "vendor/canvas-agent/agent-instructions.md",
+      "bytes": 2541,
+      "sha256": "5ca4e8517837b054a9b07c1c3e6e739c98273050d9266d5d3c6399a0a20bb9b2"
+    },
+    {
+      "file": "vendor/canvas-agent/package-lock.json",
+      "bytes": 85754,
+      "sha256": "dfec8be52e32c5719586235a9f9d75dbb900efa715db27e102282a2745efcd13"
+    },
+    {
+      "file": "vendor/canvas-agent/package.json",
+      "bytes": 1475,
+      "sha256": "233e790ee40cc80ec7d865eaa80218bec7184c07e9e30c03903200be3e464418"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/claude-provider-config.test.ts",
+      "bytes": 5646,
+      "sha256": "e0b379083b19d3c825fc9ba7e24d5aba3a391a7edf9f9024b9fad8256ae133f2"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/claude-provider-config.ts",
+      "bytes": 5341,
+      "sha256": "6b9b1e35b38af5c71f42254e051c3dd4561b55bfd50b73611c792b77c33eb8c7"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/claude.ts",
+      "bytes": 2331,
+      "sha256": "863e8767eca80c00fda6e2e11ee5bf36dd95a1e26337e05205f27165a9ca056a"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codebuddy.test.ts",
+      "bytes": 5733,
+      "sha256": "6f5434c8e44f219a8b067957f53de5ea0ba62a0c00c3f2c67676057829cad49d"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codebuddy.ts",
+      "bytes": 7142,
+      "sha256": "1175b1355d90c0d770ffab63a138abeb9d75a36fb068af56bbb8db5ead3f979b"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-client.test.ts",
+      "bytes": 60011,
+      "sha256": "a96909ecbc01aed32767f765370c7ac1eb97594b17c3e4865c59128a1bc695a1"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-client.ts",
+      "bytes": 51349,
+      "sha256": "47eb05166ac9299ba7b20517800766679c6de4a109a0c804f108340b2c3e2187"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-event-history.ts",
+      "bytes": 7993,
+      "sha256": "f8bb6abfbaea9453717890f617afcf0d7c1a52dbb0311fb31b03e3e4744ac5f2"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-history.test.ts",
+      "bytes": 24801,
+      "sha256": "6e8943e8d18051d8f5874281aa23dbc605526f320ec5bbc2b50bcc40b408a90c"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-history.ts",
+      "bytes": 42238,
+      "sha256": "c5a07e11a738a8435bcbf5fe4ee026084bedb1b6e065b0f027e74e011e1921f0"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-protocol.ts",
+      "bytes": 7692,
+      "sha256": "51e41635565360f93ab70aa34ae62a13c03681af292c7a1f70c1d31d087fb5a3"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-provider-config.test.ts",
+      "bytes": 23611,
+      "sha256": "d543deb405cff265f5822d72cadc572275afaeb8b402eb0314458df867dbb1e6"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex-provider-config.ts",
+      "bytes": 22302,
+      "sha256": "09535308f30e3b16dc6074441a9002fbb793d90e90f18c6afa722ea154efa829"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/codex.ts",
+      "bytes": 31084,
+      "sha256": "be22effadf90ecebc52d894739dc4c91fddf4c5c70465d724629d937f4d78807"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/message-metadata.test.ts",
+      "bytes": 5624,
+      "sha256": "09ab44c8da0488c2f24ec59573c6dbdf6c556724c7364ab131ee130b981ff750"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/message-metadata.ts",
+      "bytes": 17377,
+      "sha256": "329eabd4aef37aeaa55f182fcd0eac9772101e06a7d31b8cdd9b3e2185b9cb48"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/provider-cli.test.ts",
+      "bytes": 7488,
+      "sha256": "fd3ae5874fbee14344c7d9d452bddff1c2313d919d45851ed767b53ee12e7bb2"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/provider-cli.ts",
+      "bytes": 8744,
+      "sha256": "fa871810b616244689fec13b58658e0ba409eaad49473b182ed98eacf802e69c"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/provider-config-toml.ts",
+      "bytes": 4299,
+      "sha256": "516e2125e9b7acaf9cfce4e5d02268c6afe47ceab668b1b42ddf5604af8237a5"
+    },
+    {
+      "file": "vendor/canvas-agent/src/agent/types.ts",
+      "bytes": 1247,
+      "sha256": "1ef69f2c8654bc2b60fddede88055a5d0f785521aa300b89851e971a2a11a89b"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/atomic-schema.ts",
+      "bytes": 6621,
+      "sha256": "4b138ababfc9c618f6b9f8e74b44fc2667d681bf9d6b226d872cea7202ab11af"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/blueprint-schema.ts",
+      "bytes": 434,
+      "sha256": "a574e6482999c0c68868e67435acaae9dd372d9ce067edc08df60e7999d79fe2"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/chat-scope.ts",
+      "bytes": 1127,
+      "sha256": "c64260e979a83ef164abfa4bb4ebb9b885e50ab953c27ce87779c295828c9f35"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/operations.test.ts",
+      "bytes": 3317,
+      "sha256": "6522f858df49ec29c62411edcd1a50fc72d8020c4377633d963d97ef110a2b51"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/operations.ts",
+      "bytes": 10353,
+      "sha256": "46367c016114779a3b7091997a5b7c9ef7d4ef350f10ae7feabdc3537d3b7667"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/schemas.ts",
+      "bytes": 16685,
+      "sha256": "865b848a266971cc898afb2855d12d8489c488911a1e7be17649b4fe34995e01"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/session.test.ts",
+      "bytes": 44007,
+      "sha256": "bb03738c4a8c8a0cad033ca65518b0cbbb37c08c711504eef689b5b7be468fcf"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/session.ts",
+      "bytes": 35924,
+      "sha256": "ed02b2842f65c849a504b0dc849dc5ae264e933e592e7feadb809f9260372dc4"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/tools.ts",
+      "bytes": 1523,
+      "sha256": "4060f1cd21e4b9ca12d6b7426e754985f9ddaf57b00175947a20e2bbd878ecca"
+    },
+    {
+      "file": "vendor/canvas-agent/src/canvas/types.ts",
+      "bytes": 725,
+      "sha256": "4b818893f1c27af3b1ba72aeb226499543b818cba57523f7b9cd56725498f056"
+    },
+    {
+      "file": "vendor/canvas-agent/src/config.test.ts",
+      "bytes": 9417,
+      "sha256": "5ab7b3773773c30611b22f5e2217cd5f848690d9273a51d8f2a50c326e36bc27"
+    },
+    {
+      "file": "vendor/canvas-agent/src/config.ts",
+      "bytes": 5675,
+      "sha256": "67afeb7c5c2fad721c2586cd0b5c3a5ca0890b720a59892d5c4f1bb9b7e7f26c"
+    },
+    {
+      "file": "vendor/canvas-agent/src/index.ts",
+      "bytes": 384,
+      "sha256": "d9b0235149b6bc5b0e064c62e1fe60b2ad4d8bd928bce134a1d0a93ae79160d5"
+    },
+    {
+      "file": "vendor/canvas-agent/src/server/codebuddy-http.test.ts",
+      "bytes": 7056,
+      "sha256": "9dfa3144a385b1c451361b46185fee34a88ca98300768b3906e806f216e36b46"
+    },
+    {
+      "file": "vendor/canvas-agent/src/server/codebuddy-mcp.test.ts",
+      "bytes": 4640,
+      "sha256": "bfc177262ecc31540d0e0aaccfae23f387caafbb535a06f65b0b3fda6cdb076f"
+    },
+    {
+      "file": "vendor/canvas-agent/src/server/http.ts",
+      "bytes": 46270,
+      "sha256": "bab636f7016203a2c0921f65af0362888dfa18c5b778c7b828a3dc093b727102"
+    },
+    {
+      "file": "vendor/canvas-agent/src/server/kk-idle-conversation.ts",
+      "bytes": 2099,
+      "sha256": "31f5d88db8a3c9a137cb443c82a517c9a648a7371badb68fce716efe73099322"
+    },
+    {
+      "file": "vendor/canvas-agent/src/server/kk-runtime-drain.ts",
+      "bytes": 567,
+      "sha256": "4a3d5dc72eb3cf751714c223f0b635f4007c01819301bd598a2f0c2820fb9263"
+    },
+    {
+      "file": "vendor/canvas-agent/src/server/mcp.ts",
+      "bytes": 3487,
+      "sha256": "ae965bbdf92e572f6f0895527936d7c5efed4f9c65db3f370290c67997ef3a92"
+    },
+    {
+      "file": "vendor/canvas-agent/src/skills/store.test.ts",
+      "bytes": 12502,
+      "sha256": "d615ea11a3a15e93ffc1ac6043c1dcfe59b49523a4f1b6aaffc0cb2044c2e6b8"
+    },
+    {
+      "file": "vendor/canvas-agent/src/skills/store.ts",
+      "bytes": 21885,
+      "sha256": "47786cbad1f57e6391a1f554718efce1ab794ad7531fb65792b2dc5d52337330"
+    },
+    {
+      "file": "vendor/canvas-agent/src/utils/agent-runtime.test.ts",
+      "bytes": 1970,
+      "sha256": "16c289d451c50a2fe32e648f57f54191d09414209c4cfcf800d55127c5b6666e"
+    },
+    {
+      "file": "vendor/canvas-agent/src/utils/agent-runtime.ts",
+      "bytes": 1385,
+      "sha256": "c65011ad8259feecab4baa65c95b2194ec5acd7354b2557506af4dcc5df2290d"
+    },
+    {
+      "file": "vendor/canvas-agent/src/utils/date.ts",
+      "bytes": 341,
+      "sha256": "db491524113adcafb9ebc9cd1a9b301de89a51be016e2ac86aa07caa1124dbac"
+    },
+    {
+      "file": "vendor/canvas-agent/src/utils/logger.ts",
+      "bytes": 3739,
+      "sha256": "c358e4e842ae912ff164ec4cdac5138a0745e5fbd2b98e25d22e7e20c2cd7eed"
+    },
+    {
+      "file": "vendor/canvas-agent/src/utils/value.ts",
+      "bytes": 434,
+      "sha256": "89b663a33cd9beac5f7e7530faf2656bec2f54473dc18e2c6871315f857ef0fc"
+    },
+    {
+      "file": "vendor/canvas-agent/src/version-check.ts",
+      "bytes": 3306,
+      "sha256": "44b32a605b40960d86f8e23614d254140fa9389694abb8cf4495d65cb9ad8886"
+    },
+    {
+      "file": "vendor/canvas-agent/tsconfig.json",
+      "bytes": 340,
+      "sha256": "424c5ff01142ed6e4a5bba6a82153c1c3161c5163c12cfd739116e6b185eb45e"
+    },
+    {
+      "file": "vendor/canvas-plugins/LICENSE",
+      "bytes": 1088,
+      "sha256": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "file": "vendor/canvas-plugins/UPSTREAM.md",
+      "bytes": 2919,
+      "sha256": "27d2690aa879993d578b7625c44bf50ba97ff2db29f289ea58be35f6e666fdaf"
+    },
+    {
+      "file": "vendor/canvas-plugins/host/plugin-loader.ts",
+      "bytes": 7944,
+      "sha256": "6e17bf04abe6433428101305a335715d96d5dbfa2db35a5361cb10f0a324efa2"
+    },
+    {
+      "file": "vendor/canvas-plugins/host/plugin-node-context.ts",
+      "bytes": 1494,
+      "sha256": "dd0eeec94d78863e07826d031cef882e09322fb7d43ae2836691d26cd22543d6"
+    },
+    {
+      "file": "vendor/canvas-plugins/host/plugin-registry.ts",
+      "bytes": 2332,
+      "sha256": "427393edcd79e8f2c8e726b35f5dfe5b7e508257b4e10d900dc7a078caccfd79"
+    },
+    {
+      "file": "vendor/canvas-plugins/host/plugin-runtime.ts",
+      "bytes": 1565,
+      "sha256": "b4ffe185b0baa8c526b3fbe85c70f35945fb2d20777d66b68f4d6717e221b688"
+    },
+    {
+      "file": "vendor/canvas-plugins/html/README.md",
+      "bytes": 484,
+      "sha256": "e7e590bf6b7f9d6420bc7ebfe3fa87a2ba95472de91dd8c98c5f72e2b72c3e27"
+    },
+    {
+      "file": "vendor/canvas-plugins/html/build.mjs",
+      "bytes": 105,
+      "sha256": "0aafed4ba23fe89b255f1bcfc5c515881de521d14b31c5fd5182559e9584ddff"
+    },
+    {
+      "file": "vendor/canvas-plugins/html/package.json",
+      "bytes": 461,
+      "sha256": "9ea1e6cd38f77d562e5dba1a98a03a45950c030cf3d3d196c89a5463156f3b52"
+    },
+    {
+      "file": "vendor/canvas-plugins/html/src/index.tsx",
+      "bytes": 6507,
+      "sha256": "8d3d64adcd505d52508d21cccc22f4ac73d94e73f136b2fad776aa5ec56a1870"
+    },
+    {
+      "file": "vendor/canvas-plugins/html/tsconfig.json",
+      "bytes": 471,
+      "sha256": "984e9860ac820a8e88e9a8409743524deeb8900a74094bbf39aba9b19cafbfbe"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/README.md",
+      "bytes": 799,
+      "sha256": "203b3cd687db7d798cb9576fd4fdf021929c557db3b81d6adcc63debf7fdfe46"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/build.mjs",
+      "bytes": 105,
+      "sha256": "0aafed4ba23fe89b255f1bcfc5c515881de521d14b31c5fd5182559e9584ddff"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/package.json",
+      "bytes": 528,
+      "sha256": "d4dc3463053ff90f47fcf8c04af005f80e899579370c302ab05125006b392761"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/src/env.d.ts",
+      "bytes": 131,
+      "sha256": "bd347b301626abc7820a160a1be3089230106f9e1f298387bff5a5622dd5a811"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/src/index.tsx",
+      "bytes": 4973,
+      "sha256": "1921a07d1f4ba2debc56654a8d105021dae6ad29c70e2a9e445266b9e0414e39"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/src/styles.css",
+      "bytes": 1073,
+      "sha256": "db32f181459e21788431739835871fa6a6b5d3c34286c8bd3d1ba56235b0c79e"
+    },
+    {
+      "file": "vendor/canvas-plugins/markdown/tsconfig.json",
+      "bytes": 471,
+      "sha256": "984e9860ac820a8e88e9a8409743524deeb8900a74094bbf39aba9b19cafbfbe"
+    },
+    {
+      "file": "vendor/canvas-plugins/package-lock.json",
+      "bytes": 21148,
+      "sha256": "b98026d6842f20fa8e8228f4ab99c9fd4d1da6ebcd61d413ab0cb80655020931"
+    },
+    {
+      "file": "vendor/canvas-plugins/package.json",
+      "bytes": 586,
+      "sha256": "5b6de2eeb13e83624f38091075095b3255bfb64ddae8bec24a762573fdd3036b"
+    },
+    {
+      "file": "vendor/canvas-plugins/registry-README.md",
+      "bytes": 1945,
+      "sha256": "4328a0b93fb148c4fbe648d3706535887cae445edd64dcbc55b0dd2c9b8e06c1"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/README.md",
+      "bytes": 2907,
+      "sha256": "20a13226548f8f8eee5b021e2af458aab472e2f509d13fa44529e068d9dd7a05"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/build.mjs",
+      "bytes": 3485,
+      "sha256": "aedffc37617ed0ebd2a236c7b06b001a99383a6c401c477ed25881819a18cfe7"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/package.json",
+      "bytes": 688,
+      "sha256": "fadbe7c72b9816f8db3a536a2a0e13c8bfbc983eac98b945131e907fdcb15b4f"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/src/define-plugin.ts",
+      "bytes": 793,
+      "sha256": "76cdb086d68f3473594ab61fb1cc1356ce71f85d255c18942da360645acd7d8a"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/src/index.ts",
+      "bytes": 488,
+      "sha256": "33d5dee77a13049018e25bb62b33183d2fd5ebc09e024cfe48684586957fc957"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/src/jsx-dev-runtime.ts",
+      "bytes": 500,
+      "sha256": "f4d894944009871a4a95e59bc76f3f6dbfac5723d9a5b53656b3f7fcc5ea39fb"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/src/jsx-runtime.ts",
+      "bytes": 2638,
+      "sha256": "d68b9ed7d744709949ffc282ed347de0016cc3fbf90ec5d0238872b55b37c0c5"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/src/runtime.ts",
+      "bytes": 2744,
+      "sha256": "b5f5c50f5b16f13ecf903ff9df844f37cd77a7e27bb108ff9353e93fc72adeb5"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/src/types.ts",
+      "bytes": 14348,
+      "sha256": "56052ff4dc07f12ac7b1a3686e22bf4cfacac30229d755bb091e6a603cf71ed8"
+    },
+    {
+      "file": "vendor/canvas-plugins/sdk/tsconfig.json",
+      "bytes": 489,
+      "sha256": "dbbf7c0d45092d7376cde46d8d45554e7f1939ce52c424d541cc79d2fd7961ae"
+    },
+    {
+      "file": "vendor/canvas-plugins/sticky-note/README.md",
+      "bytes": 539,
+      "sha256": "d43aefe1540cef24e9a29179fad286b070f904c67fc589ec7b1c339f7f37f0fa"
+    },
+    {
+      "file": "vendor/canvas-plugins/sticky-note/build.mjs",
+      "bytes": 105,
+      "sha256": "0aafed4ba23fe89b255f1bcfc5c515881de521d14b31c5fd5182559e9584ddff"
+    },
+    {
+      "file": "vendor/canvas-plugins/sticky-note/package.json",
+      "bytes": 472,
+      "sha256": "26977ca5644c2cb7ed1888b4ed074d7da58040c6f66eda9b139d0645fbc5fb80"
+    },
+    {
+      "file": "vendor/canvas-plugins/sticky-note/src/index.tsx",
+      "bytes": 8813,
+      "sha256": "4e150a4e59ea7d39cbc3cd597d7d40d47a3cdd87230281ad19f53067bd0a45ba"
+    },
+    {
+      "file": "vendor/canvas-plugins/sticky-note/tsconfig.json",
+      "bytes": 471,
+      "sha256": "984e9860ac820a8e88e9a8409743524deeb8900a74094bbf39aba9b19cafbfbe"
+    },
+    {
+      "file": "vendor/canvas-plugins/svg/README.md",
+      "bytes": 467,
+      "sha256": "430da7b9a2ce5e70ad0fc7e36b25fd4cf28c71480400e9e1c2c36682e3cd682d"
+    },
+    {
+      "file": "vendor/canvas-plugins/svg/build.mjs",
+      "bytes": 105,
+      "sha256": "0aafed4ba23fe89b255f1bcfc5c515881de521d14b31c5fd5182559e9584ddff"
+    },
+    {
+      "file": "vendor/canvas-plugins/svg/package.json",
+      "bytes": 459,
+      "sha256": "c02351cab60de071bed165c86b494002d9196c4baeeaf9dcee3e4d40fe86c41a"
+    },
+    {
+      "file": "vendor/canvas-plugins/svg/src/index.tsx",
+      "bytes": 5015,
+      "sha256": "b41f65537c5a9cbfd491ef3f95521ff5fe31850b0ffb1de87b984ab9be75bfca"
+    },
+    {
+      "file": "vendor/canvas-plugins/svg/tsconfig.json",
+      "bytes": 471,
+      "sha256": "984e9860ac820a8e88e9a8409743524deeb8900a74094bbf39aba9b19cafbfbe"
+    },
+    {
+      "file": "vendor/canvas-proxy/LICENSE",
+      "bytes": 1088,
+      "sha256": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "file": "vendor/canvas-proxy/README.md",
+      "bytes": 2231,
+      "sha256": "bf49318305d2a5731fa4f977c9ae1fe5cb5586d914cc22a481ae09447cc52222"
+    },
+    {
+      "file": "vendor/canvas-proxy/UPSTREAM.md",
+      "bytes": 2661,
+      "sha256": "6e02b13015c633bb35441def27d65a53ee0b8c35280e9d6daad77272c3796dc6"
+    },
+    {
+      "file": "vendor/canvas-proxy/index.js",
+      "bytes": 11804,
+      "sha256": "a8e2a5860ef2dc494cfa51a1e728ec4a7cd703b2c30babd4340d4ac217fc2eb0"
+    },
+    {
+      "file": "vendor/canvas-proxy/package.json",
+      "bytes": 523,
+      "sha256": "5bca5a9cf6ddb3a461b1e0edc67b8f4aabadda401aae42c05f6b8df3df94ccd8"
+    }
+  ]
+}

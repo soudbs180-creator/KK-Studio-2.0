@@ -30,10 +30,13 @@ function discoverMarkdownFiles() {
       if (f.isFile() && f.name.endsWith(".md")) {
         let domain = "global";
         if (f.name.includes("ui")) domain = "ui";
-        else if (f.name.includes("runtime") || f.name.includes("engine")) domain = "runtime";
+        else if (f.name.includes("runtime") || f.name.includes("engine"))
+          domain = "runtime";
         else if (f.name.includes("mcp")) domain = "mcp";
         targets.push({
-          file: path.relative(REPO_ROOT, path.join(MEMORY_DIR, f.name)).replace(/\\/g, "/"),
+          file: path
+            .relative(REPO_ROOT, path.join(MEMORY_DIR, f.name))
+            .replace(/\\/g, "/"),
           domain,
         });
       }
@@ -45,7 +48,9 @@ function discoverMarkdownFiles() {
       for (const af of archFiles) {
         if (af.isFile() && af.name.endsWith(".md")) {
           targets.push({
-            file: path.relative(REPO_ROOT, path.join(archiveDir, af.name)).replace(/\\/g, "/"),
+            file: path
+              .relative(REPO_ROOT, path.join(archiveDir, af.name))
+              .replace(/\\/g, "/"),
             domain: "archive",
           });
         }
@@ -59,7 +64,9 @@ function discoverMarkdownFiles() {
     for (const f of archFiles) {
       if (f.isFile() && f.name.endsWith(".md")) {
         targets.push({
-          file: path.relative(REPO_ROOT, path.join(ARCH_DIR, f.name)).replace(/\\/g, "/"),
+          file: path
+            .relative(REPO_ROOT, path.join(ARCH_DIR, f.name))
+            .replace(/\\/g, "/"),
           domain: "architecture",
         });
       }
@@ -124,12 +131,15 @@ export function parseMarkdownChunks(relFile, domain) {
       }
       currentStart = lineNum;
       currentDate = headerMatch[1] || "";
-      currentTitle = headerMatch[2] || headerMatch[1] || `Section @ L${lineNum}`;
+      currentTitle =
+        headerMatch[2] || headerMatch[1] || `Section @ L${lineNum}`;
       currentAgent = "";
     }
 
     // Detect agent line: - **执行 Agent**：... or - Agent: ...
-    const agentMatch = line.match(/- \*\*(?:执行\s*)?Agent\*\*[:：]\s*(.*)/i) || line.match(/-\s+Agent[:：]\s*(.*)/i);
+    const agentMatch =
+      line.match(/- \*\*(?:执行\s*)?Agent\*\*[:：]\s*(.*)/i) ||
+      line.match(/-\s+Agent[:：]\s*(.*)/i);
     if (agentMatch) {
       currentAgent = agentMatch[1].trim();
     }
@@ -206,7 +216,10 @@ export function searchMemories(query, options = {}) {
       if (titleLower.includes(term)) termScore += 5.0;
       if (fileLower.includes(term)) termScore += 2.0;
 
-      const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+      const regex = new RegExp(
+        term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "gi",
+      );
       const matches = contentLower.match(regex);
       if (matches) {
         termScore += Math.min(matches.length * 1.0, 5.0);
@@ -236,7 +249,9 @@ export function expandChunk(chunkId) {
 }
 
 // CLI Execution only when run as main script
-const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+const isMain =
+  process.argv[1] &&
+  fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 
 if (isMain) {
   const [cmd, ...cliArgs] = process.argv.slice(2);
@@ -244,7 +259,9 @@ if (isMain) {
   if (cmd === "search") {
     const query = cliArgs[0];
     if (!query) {
-      console.error("用法: node memsearch.mjs search <query> [--domain=ui|runtime|global] [--top-k=5] [--json]");
+      console.error(
+        "用法: node memsearch.mjs search <query> [--domain=ui|runtime|global] [--top-k=5] [--json]",
+      );
       process.exit(1);
     }
     let domain = "";
@@ -253,7 +270,8 @@ if (isMain) {
 
     cliArgs.slice(1).forEach((arg) => {
       if (arg.startsWith("--domain=")) domain = arg.split("=")[1];
-      else if (arg.startsWith("--top-k=")) topK = Number.parseInt(arg.split("=")[1], 10);
+      else if (arg.startsWith("--top-k="))
+        topK = Number.parseInt(arg.split("=")[1], 10);
       else if (arg === "--json") jsonOutput = true;
     });
 
@@ -262,23 +280,39 @@ if (isMain) {
     if (jsonOutput) {
       console.log(JSON.stringify(hits, null, 2));
     } else {
-      console.log("================================================================================");
-      console.log(`🔍 KK Studio MemSearch — 检索词: "${query}" (命中: ${hits.length} 项)`);
-      console.log("================================================================================");
+      console.log(
+        "================================================================================",
+      );
+      console.log(
+        `🔍 KK Studio MemSearch — 检索词: "${query}" (命中: ${hits.length} 项)`,
+      );
+      console.log(
+        "================================================================================",
+      );
       if (hits.length === 0) {
-        console.log("ℹ️ 未找到相关记忆块。建议更换关键词或运行 node memsearch.mjs index 重建索引。");
+        console.log(
+          "ℹ️ 未找到相关记忆块。建议更换关键词或运行 node memsearch.mjs index 重建索引。",
+        );
       } else {
         hits.forEach((h, idx) => {
           const c = h.chunk;
-          console.log(`[${idx + 1}] 匹配分: ${h.score.toFixed(1)} | [${c.domain.toUpperCase()}] | ${c.date} | ID: ${c.id}`);
+          console.log(
+            `[${idx + 1}] 匹配分: ${h.score.toFixed(1)} | [${c.domain.toUpperCase()}] | ${c.date} | ID: ${c.id}`,
+          );
           console.log(`    标题: ${c.title}`);
-          console.log(`    文件: ${c.file} (L${c.startLine}-L${c.endLine}) | Agent: ${c.agent}`);
+          console.log(
+            `    文件: ${c.file} (L${c.startLine}-L${c.endLine}) | Agent: ${c.agent}`,
+          );
           console.log(`    摘要: ${c.snippet}...`);
-          console.log(`    💡 展开详情: node scripts/governance/memsearch.mjs expand ${c.id}`);
+          console.log(
+            `    💡 展开详情: node scripts/governance/memsearch.mjs expand ${c.id}`,
+          );
           console.log("");
         });
       }
-      console.log("================================================================================");
+      console.log(
+        "================================================================================",
+      );
     }
   } else if (cmd === "expand") {
     const chunkId = cliArgs[0];
@@ -291,20 +325,32 @@ if (isMain) {
       console.error(`❌ 未找到 ID 为 ${chunkId} 的记忆块。`);
       process.exit(1);
     }
-    console.log("================================================================================");
+    console.log(
+      "================================================================================",
+    );
     console.log(`📖 展开记忆块: [${chunk.id}] ${chunk.title}`);
-    console.log(`   来源: ${chunk.file}:${chunk.startLine}-${chunk.endLine} | 日期: ${chunk.date} | Agent: ${chunk.agent}`);
-    console.log("--------------------------------------------------------------------------------");
+    console.log(
+      `   来源: ${chunk.file}:${chunk.startLine}-${chunk.endLine} | 日期: ${chunk.date} | Agent: ${chunk.agent}`,
+    );
+    console.log(
+      "--------------------------------------------------------------------------------",
+    );
     console.log(chunk.content);
-    console.log("================================================================================");
+    console.log(
+      "================================================================================",
+    );
   } else if (cmd === "index" || cmd === "reindex") {
     console.log("🔄 正在扫描并重建 KK Studio MemSearch 影子索引...");
     const chunks = buildIndex();
-    console.log(`✅ 重建完成：共索引 ${chunks.length} 个 Markdown 语义块 (缓存至 .tmp/memsearch-index.json)！`);
+    console.log(
+      `✅ 重建完成：共索引 ${chunks.length} 个 Markdown 语义块 (缓存至 .tmp/memsearch-index.json)！`,
+    );
   } else if (cmd) {
     const hits = searchMemories(cmd, { topK: 5 });
     hits.forEach((h, idx) => {
-      console.log(`[${idx + 1}] (${h.score.toFixed(1)}) [${h.chunk.domain}] ${h.chunk.title} (${h.chunk.file}:${h.chunk.startLine})`);
+      console.log(
+        `[${idx + 1}] (${h.score.toFixed(1)}) [${h.chunk.domain}] ${h.chunk.title} (${h.chunk.file}:${h.chunk.startLine})`,
+      );
       console.log(`    ${h.chunk.snippet}...`);
     });
   } else {

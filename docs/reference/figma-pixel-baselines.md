@@ -1,6 +1,6 @@
 # Figma 参考基线（L4 像素门禁）
 
-本目录存放 **Figma 原稿截图** 与其状态描述，是 L4 像素一致性的比对基准。
+本文说明 `design/preview/baselines/` 中 **Figma 原稿截图** 与状态描述的登记约定，用于 L4 像素一致性比对。
 
 ## 目录约定
 
@@ -18,7 +18,7 @@ baselines/
 | `route`             | 本地预览路由                                 |
 | `theme`             | `dark` / `light`                             |
 | `viewport`          | `{ width, height }`，须与 Figma 导出尺寸一致 |
-| `reference`         | 参考图文件名（相对本目录）                   |
+| `reference`         | 参考图文件名（相对基线目录）                 |
 | `maxDiffPixelRatio` | 允许的差异像素占比上限，默认 `0.01`          |
 | `channelTolerance`  | 单通道色差容差，默认 `8`                     |
 
@@ -32,8 +32,8 @@ baselines/
 ## 与标定数据的区别
 
 历史 Figma 原稿（应用界面截图）保存在
-[`docs/reference/figma-pixel-calibration/`](../../../docs/reference/figma-pixel-calibration/README.md)，
-用于标定容差区间，**不是**门禁基线——它们与本目录渲染的设计预览页不是同一画面。
+[`docs/reference/figma-pixel-calibration/`](figma-pixel-calibration/README.md)，
+用于标定容差区间，**不是**门禁基线——它们与设计预览页不是同一画面。
 
 ## 使用
 

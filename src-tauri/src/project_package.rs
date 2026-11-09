@@ -19,6 +19,11 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use zip::write::SimpleFileOptions;
 use zip::{CompressionMethod, ZipArchive, ZipWriter};
 
+#[path = "project_package_companion.rs"]
+mod companion;
+#[cfg(test)]
+#[path = "project_package_companion_tests.rs"]
+mod companion_tests;
 #[cfg(test)]
 #[path = "project_package_failure_tests.rs"]
 mod failure_tests;
@@ -249,6 +254,25 @@ fn attachments(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> 
     Ok(())
 }
 
+fn message_references(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> {
+    for message in value["messages"].as_array().into_iter().flatten() {
+        attachments(message, ids)?;
+        if let Some(assets) = message.get("assetIds") {
+            for id in assets
+                .as_array()
+                .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?
+            {
+                let id = id
+                    .as_str()
+                    .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?;
+                asset_id(id)?;
+                ids.insert(id.into());
+            }
+        }
+    }
+    Ok(())
+}
+
 fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> {
     fn edit_references(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> {
         if let Some(edit) = value.get("imageEdit") {
@@ -290,24 +314,11 @@ fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<()
     {
         attachments(project, ids)?;
         attachments(&project["composerDraft"], ids)?;
+        message_references(project, ids)?;
         if let Some(chats) = project["chats"].as_object() {
             for chat in chats.values() {
                 attachments(&chat["draft"], ids)?;
-                for message in chat["messages"].as_array().into_iter().flatten() {
-                    attachments(message, ids)?;
-                    if let Some(assets) = message.get("assetIds") {
-                        for id in assets
-                            .as_array()
-                            .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?
-                        {
-                            let id = id
-                                .as_str()
-                                .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?;
-                            asset_id(id)?;
-                            ids.insert(id.into());
-                        }
-                    }
-                }
+                message_references(chat, ids)?;
             }
         }
         if let Some(tasks) = project["tasks"].as_array() {
@@ -674,6 +685,9 @@ fn read_and_validate(path: &Path) -> Result<ValidatedPackage, String> {
         .map_err(|_| failure("io", "无法读取项目包"))?;
     if bytes.len() as u64 > MAX_TOTAL_BYTES {
         return Err(failure("quota", "项目包超过大小限制"));
+    }
+    if bytes.iter().find(|byte| !byte.is_ascii_whitespace()) == Some(&b'{') {
+        return companion::read(path, &bytes);
     }
     validate_entries(read_zip(&bytes)?)
 }

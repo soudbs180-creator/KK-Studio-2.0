@@ -22,3 +22,4 @@ export * from "./imageCapability.ts";
 export * from "./assetLineage.ts";
 
 export * from "./media.ts";
+export * from "./storageFormat.ts";

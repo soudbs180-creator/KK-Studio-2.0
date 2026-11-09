@@ -111,7 +111,6 @@ export function startHttpServer() {
     };
     const app = express();
     app.disable("x-powered-by");
-    app.use(express.json({ limit: "30mb" }));
     app.use((req, res, next) => {
         if (!logger.enabled) return next();
         const startedAt = Date.now();
@@ -133,6 +132,14 @@ export function startHttpServer() {
     app.use((req, res, next) => {
         if (validToken(req, requestUrl(req, config), config.token)) return next();
         res.status(401).json({ ok: false, error: "invalid token" });
+    });
+    // Authenticate before decompression; retain a four-argument handler for parser client errors.
+    app.use(express.json({ limit: "30mb" }));
+    app.use((error: Error & { status?: number; type?: string }, req: Request, res: Response, next: NextFunction) => {
+        const status = error.status;
+        if (typeof status !== "number" || status < 400 || status >= 500) return next(error);
+        logger.warn("HTTP request body rejected", { method: req.method, path: req.path, type: error.type, message: error.message });
+        res.status(status).json({ ok: false, error: "invalid request body" });
     });
     app.use((req, res, next) => {
         const scoped = req.path.startsWith("/canvas/") || req.path.startsWith("/agent/attachments/") || /^\/agent\/codex\/(turn|threads|conversation|history|generated-image|approval|interrupt)/.test(req.path) || (req.path === "/events" && req.query.role !== "status");

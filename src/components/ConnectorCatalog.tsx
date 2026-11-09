@@ -8,6 +8,10 @@ type Connector = {
   description: string;
   requirement: string;
 };
+// 等 A 的 featureFlags.connectorRemote；该批条目未开放，先不渲染
+const SHOW_UNFINISHED: boolean = false;
+const REMOTE_CONNECTOR_IDS = new Set(["fastmoss", "apify", "libtv"]);
+
 const CONNECTORS: Connector[] = [
   {
     id: "blender",
@@ -69,7 +73,7 @@ const CONNECTORS: Connector[] = [
     id: "apify",
     name: "Apify",
     category: "数据工具",
-    description: "将受信任的本地或远程数据工具接入工作流。",
+    description: "将受信任的本地数据工具接入工作流。",
     requirement: "需要用户配置受信任的 MCP 服务地址。",
   },
   {
@@ -93,13 +97,14 @@ export default function ConnectorCatalog({
   const [selected, setSelected] = useState<Connector | null>(null);
   const visible = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    return normalized
-      ? CONNECTORS.filter((item) =>
+    return CONNECTORS.filter(
+      (item) =>
+        (SHOW_UNFINISHED || !REMOTE_CONNECTOR_IDS.has(item.id)) &&
+        (!normalized ||
           `${item.name}${item.category}${item.description}`
             .toLowerCase()
-            .includes(normalized),
-        )
-      : CONNECTORS;
+            .includes(normalized)),
+    );
   }, [query]);
   return (
     <>
@@ -109,12 +114,12 @@ export default function ConnectorCatalog({
           <article className="catalog-card connector-card" key={connector.id}>
             <div className="catalog-card-image workflow-image workflow-image-0">
               <strong>{connector.name}</strong>
-              <span>桌面 / MCP</span>
+              <span>本机连接</span>
             </div>
             <div className="catalog-card-body">
               <strong>{connector.name}</strong>
               <p>{connector.description}</p>
-              <small>{connector.category} · Prototype</small>
+              <small>{connector.category}</small>
             </div>
             <div className="catalog-page-actions connector-card-actions">
               <button
@@ -143,7 +148,7 @@ export default function ConnectorCatalog({
           <div className="connector-detail-header">
             <div>
               <h2>连接 {selected.name}</h2>
-              <p>连接器未安装 · Prototype</p>
+              <p>需要本机安装对应应用</p>
             </div>
             <button
               type="button"
@@ -157,9 +162,8 @@ export default function ConnectorCatalog({
             <h3>准备 {selected.name}</h3>
             <p>{selected.requirement}</p>
             <p>
-              安装连接器会运行本机插件或连接外部服务。KK Studio
-              当前只支持显式保存并发现 Streamable HTTP
-              工具，不会自动安装桌面插件或提交凭据。
+              连接器需要本机安装对应应用；请在「扩展与
+              MCP」设置中手动添加受信任的连接，KK Studio 不会自动安装桌面插件。
             </p>
           </div>
           <div className="settings-action-group">
@@ -174,14 +178,16 @@ export default function ConnectorCatalog({
             >
               打开 MCP 设置
             </button>
-            <button
-              type="button"
-              className="ui-button"
-              disabled
-              title="桌面连接器安装服务尚未接入"
-            >
-              安装连接器（未接入）
-            </button>
+            {SHOW_UNFINISHED && (
+              <button
+                type="button"
+                className="ui-button"
+                disabled
+                title="桌面连接器安装服务尚未接入"
+              >
+                安装连接器（未接入）
+              </button>
+            )}
           </div>
         </Modal>
       )}

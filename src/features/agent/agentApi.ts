@@ -161,7 +161,7 @@ export function createAgentApi(options: AgentApiClientOptions) {
               },
               hasCanvas: true,
             }
-          : { hasCanvas: false },
+          : { hasCanvas: false, ...(options.scope ? { projectId: options.scope.projectId } : {}) },
       );
       return true;
     },

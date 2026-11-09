@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import { once } from "node:events";
 import { mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
+import { request } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { setTimeout as delay } from "node:timers/promises";
+import { gzipSync } from "node:zlib";
 
 test("CodeBuddy config and probe require local token and distinguish saved from usable", async (t) => {
   const dir = await mkdtemp(path.join(os.tmpdir(), "kk-codebuddy-http-"));
@@ -71,6 +74,87 @@ test("CodeBuddy config and probe require local token and distinguish saved from 
     ok: true,
     configured: false,
     cliPath: "",
+  });
+  await t.test("checks Origin and token before parsing request bodies", async () => {
+    for (const [endpoint, method, extraHeaders, status] of [
+      ["/agent/codebuddy/config", "POST", {}, 401],
+      ["/agent/codebuddy/config", "POST", { "x-canvas-agent-token": "invalid" }, 401],
+      ["/agent/codebuddy/config", "POST", { origin: "https://untrusted.invalid" }, 403],
+      ["/body-parser-regression", "POST", {}, 401],
+      ["/health", "POST", {}, 401],
+      ["/config", "POST", {}, 401],
+      ["/agent/codebuddy/config", "OPTIONS", { origin: "https://untrusted.invalid" }, 200],
+    ] as const) {
+      const response = await fetch(base + endpoint, {
+        method,
+        headers: { "content-type": "application/json", "content-encoding": "gzip", ...extraHeaders },
+        body: Buffer.from([0x1f, 0x8b]),
+        signal: AbortSignal.timeout(3000),
+      });
+      assert.equal(response.status, status, `${method} ${endpoint} must be checked before decompression`);
+      await response.arrayBuffer();
+    }
+    for (const endpoint of ["/health", "/config"]) {
+      const response = await fetch(base + endpoint, { signal: AbortSignal.timeout(3000) });
+      assert.equal(response.status, 200);
+      assert.equal((await response.json()).ok, true);
+    }
+  });
+  for (const compressed of [false, true]) {
+    const body = JSON.stringify({ cliPath: "" });
+    const response = await fetch(base + "/agent/codebuddy/config", {
+      method: "POST",
+      headers: { ...headers, ...(compressed ? { "content-encoding": "gzip" } : {}) },
+      body: compressed ? gzipSync(body) : body,
+    });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { ok: true, configured: false, cliPath: "" });
+  }
+  for (const compressed of [false, true]) {
+    const response = await fetch(base + "/agent/codebuddy/config", {
+      method: "POST",
+      headers: { ...headers, ...(compressed ? { "content-encoding": "gzip" } : {}) },
+      body: compressed ? Buffer.from([0x1f, 0x8b]) : "{",
+    });
+    const payload = await response.json();
+    // Malformed client input must not be reported as a server fault (500),
+    // and must not echo the parser's internal message back to the caller.
+    assert.ok(
+      response.status >= 400 && response.status < 500,
+      `malformed body must be a client error, got ${response.status}`,
+    );
+    assert.equal(payload.ok, false);
+    assert.equal(payload.error, "invalid request body");
+    const health = await fetch(base + "/health");
+    assert.equal(health.status, 200);
+    assert.equal((await health.json()).ok, true);
+  }
+  await t.test("survives trailing gzip bytes with and without a token", async () => {
+    // Later chunks reach a finished gzip decoder and used to crash the process (GHSA-27r3-jxmh-p828).
+    const trailingBody = Buffer.concat([gzipSync('{"probe":true}'), Buffer.from([0]), Buffer.alloc(100 * 1024, 0x58)]);
+    for (const authenticated of [false, true]) {
+      const trailingStatus = await new Promise<number | undefined>((resolve, reject) => {
+        const req = request({
+          host: "127.0.0.1", port: address.port, method: "POST", path: "/body-parser-regression",
+          headers: {
+            "content-type": "application/json", "content-encoding": "gzip", "content-length": trailingBody.length,
+            ...(authenticated ? { "x-canvas-agent-token": "test-codebuddy-token" } : {}),
+          },
+        }, (res) => {
+          res.on("error", reject);
+          res.resume();
+          res.once("end", () => resolve(res.statusCode));
+        });
+        req.on("error", reject);
+        req.setTimeout(3000, () => req.destroy(new Error("compressed request timed out")));
+        req.end(trailingBody);
+      });
+      assert.equal(trailingStatus, authenticated ? 404 : 401);
+      await delay(200);
+      const healthy = await fetch(base + "/health", { signal: AbortSignal.timeout(3000) });
+      assert.equal(healthy.status, 200);
+      assert.equal((await healthy.json()).ok, true);
+    }
   });
   const invalid = await fetch(base + "/agent/codebuddy/config", {
     method: "POST",

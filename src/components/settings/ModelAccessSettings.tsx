@@ -58,6 +58,18 @@ export const CHANNELS = [
 export type ChannelId = (typeof CHANNELS)[number]["id"];
 export type Method = ChannelId | "codex";
 
+/**
+ * OAuth 账号授权渠道与占位面板尚未接入后端会话，默认不渲染。
+ * 如需调试可通过环境变量 KK_SHOW_UNFINISHED_OAUTH=1 控制。
+ */
+const SHOW_UNFINISHED_OAUTH =
+  typeof process !== "undefined" &&
+  process.env?.KK_SHOW_UNFINISHED_OAUTH === "1";
+
+const VISIBLE_CHANNELS = SHOW_UNFINISHED_OAUTH
+  ? CHANNELS
+  : CHANNELS.filter((ch) => ch.id !== "oauth");
+
 export default function ModelAccessSettings({
   onFeedback,
   active = true,
@@ -70,9 +82,13 @@ export default function ModelAccessSettings({
   workflows: LocalWorkflowAccess;
 }) {
   const setBusy = useSettingsNavigationBusy();
-  const [currentChannel, setCurrentChannel] = useState<ChannelId>(
-    initialMethod === "codex" ? "cli" : initialMethod,
-  );
+  const defaultChannel: ChannelId =
+    initialMethod === "codex"
+      ? "cli"
+      : !SHOW_UNFINISHED_OAUTH && initialMethod === "oauth"
+        ? "official"
+        : initialMethod;
+  const [currentChannel, setCurrentChannel] = useState<ChannelId>(defaultChannel);
   const [cliTool, setCliTool] = useState<"codex" | "gemini" | "codebuddy">(
     initialMethod === "codex" ? "codex" : "gemini",
   );
@@ -115,7 +131,8 @@ export default function ModelAccessSettings({
     setFocusGoogle(false);
   }, [focusGoogle, currentChannel]);
 
-  const channelInfo = CHANNELS.find((c) => c.id === currentChannel)!;
+  const channelInfo =
+    CHANNELS.find((c) => c.id === currentChannel) ?? VISIBLE_CHANNELS[0];
   const cliActive = active && currentChannel === "cli";
   const apiVisible = ["official", "relay", "local"].includes(currentChannel);
   const apiChannel = useRef<ChannelId>("official");
@@ -126,14 +143,22 @@ export default function ModelAccessSettings({
       <nav className="model-access-channel-nav" aria-label="模型接入渠道导航">
         <div className="channel-nav-header">
           <h2 className="channel-nav-title">模型接入渠道</h2>
-          <span className="channel-nav-count">5 大核心渠道</span>
+          <span className="channel-nav-count">
+            {VISIBLE_CHANNELS.length === 5
+              ? "5 大核心渠道"
+              : `${VISIBLE_CHANNELS.length} 大核心渠道`}
+          </span>
         </div>
         <div
           className="channel-segmented-tabs"
           role="tablist"
-          aria-label="5 大模型接入渠道"
+          aria-label={
+            VISIBLE_CHANNELS.length === 5
+              ? "5 大模型接入渠道"
+              : `${VISIBLE_CHANNELS.length} 大模型接入渠道`
+          }
         >
-          {CHANNELS.map((ch) => (
+          {VISIBLE_CHANNELS.map((ch) => (
             <button
               key={ch.id}
               type="button"
@@ -197,7 +222,7 @@ export default function ModelAccessSettings({
         }
 
         {/* 3. OAuth */}
-        {currentChannel === "oauth" && (
+        {SHOW_UNFINISHED_OAUTH && currentChannel === "oauth" && (
           <section
             id="channel-panel-oauth"
             role="tabpanel"

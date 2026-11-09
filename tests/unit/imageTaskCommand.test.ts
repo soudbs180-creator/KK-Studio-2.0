@@ -184,7 +184,7 @@ test("image task input rejects oversized prompts, invalid counts and unsupported
   );
   expectCommandError(
     () => validateImageTaskInput({ ...input, privacyMode: "platform_backed" }),
-    /Prototype/,
+    /自带 Key/,
   );
   const noModel = { ...input, model: "" };
   assert.throws(

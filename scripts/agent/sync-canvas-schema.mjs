@@ -14,6 +14,13 @@ async function writeIfChanged(url, next) {
   await fs.writeFile(url, normalized);
 }
 
+await fs.mkdir(new URL("../../vendor/canvas-agent/src/config/", import.meta.url), { recursive: true });
+await writeIfChanged(
+  new URL("../../vendor/canvas-agent/src/config/tools.ts", import.meta.url),
+  "// Generated from src/domain/configTools.ts by scripts/agent/sync-canvas-schema.mjs.\n" +
+    await fs.readFile(new URL("../../src/domain/configTools.ts", import.meta.url), "utf8"),
+);
+
 const source = await fs.readFile(
   new URL("../../src/domain/canvasOperationSchema.ts", import.meta.url),
   "utf8",

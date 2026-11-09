@@ -714,6 +714,8 @@ function toolName(name: string) {
     if (name === "canvas_create_text_nodes") return "批量创建文本";
     if (name === "canvas_create_config_node") return "创建生成配置";
     if (name === "canvas_create_image_prompt_flow") return "创建生图流程";
+    if (name === "canvas_create_reverse_prompt_flow") return "创建反推提示词流程";
+    if (name === "canvas_get_result") return "读取生成结果";
     if (name === "canvas_create_generation_flow") return "创建生成流程";
     if (name === "canvas_generate_text") return "生成文本";
     if (name === "canvas_generate_image") return "生成图片";

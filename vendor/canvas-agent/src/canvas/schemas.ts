@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CanvasOpSchema } from "./atomic-schema.js";
+import { configToolNames, configToolInputSchemas, configToolDescriptions } from "../config/tools.js";
 
 const recordSchema = z.record(z.string(), z.unknown());
 const positionSchema = z.object({ x: z.number(), y: z.number() });
@@ -9,6 +10,7 @@ const generationModeSchema = z.enum(["text", "image", "video", "audio"]);
 
 /** Canvas Agent 对外提供的工具名称。 */
 export const toolNames = [
+    ...configToolNames,
     "site_navigate",
     "canvas_list_projects",
     "canvas_get_state",
@@ -21,6 +23,8 @@ export const toolNames = [
     "canvas_create_text_nodes",
     "canvas_create_config_node",
     "canvas_create_image_prompt_flow",
+    "canvas_create_reverse_prompt_flow",
+    "canvas_get_result",
     "canvas_create_generation_flow",
     "canvas_generate_text",
     "canvas_generate_image",
@@ -92,6 +96,7 @@ const generationFlowSchema = z.object({
 });
 
 export const toolInputSchemas = {
+    ...configToolInputSchemas,
     site_navigate: z.object({ path: z.string() }),
     canvas_list_projects: z.object({ keyword: z.string().optional(), page: z.number().optional(), pageSize: z.number().optional() }),
     canvas_get_state: z.object({}).passthrough(),
@@ -104,6 +109,8 @@ export const toolInputSchemas = {
     canvas_create_text_nodes: z.object({ items: z.array(textNodeSchema).min(1), x: z.number().optional(), y: z.number().optional(), gap: z.number().optional(), direction: z.enum(["row", "column"]).optional() }),
     canvas_create_config_node: z.object({ prompt: z.string().optional(), mode: generationModeSchema.optional(), title: z.string().optional(), x: z.number().optional(), y: z.number().optional(), width: z.number().optional(), height: z.number().optional(), autoRun: z.boolean().optional() }).merge(generationOptionsSchema),
     canvas_create_image_prompt_flow: z.object({ prompt: z.string(), x: z.number().optional(), y: z.number().optional(), autoRun: z.boolean().optional() }).merge(generationOptionsSchema),
+    canvas_create_reverse_prompt_flow: z.object({ imageNodeId: z.string().optional(), attachmentId: z.string().optional(), prompt: z.string().optional(), autoRun: z.boolean().optional(), x: z.number().optional(), y: z.number().optional() }).merge(generationOptionsSchema),
+    canvas_get_result: z.object({ nodeId: z.string(), wait: z.boolean().optional() }),
     canvas_create_generation_flow: generationFlowSchema.extend({ mode: generationModeSchema.optional(), autoRun: z.boolean().optional() }).merge(generationOptionsSchema),
     canvas_generate_text: generationFlowSchema.merge(generationOptionsSchema),
     canvas_generate_image: generationFlowSchema.merge(generationOptionsSchema),
@@ -129,6 +136,7 @@ export const toolInputSchemas = {
 } satisfies Record<ToolName, z.ZodObject>;
 
 export const toolDescriptions: Record<ToolName, string> = {
+    ...configToolDescriptions,
     site_navigate: "跳转网站页面。path 可为 / (首页)、/canvas (我的画布)、/canvas/:id (指定画布)、/image (生图工作台)、/video (视频创作台)、/prompts (提示词库)、/assets (我的素材)、/config (配置)。操作画布前若不在画布页，先用本工具打开画布。",
     canvas_list_projects: "列出用户全部画布（仅标题、创建/更新时间、节点数、连线数，不含完整数据），支持 keyword 搜索和 page/pageSize 分页。返回的 id 可配合 site_navigate 跳转到 /canvas/:id 打开对应画布。",
     canvas_get_state: "读取当前网页画布的节点、连线、选区和视口。",
@@ -141,6 +149,8 @@ export const toolDescriptions: Record<ToolName, string> = {
     canvas_create_text_nodes: "批量创建文本节点，适合生成标题、段落、脚本、说明等内容块。",
     canvas_create_config_node: "创建生成配置节点，可指定 text/image/video/audio 模式和生成参数，可选择立即触发生成。",
     canvas_create_image_prompt_flow: "创建提示词文本节点和图片生成配置节点，并自动连线，可选择立即触发生图。",
+    canvas_create_reverse_prompt_flow: "反推提示词流程：基于图片节点或上传附件反推提示词，自动创建「反推文本节点」与「图片生成配置节点」，建立「原图 → 反推文本 → 生成配置」连线，可选择 autoRun 立即生成。",
+    canvas_get_result: "读取画布生成节点的结果与状态（只读），支持查询 queued/running/ready/error 状态及生成产物。",
     canvas_create_generation_flow: "创建通用生成流程：提示词文本节点、生成配置节点、参考节点连线，可用于文案、生图、视频或音频。",
     canvas_generate_text: "创建通用文本生成流程并立即触发生成。",
     canvas_generate_image: "创建通用图片生成流程并立即触发生成。",

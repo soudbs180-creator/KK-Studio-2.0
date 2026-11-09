@@ -30,6 +30,14 @@ export {
   layerSplitCapabilityManifest,
   executeLayerSplitCapability,
 } from "./layerSplitCapability.ts";
+export {
+  visionCaptionCapabilityManifest,
+  executeVisionCaptionCapability,
+  captionImage,
+  visionCaptionAdapters,
+  type VisionCaptionInput,
+  type VisionCaptionAdapter,
+} from "./visionCaption.ts";
 export { createImageCapabilityRegistry } from "./imageCapabilityRegistry.ts";
 
 export { UniversalExternalAppBridge } from "./externalBridge.ts";

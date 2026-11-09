@@ -136,7 +136,6 @@ function metadataFor(
 ): CompanionAssetMetadata {
   const copy = { ...value } as Record<string, unknown>;
   delete copy.preview;
-  delete copy.origins;
   return assetMetadataSchema.parse({ ...copy, size: bytes.byteLength });
 }
 

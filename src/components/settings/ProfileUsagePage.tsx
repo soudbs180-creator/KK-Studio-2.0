@@ -10,6 +10,12 @@ import {
   getUsageRecords,
   seedSampleUsageIfEmpty,
 } from "../../features/usage/index.ts";
+import { isEnabled } from "../../app/featureFlags.ts";
+import {
+  getLocalAccountProvider,
+  LOCAL_ACCOUNT_CHANGED_EVENT,
+  type AccountProfile,
+} from "../../features/account/index.ts";
 
 import {
   cardBox,
@@ -19,6 +25,13 @@ import {
 import ProfileUsageChart from "./ProfileUsageCharts";
 
 export default function ProfileUsagePage() {
+  const account = getLocalAccountProvider();
+  const [profile, setProfile] = useState<AccountProfile>(() =>
+    account.getProfile(),
+  );
+  const [draftName, setDraftName] = useState(profile.displayName);
+  const [draftBio, setDraftBio] = useState(profile.bio);
+  const [savedHint, setSavedHint] = useState<string | null>(null);
   const [daysRange, setDaysRange] = useState<7 | 14>(7);
   const [hoveredDay, setHoveredDay] = useState<DailyUsageSummary | null>(null);
   const [kpis, setKpis] = useState<UsageKpis>(getUsageKpis);
@@ -27,17 +40,29 @@ export default function ProfileUsagePage() {
   );
   const [modelBreakdown, setModelBreakdown] =
     useState<Record<string, number>>(getModelBreakdown);
+  const showCloud = isEnabled("accountCloud");
 
   useEffect(() => {
     seedSampleUsageIfEmpty();
-    const refresh = () => {
+    const refreshUsage = () => {
       setKpis(getUsageKpis());
       setDailyData(getDailySummaries(daysRange));
       setModelBreakdown(getModelBreakdown());
     };
-    refresh();
-    window.addEventListener("kk:token-usage-changed", refresh);
-    return () => window.removeEventListener("kk:token-usage-changed", refresh);
+    const refreshProfile = () => {
+      const next = getLocalAccountProvider().getProfile();
+      setProfile(next);
+      setDraftName(next.displayName);
+      setDraftBio(next.bio);
+    };
+    refreshUsage();
+    refreshProfile();
+    window.addEventListener("kk:token-usage-changed", refreshUsage);
+    window.addEventListener(LOCAL_ACCOUNT_CHANGED_EVENT, refreshProfile);
+    return () => {
+      window.removeEventListener("kk:token-usage-changed", refreshUsage);
+      window.removeEventListener(LOCAL_ACCOUNT_CHANGED_EVENT, refreshProfile);
+    };
   }, [daysRange]);
 
   const modelEntries = Object.entries(modelBreakdown).sort(
@@ -45,25 +70,37 @@ export default function ProfileUsagePage() {
   );
   const totalModelTokens = modelEntries.reduce((sum, [, val]) => sum + val, 0);
   const recentRecords = getUsageRecords().slice(-5).reverse();
+  const dirty =
+    draftName.trim() !== profile.displayName || draftBio.trim() !== profile.bio;
+
+  function saveProfile(): void {
+    const next = getLocalAccountProvider().updateProfile({
+      displayName: draftName,
+      bio: draftBio,
+    });
+    setProfile(next);
+    setDraftName(next.displayName);
+    setDraftBio(next.bio);
+    setSavedHint("已保存到本机");
+  }
 
   return (
     <div className="settings-detail-stack" style={{ gap: "20px" }}>
       <h2 className="settings-page-title" id="settings-section-title">
         个人主页
       </h2>
-      {/* Profile Header */}
       <div
         className="kk-card-box"
         style={{
           ...cardBox,
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "flex-start",
           flexWrap: "wrap",
           gap: "14px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
           <div
             className="kk-pill-box"
             style={{
@@ -77,11 +114,13 @@ export default function ProfileUsagePage() {
               fontWeight: 600,
               fontSize: "15px",
               color: "var(--kk-text-accent)",
+              flexShrink: 0,
             }}
+            aria-hidden="true"
           >
-            KK
+            {profile.avatarInitials}
           </div>
-          <div>
+          <div style={{ minWidth: 0, flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <span
                 style={{
@@ -90,7 +129,7 @@ export default function ProfileUsagePage() {
                   color: "var(--kk-text-primary)",
                 }}
               >
-                本地创作者
+                {profile.displayName}
               </span>
               <span
                 className="kk-pill-box"
@@ -101,33 +140,72 @@ export default function ProfileUsagePage() {
                   color: "var(--kk-text-accent)",
                 }}
               >
-                本地离线模式
+                本地登录
               </span>
             </div>
             <p
               style={{
                 fontSize: "12px",
                 color: "var(--kk-text-secondary)",
-                margin: "3px 0 0",
+                margin: "3px 0 12px",
               }}
             >
-              数据完全保存在本机沙盒中；模型密钥与用量记录由系统本地加密保管。
+              资料保存在本机；可随时改显示名。云端账号后续版本再接。
             </p>
+            <label className="settings-field">
+              显示名
+              <input
+                value={draftName}
+                maxLength={40}
+                onChange={(event) => {
+                  setDraftName(event.target.value);
+                  setSavedHint(null);
+                }}
+              />
+            </label>
+            <label className="settings-field">
+              简介（可选）
+              <input
+                value={draftBio}
+                maxLength={280}
+                placeholder="写一句本机备注"
+                onChange={(event) => {
+                  setDraftBio(event.target.value);
+                  setSavedHint(null);
+                }}
+              />
+            </label>
+            <div className="settings-action-group">
+              <button
+                type="button"
+                className="settings-action secondary"
+                disabled={!dirty}
+                onClick={saveProfile}
+              >
+                保存到本机
+              </button>
+              {savedHint && (
+                <span role="status" className="settings-section-intro">
+                  {savedHint}
+                </span>
+              )}
+            </div>
           </div>
         </div>
-        <button
-          type="button"
-          className="settings-action secondary"
-          style={{ height: "var(--kk-control-h-md)" }}
-          onClick={() =>
-            alert("当前处于本地无限制安全运行模式。云端协作将于后续版本开放。")
-          }
-        >
-          连接云端账号
-        </button>
+        {showCloud && (
+          <button
+            type="button"
+            className="settings-action secondary"
+            style={{ height: "var(--kk-control-h-md)" }}
+            onClick={() =>
+              alert("云端协作将于后续版本开放；当前请继续使用本地登录。")
+            }
+          >
+            连接云端账号
+          </button>
+        )}
       </div>
 
-      {/* 4 KPI Cards */}
       <div
         style={{
           display: "grid",
@@ -157,7 +235,7 @@ export default function ProfileUsagePage() {
           {
             label: "模型请求总频次",
             val: `${kpis.totalRequests.toLocaleString()} 次`,
-            sub: "连通成功率 100%",
+            sub: "本机记录",
             color: "var(--kk-success)",
           },
         ].map((item) => (

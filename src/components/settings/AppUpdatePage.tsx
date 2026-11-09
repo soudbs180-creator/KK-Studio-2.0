@@ -18,6 +18,14 @@ export type UpdateState =
   | "ready"
   | "error";
 
+/**
+ * 尚未接入的更新检测与自动下载默认不渲染（避免禁用占位卡片与假按钮）。
+ * 如需调试可通过环境变量 KK_SHOW_UNFINISHED_UPDATE_SETTINGS=1 控制。
+ */
+const SHOW_UNFINISHED_UPDATE_SETTINGS =
+  typeof process !== "undefined" &&
+  process.env?.KK_SHOW_UNFINISHED_UPDATE_SETTINGS === "1";
+
 const unavailable =
   "自动更新服务尚未接入；未检查远端版本，也未下载或安装更新。";
 const cardStyle: CSSProperties = {
@@ -58,59 +66,67 @@ export default function AppUpdatePage() {
           <h3 style={headingStyle}>
             {appPlatform()} · 当前版本 {appVersion}
           </h3>
-          <button
-            type="button"
-            className="settings-action secondary"
-            disabled
-            title={unavailable}
-          >
-            检查更新
-          </button>
+          {SHOW_UNFINISHED_UPDATE_SETTINGS && (
+            <button
+              type="button"
+              className="settings-action secondary"
+              disabled
+              title={unavailable}
+            >
+              检查更新
+            </button>
+          )}
         </div>
         <p className="settings-field-help" style={helpStyle}>
           版本来自当前应用构建信息。
         </p>
-        <div
-          role="status"
-          style={{ ...rowStyle, justifyContent: "flex-start" }}
-        >
-          <UiIcon name="clock" />
-          <div>
-            <strong>尚未检查更新</strong>
-            <p className="settings-field-help" style={helpStyle}>
-              {unavailable}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="kk-card-box" style={cardStyle}>
-        <h3 style={headingStyle}>当前安装版本包含的更新内容</h3>
-        <p className="settings-field-help" style={helpStyle}>
-          安装记录尚未接入，不能将示例日志视为本机安装记录。
-        </p>
-      </div>
-      <div
-        className="kk-card-box"
-        style={{ ...cardStyle, ...rowStyle, flexDirection: "row" }}
-      >
-        <div>
-          <h3 id="automatic-downloads-label" style={headingStyle}>
-            自动检查并下载更新
-          </h3>
-          <p
-            id="automatic-downloads-description"
-            className="settings-field-help"
-            style={helpStyle}
+        {SHOW_UNFINISHED_UPDATE_SETTINGS && (
+          <div
+            role="status"
+            style={{ ...rowStyle, justifyContent: "flex-start" }}
           >
-            安装与重启仍须提示确认
+            <UiIcon name="clock" />
+            <div>
+              <strong>尚未检查更新</strong>
+              <p className="settings-field-help" style={helpStyle}>
+                {unavailable}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+      {SHOW_UNFINISHED_UPDATE_SETTINGS && (
+        <div className="kk-card-box" style={cardStyle}>
+          <h3 style={headingStyle}>当前安装版本包含的更新内容</h3>
+          <p className="settings-field-help" style={helpStyle}>
+            安装记录尚未接入，不能将示例日志视为本机安装记录。
           </p>
         </div>
-        <SettingsToggle
-          id="automatic-downloads"
-          checked={false}
-          disabledReason={unavailable}
-        />
-      </div>
+      )}
+      {SHOW_UNFINISHED_UPDATE_SETTINGS && (
+        <div
+          className="kk-card-box"
+          style={{ ...cardStyle, ...rowStyle, flexDirection: "row" }}
+        >
+          <div>
+            <h3 id="automatic-downloads-label" style={headingStyle}>
+              自动检查并下载更新
+            </h3>
+            <p
+              id="automatic-downloads-description"
+              className="settings-field-help"
+              style={helpStyle}
+            >
+              安装与重启仍须提示确认
+            </p>
+          </div>
+          <SettingsToggle
+            id="automatic-downloads"
+            checked={false}
+            disabledReason={unavailable}
+          />
+        </div>
+      )}
       <div style={rowStyle}>
         <SettingsExternalLink
           href={windowsInstallerUrl}

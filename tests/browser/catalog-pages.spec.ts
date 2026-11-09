@@ -25,7 +25,7 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
     page.getByRole("dialog", { name: "项目库使用教程" }),
   ).toBeVisible();
   await expect(
-    page.getByText("当前版本是前端 Prototype。", { exact: false }),
+    page.getByText("项目与素材仅保存在本机", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "关闭", exact: true }).click();
   await expect(

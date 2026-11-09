@@ -1,4 +1,8 @@
 // Public contract entry for feature: providers
+export { createConfigToolHost, diffConfig } from "./configAgent.ts";
+export type { ConfigToolPorts, ConfigState, ConfigSnapshot } from "./configAgent.ts";
+export { createBrowserConfigToolHost, requestConfigCredential, CONFIG_CREDENTIAL_EVENT, CONFIG_CHANGED_EVENT, CONFIG_SNAPSHOTS_KEY } from "./configAgentRuntime.ts";
+export type { ConfigCredentialRequest } from "./configAgentRuntime.ts";
 export {
   providerConfigSchema,
   exportProviderConfig,

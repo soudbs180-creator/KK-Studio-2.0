@@ -90,7 +90,10 @@ export default function ProjectPackageActions({
       title: "选择项目包",
       multiple: false,
       directory: false,
-      filters,
+      filters: [
+        ...filters,
+        { name: "旧本机服务备份清单", extensions: ["json"] },
+      ],
     });
     if (!mounted.current) return;
     if (!source || Array.isArray(source)) {

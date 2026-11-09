@@ -118,7 +118,14 @@ export interface StorageSnapshotRead {
   revision: number | null;
 }
 
-/** Snapshot transport; decoding and revision conflict policy remain with their owners. */
+/** Snapshot transport; decoding and revision conflict policy remain with their owners.
+ * Warehouse family handshake and cross-format import policy are specified in
+ * storageFormat.ts. WIRING STATUS (2026-11-09): CONTRACT-ONLY — see
+ * TASK-CLOSURE-20261109 (PARTIAL). Only the companion service applies an
+ * admission check today; each other platform implementation still has to wire
+ * its own admission before read/write. This comment is a requirement, not a
+ * statement that the guard is active.
+ */
 export interface StoragePort<Snapshot> {
   read(): Promise<StorageSnapshotRead>;
   write(

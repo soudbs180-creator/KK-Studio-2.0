@@ -228,6 +228,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | PARTIAL | 进行中 | P0 | none | root | 本地752f7dbd已承接，当前PR83尚未合origin/main；复用已有实现，只补当前SHA完整verify、Desktop与正式独审，不重开/重复合并旧树；未授权合并或删除。 |
 | TASK-DEEP-WATER-20261105 | 第二阶段B1–B5与A1–A3深水区补齐 | IN_PROGRESS | 进行中 | P0 | TASK-E2E-WIRING-20261104 | root | 完成当前整合候选完整verify、Desktop来源收据及独审；保留外部模型/用户验收边界，不重做已存在B1–B5；六支柱原型helper不冒充生产接线。 |
 | TASK-RULES-005 | AI铁律卡片RULES.md与Figma组件三层Token化治理重构 | DONE | 已完成 | P0 | none | root | 已完成合流并推送 |
+| TASK-CLOSURE-20261109 | 当前版本验收、存储保护与安全来源闭环 | PARTIAL | 未完成 | P1 | TASK-LOCAL-SERVICE-001, TASK-CHAT-MIGRATION-20261017, TASK-SEC-AGENT-AUDIT-20261028 | Codex | 保持本地有界修复与原件保护；继续实现/验收明确的跨格式显式导入和版本接线，核清剩余5包公告暴露与固定上游身份；Hosted/main、安装生命周期/签名/干净机、全六态/像素及有权限后真实生成仍分别未完成，性能先有基准。 |
 
 ## TASK-SYNC-LOCAL-MAIN-20261106 — 主线审查分支全面治理与门禁收口
 
@@ -4453,3 +4454,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 已完成合流并推送
 - Last verified: 2026-11-05
 - Updated: 2026-11-05
+
+## TASK-CLOSURE-20261109 — 当前版本验收、存储保护与安全来源闭环
+
+- Goal: 按用户五阶段优先级推进当前代码验收、跨端数据保护、安全追溯，保留外部验收和后续性能基准边界
+- Scope: 本轮docs/changes/2026-11-09-local-closure、docs/README.md、docs/governance交接与新任务；承接packages/creation-contracts及local-service存储候选，修复store.ts恢复目标准入、migration.ts来源链保留及对应tests/unit、tests/desktop/agent-startup-recovery.mjs当前契约验收；独立核验vendor/canvas-agent/body-parser与vendor来源清单。无产品UI、新功能、付费API或生产写入。 续接ADR-021显式Companion备份导入：仅src-tauri/src/project_package.rs、project_package_companion.rs、project_package_companion_tests.rs、src/features/projects/ProjectPackageActions.tsx的导入文件过滤器（不改视觉）、tests/unit/projectPackageActions.test.ts、tests/fixtures/companion-backup-v1、docs/features/feat-037-web-local-service.md及docs/changes/2026-11-09-companion-backup-import。 真实Node v2镜像字段触发原生迁移重复Agent线程错误，最小补齐src-tauri/src/chat_migration_value.rs按唯一完全相同Codex线程复用既有聊天；project_package_failure_tests.rs仅开放测试故障注入句柄；UI回归复用tests/browser/project-package.spec.ts，不新建重复unit harness。
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-11-09-local-closure/intent.md, docs/changes/2026-11-09-local-closure/spec.md, docs/changes/2026-11-09-companion-backup-import/spec.md
+- Feature IDs: FEAT-037
+- Owner role: repository-maintainer
+- Acceptance: 当前候选以源码指纹绑定完整本地门禁、安装包/界面证据；未验证项分开; 恢复拒绝不兼容目标且主/备/记录/Blob原字节不变；迁移保留合法来源并明确拒绝非法输入; 安全公告与真实运行拓扑、插件权限门和来源清单分别核验；上游未知身份不猜测; 真实计费/云生成/生产和退役待权限核验，性能先有重复基准
+- Branch: `fix/TASK-STORAGE-CLOSURE-20261109`
+- Worktree: `D:/kk-studio/.worktrees/TASK-STORAGE-CLOSURE-20261109`
+- Modules: docs/changes/2026-11-09-local-closure, src/features/local-service, packages/creation-contracts, tests/unit, vendor/canvas-agent, vendor/README.md, docs/governance, src-tauri/src/project_package.rs, src-tauri/src/project_package_companion.rs, src-tauri/src/project_package_companion_tests.rs, src/features/projects/ProjectPackageActions.tsx, tests/unit/projectPackageActions.test.ts, tests/fixtures/companion-backup-v1, docs/features/feat-037-web-local-service.md, docs/changes/2026-11-09-companion-backup-import, src-tauri/src/chat_migration_value.rs, src-tauri/src/project_package_failure_tests.rs, tests/browser/project-package.spec.ts
+- Verification: PARTIAL — PARTIAL：组合verify-02退出0（unit2771 pass/20skip，Agent205pass/2skip，browser963pass/1skip，design9pass，pixel缺基线skip）；storage92/92、Rust318pass/1ignore、真实本机服务HTTP+smoke通过。产品快照df597194独立SHA审查PASS、新安装包收据验证PASS；Native TaskHost11/11及后补脚本官方BAT38/38通过，凭据已清理。保留2.1.42既有安装未改，安装生命周期/签名/干净机未验；仍有5包公告和来源UNKNOWN，不代表共仓导入完成。
+- Evidence: [docs/changes/2026-11-09-local-closure/verification.md](../../docs/changes/2026-11-09-local-closure/verification.md), [docs/changes/2026-11-09-local-closure/review.md](../../docs/changes/2026-11-09-local-closure/review.md)
+- Next action: 保持本地有界修复与原件保护；继续实现/验收明确的跨格式显式导入和版本接线，核清剩余5包公告暴露与固定上游身份；Hosted/main、安装生命周期/签名/干净机、全六态/像素及有权限后真实生成仍分别未完成，性能先有基准。
+- Last verified: 2026-11-09
+- Updated: 2026-11-09

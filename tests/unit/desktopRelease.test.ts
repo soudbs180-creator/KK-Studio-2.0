@@ -75,6 +75,73 @@ function fixture(t: { after: (cleanup: () => void) => void }) {
   return { root, source, executable };
 }
 
+// Windows entry diagnostics are printed for the console log, but the CI
+// artifact only uploads test-results/. Persisting the same payload there keeps
+// a hosted failure classifiable after the console log is gone, which is what
+// previously left TASK-WINDOWS-ENTRY-RECOVERY-003 without a root cause.
+function persistDiagnostic(diagnostic: string) {
+  // One file per test process: parallel workers appending to a shared
+  // windows-entry.jsonl can interleave and corrupt the JSONL evidence.
+  const target = path.join(
+    process.cwd(),
+    "test-results",
+    `windows-entry-${process.pid}.jsonl`,
+  );
+  try {
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.appendFileSync(target, `${diagnostic}\n`, "utf8");
+  } catch (error) {
+    // Evidence capture must never decide the test outcome, but a silent
+    // failure leaves a hosted run without the artifact it relies on.
+    console.warn(
+      `Windows entry diagnostics could not be persisted: ${String(error)}`,
+    );
+  }
+}
+
+// Requesting piped stdio makes spawnSync fail outright with EBUSY (errno
+// -4082, pid 0) on Windows hosts that refuse anonymous pipe creation, which
+// made this fixture fail before it could exercise anything. Redirecting the
+// child straight into real files keeps every observable the assertions rely on
+// (exit status, error code, timeout, captured output) without that dependency.
+function spawnSyncCaptured(
+  command: string,
+  args: readonly string[],
+  options: {
+    cwd?: string;
+    windowsHide?: boolean;
+    input?: string;
+    timeout?: number;
+  },
+  captureDirectory: string,
+) {
+  fs.mkdirSync(captureDirectory, { recursive: true });
+  const stdinPath = path.join(captureDirectory, "stdin.log");
+  const stdoutPath = path.join(captureDirectory, "stdout.log");
+  const stderrPath = path.join(captureDirectory, "stderr.log");
+  fs.writeFileSync(stdinPath, options.input ?? "", "utf8");
+  const handles = [
+    fs.openSync(stdinPath, "r"),
+    fs.openSync(stdoutPath, "w"),
+    fs.openSync(stderrPath, "w"),
+  ];
+  try {
+    const result = spawnSync(command, args, {
+      cwd: options.cwd,
+      windowsHide: options.windowsHide,
+      timeout: options.timeout,
+      stdio: handles,
+    });
+    return {
+      ...result,
+      stdout: fs.readFileSync(stdoutPath, "utf8"),
+      stderr: fs.readFileSync(stderrPath, "utf8"),
+    };
+  } finally {
+    for (const handle of handles) fs.closeSync(handle);
+  }
+}
+
 function processDiagnostic(
   phase: string,
   result: ReturnType<typeof spawnSync>,
@@ -113,6 +180,7 @@ function processDiagnostic(
       : null,
   });
   console.log(`Windows entry fixture: ${diagnostic}`);
+  persistDiagnostic(diagnostic);
   return diagnostic;
 }
 
@@ -633,10 +701,12 @@ test(
       stub,
     ];
     const compilationStartedAt = performance.now();
-    const compiled = spawnSync(compiler, compilerArguments, {
-      windowsHide: true,
-      encoding: "utf8",
-    });
+    const compiled = spawnSyncCaptured(
+      compiler,
+      compilerArguments,
+      { windowsHide: true },
+      path.join(root, "captures", "compile"),
+    );
     const compilationDiagnostic = processDiagnostic(
       "compile-existing-executable",
       compiled,
@@ -662,13 +732,17 @@ test(
     const launcherCommand = process.env.ComSpec ?? "cmd.exe";
     const launcherArguments = ["/d", "/c", "start-kk-studio.bat"];
     const launchStartedAt = performance.now();
-    const started = spawnSync(launcherCommand, launcherArguments, {
-      cwd: root,
-      windowsHide: true,
-      encoding: "utf8",
-      input: "\r\n",
-      timeout: 10000,
-    });
+    const started = spawnSyncCaptured(
+      launcherCommand,
+      launcherArguments,
+      {
+        cwd: root,
+        windowsHide: true,
+        input: "\r\n",
+        timeout: 10000,
+      },
+      path.join(root, "captures", "freshness-success"),
+    );
     const launchDiagnostic = processDiagnostic(
       "freshness-success",
       started,
@@ -697,13 +771,17 @@ test(
       'import fs from "node:fs"; fs.writeFileSync("freshness-checked.txt", JSON.stringify({phase:"freshness-rejected",node:process.execPath,version:process.version})); process.exitCode = 23;',
     );
     const rejectionStartedAt = performance.now();
-    const failed = spawnSync(launcherCommand, launcherArguments, {
-      cwd: root,
-      windowsHide: true,
-      encoding: "utf8",
-      input: "\r\n",
-      timeout: 10000,
-    });
+    const failed = spawnSyncCaptured(
+      launcherCommand,
+      launcherArguments,
+      {
+        cwd: root,
+        windowsHide: true,
+        input: "\r\n",
+        timeout: 10000,
+      },
+      path.join(root, "captures", "freshness-rejected"),
+    );
     const rejectionDiagnostic = processDiagnostic(
       "freshness-rejected",
       failed,

@@ -1,5 +1,9 @@
 import type { SettingsPreferences } from "../../domain/settings";
-import { SETTINGS_SECTIONS, type SettingsSection } from "./SettingsSectionData";
+import {
+  SETTINGS_SECTIONS,
+  getSettingsTier,
+  type SettingsSection,
+} from "./SettingsSectionData";
 import ConnectionSettings from "./ConnectionSettings";
 import { ProjectPackageActions as ProjectPackageActions } from "../../features/projects/index.ts";
 import type { SaveState } from "../../features/creation/index.ts";
@@ -45,7 +49,7 @@ export default function SettingsSections({
 }: SettingsSectionsProps) {
   const item = SETTINGS_SECTIONS.find((entry) => entry.id === section);
   return (
-    <div hidden={!active}>
+    <div hidden={!active} data-settings-tier={getSettingsTier(section)}>
       {active && (
         <h2 className="settings-page-title" id="settings-section-title">
           {item?.label}

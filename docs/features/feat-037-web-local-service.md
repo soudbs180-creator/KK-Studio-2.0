@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：platform
-- 最近更新：2026-10-16
-- 关联任务：TASK-LOCAL-SERVICE-001、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 最近更新：2026-11-09
+- 关联任务：TASK-LOCAL-SERVICE-001、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-CLOSURE-20261109
 
 ## 用户可见入口
 
@@ -18,6 +18,8 @@
 - 旧浏览器存储契约：`src/runtime/storage-contract.ts`、`src/features/creation/useCreationStorage.ts`。
 
 ## 测试与证据
+
+- 2026-11-09：Desktop 项目包恢复入口新增旧 Node 备份 manifest.json 的显式导入候选；复用 Native 暂存、读回、准入与原子新目录发布，保留合法未引用素材与 origins。来源时间缺失、非标准目录/未列入清单文件、歧义线程拒绝并保留源。真实 Node 合成 v2/v3 与故障测试及当前验证边界见[本轮记录](../changes/2026-11-09-companion-backup-import/verification.md)。这不是 Web 实时共仓，不据此升级 REAL。
 
 - 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：伴随服务父子操作独立busy，连接revision/身份约束迟到成功和错误；同renderer同身份重新配对受保护，跨renderer同字节ABA不冒称闭合；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 

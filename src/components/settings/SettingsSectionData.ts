@@ -1,3 +1,5 @@
+import { isEnabled } from "../../app/featureFlags.ts";
+
 export type SettingsSection =
   | "general"
   | "shortcuts"
@@ -41,13 +43,13 @@ export const SETTINGS_SECTIONS: SettingsSectionItem[] = [
     id: "account",
     label: "个人主页",
     icon: "account",
-    description: "查看账号信息与模型 Token 用量看板。",
+    description: "查看与编辑本机本地登录资料，以及本机 Token 用量看板。",
   },
   {
     id: "usage",
     label: "套餐与积分",
     icon: "account",
-    description: "查看当前模式、积分与账单明细。",
+    description: "本地模式说明、本机用量统计与预算占位（无云端扣费）。",
   },
   {
     id: "providers",
@@ -87,63 +89,165 @@ export const SETTINGS_SECTIONS: SettingsSectionItem[] = [
   },
 ];
 
+/** Three-tier information architecture for the settings sidebar. */
+export type SettingsTier = "essentials" | "advanced" | "experimental";
+
+export const SETTINGS_TIER_LABELS: Record<SettingsTier, string> = {
+  essentials: "常用",
+  advanced: "高级",
+  experimental: "实验",
+};
+
 export interface SettingsNavGroup {
+  tier: SettingsTier;
   label: string;
   items: SettingsSectionItem[];
 }
 
+/** Resolve tier members by their real section ids; never invent a section id. */
+function pickSections(...ids: SettingsSection[]): SettingsSectionItem[] {
+  return ids.map((id) => {
+    const item = SETTINGS_SECTIONS.find((entry) => entry.id === id);
+    if (!item) throw new Error(`Unknown settings section: ${id}`);
+    return item;
+  });
+}
+
+/**
+ * The 11 flat entries collapse into exactly three groups. Every id from
+ * SETTINGS_SECTIONS appears in exactly one group.
+ * The four lab panels named in the review (GatewayConsole / LocalHardware /
+ * LocalWorkflow / OntologyCertification) are inner panels of the providers and
+ * memory pages, not standalone section ids, so they stay where they are mounted.
+ */
 export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
   {
-    label: "",
-    items: [SETTINGS_SECTIONS[0], SETTINGS_SECTIONS[1]],
+    tier: "essentials",
+    label: SETTINGS_TIER_LABELS.essentials,
+    items: pickSections(
+      "general",
+      "providers",
+      "storage",
+      "updates",
+      "account",
+    ),
   },
   {
-    label: "账户与用量",
-    items: [SETTINGS_SECTIONS[3], SETTINGS_SECTIONS[4]],
+    tier: "advanced",
+    label: SETTINGS_TIER_LABELS.advanced,
+    items: pickSections("shortcuts", "memory", "extensions", "network"),
   },
   {
-    label: "核心功能",
-    items: [
-      SETTINGS_SECTIONS[5],
-      SETTINGS_SECTIONS[6],
-      SETTINGS_SECTIONS[7],
-      SETTINGS_SECTIONS[8],
-    ],
-  },
-  {
-    label: "安全与数据",
-    items: [SETTINGS_SECTIONS[9], SETTINGS_SECTIONS[10]],
-  },
-  {
-    label: "",
-    items: [SETTINGS_SECTIONS[2]],
+    tier: "experimental",
+    label: SETTINGS_TIER_LABELS.experimental,
+    items: pickSections("security", "usage"),
   },
 ];
+
+export const DEFAULT_SETTINGS_TIER: SettingsTier = "essentials";
+export const DEFAULT_SETTINGS_SECTION: SettingsSection = "general";
+
+/** Which tier owns a section; undefined means the section is not navigable. */
+export function getSettingsTier(
+  section: SettingsSection,
+): SettingsTier | undefined {
+  return SETTINGS_NAV_GROUPS.find((group) =>
+    group.items.some((item) => item.id === section),
+  )?.tier;
+}
+
+function sectionVisible(id: SettingsSection): boolean {
+  if (id === "account") return isEnabled("accountLocal");
+  if (id === "usage") return isEnabled("creditsLocal");
+  return true;
+}
+
+/** Filter nav by feature flags; local account/credits stay on by default. */
+export function getVisibleSettingsNavGroups(
+  groups: SettingsNavGroup[] = SETTINGS_NAV_GROUPS,
+): SettingsNavGroup[] {
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => sectionVisible(item.id)),
+    }))
+    .filter((group) => group.items.length > 0);
+}
 
 export interface ResolvedSettingsRoute {
   section: SettingsSection;
   generalDetail?: "updates" | "advanced";
   extensionsTab?: "plugins" | "skills" | "partners";
   modelMethod?: "local";
+  unavailableNotice?: string;
+}
+
+/**
+ * Legacy deep-link ids -> canonical section inside the new three-tier nav.
+ * "advanced" is deliberately absent: it is still the general-detail deep link.
+ */
+export const LEGACY_SETTINGS_ROUTE_ALIASES: Record<string, SettingsSection> = {
+  models: "providers",
+  data: "storage",
+  profile: "account",
+  plans: "usage",
+  comfy: "providers",
+  comfyui: "providers",
+  local: "providers",
+  partners: "providers",
+  codex: "providers",
+  mcp: "extensions",
+  plugins: "extensions",
+  skill: "extensions",
+  skills: "extensions",
+};
+
+function legacySection(route: string): SettingsSection {
+  return LEGACY_SETTINGS_ROUTE_ALIASES[route] ?? DEFAULT_SETTINGS_SECTION;
 }
 
 /** Preserve public links and stored IDs while consolidating their visible pages. */
 export function resolveSettingsRoute(route: string): ResolvedSettingsRoute {
-  if (route === "updates") return { section: "updates" };
-  if (route === "shortcuts") return { section: "shortcuts" };
-  if (route === "advanced")
+  const normalized =
+    typeof route === "string" ? route.trim().toLowerCase() : "";
+  // No deep link (or a wiped stored id) always lands on the essentials tier.
+  if (normalized === "" || normalized === "default" || normalized === "home")
+    return { section: DEFAULT_SETTINGS_SECTION };
+  if (normalized === "advanced")
     return { section: "general", generalDetail: "advanced" };
-  if (route === "profile") return { section: "account" };
-  if (route === "plans") return { section: "usage" };
-  if (route === "models") return { section: "providers" };
-  if (route === "data") return { section: "storage" };
-  if (["comfy", "comfyui", "local"].includes(route))
-    return { section: "providers", modelMethod: "local" };
-  if (["partners", "codex"].includes(route)) return { section: "providers" };
-  if (["mcp", "plugins"].includes(route))
-    return { section: "extensions", extensionsTab: "plugins" };
-  if (["skill", "skills"].includes(route))
-    return { section: "extensions", extensionsTab: "skills" };
-  const section = SETTINGS_SECTIONS.find((item) => item.id === route)?.id;
-  return { section: section ?? "general" };
+  if (normalized === "updates") return { section: "updates" };
+  if (normalized === "shortcuts") return { section: "shortcuts" };
+  if (normalized === "profile" || normalized === "account") {
+    if (!isEnabled("accountLocal"))
+      return {
+        section: DEFAULT_SETTINGS_SECTION,
+        unavailableNotice: "个人主页未开放（accountLocal 已关闭）。",
+      };
+    return { section: "account" };
+  }
+  if (normalized === "plans" || normalized === "usage") {
+    if (!isEnabled("creditsLocal"))
+      return {
+        section: DEFAULT_SETTINGS_SECTION,
+        unavailableNotice: "套餐与积分未开放（creditsLocal 已关闭）。",
+      };
+    return { section: "usage" };
+  }
+  if (["comfy", "comfyui", "local"].includes(normalized))
+    return { section: legacySection(normalized), modelMethod: "local" };
+  if (["partners", "codex"].includes(normalized))
+    return { section: legacySection(normalized) };
+  if (["mcp", "plugins"].includes(normalized))
+    return {
+      section: legacySection(normalized),
+      extensionsTab: "plugins",
+    };
+  if (["skill", "skills"].includes(normalized))
+    return {
+      section: legacySection(normalized),
+      extensionsTab: "skills",
+    };
+  const canonical = LEGACY_SETTINGS_ROUTE_ALIASES[normalized] ?? normalized;
+  const section = SETTINGS_SECTIONS.find((item) => item.id === canonical)?.id;
+  return { section: section ?? DEFAULT_SETTINGS_SECTION };
 }

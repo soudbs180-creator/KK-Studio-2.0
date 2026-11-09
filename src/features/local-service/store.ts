@@ -1,4 +1,7 @@
-import { mergeAssetOrigins } from "../../../packages/creation-contracts/index.ts";
+import {
+  detectAssetRecordFamily,
+  mergeAssetOrigins,
+} from "../../../packages/creation-contracts/index.ts";
 import { randomUUID } from "node:crypto";
 import {
   closeSync,
@@ -38,6 +41,20 @@ import {
   type CompanionBackupManifest,
 } from "./protocol.ts";
 import { assertStandaloneRoot } from "./standaloneRoot.ts";
+
+function parseCompanionDiskRecord(raw: unknown): CompanionAssetMetadata {
+  const family = detectAssetRecordFamily(raw).family;
+  if (family === "native-envelope" || family === "unsupported-future") {
+    throw new CompanionProtocolError(
+      "SNAPSHOT_UNSUPPORTED",
+      409,
+      family === "native-envelope"
+        ? "这是桌面原生素材封装，本机服务不会改写，原件已保留。"
+        : "素材记录版本较新，已暂停写入以保留原件。",
+    );
+  }
+  return assetMetadataSchema.parse(raw);
+}
 
 export type SnapshotReadResult = {
   status: "missing" | "loaded" | "recovered";
@@ -191,6 +208,21 @@ function isRestorableBackupPath(path: string): boolean {
   );
 }
 
+/**
+ * Manifests are accepted case-insensitively because Windows roots are
+ * case-insensitive, but every restore write must use the canonical lowercase
+ * layout. Otherwise a case-variant entry creates a shadow directory on POSIX
+ * hosts (or a duplicate record that list/read can never find).
+ * Exported for the regression test in companionRestoreTargetProtection.
+ */
+export function canonicalBackupPath(path: string): string {
+  const record = /^assets\/records\/(asset-[a-f0-9]{24}\.json)$/i.exec(path);
+  if (record) return `assets/records/${record[1]!.toLowerCase()}`;
+  const blob = /^assets\/blobs\/([a-f0-9]{64})$/i.exec(path);
+  if (blob) return `assets/blobs/${blob[1]!.toLowerCase()}`;
+  return path;
+}
+
 function readVerifiedBackupManifest(
   backupsRoot: string,
   backupId: string,
@@ -221,13 +253,16 @@ function loadAndVerifyBackupEntries(
   manifest: CompanionBackupManifest,
 ): Map<string, Uint8Array> {
   const entries = new Map<string, Uint8Array>();
+  const seenPaths = new Set<string>();
   for (const entry of manifest.files) {
-    if (entries.has(entry.path))
+    const canonical = canonicalBackupPath(entry.path);
+    if (seenPaths.has(entry.path) || entries.has(canonical))
       throw new CompanionProtocolError(
         "CORRUPT",
         422,
         "备份清单包含重复文件。",
       );
+    seenPaths.add(entry.path);
     if (!isRestorableBackupPath(entry.path))
       throw new CompanionProtocolError(
         "CORRUPT",
@@ -240,7 +275,7 @@ function loadAndVerifyBackupEntries(
     const bytes = asBytes(readFileSync(path));
     if (bytes.byteLength !== entry.size || sha256Bytes(bytes) !== entry.sha256)
       throw new CompanionProtocolError("CORRUPT", 422, "备份文件校验失败。");
-    entries.set(entry.path, bytes);
+    entries.set(canonical, bytes);
   }
   return entries;
 }
@@ -274,14 +309,15 @@ function verifyBackupAssetsAndReferences(
     if (!record) continue;
     try {
       const assetId = record[1].toLowerCase();
-      const metadata = assetMetadataSchema.parse(
+      const metadata = parseCompanionDiskRecord(
         JSON.parse(new TextDecoder().decode(bytes)),
       );
       if (metadata.assetId !== assetId)
         throw new Error("record asset id mismatch");
       if (records.has(assetId)) throw new Error("duplicate asset record");
       records.set(assetId, metadata);
-    } catch {
+    } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
       throw new CompanionProtocolError("CORRUPT", 422, "备份素材索引无效。");
     }
   }
@@ -539,11 +575,12 @@ export class CompanionStore {
     let metadata: CompanionAssetMetadata;
     let bytes: Uint8Array;
     try {
-      metadata = assetMetadataSchema.parse(
+      metadata = parseCompanionDiskRecord(
         JSON.parse(readFileSync(metadataPath, "utf8")),
       );
       bytes = asBytes(readFileSync(blobPath));
-    } catch {
+    } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
       throw new CompanionProtocolError(
         "INVALID_ASSET",
         422,
@@ -570,7 +607,7 @@ export class CompanionStore {
     let merged = metadata;
     if (existsSync(targetRecord)) {
       try {
-        const old = assetMetadataSchema.parse(
+        const old = parseCompanionDiskRecord(
           JSON.parse(readFileSync(targetRecord, "utf8")),
         );
         const canonical = old.isAiGenerated !== false ? old : metadata;
@@ -593,7 +630,8 @@ export class CompanionStore {
           origins,
           tags: [...new Set([...old.tags, ...metadata.tags])].slice(0, 20),
         };
-      } catch {
+      } catch (error) {
+        if (error instanceof CompanionProtocolError) throw error;
         throw new CompanionProtocolError("CORRUPT", 500, "素材索引校验失败。");
       }
     }
@@ -623,13 +661,14 @@ export class CompanionStore {
       .slice(offset, offset + limit)
       .map((name) => {
         try {
-          const metadata = assetMetadataSchema.parse(
+          const metadata = parseCompanionDiskRecord(
             JSON.parse(readFileSync(join(this.assetRecordsRoot, name), "utf8")),
           );
           if (metadata.assetId !== name.slice(0, -5).toLowerCase())
             throw new Error("asset id mismatch");
           return metadata;
-        } catch {
+        } catch (error) {
+          if (error instanceof CompanionProtocolError) throw error;
           throw new CompanionProtocolError("CORRUPT", 500, "素材索引无效。");
         }
       });
@@ -723,10 +762,11 @@ export class CompanionStore {
     if (!existsSync(recordPath)) return null;
     let metadata: CompanionAssetMetadata;
     try {
-      metadata = assetMetadataSchema.parse(
+      metadata = parseCompanionDiskRecord(
         JSON.parse(readFileSync(recordPath, "utf8")),
       );
-    } catch {
+    } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
       throw new CompanionProtocolError("CORRUPT", 500, "素材索引无效。");
     }
     const blobPath = join(this.assetBlobsRoot, metadata.sha256);
@@ -912,6 +952,12 @@ export class CompanionStore {
 
     const restoreStage = join(this.stagingRoot, `restore-${randomUUID()}`);
     try {
+      for (const path of entries.keys()) {
+        if (!/^assets\/records\//i.test(path)) continue;
+        const target = join(this.root, path);
+        if (existsSync(target))
+          parseCompanionDiskRecord(JSON.parse(readFileSync(target, "utf8")));
+      }
       const originals = this.stageAndCaptureRestoreFiles(restoreStage, entries);
       const current = this.validateRestoreSnapshotCompatibility(snapshot);
       if (current)

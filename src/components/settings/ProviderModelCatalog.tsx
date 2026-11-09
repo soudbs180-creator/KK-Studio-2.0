@@ -1,9 +1,5 @@
 import { useEffect, useState, useId } from "react";
-import {
-  catalogForConnection,
-  saveModelCatalog,
-  type ModelKind,
-} from "../../features/models/index.ts";
+import { catalogForConnection } from "../../features/models/index.ts";
 import {
   connectionFromModelProfile,
   newModelProfileConnection,
@@ -11,18 +7,13 @@ import {
 } from "../../features/creation/index.ts";
 import { requiresModelProviderSelection } from "./modelProviderSettingsState";
 import type { ProviderConnection } from "../../domain/providerConnections";
-import {
-  modelProviderSchema,
-  type ModelProviderProfile,
-} from "../../domain/modelProvider";
-import ImageModelCapabilityFields, {
-  imageDeclarationFromDraft,
-} from "./ImageModelCapabilityFields";
+import type { ModelProviderProfile } from "../../domain/modelProvider";
 import { useModelCatalogPreferences } from "../../features/models/index.ts";
 import { fetchAndSaveProviderModels } from "./fetchProviderModels";
-import ModelDisplayFields from "./ModelDisplayFields";
-import useModelCapabilityDraft from "./useModelCapabilityDraft";
 import ProviderModelCatalogList from "./ProviderModelCatalogList";
+
+// ss2：ImageModelCapabilityFields / ModelDisplayFields 文件保留，展示对用户条件隐藏。
+
 export default function ProviderModelCatalog({
   profile,
   onSelect,
@@ -57,19 +48,6 @@ export default function ProviderModelCatalog({
   const modelId = profile.model.trim();
   const rawModels = catalogForConnection({ ...connection, model: modelId });
   const models = merge(rawModels);
-  const selected = models.find((m) => m.id === modelId);
-  const draft = useModelCapabilityDraft(
-    JSON.stringify([connectionKey, modelId]),
-    selected,
-  );
-  const { kind, sizes, family, variant, aliases, image } = draft.value;
-  const setKind = (kind: ModelKind) => draft.update({ kind });
-  const setSizes = (sizes: string) => draft.update({ sizes });
-  const setFamily = (family: string) => draft.update({ family });
-  const setVariant = (variant: string) => draft.update({ variant });
-  const setAliases = (aliases: string) => draft.update({ aliases });
-  const setImage = (image: typeof draft.value.image) => draft.update({ image });
-  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const update = () => setRevision((v) => v + 1);
@@ -117,49 +95,6 @@ export default function ProviderModelCatalog({
     }
   }
 
-  function saveModelCapabilities() {
-    if (selectionRequired) {
-      setStatus("请先选择已登记账号，再保存此模型能力。");
-      return;
-    }
-    const valid = modelProviderSchema.safeParse(profile);
-    if (!valid.success) {
-      setStatus(valid.error.issues[0]?.message ?? "请检查供应商配置。");
-      return;
-    }
-    const values = sizes.split(/[,，\s]+/).filter(Boolean);
-    if (values.some((v) => !/^([1-9]\d{1,4})x([1-9]\d{1,4})$/.test(v))) {
-      setStatus("尺寸请填写宽x高，例如 1024x1024。");
-      return;
-    }
-    try {
-      const declaration =
-        kind === "image" ? imageDeclarationFromDraft(image) : undefined;
-      const model = {
-        id: valid.data.model,
-        family: family.trim() || undefined,
-        variant: variant.trim() || undefined,
-        aliases: aliases
-          .split(/[,，]/)
-          .map((v) => v.trim())
-          .filter(Boolean),
-        kind,
-        sizes: kind === "image" ? [...new Set(values)] : undefined,
-        image: declaration,
-        source: "manual" as const,
-      };
-      saveModelCatalog(
-        connection,
-        [...rawModels.filter((item) => item.id !== model.id), model],
-        true,
-      );
-      draft.saved();
-      setStatus("已保存此模型参数声明。");
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "保存失败");
-    }
-  }
-
   return (
     <fieldset
       className="provider-model-catalog inset-grouped-card"
@@ -170,20 +105,11 @@ export default function ProviderModelCatalog({
       )}
       <div className="model-catalog-header">
         <div>
-          <h3 className="model-catalog-title">模型目录与能力管理</h3>
+          <h3 className="model-catalog-title">模型目录</h3>
           <p className="model-catalog-subtitle">
-            勾选启用/停用模型、设置常用默认模型，或通过 `/v1/models`
-            一键同步拉取。
+            连通测试成功后会自动同步模型列表；勾选启用或设为默认即可。
           </p>
         </div>
-        <button
-          type="button"
-          className="settings-action secondary"
-          disabled={fetchingRemote || loading || !profile.baseUrl}
-          onClick={() => void handleFetchRemote()}
-        >
-          {fetchingRemote ? "正在拉取…" : "一键拉取模型列表"}
-        </button>
       </div>
 
       {catalogFeedback && (
@@ -191,35 +117,6 @@ export default function ProviderModelCatalog({
           {catalogFeedback}
         </div>
       )}
-
-      <div className="model-custom-add-bar">
-        <label htmlFor={customIdInput} className="custom-add-label">
-          添加自定义模型 ID：
-        </label>
-        <div className="custom-add-input-group">
-          <input
-            id={customIdInput}
-            type="text"
-            value={newCustomModelId}
-            placeholder="例如 o3-mini、deepseek-ai/DeepSeek-V3"
-            onChange={(e) => setNewCustomModelId(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddCustom();
-              }
-            }}
-          />
-          <button
-            type="button"
-            className="settings-action secondary"
-            disabled={!newCustomModelId.trim()}
-            onClick={handleAddCustom}
-          >
-            添加
-          </button>
-        </div>
-      </div>
 
       <ProviderModelCatalogList
         models={models}
@@ -229,72 +126,56 @@ export default function ProviderModelCatalog({
         onSelect={onSelect}
       />
 
-      {selected && (
-        <div className="model-params-editor">
-          <h4 className="params-editor-title">
-            编辑选中模型参数: <code>{selected.id}</code>
-          </h4>
-          <div className="params-row">
-            <label className="params-field">
-              <span>模型用途</span>
-              <select
-                aria-label="当前模型用途"
-                value={kind}
-                onChange={(e) => setKind(e.target.value as ModelKind)}
-              >
-                <option value="text">文本对话 / 深度推理</option>
-                <option value="image">图像生成</option>
-                <option value="video">视频生成</option>
-                <option value="audio">音频合成</option>
-                <option value="unknown">未声明</option>
-              </select>
-            </label>
-            {kind === "image" && (
-              <label className="params-field">
-                <span>支持的图片尺寸</span>
-                <input
-                  aria-label="支持的图片尺寸"
-                  value={sizes}
-                  placeholder="例如 1024x1024, 1536x1024"
-                  onChange={(e) => setSizes(e.target.value)}
-                />
-              </label>
-            )}
-          </div>
-          {kind === "image" && (
-            <ImageModelCapabilityFields
-              value={image}
-              onChange={setImage}
-              disabled={loading}
+      <details className="settings-usage-guide">
+        <summary>
+          <span className="settings-usage-guide-toggle">
+            <span className="settings-usage-guide-expand">
+              展开高级：手动拉取 / 自定义模型 ID
+            </span>
+            <span className="settings-usage-guide-collapse">
+              收起高级：手动拉取 / 自定义模型 ID
+            </span>
+          </span>
+        </summary>
+        <div className="model-custom-add-bar">
+          <button
+            type="button"
+            className="settings-action secondary"
+            disabled={fetchingRemote || loading || !profile.baseUrl}
+            onClick={() => void handleFetchRemote()}
+          >
+            {fetchingRemote ? "正在拉取…" : "手动拉取模型列表"}
+          </button>
+        </div>
+        <div className="model-custom-add-bar">
+          <label htmlFor={customIdInput} className="custom-add-label">
+            添加自定义模型 ID：
+          </label>
+          <div className="custom-add-input-group">
+            <input
+              id={customIdInput}
+              type="text"
+              value={newCustomModelId}
+              placeholder="例如 o3-mini、deepseek-ai/DeepSeek-V3"
+              onChange={(e) => setNewCustomModelId(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddCustom();
+                }
+              }}
             />
-          )}
-
-          <ModelDisplayFields
-            family={family}
-            variant={variant}
-            aliases={aliases}
-            setFamily={setFamily}
-            setVariant={setVariant}
-            setAliases={setAliases}
-          />
-
-          <div className="params-footer">
             <button
               type="button"
-              className="settings-action primary"
-              disabled={loading}
-              onClick={saveModelCapabilities}
+              className="settings-action secondary"
+              disabled={!newCustomModelId.trim()}
+              onClick={handleAddCustom}
             >
-              保存此模型参数声明
+              添加
             </button>
-            {status && (
-              <span className="params-status-text" role="status">
-                {status}
-              </span>
-            )}
           </div>
         </div>
-      )}
+      </details>
     </fieldset>
   );
 }

@@ -8,6 +8,14 @@ import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import SettingsExternalLink from "./SettingsExternalLink";
 import LocalVideoPackages from "./LocalVideoPackages";
 
+/**
+ * 尚未接入的本地模型安装服务与未经验收的视频模型包默认不渲染（避免禁用占位按钮与未验收占位）。
+ * 如需调试可通过环境变量 KK_SHOW_UNFINISHED_LOCAL_INSTALL=1 控制。
+ */
+const SHOW_UNFINISHED_LOCAL_INSTALL =
+  typeof process !== "undefined" &&
+  process.env?.KK_SHOW_UNFINISHED_LOCAL_INSTALL === "1";
+
 const gib = (value: number | null | undefined) =>
   value == null ? "未报告" : `${(value / 1024 ** 3).toFixed(1)} GiB`;
 const reasonLabels: Record<string, string> = {
@@ -198,15 +206,19 @@ export default function LocalHardwareSettings() {
             可选择非推荐型号。下载 Qwen 不代表 Agent 工具调用已验证；Qwen-Agent
             是执行框架。自动安装、目录关联和推理引擎启动尚未接通。
           </p>
-          <button
-            type="button"
-            className="settings-action secondary"
-            disabled
-            title="安装与完整性校验服务尚未接入"
-          >
-            安装服务未接入
-          </button>
-          <LocalVideoPackages packages={recommendations.videoPackages} />
+          {SHOW_UNFINISHED_LOCAL_INSTALL && (
+            <>
+              <button
+                type="button"
+                className="settings-action secondary"
+                disabled
+                title="安装与完整性校验服务尚未接入"
+              >
+                安装服务未接入
+              </button>
+              <LocalVideoPackages packages={recommendations.videoPackages} />
+            </>
+          )}
         </>
       )}
     </section>

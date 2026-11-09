@@ -14,7 +14,11 @@ import ShortcutsManagementPage from "./ShortcutsManagementPage";
 import SettingsSections from "./SettingsSections";
 import SettingsSidebar from "./SettingsSidebar";
 import type { SettingsSection } from "./SettingsSectionData";
-import { resolveSettingsRoute } from "./SettingsSectionData";
+import {
+  DEFAULT_SETTINGS_SECTION,
+  getSettingsTier,
+  resolveSettingsRoute,
+} from "./SettingsSectionData";
 import {
   SettingsNavigationContext,
   useSettingsNavigationLock,
@@ -56,7 +60,7 @@ function readInitialSettings(): {
 
 export default function SettingsPanel({
   onClose,
-  initialSection = "general",
+  initialSection = DEFAULT_SETTINGS_SECTION,
   saveState = "loading",
   revision = 0,
   projects,
@@ -161,6 +165,7 @@ export default function SettingsPanel({
         ref={panelRef}
         className="settings-panel"
         data-section={section}
+        data-settings-tier={getSettingsTier(section)}
         data-navigation={navigation}
         aria-busy={busy}
         data-figma-node="47:185"

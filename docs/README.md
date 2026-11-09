@@ -4,6 +4,8 @@
 
 本文件是 KK Studio 全部工程文档的索引与冲突裁决入口。找规则先查这里，不要凭记忆猜文件位置。
 
+当前闭环需求与五阶段顺序见[本轮需求](changes/2026-11-09-local-closure/intent.md)、[验收规格](changes/2026-11-09-local-closure/spec.md)和[推进验证](changes/2026-11-09-local-closure/verification.md)。进度仍以任务台账为准。
+
 所有 AI 的共同规则见仓库根的 [RULES.md](../RULES.md)、[AGENTS.md](../AGENTS.md) 与 [AI_RULES.md](../AI_RULES.md)。Claude、Gemini、Copilot、Cursor 的原生入口只指向这三份，不复制规则正文。开发 Agent 的八层物理落点见 [REPO-LAYOUT](architecture/REPO-LAYOUT.md) 的「开发 Agent 八层」；产品里的 agent、skills、mcp、commands 仍留在应用源码，不搬进工具配置目录。
 
 ## 阅读顺序
@@ -132,6 +134,8 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 | [MEMORY-CONTRACT](MEMORY-CONTRACT.md)     | 共享记忆契约：本机 Agent 的文件读写契约（产品功能规格）  |
 | [MEMORY-GOVERNANCE](MEMORY-GOVERNANCE.md) | 记忆运维检查表：MEMORY-CONTRACT 的审计入口，不替换契约   |
 | [PROGRESS](PROGRESS.md)                   | 里程碑流水，只记录已发生的变更并引用证据，不替代任务状态 |
+| [agent-backends](agent-backends.md)       | 主 Agent 后端选择说明：第一期多后端优先级与就绪条件判定，阐明 dsh-superagent 现阶段不嵌入原因与薄兜底策略 |
+| [agent-dispatch](agent-dispatch.md)       | 面向用户的 Agent 调度分工说明：阐明主 Agent 只规划、子 Agent 动手干活与额度轮转机制 |
 
 ## 容器层与产物区（仓库外，无版本管理）
 
@@ -140,8 +144,8 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 | `D:/kk-studio/`（容器）           | 非 git 仓库；worktree 唯一合法落点 `.worktrees/`                                   | 容器上手：`D:/kk-studio/README.md`          |
 | `D:/kk-studio/docs/`              | 容器级文档：竞品/审计/方案/架构参考/API 契约（**不承载现行规范**）                 | 容器文档索引：`D:/kk-studio/docs/README.md` |
 | `D:/kk-studio/output/`            | 任务运行输出、交付物与恢复包；恢复原件按 receipt/hash 保护，任务状态仍回读仓库账本 | 任务输出入口与收据                          |
-| `D:/kk-studio/.verification/`     | 任务验收留存，一任务一目录                                                         | 结构调整方案 B2 建索引                      |
-| `D:/kk-studio/.workbuddy/memory/` | AI 本地记忆（上下文辅助，非事实源；冲突以仓库文档为准）                            | 见下方「本地记忆机制」                      |
+
+旧容器路径 `.verification/`、`.workbuddy/memory/` 已不作为现行入口：验证证据归容器 `output/`，共享思维与历史记忆归档见下方「本地记忆机制」。
 
 ## 源码、数据与文档的落点
 
@@ -149,7 +153,7 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 | -------------------- | ------------------------------------------------------------------------------------------------- |
 | Desktop/Web 共享源码 | src/ 的现有 domain、features、components、runtime、styles；就近组织，按职责拆分                   |
 | Desktop 原生壳       | src-tauri/；IPC、文件和凭据能力不搬进浏览器领域层                                                 |
-| Native Mobile        | 后续独立 mobile/ 工程；当前窄屏是响应式 Web，不复制桌面几何                                       |
+| Native Mobile        | 独立 mobile/ 工程，入口见[架构](architecture/ARCHITECTURE.md)；响应式 Web 窄屏不等同于原生验收 |
 | 静态设计与 demo      | public/design/figma、public/fixtures/demo；保留版本化来源，不把真实生成原件混入 fixtures          |
 | 构建与依赖缓存       | dist、node_modules、target、vendor 构建输出默认留在产物区；已版本化宿主 schema 仍按其输入契约审阅 |
 | 用户项目、原件和凭据 | 原数据根与系统凭据库；仓库、文档、测试报告不保存秘密或生产用户快照                                |
@@ -196,18 +200,18 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 
 本地记忆是 **AI 客户端的上下文辅助机制**，不是产品功能、不是数据存储、不参与运行时，也不能作为事实来源。它的唯一作用是让 AI 在跨会话时快速恢复工作上下文。
 
-四层存储：
+入口分工：
 
 | 层           | 位置                                                                                             | 内容                         | 更新规则                                           |
 | ------------ | ------------------------------------------------------------------------------------------------ | ---------------------------- | -------------------------------------------------- |
-| 项目日记     | `D:\kk-studio\.workbuddy\memory\YYYY-MM-DD.md`                                                   | 当日实际做了什么、遇到什么坑 | 追加式，不覆写；不记录搜索结果、临时路径等瞬时信息 |
-| 项目长期约定 | `D:\kk-studio\.workbuddy\memory\MEMORY.md`                                                       | 跨会话仍有效的项目约定       | 每次实质工作后提炼更新                             |
-| 用户个人记忆 | AI 客户端的用户级记忆目录（各客户端不同，本机为 `%USERPROFILE%\.workbuddy\user-<id>\MEMORY.md`） | 用户跨项目偏好与本机环境事实 | 只在用户明确要求长期记住时写入                     |
+| 项目共享交接 | [memlog.md](governance/ai-memory/memlog.md) 与同目录分领域记录 | 实际进展、决策与跨会话交接 | 通过 `scripts/governance/ai-memory.mjs` 追加留痕 |
+| 历史记忆归档 | [ai-memory/archive/](governance/ai-memory/archive/) | 原 WorkBuddy 高价值历史记录 | 只读追溯，不覆盖当前工程规范 |
+| 用户个人记忆 | AI 客户端的用户级记忆目录（各客户端不同） | 用户跨项目偏好与本机环境事实 | 只在用户明确要求长期记住时写入 |
 | 任务账本     | 仓库内 `docs/governance/task-ledger.json`                                                        | 任务状态                     | 走门禁 `npm run governance:check`                  |
 
 作用边界（重要）：
 
-- `.workbuddy/` 位于 **容器目录 `D:\kk-studio\`**，在 git 仓库 `D:\kk-studio\KK-Studio-2.0` 之外，因此**不受版本管理、不随分支切换、不参与 PR 审查、不会同步到其他机器**。
+- 项目共享交接与历史归档位于主仓 `docs/governance/ai-memory/`，随 Git 版本管理；客户端个人记忆由各工具自行管理，不能假定会随仓库同步。
 - 因此本地记忆不能替代仓库内文档。任何需要团队共享、需要跨设备、需要长期权威的内容，必须写进仓库文档。
 - 本地记忆与仓库文档冲突时，**一律以仓库文档为准**。
 - 记忆内容不构成授权。用户说过的话若只存在记忆里而仓库无记录，执行前仍需确认。
@@ -216,7 +220,7 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 
 `D:\kk-studio\` 是容器目录，不是 git 仓库。真正的仓库根是 `D:\kk-studio\KK-Studio-2.0`。容器级结构规范见纯文本路径 `D:\kk-studio\docs\REPO-STRUCTURE.md`，快速上手见 `D:\kk-studio\README.md`。
 
-worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。新建 worktree 后需把主仓 `node_modules` 以目录联接（junction）挂入，否则 `eslint` 与 `typescript` 解析失败。
+worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。依赖准备与共享目录边界见[工作树生命周期](engineering/WORKTREE-LIFECYCLE.md)和[分支规则](engineering/BRANCH-POLICY.md)，不把主仓依赖联接作为所有任务的必选步骤。
 
 P1纯契约与单一清单投影的草案见[ADR-028](architecture/adr/ADR-028-capability-manifest-projections.md)；[P1规格与映射](changes/2026-10-28-capability-contract/spec.md)区分声明候选、运行接线及未验收边界。
 

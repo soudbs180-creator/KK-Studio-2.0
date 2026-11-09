@@ -1,6 +1,6 @@
 {
-  "name": "KK Studio · 可编辑补充页面",
-  "id": "kk-studio-editable-supplement",
+  "name": "KK Studio · 模型接入 UI 深度重构修稿",
+  "id": "kk-studio-model-access-redesign",
   "api": "1.0.0",
   "main": "code.js",
   "editorType": ["figma"],

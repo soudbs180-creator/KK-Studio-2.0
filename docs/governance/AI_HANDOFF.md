@@ -2,9 +2,13 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-11-07
+- updatedAt: 2026-11-09
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
+
+2026-11-09 恢复入口：先读[当前闭环需求](../changes/2026-11-09-local-closure/intent.md)、[验证](../changes/2026-11-09-local-closure/verification.md)和[审查](../changes/2026-11-09-local-closure/review.md)。主 checkout 为 cc222004 加未提交候选；恢复目标格式保护、迁移 origins 保留及 body-parser/qs 安全锁修复已经组合本地验证。verify-02 退出 0，像素因缺基线跳过；当前安装包另从隔离快照核验，不沿用旧安装收据。先核对源码指纹与 worktree，保留既有改动，不把本地内容审查当作正式 SHA 审批或主线合入。
+
+续验：隔离产品快照 df597194 / tree b71d9d22 已通过正式独立只读 SHA 审查与新安装包收据校验；TaskHost 11/11、后补当前契约脚本的官方 BAT 38/38（3 次启动）通过。系统存在既有 2.1.42 安装，登记/EXE/快捷方式已核对未改，未跑 NSIS 安装升级卸载；签名 NotSigned。测试脚本新 SHA 与产品快照分开绑定，前三/四轮测试失败原件不删除。后续仍先做存储契约与安全来源缺口，不跳到无权限的真实计费/生产或新增功能。
 
 1. 先核对实时HEAD/dirty/远端和唯一worktree。当前复用`chore/sync-local-main-20261106`，origin/main仍为`9b1038a7`，PR #83尚未合。读取[主线续验](../changes/2026-11-06-ci-gate-repair/verification.md)、[当前状态](PROJECT_STATE.md)、[任务台账](task-ledger.json)。禁止擅自合并/删树/删分支/reset/clean/force；允许推审查分支重跑检查。
 2. 不重开旧接线分支，不重复做P2。PR #81 已包含于 #83；其余开放PR各有独有历史，保留。

@@ -3,13 +3,14 @@ import type { ServerResponse } from "node:http";
 
 import type { AgentAttachment } from "../agent/types.js";
 import { logger } from "../utils/logger.js";
+import { configToolNames, isConfigToolName, parseConfigToolInput, safeConfigToolResult } from "../config/tools.js";
 import { buildCanvasToolRequest, fitAttachmentNodeSize } from "./operations.js";
 import type { ToolName } from "./schemas.js";
 import { compactCanvasState, compactNode, isToolName, nextCanvasX, parseToolInput } from "./tools.js";
 import type { CanvasSnapshot } from "./types.js";
 import { parseChatScope, sameChat, sameScope, type ChatScope } from "./chat-scope.js";
 
-type PendingRequest = { clientId: string; scope?: ChatScope; threadId?: string; turnId?: string; resolve: (value: unknown) => void; reject: (error: Error) => void };
+type PendingRequest = { name: ToolName; clientId: string; scope?: ChatScope; threadId?: string; turnId?: string; resolve: (value: unknown) => void; reject: (error: Error) => void };
 type TurnAttachment = { clientId: string; scope?: ChatScope; id: string; name: string; type: string; size: number; width: number; height: number; dataUrl: string };
 type ReplayEvent = { type: string; payload: Record<string, unknown> };
 export type CodexState = { busy: boolean; threadId: string; turnId: string };
@@ -28,6 +29,7 @@ type McpInventoryItem = { name: string; authStatus?: string };
 export const AGENT_PROTOCOL_VERSION = 7;
 
 const SITE_TOOLS = new Set<ToolName>([
+    ...configToolNames,
     "site_navigate",
     "canvas_list_projects",
     "workbench_image_get_config",
@@ -38,6 +40,8 @@ const SITE_TOOLS = new Set<ToolName>([
     "assets_list",
     "assets_add",
     "generation_get_status",
+    "canvas_create_reverse_prompt_flow",
+    "canvas_get_result",
 ]);
 
 /** 管理网页画布连接、状态、附件和工具请求。 */
@@ -478,6 +482,14 @@ export class CanvasSession {
         if (item.scope && (!sameScope(item.scope, body.scope) || !sameScope(this.canvasStates.get(clientId)?.scope, item.scope))) return false;
         if (item.scope && (item.threadId !== body.threadId || item.turnId !== body.turnId)) return false;
         this.pending.delete(body.requestId);
+        if (isConfigToolName(item.name)) {
+            logger.debug("Config tool result received", { name: item.name, clientId, requestId: body.requestId, failed: Boolean(body.error) });
+            try {
+                if (body.error) item.reject(new Error("CONFIG_HOST_FAILED"));
+                else item.resolve(safeConfigToolResult(item.name, body.result));
+            } catch { item.reject(new Error("CONFIG_INVALID_RESULT")); }
+            return true;
+        }
         logger.debug("Canvas tool result received", { clientId, requestId: body.requestId, error: body.error, result: body.result });
         body.error ? item.reject(new Error(body.error)) : item.resolve(body.result);
         return true;
@@ -542,8 +554,9 @@ export class CanvasSession {
     /** 校验工具参数并将调用分派到当前目标网页。 */
     async callTool(name: unknown, rawInput: unknown) {
         if (!isToolName(name)) throw new Error(`未知工具：${String(name)}`);
-        logger.info("MCP tool called", { name, input: rawInput, targetClientId: this.targetClientId });
-        const input = parseToolInput(name, rawInput) as Record<string, unknown>;
+        const configInput = isConfigToolName(name) ? parseConfigToolInput(name, rawInput) : undefined;
+        logger.info("MCP tool called", { name, ...(configInput ? {} : {input: rawInput}), targetClientId: this.targetClientId });
+        const input = configInput ?? parseToolInput(name, rawInput) as Record<string, unknown>;
         if (SITE_TOOLS.has(name)) {
             if (!this.clients.size) throw new Error("当前没有已连接网页");
             return await this.requestCanvasTool(name, input);
@@ -598,14 +611,14 @@ export class CanvasSession {
         if (scope) this.assertClientScope(clientId, scope);
         const turn = scope ? { threadId: this.codexState.threadId, turnId: this.codexState.turnId } : {};
         sendEvent(client, "tool_call", { requestId, name, input, ...turn, ...(scope ? { scope } : {}) });
-        logger.debug("Canvas tool request sent", { requestId, name, input, clientId });
+        logger.debug("Canvas tool request sent", { requestId, name, ...(isConfigToolName(name) ? {} : {input}), clientId });
         return await new Promise((resolve, reject) => {
             const timer = setTimeout(() => {
                 this.pending.delete(requestId);
                 logger.warn("Canvas tool request timed out", { requestId, name, clientId });
                 reject(new Error("画布操作超时"));
             }, 30000);
-            this.pending.set(requestId, { clientId, scope, ...turn, resolve: (value) => (clearTimeout(timer), resolve(value)), reject: (error) => (clearTimeout(timer), reject(error)) });
+            this.pending.set(requestId, { name, clientId, scope, ...turn, resolve: (value) => (clearTimeout(timer), resolve(value)), reject: (error) => (clearTimeout(timer), reject(error)) });
         });
     }
 }

@@ -1,5 +1,6 @@
 /** Codex 会话、具名 SSE 与 KK 画布桥的应用级 store。 */
 import { memoryService } from "../memory/index.ts";
+import { isConfigToolName, safeConfigToolResult } from "../../domain/configTools.ts";
 import { agentAnswerabilityError } from "./agentAnswerability.ts";
 import type { AgentOpExecutionContext } from "./agentToolRuntime.ts";
 import type { ConfirmationCheckpoint } from "../../domain/agentWorkflow.ts";
@@ -80,6 +81,9 @@ export interface AgentOpResult {
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  executeConfigTool?(name: string, input: unknown, signal?: AbortSignal): Promise<Record<string, unknown>>;
+  executeReversePromptFlow?(input: unknown, signal?: AbortSignal): Promise<Record<string, unknown>>;
+  executeGetResult?(input: unknown, signal?: AbortSignal): Promise<Record<string, unknown>>;
   subscribeStatusline?(listener: StatuslineListener): () => void;
   getChatScope?(): ChatScope | null;
   getExecutionAdapter?(): string | undefined;
@@ -209,10 +213,10 @@ export function writeAgentEffort(effort: AgentReasoningEffort | ""): void {
 const KK_INSTRUCTIONS = `你是 KK Studio 的主 Agent。用户选择的生成模型不是你的推理模型。
 先读取画布再操作。KK 支持 canvas_apply_ops 的 add_node/update_node/delete_node/connect_nodes/delete_connections/run_generation/select_nodes/set_viewport。选择节点和设置视口会更新真实界面；视口缩放范围 0.2–4。进阶操作通过 {type:"canvas_operation",operation:{op,payload}} 调用34项强校验原子操作（卡片/连线/分组/布局/视口/选择/附件/导入导出/历史/锁/颜色/网格/小地图）；必须提供对应载荷，宿主拒绝空载荷或未知参数。
 节点类型为 text、image、video、audio；run_generation 的 mode 必须匹配节点类型，且配置实际已授权模型。metadata.prompt 为提示词，音视频仅支持宿主明确暴露的模型与参数，不得声称未执行的生成已成功。
-run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务 ID 仅表示已受理。通过 canvas_get_state 的 generationStatus 和 generationTask 查询状态，不能把 queued/running 当作完成。
+run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务 ID 仅表示已受理。通过 canvas_get_result 或 canvas_get_state 的 generationStatus 和 generationTask 查询状态，不能把 queued/running 当作完成。
 先优化提示词，再按用户要求生成。没有 Provider 或登录时说明缺口，不虚构成功，不自行改用其他付费接口。
 用户明确要求 Codex/ChatGPT 内置生图、或选择 Codex 图片入口时，可直接使用内置 imagegen/image_generation 工具，KK 会读取完成事件并将图片归档到画布；这使用 Codex 账号额度，不需要生成 API Key。必须实际调用内置工具，不能用脚本绘图冒充。
-用户主动添加的图片会作为附件传给你；引用画布图片时以所附原件为准。附件导入画布工具尚未接入，其他工具如返回 unsupported，不得声称已执行。不要为实现画布操作修改项目源码。
+用户主动添加的图片会作为附件传给你；引用画布图片时以所附原件为准。可用 canvas_create_attachment_nodes 将上传附件创建为画布图片节点；反推提示词流程可用 canvas_create_reverse_prompt_flow 建立反推与生图节点连线。其他工具如返回 unsupported，不得声称已执行。不要为实现画布操作修改项目源码。
 `;
 function mergeRetainedMessage(
   previous: AgentChatItem | undefined,
@@ -723,6 +727,58 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     try {
       if (currentProject() !== projectId)
         throw new Error("项目已切换，未执行旧会话操作。");
+      if (isConfigToolName(name)) {
+        if (!bridge?.executeConfigTool) throw new Error("CONFIG_HOST_UNAVAILABLE");
+        const result = safeConfigToolResult(name, await bridge.executeConfigTool(name,input,signal));
+        if (!isCurrent(version)) return;
+        await activeApi.postToolResult({requestId,...turn,result}).catch(async () => {
+          toolReceiptError = "配置回执未能确认，请重新读取配置；已写入的配置可用快照撤销。";
+          toolController.abort();
+          patch({error:toolReceiptError});
+          await activeApi.interrupt(state.conversation?.threadId).catch(() => undefined);
+        });
+        if (isCurrent(version) && !signal.aborted && ["applied","restored"].includes(String(result.status))) {
+          message({id:"config:"+requestId,role:"system",text:`已修改，可撤销。快照：${String(result.snapshotId)}`,...turn});
+          void persistMessages().catch(() => undefined);
+        }
+        return;
+      }
+      if (name === "canvas_create_reverse_prompt_flow") {
+        if (!bridge?.executeReversePromptFlow)
+          throw new Error("REVERSE_PROMPT_HOST_UNAVAILABLE");
+        const result = await bridge.executeReversePromptFlow(input, signal);
+        if (!isCurrent(version)) return;
+        await activeApi
+          .postToolResult({ requestId, ...turn, result })
+          .catch(async () => {
+            toolReceiptError = "反推提示词流程回执未确认，请核对画布状态。";
+            toolController.abort();
+            patch({ error: toolReceiptError });
+            await activeApi
+              .interrupt(state.conversation?.threadId)
+              .catch(() => undefined);
+          });
+        if (!isCurrent(version) || signal.aborted) return;
+        await activeApi.postState(bridge.getSnapshot()).catch(() => undefined);
+        return;
+      }
+      if (name === "canvas_get_result") {
+        if (!bridge?.executeGetResult)
+          throw new Error("GET_RESULT_HOST_UNAVAILABLE");
+        const result = await bridge.executeGetResult(input, signal);
+        if (!isCurrent(version)) return;
+        await activeApi
+          .postToolResult({ requestId, ...turn, result })
+          .catch(async () => {
+            toolReceiptError = "读取生成结果回执未确认。";
+            toolController.abort();
+            patch({ error: toolReceiptError });
+            await activeApi
+              .interrupt(state.conversation?.threadId)
+              .catch(() => undefined);
+          });
+        return;
+      }
       if (name !== "canvas_apply_ops")
         throw new Error("KK 尚未接入工具 " + name);
       if (!bridge || !Array.isArray(input.ops))
@@ -761,7 +817,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     } catch (error) {
       if (isCurrent(version))
         await activeApi
-          .postToolResult({ requestId, ...turn, error: errorText(error) })
+          .postToolResult({ requestId, ...turn, error: isConfigToolName(name) ? "CONFIG_HOST_FAILED" : errorText(error) })
           .catch(() => undefined);
     }
   }

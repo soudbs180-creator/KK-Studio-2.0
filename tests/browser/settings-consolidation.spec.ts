@@ -1,10 +1,23 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import {
   openSettingsSection,
   selectSettingsSection,
   showSettingsCategories,
 } from "./helpers";
 import { readFile } from "node:fs/promises";
+
+/** ss2 把提供商 / 接口地址 / 模型名收进默认折叠的「自定义中转」区。 */
+async function expandCustomRelay(page: Page): Promise<void> {
+  const details = page
+    .locator("details.settings-usage-guide")
+    .filter({ hasText: "展开自定义中转站或自建模型地址" });
+  await expect(details).toHaveCount(1);
+  if (!(await details.evaluate((element) => element.hasAttribute("open"))))
+    await details.locator("summary").click();
+  expect(
+    await details.evaluate((element) => element.hasAttribute("open")),
+  ).toBe(true);
+}
 
 test("设置分类按用途分组，移除独立使用记录与 ComfyUI 入口", async ({
   page,
@@ -18,30 +31,40 @@ test("设置分类按用途分组，移除独立使用记录与 ComfyUI 入口",
   await openSettingsSection(page, "通用设置");
   const nav = await showSettingsCategories(page);
   await expect(nav.locator(".settings-nav-group-label")).toHaveText([
-    "账户与用量",
-    "核心功能",
-    "安全与数据",
+    "常用",
+    "高级",
+    "实验",
   ]);
   await expect(nav.getByRole("button")).toHaveText([
     "通用设置",
-    "快捷键管理",
-    "个人主页",
-    "套餐与积分",
     "模型接入",
+    "数据管理",
+    "软件更新",
+    "个人主页",
+    "快捷键管理",
     "记忆管理",
     "扩展与 MCP",
     "网络与代理",
-    "数据管理",
     "安全中心",
-    "软件更新",
+    "套餐与积分",
   ]);
+  expect(
+    await nav.locator(".settings-nav-group").evaluateAll((groups) =>
+      groups.map((group) => group.getAttribute("data-settings-tier")),
+    ),
+  ).toEqual(["essentials", "advanced", "experimental"]);
+  await expect(page.locator(".settings-panel")).toHaveAttribute(
+    "data-settings-tier",
+    "essentials",
+  );
   await selectSettingsSection(page, "套餐与积分");
   await expect(
     page.getByRole("heading", { name: "使用记录", exact: true }),
   ).toBeVisible();
   await expect(page.locator("[data-usage-state]")).toBeVisible();
+  await expect(page.locator(".settings-content")).toContainText("本地模式");
   await expect(page.locator(".settings-content")).toContainText(
-    "套餐与积分服务尚未接入",
+    "不接入云端套餐与平台积分",
   );
   await selectSettingsSection(page, "通用设置");
   await expect(page.locator(".settings-content")).toContainText("软件更新");
@@ -66,7 +89,10 @@ for (const width of [390, 1099, 1920]) {
     await selectSettingsSection(page, "个人主页");
     await expect(page.locator(".settings-content")).toContainText("本地创作者");
     await expect(page.locator(".settings-content")).toContainText(
-      "本地离线模式",
+      "本地登录资料保存在本机",
+    );
+    await expect(page.locator(".settings-content")).toContainText(
+      "云端账号后续版本再接",
     );
     await selectSettingsSection(page, "通用设置");
     await expect(page.getByLabel("主题外观", { exact: true })).toHaveValue(
@@ -126,9 +152,15 @@ test("本地检测仅点击后执行，网页明确需要本机能力", async ({
   await expect(hardware.getByRole("status")).toContainText(
     "请在桌面版使用本机检测",
   );
+  await expandCustomRelay(page);
   await expect(
     page.getByRole("combobox", { name: "认证方式", exact: true }),
-  ).toHaveValue("none");
+  ).toHaveCount(0);
+  await expect(
+    page.getByText("协议与认证方式已由预设自动填入，无需手动选择", {
+      exact: false,
+    }),
+  ).toBeVisible();
   await expect(page.getByLabel("接口地址", { exact: true })).toHaveValue(
     "http://127.0.0.1:8080/v1",
   );
@@ -218,14 +250,23 @@ test("硬件快照建议与本地草稿在连续缩放中保留，不发起安�
     JSON.stringify(calls),
   ).toBe(true);
   await page.getByRole("radio", { name: /Qwen3.8-27B/ }).check();
-  await page.getByText("H3 视频模型候选", { exact: true }).click();
-  await expect(page.locator(".settings-content")).toContainText("64.73 GB");
-  await expect(page.locator(".settings-content")).toContainText(
-    "容量符合作者建议 · 待实测",
-  );
+  // ss1 已条件隐藏未接入的安装按钮与未经本机验收的视频模型包占位。
+  await expect(
+    page.getByText("H3 视频模型候选", { exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "安装服务未接入", exact: true }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
+  await expect(page.locator(".settings-content")).not.toContainText("64.73 GB");
+  await expect(page.locator(".settings-content")).not.toContainText(
+    "容量符合作者建议 · 待实测",
+  );
+  // 保留下来的 Qwen 推荐与本机硬件快照仍必须可见。
+  await expect(
+    page.getByText("Qwen 对话 / 看图候选", { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".settings-content")).toContainText("64.0 GiB");
+  await expandCustomRelay(page);
   await page.getByLabel("提供商", { exact: true }).fill("本地草稿需要保留");
   for (const width of [1099, 767, 480, 390, 900, 1920]) {
     await page.setViewportSize({ width, height: width <= 767 ? 844 : 1080 });
@@ -341,6 +382,7 @@ test("硬件检测失败保留本地草稿并释放导航锁，不显示底层�
   await page
     .getByRole("tab", { name: "本地模型 Offline", exact: true })
     .click();
+  await expandCustomRelay(page);
   await page.getByLabel("提供商", { exact: true }).fill("检测失败也要保留");
   await page.evaluate(() => {
     Object.assign(window, {
@@ -428,15 +470,26 @@ for (const existingChat of [false, true]) {
     await page
       .getByRole("tab", { name: "本地模型 Offline", exact: true })
       .click();
+    await expandCustomRelay(page);
     await expect(page.getByLabel("提供商", { exact: true })).toHaveValue(
       existingChat ? chat.provider : "本地对话服务",
     );
     await expect(page.getByLabel("接口地址", { exact: true })).toHaveValue(
       existingChat ? chat.baseUrl : "http://127.0.0.1:8080/v1",
     );
+    // ss2 已移除认证方式下拉：认证由预设写入 profile，仍可通过
+    // 「是否要求 API Key」看出旧连接的认证状态是否被改写。
     await expect(
       page.getByRole("combobox", { name: "认证方式", exact: true }),
-    ).toHaveValue(existingChat ? "api-key" : "none");
+    ).toHaveCount(0);
+    await expect(
+      page.getByText("协议与认证方式已由预设自动填入，无需手动选择", {
+        exact: false,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.locator("#model-access-api .provider-api-key-field"),
+    ).toHaveCount(existingChat ? 1 : 0);
     const listed = page.locator('.provider-connection-list [role="listitem"]');
     await expect(listed).toHaveCount(existingChat ? 1 : 0);
     await expect(listed.filter({ hasText: "既有 Comfy" })).toHaveCount(0);

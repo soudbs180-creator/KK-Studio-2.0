@@ -8,6 +8,14 @@ import AppUpdateSettings from "./AppUpdateSettings";
 import GeneralAdvancedPreferences from "./GeneralAdvancedPreferences";
 import { Button } from "../ui";
 
+/**
+ * 尚未接入的系统桌面开关默认不渲染（避免一排永远禁用的占位开关）。
+ * 如需调试或显式开启未接入系统偏好，可通过环境变量 KK_SHOW_UNFINISHED_SYSTEM_SETTINGS=1 控制。
+ */
+const SHOW_UNFINISHED_SYSTEM_SETTINGS =
+  typeof process !== "undefined" &&
+  process.env?.KK_SHOW_UNFINISHED_SYSTEM_SETTINGS === "1";
+
 interface GeneralSettingsProps {
   preferences: SettingsPreferences;
   onChange: (patch: Partial<SettingsPreferences>, message?: string) => void;
@@ -218,6 +226,8 @@ export default function GeneralSettings({
             />
           </SettingRow>
 
+          {SHOW_UNFINISHED_SYSTEM_SETTINGS && (
+            <>
           <SettingRow
             id="tray"
             title="系统托盘图标"
@@ -253,6 +263,8 @@ export default function GeneralSettings({
               disabledReason="开机自启动尚未接入"
             />
           </SettingRow>
+            </>
+          )}
         </section>
 
         <div className="settings-general-version" data-figma-node="655:142688">

@@ -1,6 +1,7 @@
 import UiIcon, { type UiIconName } from "../UiIcon";
 import {
-  SETTINGS_NAV_GROUPS,
+  SETTINGS_TIER_LABELS,
+  getVisibleSettingsNavGroups,
   type SettingsSection,
 } from "./SettingsSectionData";
 
@@ -27,14 +28,21 @@ export default function SettingsSidebar({
   busy: boolean;
   onSelect: (section: SettingsSection) => void;
 }) {
+  const groups = getVisibleSettingsNavGroups();
   return (
     <aside className="settings-sidebar">
       <h1 id="settings-dialog-title">设置</h1>
       <nav className="settings-nav" aria-label="设置分类">
-        {SETTINGS_NAV_GROUPS.map((group) => (
-          <div key={group.items[0].id} className="settings-nav-group">
+        {groups.map((group) => (
+          <div
+            key={group.tier}
+            className="settings-nav-group"
+            data-settings-tier={group.tier}
+          >
             {group.label && (
-              <div className="settings-nav-group-label">{group.label}</div>
+              <div className="settings-nav-group-label">
+                {SETTINGS_TIER_LABELS[group.tier]}
+              </div>
             )}
             {group.items.map((item) => (
               <button

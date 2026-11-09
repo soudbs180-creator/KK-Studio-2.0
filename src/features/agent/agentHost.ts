@@ -1,4 +1,6 @@
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import { createBrowserConfigToolHost } from "../providers/index.ts";
+import type { createConfigToolHost } from "../providers/index.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import {
   projectChatExecutionBlockReason,
@@ -28,8 +30,13 @@ import { prepareAgentOperationPlan } from "./agentOperationPlan.ts";
 import { sumTokenUsage } from "../../domain/tokenUsage.ts";
 import { closeWorkTicket, openWorkTicket } from "./superagentSession.ts";
 import { agentOperationLockReason } from "./agentOperationLocks.ts";
+import {
+  executeReversePromptFlowCore,
+  executeGetResultCore,
+} from "./reversePromptFlow.ts";
 
 export interface AgentHostOptions {
+  configTools?: ReturnType<typeof createConfigToolHost>;
   toolRuntime?: AgentToolRuntime;
   getView?(): AgentCanvasView | null;
   getProject(): CreationProject | undefined;
@@ -51,6 +58,7 @@ export interface AgentHostOptions {
 
 /** MCP 请求通过 KK 领域和任务入口落地，不直接持有 Provider 凭据。 */
 export function createAgentHost(options: AgentHostOptions) {
+  let configTools = options.configTools;
   const getExecutionBlockReason = () =>
     options.getExecutionBlockReason?.() ??
     projectChatExecutionBlockReason(options.getProject());
@@ -85,6 +93,38 @@ export function createAgentHost(options: AgentHostOptions) {
     if (reason) throw new Error(reason);
   };
   const host = {
+    async executeConfigTool(name: string, input: unknown, signal?: AbortSignal) {
+      assertExecutable();
+      configTools ??= createBrowserConfigToolHost();
+      return configTools.execute(name, input, signal);
+    },
+    async executeReversePromptFlow(input: unknown, signal?: AbortSignal) {
+      assertExecutable();
+      const project = options.getProject();
+      if (!project) throw new Error("没有活动项目");
+      const { nextProject, result } = await executeReversePromptFlowCore(
+        project,
+        input,
+        {
+          generate: options.generate,
+          signal,
+          modelAllowlist: getModelAllowlist(),
+        },
+      );
+      options.commit(nextProject);
+      options.getView?.()?.selectNodes?.([result.configNodeId]);
+      return result as unknown as Record<string, unknown>;
+    },
+    async executeGetResult(input: unknown, signal?: AbortSignal) {
+      assertExecutable();
+      const project = options.getProject();
+      if (!project) throw new Error("没有活动项目");
+      const result = await executeGetResultCore(project, input, {
+        signal,
+        getProject: options.getProject,
+      });
+      return result as unknown as Record<string, unknown>;
+    },
     getChatScope,
     getExecutionAdapter: () => activeChat(options.getProject())?.mainAgent,
     getExecutionBlockReason,

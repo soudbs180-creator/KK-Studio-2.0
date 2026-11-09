@@ -5,6 +5,10 @@
 
 ---
 
+## [2026-11-09 11:03] FEAT-MODEL-UI: 完成模型接入 UI 深度重构 Figma 修稿脚本与全套原生布局包
+- **执行 Agent**：已完成四大病灶审计（提示泛滥、按钮无级、架构错位、填写反直觉）；编写原生 Figma 生成脚本至 design/figma-plugin；准备 Figwright 实时协同与一键生成双通道
+- Antigravity
+
 ## [2026-11-08 01:53] UI-004 FEAT-036 登记修正 2026-11-08
 - **执行 Agent**：Codex
 - 发现并最小修正 docs/features/features.registry.json 中 FEAT-036 的旧路径（src/features/compare/ImageCompareDialog.tsx → src/components/compare/ImageCompareDialog.tsx）。随后 npm run features:check、npm run lint、imageCompare 单测 3/3、image-compare 浏览器 2/2 均通过。UI-004 的剩余限制仍是 Figma pixel baseline 缺失与正式 SHA 独审未完成；真实 API/Provider 继续暂缓。

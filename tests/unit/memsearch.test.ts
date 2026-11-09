@@ -46,16 +46,25 @@ test("memsearch: parseMarkdownChunks correctly chunks markdown headings with met
 
 test("memsearch: buildIndex and searchMemories retrieve relevant chunks by keyword and domain", () => {
   const allChunks = buildIndex();
-  assert.ok(allChunks.length > 10, "Should index more than 10 chunks from repository memory and architecture");
+  assert.ok(
+    allChunks.length > 10,
+    "Should index more than 10 chunks from repository memory and architecture",
+  );
 
   const hits = searchMemories("Topaz", { topK: 3 });
-  assert.ok(hits.length > 0, "Should find Topaz mentions in architecture and memory");
+  assert.ok(
+    hits.length > 0,
+    "Should find Topaz mentions in architecture and memory",
+  );
   assert.ok(hits[0].score > 0);
   assert.ok(hits[0].matchingKeywords.includes("topaz"));
 
   // Domain filter
   const uiHits = searchMemories("图标", { domain: "ui", topK: 3 });
-  assert.ok(uiHits.length > 0, "Should find UI chunks when filtering by ui domain");
+  assert.ok(
+    uiHits.length > 0,
+    "Should find UI chunks when filtering by ui domain",
+  );
   assert.equal(uiHits[0].chunk.domain, "ui");
 });
 

@@ -2,21 +2,23 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-11-07
+- updatedAt: 2026-11-09
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 | 项目 | 当前事实 |
 | --- | --- |
-| 正式工程 | D:/kk-studio/KK-Studio-2.0，唯一worktree；复用chore/sync-local-main-20261106；本地main同审查分支 |
+| 正式工程 | D:/kk-studio/KK-Studio-2.0 为主 checkout，复用 chore/sync-local-main-20261106；当前 HEAD cc222004 与 dirty 候选分别记录，不混为干净提交 |
 | 版本 | Desktop / Web 源码2.1.66，Mobile 2.1.44；当前源码不等于已安装或正式发布 |
-| 当前任务 | TASK-SYNC-LOCAL-MAIN-20261106（Cursor）：全面治理收口dirty、修门禁与锁表，推审查分支重跑PR #83；不合并main |
+| 当前任务 | 新增 TASK-CLOSURE-20261109（Codex，PARTIAL），按当前版本验收、存储保护、安全追溯顺序推进；原主线治理任务保留 |
 | 实现 | 导演机位/预设/同源桥；设定表提炼；MCP Schema；Floorplan；设置页拆分与Mobile token；雷达默认验证命令已改为真实scripts |
-| 当前验证 | 本地 typecheck/lint/format/ui/tokens/unit 通过；当前 `eb7863…` SHA/树已与远端和 PR #83 对齐；Hosted windows-release/git-guards 绿，quality verify 失败 |
-| 能力边界 | 外部桥无真实侧车；成本回执无真实扣费；UI-004仍PARTIAL；安装器与已安装文件已在隔离环境验收，真实 Provider/全窗口/真机/发布未完成 |
-| 工作树 | 仅1树。禁止擅自合并PR、删树、force；允许推送到审查分支触发检查 |
+| 当前验证 | 2026-11-09 组合候选 verify-02 退出 0；像素用例缺基线跳过。存储 92/92、Rust 318通过/1忽略；独立内容审查通过，不等于正式 SHA 审批。日志与源码指纹见本轮验证 |
+| 能力边界 | 共仓/跨格式导入未完成；Agent audit 仍有 5 包公告（1 high/4 moderate），固定上游 SHA UNKNOWN；UI-004、全页六态/像素、真实 Provider/全窗口/真机/发布未完成。新安装包收据和隔离 Native 11+38 检查通过；既有 2.1.42 安装保留，安装生命周期/签名/干净机未验 |
+| 工作树 | 主 checkout 外有本轮隔离修复/构建树，当前登记以 git worktree list 为准；尚未合并 main，不清理其他分支 |
 
 [本次验证](../changes/2026-11-05-step2-deep-water/verification.md) · [审查](../changes/2026-11-05-step2-deep-water/review.md) · [上一阶段历史验证](../changes/2026-11-04-e2e-wiring/verification.md) · [台账](task-ledger.json)
+
+2026-11-09 当前推进见[需求与顺序](../changes/2026-11-09-local-closure/intent.md)、[组合候选验证](../changes/2026-11-09-local-closure/verification.md)和[内容审查](../changes/2026-11-09-local-closure/review.md)。初始 222 条任务语义不改，新增一条 PARTIAL 总任务后共 223 条；42 项功能真实度不升级。外部 Provider、VPS 与旧站退役按用户要求后置，未因旧阻塞记录年代久而自动解除。
 
 ## 2026-11-06 主线与台账续验
 

@@ -98,11 +98,11 @@ export function validateImageTaskInput(input: CreateProjectInput): void {
     throw new ImageTaskCommandError("图片描述不能超过 4000 字。");
   if (input.privacyMode === "platform_backed")
     throw new ImageTaskCommandError(
-      "平台额度模式仍为 Prototype；当前不会上传素材或扣费。",
+      "该生成模式未开放；请使用自带 Key 的 BYOK 本地模式提交。",
     );
   if (input.privacyMode === "local_only" && !input.imageCapability)
     throw new ImageTaskCommandError(
-      "仅本地模式需要可执行的 ComfyUI 工作流；此入口尚未接入，请使用 BYOK 本地模式。",
+      "仅本地模式需要可执行的 ComfyUI 工作流；请使用自带 Key 的 BYOK 本地模式提交。",
     );
   if (!input.model.trim())
     throw new ImageTaskCommandError("请选择本次创作使用的模型。", true);

@@ -441,7 +441,7 @@ fn package_protocol_and_text_validation_fail_before_portable_export() {
     }
 }
 
-thread_local! { static FAILURE: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) }; }
+thread_local! { pub(super) static FAILURE: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) }; }
 pub(super) fn fail_at(stage: &str) -> Result<(), String> {
     if FAILURE.with(|point| *point.borrow() == Some(stage)) {
         Err(format!("io: injected {stage}"))
