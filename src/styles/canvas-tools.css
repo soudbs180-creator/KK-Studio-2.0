@@ -168,7 +168,6 @@
    workspace layout rules cannot introduce a one-pixel drift or reorder gap. */
 .canvas-hud .canvas-toolbar,
 .canvas-toolbar {
-  width: 244px;
   padding: 4px;
 }
 .canvas-hud .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle,
@@ -233,8 +232,7 @@
 .canvas .canvas-toolbar {
   left: calc(var(--canvas-usable-width, 100%) / 2);
   bottom: var(--kk-control-px-md);
-  width: max-content;
-  height: 52px;
+  height: var(--kk-toolbar-height);
   max-width: calc(100% - 16px);
   padding: 3px;
   gap: 4px;

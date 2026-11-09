@@ -624,11 +624,11 @@
   --composer-target: 32px;
   --composer-glyph: 16px;
   width: 652px;
-  min-height: 156px;
+  min-height: var(--kk-composer-frame-h);
   height: auto;
   max-width: calc(100% - 32px);
   margin: 0 auto;
-  padding: calc(12px - var(--kk-border-width));
+  padding: calc(var(--kk-composer-pad) - var(--kk-border-width));
   gap: 8px;
   container-type: inline-size;
   container-name: start-composer;
@@ -880,6 +880,11 @@
   color: var(--text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
+}
+.start-composer .count-trigger {
+  width: var(--kk-generation-count-trigger-w);
+  min-width: var(--kk-generation-count-trigger-w);
+  padding: 0;
 }
 
 .start-composer .image-params > .ui-icon {

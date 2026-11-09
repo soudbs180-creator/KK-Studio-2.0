@@ -349,8 +349,8 @@
     min-height: 80px;
   }
   .settings-row p {
-    font-size: var(--ui-font-body);
-    line-height: 18px;
+    font-size: var(--kk-settings-copy-font);
+    line-height: var(--kk-settings-copy-line);
   }
   .settings-select {
     min-height: var(--kk-control-h-lg);

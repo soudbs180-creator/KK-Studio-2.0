@@ -11,8 +11,8 @@
   max-width: 100%;
   height: var(--kk-settings-height);
   max-height: calc(100dvh - 32px);
-  border: 1px solid var(--settings-border);
-  border-radius: 20px;
+  border: var(--kk-border-width) solid var(--settings-border);
+  border-radius: var(--kk-panel-radius);
   color: var(--settings-text);
   background: var(--settings-bg);
   font-family: var(--kk-font-sans);
@@ -36,7 +36,8 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: var(--kk-space-5);
+  padding: var(--kk-settings-nav-pad-top) var(--kk-settings-nav-pad-x)
+    var(--kk-settings-nav-pad-bottom);
   border-right: var(--kk-border-width) solid var(--kk-border-subtle);
 }
 .settings-sidebar h1 {
@@ -53,7 +54,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--kk-space-4);
+  overflow-x: hidden;
   overflow-y: auto;
+}
+@media (min-width: 801px) {
+  /* 47:185 fits the last group inside 674px. A scrollbar would hide 软件更新. */
+  .settings-panel[data-section="general"] .settings-nav {
+    overflow: hidden;
+  }
 }
 .settings-nav-group {
   display: flex;
@@ -237,6 +245,13 @@
 }
 .settings-general-reset-actions .settings-action {
   height: var(--kk-control-h-lg);
+  border-color: var(--kk-border-default);
+  background: var(--kk-bg-elevated);
+  color: var(--kk-text-primary);
+  border-radius: var(--kk-button-radius);
+  font-size: var(--kk-settings-row-title-font);
+  font-weight: var(--kk-settings-row-title-weight);
+  line-height: var(--kk-settings-row-title-line);
 }
 .settings-general-shortcuts {
   display: flex;
@@ -254,11 +269,18 @@
   font-weight: var(--kk-font-weight-title);
   line-height: var(--kk-line-body);
 }
-.settings-shortcuts-action {
+.settings-panel .settings-shortcuts-action {
   flex-shrink: 0;
   height: var(--kk-control-h-md);
-  color: var(--kk-text-secondary);
-  background: var(--kk-bg-card);
+  min-height: var(--kk-control-h-md);
+  padding: 0 var(--kk-control-px-md);
+  border: var(--kk-border-width) solid var(--kk-settings-action-border);
+  border-radius: var(--kk-settings-action-radius);
+  color: var(--kk-settings-action-fg);
+  background: var(--kk-settings-action-bg);
+  font-size: var(--kk-font-caption);
+  font-weight: var(--kk-font-weight-body-strong);
+  line-height: var(--kk-line-caption);
 }
 .settings-usage-guide {
   padding: 0;
@@ -348,16 +370,16 @@
   flex: 1;
 }
 .settings-row h3 {
-  font-size: var(--ui-font-label);
-  line-height: var(--ui-line-height-label);
-  font-weight: var(--kk-font-weight-body-strong);
+  font-size: var(--kk-settings-row-title-font);
+  line-height: var(--kk-settings-row-title-line);
+  font-weight: var(--kk-settings-row-title-weight);
   margin: 0;
 }
 .settings-row p {
-  font-size: var(--ui-font-body);
-  line-height: var(--ui-line-height-body);
-  font-weight: var(--kk-font-weight-body);
-  margin-top: 1px;
+  font-size: var(--kk-settings-copy-font);
+  line-height: var(--kk-settings-copy-line);
+  font-weight: var(--kk-settings-copy-weight);
+  margin-top: var(--kk-border-width);
   color: var(--settings-muted);
 }
 .settings-row-control {
@@ -394,21 +416,21 @@
   min-height: 0;
 }
 .settings-select {
-  width: auto;
+  width: max-content;
   max-width: 100%;
   min-width: 0;
   flex-shrink: 0;
-  height: var(--kk-control-h-md);
-  padding: 0 var(--ui-space-2);
-  border: var(--ui-border-width) solid var(--border-control);
-  border-radius: var(--ui-radius-control);
-  background: var(--bg-input);
-  appearance: auto;
+  height: var(--kk-select-hug-h);
+  padding: 0 var(--kk-select-hug-pad);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-select-hug-radius);
+  background: var(--kk-bg-elevated);
+  appearance: none;
   color: var(--settings-text);
   font: inherit;
-  font-size: var(--kk-font-caption);
-  font-weight: var(--kk-font-weight-body-strong);
-  line-height: var(--kk-line-caption);
+  font-size: var(--kk-select-hug-font);
+  font-weight: var(--kk-select-hug-weight);
+  line-height: var(--kk-select-hug-line);
   cursor: pointer;
   color-scheme: dark;
 }
@@ -465,64 +487,61 @@
   opacity: var(--ui-disabled-opacity);
 }
 
-/* Stepper Stepping Control for canvas history & limits */
+/* Figma 655:142641 stepper. One size rule: 134×32, value 16/24 Medium. */
 .settings-stepper-wrap {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  background: var(--bg-input);
-  border: 1px solid var(--border-control);
-  border-radius: var(--ui-radius-control);
-  padding: 2px 4px;
-  gap: 2px;
-  transition: border-color var(--motion-fast) var(--motion-ease);
+  justify-content: space-between;
+  width: var(--kk-settings-stepper-w);
+  height: var(--kk-settings-stepper-h);
+  background: var(--kk-bg-input);
+  border: var(--kk-border-width) solid var(--kk-border-control);
+  border-radius: var(--kk-settings-stepper-radius);
+  padding: 0 var(--kk-settings-stepper-pad);
+  gap: var(--kk-settings-stepper-gap);
 }
-
 .settings-stepper-wrap:focus-within {
   border-color: var(--kk-text-accent);
-  box-shadow: 0 0 0 1px var(--kk-text-accent);
+  box-shadow: 0 0 0 var(--kk-border-width) var(--kk-text-accent);
 }
-
 .settings-stepper-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border: none;
+  flex: 0 0 var(--kk-settings-stepper-h);
+  width: var(--kk-settings-stepper-h);
+  height: 100%;
+  border: 0;
   background: transparent;
   color: var(--settings-text);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--kk-button-radius);
   cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-  transition:
-    background var(--motion-fast) var(--motion-ease),
-    transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1);
-  user-select: none;
 }
-
 .settings-stepper-btn:hover:not(:disabled) {
   background: var(--settings-selected);
 }
-
 .settings-stepper-btn:active:not(:disabled) {
-  transform: scale(0.9);
+  transform: scale(var(--kk-motion-press-scale));
 }
-
 .settings-stepper-btn:disabled {
-  opacity: 0.35;
+  opacity: var(--ui-disabled-opacity);
   cursor: not-allowed;
 }
-
+.settings-stepper-btn:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: 0;
+}
 .settings-stepper-input {
-  width: 52px;
-  height: 26px;
-  border: none;
+  width: var(--kk-settings-stepper-value-w);
+  height: 100%;
+  border: 0;
   background: transparent;
   color: var(--settings-text);
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--kk-settings-stepper-value-font);
+  font-weight: var(--kk-settings-stepper-value-weight);
+  line-height: var(--kk-settings-stepper-value-line);
   text-align: center;
   outline: none;
   -moz-appearance: textfield;
@@ -1970,8 +1989,8 @@
     min-height: 112px;
   }
   .settings-row p {
-    font-size: 12px;
-    line-height: 19px;
+    font-size: var(--kk-settings-copy-font);
+    line-height: var(--kk-settings-copy-line);
   }
   .settings-row h3 {
     font-size: var(--kk-font-body);

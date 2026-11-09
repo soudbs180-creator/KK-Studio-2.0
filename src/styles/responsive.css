@@ -484,12 +484,12 @@
   .sidebar.is-collapsed .sidebar-account .logo {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
+    width: var(--kk-button-icon-sm);
+    height: var(--kk-button-icon-sm);
   }
   .sidebar.is-collapsed .sidebar-account .logo img {
-    width: 28px;
-    height: 28px;
+    width: var(--kk-button-icon-sm);
+    height: var(--kk-button-icon-sm);
   }
   .sidebar.is-collapsed .account-popup {
     position: fixed;
@@ -701,4 +701,14 @@
 /* Keep the account menu above recovery notices in every sidebar context. */
 .app .sidebar:has(> .account-popup) {
   z-index: var(--kk-z-popover);
+}
+
+/* Phone home 69:1279: more space under the title tab and before the category row. */
+@media (max-width: 767px) {
+  .start-tabs button {
+    padding-bottom: var(--kk-home-tab-pad);
+  }
+  .start-chip-row {
+    margin-top: var(--kk-home-chip-offset);
+  }
 }

@@ -2,12 +2,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 0;
   width: var(--kk-generation-count-trigger-w);
   height: var(--kk-generation-count-trigger-h);
+  padding: 0;
   color: var(--text-secondary);
   background: var(--ui-state-idle-bg);
-  font-size: var(--ui-font-body);
+  font-size: var(--kk-generation-count-font);
+  font-weight: var(--kk-generation-count-weight);
+  line-height: var(--kk-generation-count-line);
   border-radius: var(--kk-radius-full);
 }
 .count-trigger:hover {

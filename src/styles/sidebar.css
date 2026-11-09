@@ -10,6 +10,21 @@
   height: 100%;
   object-fit: contain;
 }
+/* UiIcon replaced the old img assets. Block layout keeps the glyph on the
+   control center; an inline svg sits on the baseline and reads about 6px low. */
+.sidebar-icon,
+.sidebar-icon .ui-icon,
+.sidebar-icon .ui-icon > svg {
+  display: block;
+}
+.sidebar:not(.is-collapsed) .brand .logo {
+  background: var(--kk-text-secondary);
+  -webkit-mask: url("/design/figma/logo.svg") center / contain no-repeat;
+  mask: url("/design/figma/logo.svg") center / contain no-repeat;
+}
+.sidebar:not(.is-collapsed) .brand .logo img {
+  opacity: 0;
+}
 /* These source SVGs use pale strokes on transparency. In the light
    theme, inversion maps those strokes to the primary text color.
    Two-tone add/search/settings assets retain their original contrast. */
@@ -50,7 +65,7 @@
     padding: 0 var(--kk-space-2);
     border-radius: var(--kk-radius-full);
     color: var(--kk-text-primary);
-    font-weight: var(--kk-font-weight-body-strong);
+    font-weight: var(--kk-titlebar-menu-weight);
   }
   .app .top-menu > button:hover:not(:disabled) {
     background: var(--kk-control-surface-selected);
