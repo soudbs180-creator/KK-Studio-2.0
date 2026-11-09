@@ -5,6 +5,12 @@
 
 ---
 
+## [2026-11-09 21:00] git-sync-20261109 分支同步与清理门禁
+- **执行 Agent**：Codex
+- 核对本地主线工作树的原始未提交文件并保存 `output/git-sync-20261109/before` 快照；远端任务分支删除只接受同仓已合并 PR 的 exact head，开放 head/base 依赖、head 复用、API 失败和稳定/恢复/备份分支均拒绝。
+- 本地 pre-push 保留稳定线、标签、恢复/备份线保护；服务器规则草案移除全分支禁删，另设稳定线与恢复/备份线禁删，待托管设置保存后回读。
+- `git merge-tree --write-tree` 预演远端 `chore/sync-local-main-20261106` 的 3 个提交与本地快照无文本冲突；完整全量测试受未构建的 vendor/canvas-agent dist 与既有 Agent runtime 环境失败影响，针对 Git 清理与 guard 测试通过。
+
 ## [2026-11-08 23:12] PR83 verify 第二失败：lightbox 重绘按钮契约回归
 - **执行 Agent**：features 路径修复后 Hosted verify 跑满约 31 分钟仍失败；本地 test:ui 复现 962 pass / 1 fail：image-edit archived lightbox 找不到『重绘当前图片』。
 - 根因：04278bfb 迁 ImageLightbox 时把 aria-label=重绘当前图片 / 文案『重绘』误改成『编辑』。

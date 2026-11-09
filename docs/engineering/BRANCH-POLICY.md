@@ -19,7 +19,7 @@
 
 合并后先由 quality CI 验证合并候选 SHA；只有从通过门禁的 `main` 提交创建不可变 `vMAJOR.MINOR.PATCH` tag，`windows-release` 才会重建并上传绑定该 SHA 的安装器与 receipt 工件。部署或其他环境只消费该 SHA/tag 的工件，并在启动时回读产品版本、commit/tree、文件 hash 和进程路径。没有当前 SHA 绑定的 CI/工件回执时，状态保持 `NOT_VERIFIED`，不能称为“所有环境已更新”。
 
-现有旧分支名可保留；禁止为命名整齐批量重命名/删除。没有删除授权时不清理分支；用户明确“验收并清理已合并分支”后，可将核对过的具体短期分支列入待清理清单，无需反复确认授权，但稳定线和 tag 不在清理范围。当前 pre-push 默认拒绝所有远端 ref 删除，仓库尚无已审阅的远端清理流程；有授权也不能绕过 hook 执行删除。先完成单独的清理方案、核对和门禁，再按方案处理。
+现有旧分支名可保留；禁止为命名整齐批量重命名/删除。用户明确“验收并清理已合并分支”后，可将核对过的具体短期分支列入待清理清单，无需反复确认；稳定线、恢复/备份线和 tag 不在清理范围。当前 pre-push 只放行同仓、已合并 GitHub PR 的 exact head 且没有开放 head/base 依赖的短期分支删除；GitHub API 不可读、PR 未合并、head 已复用或提交不匹配时拒绝。先完成清理核对和门禁，再按方案处理。
 
 本地分支也默认保留，禁止直接 `git branch -D` 丢弃未整合工作。本地清理必须核对对应 PR、当前 head、远端备份及 worktree 登记；仍被使用、有独有提交或未提交改动时不得删除。pre-push 不能拦截本地删除，依靠执行前规则、审查和备份约束，不能夸称 Git 原生不存在的本地删分支 hook 已生效。
 
@@ -127,9 +127,9 @@ PR 必须包含验收、风险/回滚、base/head SHA、影响平台及未完成
 
 ## 执行层及限制
 
-- `npm run git:guards` 安装本仓库共有的 pre-push 防线，拒绝稳定线直推、非 fast-forward、已有 tag 更新及默认所有远端删除；不覆盖第三方 hook。它覆盖本机本仓库 worktree，不会传播到其他 clone，其他设备必须安装。它不能阻止本地 `git branch -D` 或管理员绕过，只是补充防护。
+- `npm run git:guards` 安装本仓库共有的 pre-push 防线，拒绝稳定线直推、非 fast-forward、已有 tag 更新、稳定/恢复/备份线删除，并仅在 GitHub PR exact-head 核验通过后放行短期分支删除；不覆盖第三方 hook。它覆盖本机本仓库 worktree，不会传播到其他 clone，其他设备必须安装。它不能阻止本地 `git branch -D` 或管理员绕过，只是补充防护。
 - `npm run governance:check` 校验文档入口、账本和架构边界；`npm run markdown:check` 校验现行 Markdown 的相对文件链接；`npm run delivery:check -- --base <SHA>` 校验 PR 变更包；CI 跑完整 verify/Rust/desktop build。结构检查不能保证文档事实正确，也不能证明 AI 实际阅读。
-- `config/github-rulesets/` 是可审阅的服务器配置，不是自动生效目录。稳定门禁声明 squash merge queue、严格 `verify`/`delivery`/`deploy-linux`/`governance` 检查、线程解决和过期审查撤销；单 owner 的平台 approval 可保持 0，独立 exact-head review 由自动门禁单独核验；分支 all-refs safety 禁 force/deletion，main/release 要求 PR/current checks，v* 禁更新/删除。无 bypass actors；管理员仍可修改设置，AI 不得利用此能力绕过审核。
+- `config/github-rulesets/` 是可审阅的服务器配置，不是自动生效目录。稳定门禁声明 squash merge queue、严格 `verify`/`delivery`/`deploy-linux`/`governance` 检查、线程解决和过期审查撤销；单 owner 的平台 approval 可保持 0，独立 exact-head review 由自动门禁单独核验；分支 all-refs safety 禁 force，main/release 与 archive/backup 恢复线分别禁删除，main/release 要求 PR/current checks，v* 禁更新/删除。无 bypass actors；管理员仍可修改设置，AI 不得利用此能力绕过审核。
 - 真正远端强制需托管平台支持并成功写入、回读 active rules。历史 2026-09-23 回读的三套 ruleset 只证明当时的 PR、检查、禁止删除与非快进规则；本轮没有新的远端回读，不能把历史结果当作当前 merge queue 或 required-check 配置。管理员仍可修改配置，后续须定期回读；不能把本地 hook 当服务端保护。若将来改回不支持规则的套餐或可见性，应将 EXT-GIT 重新标为未验证或阻断。
 - 已提交受控自动合并工作流，但远端 ruleset、merge queue、required checks 和 `AUTO_MERGE_ACTIVATION` 尚未在本轮回读确认；因此默认保持关闭，不能把工作流文件当成远端已启用。门禁、主线健康暂停和 revert 回滚见 [`AUTO-MERGE.md`](AUTO-MERGE.md) 与 [`ROLLBACK.md`](ROLLBACK.md)。自动生产发布和付费 AI review 仍未配置。
 
