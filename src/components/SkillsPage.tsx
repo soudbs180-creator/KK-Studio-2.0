@@ -6,14 +6,14 @@ import {
   serializeSkill,
   type SkillRecord,
   type SkillRegistry,
-} from "../features/skills/skillRegistry";
+} from "../features/skills/index.ts";
 import SkillEditor from "./SkillEditor";
 import ConnectorCatalog from "./ConnectorCatalog";
 import SkillCollection from "./SkillCollection";
 import SkillPageControls, { type ExtensionView } from "./SkillPageControls";
-import PartnerRoles from "../features/partners/PartnerRoles";
-import { ensureTemplates } from "../features/skills/templateSkills";
-export { ensureTemplates } from "../features/skills/templateSkills";
+import { PartnerRoles as PartnerRoles } from "../features/partners/index.ts";
+import { ensureTemplates } from "../features/skills/index.ts";
+export { ensureTemplates } from "../features/skills/index.ts";
 
 const OFFICIAL_SKILLS = [
   ["3D 动画短片", "根据故事创意完成角色、场景、镜头规划与视频整合。"],
@@ -183,7 +183,7 @@ export default function SkillsPage({
                 <>
                   <h2 className="catalog-section-title">精选示例</h2>
                   <p className="catalog-page-subtitle">
-                    本地演示 Prototype；没有联网目录、官方安装或下载统计。
+                    精选本地示例，可直接选用；你也可以导入或新建自己的 Skill。
                   </p>
                   <div className="catalog-card-grid">
                     {OFFICIAL_SKILLS.map(([name, description]) => (
@@ -204,9 +204,7 @@ export default function SkillsPage({
                         <div className="catalog-card-body">
                           <strong>{name}</strong>
                           <p>{description}</p>
-                          <small>
-                            KK Studio 本地演示 · Prototype · 仅本地预览
-                          </small>
+                          <small>本地示例 · 仅在本机使用</small>
                         </div>
                       </button>
                     ))}

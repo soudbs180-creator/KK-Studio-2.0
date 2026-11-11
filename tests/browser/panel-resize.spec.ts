@@ -41,6 +41,12 @@ test("桌面宽度可用鼠标和键盘调整，平板不出现无效拖拽柄",
     .poll(async () => (await panel.boundingBox())!.width)
     .toBeLessThan(draggedWidth);
 
+  await handle.press("Shift+Home");
+  await expect
+    .poll(async () => (await panel.boundingBox())!.width)
+    .toBe(initialWidth);
+  await expect(handle).toHaveAttribute("aria-valuenow", String(initialWidth));
+
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(handle).toBeHidden();
 });
@@ -93,14 +99,14 @@ test("侧栏只使用固定展开与收起宽度，键盘切换保持焦点", as
   await expect(
     page.getByRole("separator", { name: "调整侧栏宽度" }),
   ).toHaveCount(0);
-  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(291);
+  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(292);
   const toggle = sidebar.locator(".sidebar-toggle");
   await toggle.focus();
   await toggle.press("Enter");
-  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(70);
+  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(72);
   await expect(toggle).toBeFocused();
   await expect(toggle).toHaveAttribute("aria-label", "展开侧边栏");
   await toggle.press("Enter");
-  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(291);
+  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(292);
   await expect(toggle).toBeFocused();
 });

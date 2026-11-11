@@ -119,6 +119,18 @@ test("secret-like fields are rejected before persistence", () => {
   );
 });
 
+test("key scanning distinguishes generated identity fragments from actual credentials", () => {
+  assert.doesNotThrow(() =>
+    rejectCompanionSecrets({ id: "project-mhisk-abcdefgh-message" }),
+  );
+  for (const value of [
+    "sk-abcdefghijklmnopqrst",
+    "key=sk-abcdefghijklmnopqrst",
+    '"sk-abcdefghijklmnopqrst"',
+  ])
+    assert.throws(() => rejectCompanionSecrets({ content: value }));
+});
+
 test("backup manifests are strict and content-addressed", () => {
   const value = backupManifestSchema.parse({
     protocolVersion: COMPANION_PROTOCOL_VERSION,

@@ -14,9 +14,9 @@ for (const theme of ["light", "dark"])
     }, info) => {
       await page.setViewportSize({ width, height: 844 });
       await openWorkspace(page);
-      await openSettingsSection(page, "通用");
+      await openSettingsSection(page, "通用设置");
       await page
-        .getByRole("combobox", { name: "主题", exact: true })
+        .getByRole("combobox", { name: "主题外观", exact: true })
         .selectOption(theme);
       await page.getByRole("button", { name: "关闭设置", exact: true }).tap();
       await page.getByRole("button", { name: "添加资源", exact: true }).tap();
@@ -120,9 +120,9 @@ for (const theme of ["light", "dark"])
       ).toBe(0);
       const bounds = (await canvas.boundingBox())!;
       const bar = (await actions.boundingBox())!;
-      expect(
-        bar.x < bounds.x || bar.x + bar.width > bounds.x + bounds.width,
-      ).toBe(true);
+      expect(bar.width).toBeLessThanOrEqual(
+        Math.min(380, bounds.width - 16) + 1,
+      );
       await panCanvasToRevealAction(page, preview);
       await expect
         .poll(() =>

@@ -88,6 +88,7 @@ test("Agent 图变更同步已有/新增节点及 reference 连线并从 Indexed
         ],
       },
     });
+    await approveCanvasPlan(page);
     await expect.poll(() => agent.received.tools.length).toBe(1);
     expect(agent.received.tools[0].result).toMatchObject({
       ok: true,
@@ -499,6 +500,21 @@ async function fixture(nativeImage = false) {
     },
   };
 }
+async function selectCanvasReference(page: Page) {
+  const control = page.getByRole("combobox", { name: "引用画布图片" });
+  await control.press("ArrowDown");
+  await expect(
+    page.getByRole("listbox", { name: "引用画布图片" }),
+  ).toBeVisible();
+  await control.press("Enter");
+}
+
+async function approveCanvasPlan(page: Page) {
+  const approval = page.getByRole("group", { name: "确认 Agent 权限请求" });
+  await expect(approval).toContainText("执行画布计划");
+  await approval.getByRole("button", { name: "允许", exact: true }).click();
+}
+
 async function project(page: Page, modelAllowlist?: string[]) {
   await openSeededProject(page);
   if (modelAllowlist === undefined) return;
@@ -734,7 +750,7 @@ test("Agent 图片批次失败阻止发送，重新选择可恢复；切走再�
       return request;
     };
   });
-  await page.getByLabel("引用画布图片").selectOption("image");
+  await selectCanvasReference(page);
   await expect
     .poll(() =>
       page.evaluate(
@@ -750,7 +766,7 @@ test("Agent 图片批次失败阻止发送，重新选择可恢复；切走再�
     (window as unknown as { releaseAgentRead: () => void }).releaseAgentRead(),
   );
   // Wait for the real read/digest continuation to settle via the next successful read.
-  await page.getByLabel("引用画布图片").selectOption("image");
+  await selectCanvasReference(page);
   await expect(
     page.locator(".chat-composer .start-attachment-chip"),
   ).toHaveCount(1);
@@ -769,7 +785,7 @@ test("Agent 图片批次失败阻止发送，重新选择可恢复；切走再�
   await expect(
     page.locator(".chat-composer .start-attachment-chip"),
   ).toHaveCount(6);
-  await page.getByLabel("引用画布图片").selectOption("image");
+  await selectCanvasReference(page);
   await expect(page.getByRole("alert")).toContainText("本次画布图片未添加");
   await expect(
     page.getByRole("button", { name: "发送消息", exact: true }),
@@ -798,7 +814,20 @@ test("Agent 画布引用接受恰好 8 MiB 的合法原件", async ({ page }) =>
       ]),
     });
   await expect(source.locator(".uploaded-image")).toBeVisible();
-  await page.getByLabel("引用画布图片").selectOption("image");
+  const referencePicker = page.getByRole("combobox", { name: "引用画布图片" });
+  await referencePicker.press("ArrowUp");
+  await expect(
+    page.getByRole("listbox", { name: "引用画布图片" }),
+  ).toBeVisible();
+  await referencePicker.press("Escape");
+  await expect(page.getByRole("listbox", { name: "引用画布图片" })).toHaveCount(
+    0,
+  );
+  await expect(referencePicker).toBeFocused();
+  await expect(
+    page.locator(".chat-composer .start-attachment-chip"),
+  ).toHaveCount(0);
+  await selectCanvasReference(page);
   await expect(
     page.getByRole("button", { name: "移除素材 boundary.png" }),
   ).toBeVisible();
@@ -827,7 +856,7 @@ test("画布引用发送真实原件；原件丢失和损坏图片均保留草�
         buffer: Buffer.from(png, "base64"),
       });
     await expect(source.locator(".uploaded-image")).toBeVisible();
-    await page.getByLabel("引用画布图片").selectOption("image");
+    await selectCanvasReference(page);
     await expect(
       page.locator(".chat-composer .start-attachment-chip"),
     ).toHaveCount(1);
@@ -846,7 +875,7 @@ test("画布引用发送真实原件；原件丢失和损坏图片均保留草�
     });
     agent.emit("agent_event", { type: "turn.completed", status: "completed" });
     await expect(page.getByLabel("引用画布图片")).toBeEnabled();
-    await page.getByLabel("引用画布图片").selectOption("image");
+    await selectCanvasReference(page);
     await expect(
       page.locator(".chat-composer .start-attachment-chip"),
     ).toHaveCount(1);
@@ -945,7 +974,12 @@ for (const scenario of ["image", "missing-original", "text"] as const) {
         .getByRole("button", { name: "画布模型", exact: true })
         .click();
       const menu = generator.getByRole("menu", { name: "选择模型" });
-      await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+      await menu
+        .getByRole("tab", {
+          name: textCard ? "对话 / 推理" : "图像生成",
+          exact: true,
+        })
+        .click();
       await menu
         .getByRole("searchbox")
         .fill(textCard ? "Fixture Codex" : "Codex 内置生图");
@@ -1107,9 +1141,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page.getByRole("button", { name: "模型接入", exact: true }).click();
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
@@ -1125,8 +1157,8 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
-    await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+    await menu.getByRole("menuitemradio", { name: /Codex 内置生图/ }).click();
     await expect(
       source.getByText("图片模型未报告", { exact: true }),
     ).toBeVisible();
@@ -1150,20 +1182,21 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
           const projects = JSON.parse(
             localStorage.getItem("kk-studio-next:creation:v1") || "{}",
           ).projects;
-          return projects?.[0]?.canvas.edges.some(
-            (edge: { source: string; target: string }) =>
-              edge.source === "image" &&
-              edge.target === "codex-thread-fixture-native-image",
-          );
+          return projects?.[0]?.canvas.edges;
         }),
       )
-      .toBe(true);
+      .toContainEqual(
+        expect.objectContaining({
+          source: "image",
+          target: "codex-thread-fixture-native-image",
+        }),
+      );
     expect(agent.received.images).toHaveLength(0);
     await source.focus();
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const cardMenu = source.getByRole("menu", { name: "选择模型" });
-    await cardMenu.getByRole("tab", { name: "本地", exact: true }).click();
+    await cardMenu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await cardMenu.getByRole("searchbox").fill("image-fixture");
     await cardMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })
@@ -1204,7 +1237,7 @@ for (const authorized of [true, false])
           .getByRole("button", { name: "模型接入…", exact: true })
           .click();
         await page
-          .getByRole("button", { name: "API Key（官方）", exact: true })
+          .getByRole("tab", { name: "官方直连 API", exact: true })
           .click();
         await page.getByLabel("接口地址").fill(agent.url + "/v1");
         await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
@@ -1225,6 +1258,7 @@ for (const authorized of [true, false])
         await page
           .getByRole("button", { name: "发送消息", exact: true })
           .click();
+        await approveCanvasPlan(page);
         if (!authorized) {
           await expect.poll(() => agent.received.tools.length).toBe(1);
           expect(JSON.stringify(agent.received.tools[0])).toContain("白名单");

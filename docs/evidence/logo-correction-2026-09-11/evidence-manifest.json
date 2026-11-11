@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/logo-correction-2026-09-11",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-account.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4de290c78d8d890e01f4fadcc76852783b4a5639",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-account.png",
+      "bytes": 447492,
+      "sha256": "576a3f05303dc6e034829cd623b6d3467514bd3e3a646a4e6dfc3422c1bf1247",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-landing-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ce1166bf91b17eba0095de3985fa7933893db5e4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-landing-390.png",
+      "bytes": 79243,
+      "sha256": "15bc023a0e971473f0465731ffc3efe975dee38e47e31c915ca5ecd7f3a16de5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-model-menu.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad60f5303455d91143e719b53a123200f47957c1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-model-menu.png",
+      "bytes": 91772,
+      "sha256": "a112ec63978ae7d5af9af48a36803824109e108adf1d2fae0c26d4a89b9b3831",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-preview-account.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "79940655c0d420a7227a01ef43d80fbff841a2ca",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-preview-account.png",
+      "bytes": 447516,
+      "sha256": "e9ca27766f768b2ef7de30d4db42e043ddd7897a3623a794fcb2fc4e0d6b2cab",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-preview-landing-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "65c2838c1970f828f2a27f180f8c5b14439a274b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-preview-landing-390.png",
+      "bytes": 79286,
+      "sha256": "afb5d762ffad080cc51993b9900515c9bfff8685e1dd9bdcd3fde3930264c4c9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-preview-landing.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1c2a71847cff49dcedceeadc2bdbdcfc2c1527ea",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-preview-landing.png",
+      "bytes": 433747,
+      "sha256": "9e8885b86fbf399dc456773327a2be9a93b9b52e260ca12c11089c9becdf2764",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-preview-model-menu.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5d5d627ac8be093f103d2646c31a642c97189639",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-preview-model-menu.png",
+      "bytes": 91629,
+      "sha256": "bfd5c0543af5b6fe830f6c5b69ed783c7f9462d052c30269b677bf879d17aa9f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/after-preview-workspace.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0f99c03e422df82d5550d1c7cd642b2cf7a2d346",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/after-preview-workspace.png",
+      "bytes": 70791,
+      "sha256": "747dcb704a46fbb1b516979a78f51321e35463deaaca7fab756966207ceb7de5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-account.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "444e439bbad0b8cef01979cd5a481584d62eec0a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-account.png",
+      "bytes": 447502,
+      "sha256": "c31feff3f71d5aa12460b590f6c6b2bbcdb29e3a3b8f875ca2af9c58585de3b6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "88589e78b6a62c64a4af87dfb7c03af2c41d6363",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-collapsed.png",
+      "bytes": 70439,
+      "sha256": "8f7e90518acfbc9b79366104ddf0c8b79241c36c426bed0d28cfa9025666dc6a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-desktop-icon.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5463b97305a16c14e561c28d5c73eb967a6ccb65",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-desktop-icon.png",
+      "bytes": 24502,
+      "sha256": "7db717d52dcc0c2f92df2bb3773eba0f062964f8629351d59d5bc0a0a98410c9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-landing-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b3b9ff30ddb474dab2e61b079a49d5c1bbef0196",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-landing-390.png",
+      "bytes": 79367,
+      "sha256": "e63d110fe317e368bbf8522c9da8254bb6f96978fa6d9f3c27150870d3461227",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-landing.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e7a3553b6bb30421cf19a8a924983f8bdfe831c8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-landing.png",
+      "bytes": 433823,
+      "sha256": "94f45db2cb1055f09bceec790c35abe92d25cfee9b23ca2e1cd974ce6ac6ad3c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-model-menu.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "60d818212a82efc327f4f71c88e50320c1b38cc3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-model-menu.png",
+      "bytes": 91462,
+      "sha256": "7dc79d462458e951d1f4cf649abea57892fd60395a3a8064e3778ef27bb08227",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/before-workspace.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "daf740b4701fa04b01afcd64d033b09cb8470902",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/before-workspace.png",
+      "bytes": 72483,
+      "sha256": "dc08a99018e27a345e7f5c6c566f394d82c04dc9631ffd396cd9b594264471eb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/logo-correction-2026-09-11/native-landing.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2aee41196b6c364ebfd4e551d83c187193f6bf9a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/logo-correction-2026-09-11/native-landing.png",
+      "bytes": 168612,
+      "sha256": "335613d9a03a647576f182c64e330b2e0fa94c2ddad124432adf271232a21439",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

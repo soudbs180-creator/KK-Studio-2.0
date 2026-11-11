@@ -88,15 +88,12 @@ async function harness(loadFails = false) {
                 confirmation = resolve;
               }),
           };
-        if (name.includes("agentConnection"))
+        if (name.endsWith("/agent/index.ts"))
           return {
             agentConnection: {
               subscribe: () => () => {},
               getState: () => connection,
             },
-          };
-        if (name.includes("agentApi"))
-          return {
             createAgentApi: (options: { signal?: AbortSignal }) => ({
               codebuddyConfig: async () => {
                 if (loadFails) throw new Error("fixture read failure");
@@ -115,6 +112,8 @@ async function harness(loadFails = false) {
                 }),
             }),
           };
+        if (name === "./SettingsInfoHint")
+          return { default: "InfoHint", __esModule: true };
         throw new Error("Unexpected import " + name);
       },
     },

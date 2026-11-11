@@ -96,7 +96,7 @@ export default function ChatImageCard({
             title="设为主体参考图"
             onClick={handleSetRef}
           >
-            <UiIcon name="image" size={14} />
+            <UiIcon name="image" size={12} />
             <span>设为参考</span>
           </button>
         )}
@@ -109,7 +109,7 @@ export default function ChatImageCard({
             onPreview?.(src);
           }}
         >
-          <UiIcon name="eye" size={14} />
+          <UiIcon name="eye" size={12} />
           <span>放大</span>
         </button>
         <button
@@ -118,7 +118,7 @@ export default function ChatImageCard({
           title="下载图片"
           onClick={handleDownload}
         >
-          <UiIcon name="download" size={14} />
+          <UiIcon name="download" size={12} />
           <span>下载</span>
         </button>
       </div>

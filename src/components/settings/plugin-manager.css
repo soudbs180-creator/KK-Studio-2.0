@@ -53,14 +53,7 @@
   font-size: var(--ui-font-body);
   line-height: var(--ui-line-height-body);
 }
-.plugin-manager-install input {
+.plugin-manager-install > .kk-input-wrapper {
   flex: 1 1 auto;
   min-width: 0;
-  height: 32px;
-  padding: 0 10px;
-  border: var(--ui-border-width) solid var(--border-control);
-  border-radius: var(--ui-radius-control);
-  background: var(--bg-input);
-  color: var(--settings-text);
-  font-size: 12px;
 }

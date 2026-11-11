@@ -126,7 +126,7 @@ export function ComposerIcon({
       ) : (
         <Icon
           name={name}
-          size={22}
+          size={size === 44 ? 28 : 32}
           color={solid || selected ? t.input : t.text}
         />
       )}

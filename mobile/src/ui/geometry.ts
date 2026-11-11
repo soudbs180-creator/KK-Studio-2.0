@@ -1,4 +1,7 @@
-/** Phone geometry follows the pinned mobile reference; targets remain platform-owned. */
+import colorTokens from "./colorTokens.generated.json" with { type: "json" };
+
+export const settingsGeometry = colorTokens.settingsGeometry;
+/** Existing phone geometry retains its source; settings consume current Figma values. */
 export const radii = {
   none: 0,
   control: 8,

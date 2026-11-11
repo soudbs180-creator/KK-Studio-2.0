@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MutableRefObject } from "react";
-import { loadApiKey } from "../../features/creation/providerCredentials";
-import { ProviderSaveError } from "../../features/creation/providerSaveRecovery";
+import { loadApiKey } from "../../features/creation/index.ts";
+import { ProviderSaveError } from "../../features/creation/index.ts";
 
 export type CredentialReadState = "loading" | "saved" | "missing" | "error";
 

@@ -30,10 +30,15 @@ Tauri 2.11 在 NSIS 入包前将唯一 bundle marker 从 UNK 改为 NSS，打包
 
 首次 verify 的根测试 627/635（8 skip）、Agent 169/171（2 skip）通过，browser 376 pass + 1 flaky。既有设置测试关闭 retry 重复五轮为 35/40 PASS、5 FAIL；20 次低负载诊断未复现，受控四帧间隔诊断 10/10 复现顺序测量失败，同帧矩形差值全为 0。产品 surface-enter 动画保持；仅修正同步采样，两项原像素断言未放宽。修复后关闭 retry 20 轮为 160/160 PASS。计划已记录该验证修正。
 
-2cf5249 补充 nav/两按钮/panel/sidebar 可见性断言，保留旧 boundingBox 对隐藏控件的失败能力；再次无 retry 20 轮 160/160 PASS，完整 verify 退出0且377/377无flaky。实际证据见 [candidate-verify.log](evidence/candidate-verify.log) 与 [settings-visibility.log](evidence/settings-visibility.log)；前次 head8ece4c7 的完整成功记录另存 [final-verify.log](evidence/final-verify.log)，不修改其来源SHA。
+2cf5249 补充 nav/两按钮/panel/sidebar 可见性断言，保留旧 boundingBox 对隐藏控件的失败能力；再次无 retry 20 轮 160/160 PASS，完整 verify 退出0且377/377无flaky。实际证据见 [candidate-verify.log](evidence/candidate-verify.log) 与 [settings-visibility.log](evidence-manifest.json)；前次 head8ece4c7 的完整成功记录另存 [final-verify.log](evidence-manifest.json)，不修改其来源SHA。
 
 首轮原生报告曾放在 Playwright 的 test-results，后续 browser 清理导致报告/截图丢失，退出日志保留。已将默认输出移到独立 .tmp/installer-audits，并重新完整实机验收；本轮 evidence 保留最新原始报告/截图与初次日志，未重建或伪造已删除文件。
 
 日志保留 stdout 的失败与 warning；落库仅标准化 CRLF/行尾空格/末尾空行，原始日志及 raw SHA 在工作区外保留。文本 stored hash 对应 LF 仓库字节，Git checkout 可转为 CRLF。[capture.json](evidence/capture.json) 绑定来源、退出码与文件身份；[原生报告](evidence/installer-runtime.json)、[安装收据](evidence/installer-receipt.json)、[受控诊断](evidence/settings-controlled-geometry.json)、[实际 active rulesets](evidence/hosted-rulesets.json)。
 
 当前主机已有 WebView2；干净 Windows、无 WebView2 首装、真实断网环境、低版本回滚、签名、正式发布、Provider/ComfyUI 均 NOT VERIFIED。T7 与 FEAT-026 保持 PARTIAL；收据校验不是数字签名，也不单独证明安装可用。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-30-desktop-installer manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

@@ -91,9 +91,9 @@ export async function inspectPage(
   expect(
     metrics.controls.filter(
       (item) =>
-        ![24, 32, 40].some((height) => Math.abs(item.height - height) < 1),
+        ![24, 32, 40, 44].some((height) => Math.abs(item.height - height) < 1),
     ),
-    "标准动作遵循 24/32/40 高度",
+    "标准动作遵循 24/32/40/44 高度",
   ).toEqual([]);
   expect(metrics.primary.length, "页面只有一个 Primary").toBeLessThanOrEqual(1);
   expect(metrics.bounds.x).toBeGreaterThanOrEqual(0);

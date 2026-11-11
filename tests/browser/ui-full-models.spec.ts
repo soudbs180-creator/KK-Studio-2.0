@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, panCanvasToRevealAction } from "./helpers";
 
 for (const width of [390, 1099, 1920]) {
   test(`重绘复用当前图片模型菜单 ${width}`, async ({ page }, info) => {
@@ -15,45 +15,33 @@ for (const width of [390, 1099, 1920]) {
     await expect(node.locator(".uploaded-image")).toBeVisible();
     await node.focus();
     await node.press("Enter");
-    await page
+    const redraw = page
       .getByRole("toolbar", { name: /^图片操作：/ })
-      .getByRole("button", { name: "重绘参考图片", exact: true })
-      .click();
+      .getByRole("button", { name: "重绘参考图片", exact: true });
+    await panCanvasToRevealAction(page, redraw);
+    await redraw.click();
     const model = page.getByRole("button", { name: "重绘模型", exact: true });
     await expect(model).toHaveCSS("height", "32px");
-    await expect(model).toHaveCSS("border-radius", "999px");
+    await expect(model).toHaveCSS("border-radius", "1000px");
     await model.click();
     await expect(
-      page.locator(".image-edit-model .kk-model-menu"),
+      page.locator(".image-edit-input .kk-model-menu"),
     ).toBeVisible();
-    const menu = page.locator(".image-edit-model .kk-model-menu");
-    const account = menu.getByRole("tab", { name: "登录账号", exact: true });
-    await expect(account).toBeDisabled();
-    await expect(account).toHaveAccessibleDescription(
-      "当前图片编辑仅支持 API 执行，登录账号暂不支持此操作。",
-    );
+    const menu = page.locator(".image-edit-input .kk-model-menu");
     await expect(
-      menu.getByText("当前图片编辑仅支持 API 执行，登录账号暂不支持此操作。", {
-        exact: true,
-      }),
-    ).toBeVisible();
-    const relay = menu.getByRole("tab", { name: "中转 API", exact: true });
-    await relay.focus();
-    await relay.press("ArrowRight");
+      menu.getByRole("tab", { name: "图像生成", exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
     await expect(
-      menu.getByRole("tab", { name: "官方 API", exact: true }),
-    ).toBeFocused();
-    await menu
-      .getByRole("tab", { name: "官方 API", exact: true })
-      .press("ArrowLeft");
-    await expect(relay).toBeFocused();
+      menu.getByRole("tab", { name: "对话 / 推理", exact: true }),
+    ).toHaveAttribute("aria-selected", "false");
+    await expect(menu.locator("select")).toHaveCount(0);
     await expect(page.locator(".image-edit-model select")).toHaveCount(0);
     await menu.screenshot({
       path: info.outputPath(`api-only-channel-reason-${width}.png`),
     });
     await page.keyboard.press("Escape");
     await expect(model).toBeFocused();
-    await expect(page.locator(".image-edit-model .kk-model-menu")).toHaveCount(
+    await expect(page.locator(".image-edit-input .kk-model-menu")).toHaveCount(
       0,
     );
     await page.screenshot({
@@ -74,8 +62,8 @@ for (const width of [390, 1099, 1920]) {
       name: "Google 模型",
       exact: true,
     });
-    await expect(trigger).toHaveCSS("height", "32px");
-    await expect(trigger).toHaveCSS("border-radius", "999px");
+    await expect(trigger).toHaveCSS("height", width <= 1200 ? "44px" : "32px");
+    await expect(trigger).toHaveCSS("border-radius", "1000px");
     await trigger.click();
     const menu = page.getByRole("menu", { name: "Google 模型", exact: true });
     const model = "gemini-private-long-project-model-".repeat(3);
@@ -153,7 +141,9 @@ for (const channel of ["codex", "google"]) {
       exact: true,
     });
     const search = menu.getByLabel(
-      channel === "google" ? "搜索或输入 Google 型号" : "搜索模型、厂商或参数",
+      channel === "google"
+        ? "搜索或输入 Google 型号"
+        : "搜索模型、推理能力或厂商",
       { exact: true },
     );
     for (const query of ["", "   "]) {

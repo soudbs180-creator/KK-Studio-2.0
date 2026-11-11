@@ -6,7 +6,8 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import type { Point } from "./mask.ts";
-export type ImageTool = "browse" | "rectangle" | "brush" | "color";
+export type ImageTool =
+  "browse" | "rectangle" | "brush" | "erase" | "comment" | "color";
 export function useImageViewport(options: {
   width: number;
   height: number;

@@ -1,4 +1,5 @@
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { SkillRecord } from "../features/skills/index.ts";
+import UiIcon from "./UiIcon";
 import StartResourcePopover from "./StartResourcePopover";
 
 export default function StartComposerExtensions({
@@ -28,7 +29,7 @@ export default function StartComposerExtensions({
         title="技能（Skill）"
         onClick={() => onToggleMenu("skill")}
       >
-        <img src="/design/figma/composer-puzzle.svg" alt="" />
+        <UiIcon name="puzzle" size={16} />
         <span>Skill</span>
       </button>
       {skillMenuOpen && (

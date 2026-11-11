@@ -11,11 +11,13 @@ export default function CreationParameterControl({
   onToggle,
   onChange,
   onModelChange,
+  selection,
   disabled = false,
 }: {
   disabled?: boolean;
   kind: "image" | "video";
   model: string;
+  selection?: ModelSelection;
   parameters: CanvasParameters;
   open: boolean;
   onToggle: () => void;
@@ -27,6 +29,7 @@ export default function CreationParameterControl({
   return (
     <div className="control-anchor" data-control="params">
       <button
+        type="button"
         className={"param-button " + (video ? "video-params" : "image-params")}
         disabled={disabled}
         aria-description={
@@ -35,9 +38,10 @@ export default function CreationParameterControl({
         aria-label={video ? "视频参数" : undefined}
         title={video ? undefined : "使用当前模型声明支持的尺寸"}
         aria-expanded={open}
+        aria-haspopup="dialog"
         onClick={onToggle}
       >
-        {!video && <UiIcon name="image" size={11} />}
+        {!video && <UiIcon name="image" size={12} />}
         {video ? (
           <span className="video-param-summary">
             <span>全能参考</span>
@@ -46,30 +50,41 @@ export default function CreationParameterControl({
             <i aria-hidden="true" />
             <span>{quality}</span>
             <i aria-hidden="true" />
-            <img src="/design/figma/timer-start.png" alt="" />
+            <UiIcon name="timer" size={12} />
             <span>{duration}S</span>
           </span>
         ) : (
           <span>
-            {parameters?.imageSize
-              ? `${parameters.imageSize} · ${ratio}`
-              : "自适应尺寸"}
+            {`${ratio || "自适应"} · ${
+              parameters.imageSize ||
+              (parameters.quality && parameters.quality !== "自适应"
+                ? parameters.quality
+                : "1K")
+            } · 最小`}
           </span>
         )}
       </button>
       {open && !disabled && !video && (
-        <ImageModelParameters
-          model={model}
-          onModelChange={onModelChange}
-          size={parameters?.imageSize}
-          onSize={(imageSize, ratio) =>
-            onChange({
-              imageSize,
-              ratio: ratio ?? "自适应",
-              quality: "自适应",
-            })
-          }
-        />
+        <div
+          className="node-popover parameter-menu"
+          role="dialog"
+          aria-label="图片参数"
+        >
+          <ImageModelParameters
+            embedded
+            model={model}
+            selection={selection}
+            onModelChange={onModelChange}
+            size={parameters?.imageSize}
+            onSize={(imageSize, ratio) =>
+              onChange({
+                imageSize,
+                ratio: ratio ?? "自适应",
+                quality: "自适应",
+              })
+            }
+          />
+        </div>
       )}
       {open && !disabled && video && (
         <CreationParameters

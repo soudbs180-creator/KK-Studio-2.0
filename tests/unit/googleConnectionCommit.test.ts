@@ -1,3 +1,4 @@
+import { featureEntryMocks } from "../support/featureEntryMocks.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -125,8 +126,9 @@ async function harness(
     runInNewContext(compiled.outputText, {
       exports,
       require: (id: string) => {
-        assert(id in modules, `Unexpected dependency: ${id}`);
-        return modules[id];
+        const allModules = featureEntryMocks(modules);
+        assert(id in allModules, `Unexpected dependency: ${id}`);
+        return allModules[id];
       },
       window,
       AbortController,

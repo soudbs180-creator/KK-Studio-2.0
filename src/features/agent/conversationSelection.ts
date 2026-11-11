@@ -2,7 +2,7 @@ import {
   normalizeModelSelection,
   type ModelSelection,
 } from "../../domain/modelSelection.ts";
-import type { CreationDraft } from "../creation/model.ts";
+import type { CreationDraft } from "../creation/index.ts";
 
 /** A legacy project restores text preferences, never another project's image intent. */
 export function restoreConversationSelection(

@@ -160,7 +160,8 @@ try {
     return c.toDataURL().split(",")[1];
   });
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill(fixtureProvider);
   await page.getByLabel("接口地址").fill(baseUrl);
   const fixtureId = credentialId(baseUrl, fixtureProvider);
@@ -184,7 +185,9 @@ try {
   await releaseFixtureCredential(nativeInvoke, vaultId);
   vaultId = undefined;
   vaultId = await claimFixtureCredential(nativeInvoke, fixtureId);
-  await page.getByLabel("API Key").fill("fixture-image-edit-key");
+  await page
+    .getByLabel("API Key", { exact: true })
+    .fill("fixture-image-edit-key");
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(
@@ -254,7 +257,7 @@ try {
   await expect(node.locator(".uploaded-image")).toBeVisible();
   await canvasImageAction(node, "重绘参考图片");
   const dialog = page.getByRole("dialog", { name: "重绘参考图片" });
-  await dialog.getByRole("button", { name: "框选区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "矩形选区", exact: true }).click();
   const image = await dialog.locator("canvas.image-original").boundingBox();
   await page.mouse.move(
     image.x + image.width * 0.3,
@@ -277,14 +280,12 @@ try {
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "1 个编辑区域",
   );
-  await dialog
-    .getByRole("button", { name: "清空编辑区域", exact: true })
-    .click();
+  await dialog.getByRole("button", { name: "清除", exact: true }).click();
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "0 个编辑区域",
   );
   await expect(
-    dialog.getByRole("button", { name: "清空编辑区域", exact: true }),
+    dialog.getByRole("button", { name: "清除", exact: true }),
   ).toBeDisabled();
   await dialog.getByRole("button", { name: "撤销编辑" }).click();
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
@@ -449,7 +450,11 @@ try {
   await closeApp();
   await launch();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.locator(".project-library-card").first().click();
+  await page
+    .locator(".project-library-card")
+    .first()
+    .getByRole("button", { name: /^打开编辑 / })
+    .click();
   await expect
     .poll(
       async () => (await saved()).snapshot?.projects[0]?.tasks.at(-1)?.status,

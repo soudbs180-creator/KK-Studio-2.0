@@ -1,4 +1,4 @@
-import type { CreationAttachment } from "../features/creation/model";
+import type { CreationAttachment } from "../features/creation/index.ts";
 
 export default function StartAttachmentList({
   attachments,

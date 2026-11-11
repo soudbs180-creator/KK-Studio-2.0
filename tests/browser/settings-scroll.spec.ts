@@ -12,7 +12,7 @@ test("窄屏设置分类逐行展示，并保留触屏命中区", async ({ page 
   const nav = await showSettingsCategories(page);
   await expect(nav).toBeVisible();
   await expect(
-    nav.getByRole("button", { name: "通用", exact: true }),
+    nav.getByRole("button", { name: "通用设置", exact: true }),
   ).toBeVisible();
   await expect(
     nav.getByRole("button", { name: "个人主页", exact: true }),
@@ -27,7 +27,7 @@ test("窄屏设置分类逐行展示，并保留触屏命中区", async ({ page 
       return button.getBoundingClientRect().toJSON();
     };
     return {
-      general: box("通用"),
+      general: box("通用设置"),
       account: box("个人主页"),
       bar: el.getBoundingClientRect().toJSON(),
     };
@@ -49,7 +49,7 @@ test("Skill、MCP、协作伙伴标签可用方向键切换并显示对应内容
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "扩展与 MCP", exact: true })
     .click();
   const tabs = page.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
   const skills = tabs.getByRole("tab", { name: /Skill/ });
@@ -69,7 +69,7 @@ test("Skill、MCP、协作伙伴标签可用方向键切换并显示对应内容
 test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await openSettingsSection(page, "扩展");
+  await openSettingsSection(page, "扩展与 MCP");
   const tabs = page.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
   const bounds = (await tabs.boundingBox())!;
   for (const tab of await tabs.getByRole("tab").all()) {
@@ -89,7 +89,7 @@ test("Skill 与 MCP 入口归一到扩展，Agent 连接属于模型接入", asy
     const nav = dialog.getByRole("navigation", { name: "设置分类" });
     await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
     await expect(
-      nav.getByRole("button", { name: "扩展", exact: true }),
+      nav.getByRole("button", { name: "扩展与 MCP", exact: true }),
     ).toHaveAttribute("aria-current", "page");
     await expect(dialog.getByRole("tab", { name: tab })).toHaveAttribute(
       "aria-selected",
@@ -139,8 +139,12 @@ test("Skill 与 MCP 入口归一到扩展，Agent 连接属于模型接入", asy
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "模型接入", exact: true });
   await expect(models).toHaveAttribute("aria-current", "page");
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
   await expect(
-    page.getByRole("region", { name: "Codex 主 Agent 接入" }),
+    page.locator(".settings-agent-card").filter({ hasText: "Codex 主 Agent" }),
   ).toBeVisible();
 });
 
@@ -156,7 +160,7 @@ for (const viewport of [
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "设置" });
     const content = dialog.locator(".settings-content");
-    await dialog.getByText("系统与未接入偏好", { exact: true }).click();
+    await dialog.getByText("系统偏好与桌面集成", { exact: true }).click();
     await expect(content).toHaveCSS("scrollbar-width", "none");
     await content.hover();
     await page.mouse.wheel(0, 450);
@@ -170,19 +174,16 @@ for (const viewport of [
     await expect
       .poll(() => content.evaluate((el) => el.scrollTop))
       .toBeGreaterThan(0);
-    await expect(
-      dialog.getByRole("region", { name: "软件更新", exact: true }),
-    ).toBeInViewport();
     // Categories are a separate phone level; return before keyboard navigation.
     await showSettingsCategories(page);
     const updates = dialog.getByRole("button", {
-      name: "安全中心",
+      name: "软件更新",
       exact: true,
     });
     await updates.focus();
     await expect(updates).toBeInViewport();
     await page.keyboard.press("Enter");
-    await expect(dialog.locator(".settings-content h2")).toHaveText("安全中心");
+    await expect(dialog.locator(".settings-content h2")).toHaveText("软件更新");
     await expect(dialog.getByRole("textbox")).toHaveCount(0);
     await page.keyboard.press("Escape");
     await expect(
@@ -227,8 +228,11 @@ test("资产列表隐藏滚动条后仍可滚动，浮岛设置作用于整个�
 }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
-  await page.getByRole("button", { name: "收起资产管理" }).click();
-  const assets = page.locator(".asset-content");
+  await expect(
+    page.getByRole("button", { name: "展开资产管理" }),
+  ).toBeVisible();
+  await page.setViewportSize({ width: 1920, height: 480 });
+  const assets = page.locator(".asset-panel-body");
   await expect(assets).toHaveCSS("scrollbar-width", "none");
   await assets.hover();
   await page.mouse.wheel(0, 500);

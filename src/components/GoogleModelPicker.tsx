@@ -4,9 +4,9 @@ import UiIcon from "./UiIcon";
 import {
   googleAgentConnection,
   type GoogleAgentState,
-} from "../features/agent/googleAgentConnection";
-import { searchModels } from "../features/models/modelSearch";
-import type { Entry } from "../features/models/modelMenuEntries";
+} from "../features/agent/index.ts";
+import { searchModels } from "../features/models/index.ts";
+import type { Entry } from "../features/models/index.ts";
 
 function GoogleModelOptions({
   state,

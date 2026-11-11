@@ -8,6 +8,7 @@ import path from "node:path";
 import { inflateRawSync } from "node:zlib";
 import { chromium, expect } from "@playwright/test";
 import { inspectDesktopRelease } from "../../scripts/windows/desktop-release.mjs";
+import { activeChat } from "../../src/domain/creationModel.ts";
 
 const root = process.cwd();
 const runId = randomUUID();
@@ -379,6 +380,17 @@ async function settings() {
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "模型接入", exact: true })
     .click();
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  // data-channel is a stable hook. The tab's accessible name concatenates the
+  // label and badge ("CLI 直连 CLI") and breaks on any copy change.
+  const cliTab = dialog.locator('[data-channel="cli"]');
+  if ((await cliTab.getAttribute("aria-selected")) !== "true")
+    await cliTab.click();
+  const codexTool = dialog
+    .locator(".cli-tool-subnav")
+    .getByRole("button", { name: /^Codex CLI/ });
+  if ((await codexTool.getAttribute("aria-pressed")) !== "true")
+    await codexTool.click();
   return page.locator(".settings-agent-card").filter({
     has: page.getByRole("heading", { name: /Codex 主 Agent/ }),
   });
@@ -502,9 +514,14 @@ try {
   await connected(card);
   const stored = await snapshot();
   const projectId = stored.activeProjectId;
-  const threadId = stored.projects.find(
-    (project) => project.id === projectId,
-  )?.agentThreadId;
+  const project = stored.projects.find((project) => project.id === projectId);
+  const chatId = project?.activeChatId;
+  assert.equal(
+    typeof chatId,
+    "string",
+    "Native v3 project must have an active chat",
+  );
+  const threadId = activeChat(project)?.agentThreadId;
   check(
     "project-auto-connect-persists-thread",
     typeof threadId === "string" &&
@@ -530,8 +547,9 @@ try {
   await connected(card);
   check(
     "reload-retains-thread",
-    (await snapshot()).projects.find((project) => project.id === projectId)
-      ?.agentThreadId === threadId &&
+    activeChat(
+      (await snapshot()).projects.find((project) => project.id === projectId),
+    )?.agentThreadId === threadId &&
       (await serviceConversation()).threadId === threadId,
   );
   await evidence("reload-connected", card);
@@ -541,8 +559,9 @@ try {
   await connected(card);
   check(
     "normal-close-reopen-retains-thread",
-    (await snapshot()).projects.find((project) => project.id === projectId)
-      ?.agentThreadId === threadId &&
+    activeChat(
+      (await snapshot()).projects.find((project) => project.id === projectId),
+    )?.agentThreadId === threadId &&
       (await serviceConversation()).threadId === threadId,
   );
   await evidence("reopen-connected", card);
@@ -630,8 +649,9 @@ try {
   await connected(card);
   check(
     "manual-reconnect-retains-thread",
-    (await snapshot()).projects.find((project) => project.id === projectId)
-      ?.agentThreadId === threadId &&
+    activeChat(
+      (await snapshot()).projects.find((project) => project.id === projectId),
+    )?.agentThreadId === threadId &&
       (await serviceConversation()).threadId === threadId,
   );
   await evidence("manual-reconnected", card);
@@ -640,16 +660,18 @@ try {
   await expect(card).toContainText("服务已停止");
   check(
     "stop-preserves-thread",
-    (await snapshot()).projects.find((project) => project.id === projectId)
-      ?.agentThreadId === threadId,
+    activeChat(
+      (await snapshot()).projects.find((project) => project.id === projectId),
+    )?.agentThreadId === threadId,
   );
   await evidence("service-stopped", card);
   await card.getByRole("button", { name: "重新连接", exact: true }).click();
   await connected(card);
   check(
     "service-restart-retains-thread",
-    (await snapshot()).projects.find((project) => project.id === projectId)
-      ?.agentThreadId === threadId &&
+    activeChat(
+      (await snapshot()).projects.find((project) => project.id === projectId),
+    )?.agentThreadId === threadId &&
       (await serviceConversation()).threadId === threadId,
   );
   check(
@@ -660,6 +682,7 @@ try {
   const beforeUnknown = report.threadMutations;
   const serviceIdentity = await invoke("agent_runtime_status");
   const original = await snapshot();
+  const unknownChatId = `chat-unknown-${runId}`;
   await invoke("write_creation_snapshot", {
     expectedRevision: original.revision,
     snapshot: {
@@ -667,15 +690,25 @@ try {
       revision: original.revision + 1,
       projects: original.projects.map((project) => {
         if (project.id !== projectId) return project;
-        const retained = { ...project };
+        const retained = { ...activeChat(project) };
         delete retained.agentThreadId;
-        return retained;
+        const chats = { ...project.chats };
+        delete chats[chatId];
+        chats[unknownChatId] = { ...retained, id: unknownChatId };
+        return {
+          ...project,
+          activeChatId: unknownChatId,
+          chats,
+        };
       }),
     },
   });
   await page.evaluate(
-    (id) => localStorage.removeItem("kk-agent-thread:" + id),
-    projectId,
+    ({ projectId, chatId }) =>
+      localStorage.removeItem(
+        "kk-agent-thread:" + JSON.stringify([projectId, chatId]),
+      ),
+    { projectId, chatId },
   );
   await page.reload();
   card = await settings();
@@ -692,7 +725,7 @@ try {
     (await invoke("agent_runtime_status")).pid === serviceIdentity.pid,
   );
   report.unknownOwnership =
-    "PASS; missing association simulated only in the isolated native snapshot";
+    "PASS; mismatched chat identity simulated only in the isolated native snapshot";
   await evidence("unknown-owner-refused", card);
   report.passed = report.errors.length === 0;
 } catch (error) {

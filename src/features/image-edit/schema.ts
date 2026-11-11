@@ -1,16 +1,2 @@
-/** Match the portable Rust schema; never drop unknown editing metadata. */
-export function assertEditShape(
-  value: unknown,
-  allowed: readonly string[],
-  required: readonly string[],
-  message: string,
-): void {
-  if (
-    !value ||
-    typeof value !== "object" ||
-    Array.isArray(value) ||
-    Object.keys(value).some((key) => !allowed.includes(key)) ||
-    required.some((key) => !Object.hasOwn(value, key))
-  )
-    throw new Error(message);
-}
+/** @deprecated Compatibility entry; implementation moved for P3. Keep for one release cycle. */
+export * from "../../domain/imageEditShape.ts";

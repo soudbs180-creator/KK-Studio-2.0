@@ -6,6 +6,7 @@ import {
   validateStdioEnv,
   mcpServerConfigV2Schema,
 } from "../../src/features/mcp/mcpConfig.ts";
+import { createMcpStdioCommandGuard } from "../../src/features/agent/index.ts";
 
 test("stdio 命令白名单：裸名与绝对路径放行", () => {
   assert.equal(isAllowedStdioCommand("npx"), true);
@@ -102,6 +103,36 @@ test("v2 契约：streamable_http（现状）与 stdio 均可解析，非法 tra
     args: ["server.js"],
   });
   assert.equal(stdio.transport, "stdio");
+  assert.throws(() =>
+    mcpServerConfigV2Schema.parse({ transport: "websocket" }),
+  );
+  const guard = createMcpStdioCommandGuard();
+  assert.equal(guard("canvas_apply_ops", { ops: [] }).allow, true);
+  assert.equal(
+    guard("mcp_stdio_spawn", {
+      transport: "stdio",
+      command: "npx",
+      args: ["-y", "@modelcontextprotocol/server-filesystem"],
+      env: { REGION: "cn-north" },
+    }).allow,
+    true,
+  );
+  assert.equal(
+    guard("mcp_stdio_spawn", {
+      transport: "stdio",
+      command: "bash -c 'rm -rf /'",
+    }).allow,
+    false,
+  );
+  assert.equal(
+    guard("mcp_stdio_spawn", {
+      transport: "stdio",
+      command: "node",
+      args: ["server.js"],
+      env: { OPENAI_API_KEY: "sk-abcdef1234567890" },
+    }).allow,
+    false,
+  );
   assert.throws(() =>
     mcpServerConfigV2Schema.parse({ transport: "websocket" }),
   );

@@ -1,0 +1,508 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-09-windows-entry-diagnostics",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a88c74d42e39aa6db7efe6a956b429789db7144d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.txt.gz",
+      "bytes": 18122,
+      "sha256": "59a5ecdaea191a0c9845174adc047c790328a74b1d14975881a338bbd52bd261",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-workers4-zero-retry.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "92386c0562e12f031d40ebeb551000144681260a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-workers4-zero-retry.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "baf0683e1103b94b68d94e8a12d7e144b4e0571e9948de7fb0d85103b045460e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-workers4-zero-retry.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0ac5019c5eb6bdab338026d58f8b526463745e23",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-workers4-zero-retry.txt.gz",
+      "bytes": 19806,
+      "sha256": "51a6bf1b0322e25008420f3b8cd3758ea4a4cd0cce684b74d54e18ebf98f062c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-default1423-strict-10577c1-receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1dd83b5a78e9dca02594e02a42af6368427d4911",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-default1423-strict-10577c1-receipt.json.gz",
+      "bytes": 518,
+      "sha256": "d2561fe7fb6a8b70c15f6041944ba9a2bc738f5d0dd7977ad37c743f1855d021",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-report-path-correction-10577c1.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c281c4d9d71b3a0e0fa637f9af95d46a9aaa257a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-report-path-correction-10577c1.json.gz",
+      "bytes": 410,
+      "sha256": "f0e16e68fec37e7d482c4d74b2850bf36371346b6090b77ba279c6ed4a318e5b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-actual.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ace80185eddb0bd9ececbc87d1e77e1af1bbf80f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-actual.json.gz",
+      "bytes": 2410,
+      "sha256": "cbdc578f86b500c4eddc7d1f7e6d1af0196fd93988eebc82cdaeef50408cc9f5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default-workers.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8a2f41deb2404b4c28745fe0d52e4e5ba278778b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default-workers.json.gz",
+      "bytes": 55425,
+      "sha256": "7f074ab4f6cf16c84d1b881c0b5ff0b8caa3aa9bc0b6ac8641b17a3f8212d244",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default1423-workers4-zero-retry.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2c8b46e1db027a3ebf40b2d2268ab2ebadff9f79",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default1423-workers4-zero-retry.json.gz",
+      "bytes": 49963,
+      "sha256": "6722ac2a2a637b278b1ae774e0248b5512ff1057f0d3c3e44bdebad86702fe0d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-workers4-zero-retry.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8bbe2b305cec447f4cf229b221c9dfa4f4aac9d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-workers4-zero-retry.json.gz",
+      "bytes": 43444,
+      "sha256": "08dba628f49b53b5d2f188374beb2c7209bfe731cfcbb8116e8a628b74001822",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-workers4-preview1431-failure-receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6e0ecc5c6574f3be376713c5bfff4daa3cbf280a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-workers4-preview1431-failure-receipt.json.gz",
+      "bytes": 2203,
+      "sha256": "201b31ef1b3ef1a51514e81c34075f47fbf8bb09910ab575c52ab9223639b510",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-complete-green.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-complete-green.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-complete-green.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "464c117872190cc0200eeef3af66edde252c1c25",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-complete-green.txt.gz",
+      "bytes": 1036,
+      "sha256": "efb32697008d57e6304f0172ce28fecee601b44deea74e905ae5d32484d05fc0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "560bc1687d6f3f61dc7c81f3ea00424be469591c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.json.gz",
+      "bytes": 345,
+      "sha256": "44cdce4d0eb02ca7e635d104c9fc5b53d33a4eec85025dbda98426d11645acb7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stderr.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stderr.txt.gz",
+      "bytes": 20,
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stdout.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "90ead1a9c3411be10e8354cba3d272dbae6f13f1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stdout.txt.gz",
+      "bytes": 1256,
+      "sha256": "3a547e7aeff19a3c369201046d88e58eeeabc9d0cb21a2d7785c7c394e060acc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "90430d5ffa5c5530aea03eabf4019bf14b0ccef6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.json.gz",
+      "bytes": 347,
+      "sha256": "f2dad38cd4b73c58efa0efaa8c15d8dc58511a4e6790368f968e291e8d81c5fb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stderr.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stderr.txt.gz",
+      "bytes": 20,
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stdout.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "aa7e48964249ce8c9f2bc0989fc0156714c5dac4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stdout.txt.gz",
+      "bytes": 1253,
+      "sha256": "d51d300ea7b6331eea85f8470f19c06595a4311c06f1d16cd8b626834e65f21d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/fault-preload.cjs.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fde2197b9c31fe99009835485289fcebe1ab6635",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/fault-preload.cjs.gz",
+      "bytes": 668,
+      "sha256": "363c043fac7957cb933b3c340ae6351d28b3584577070aab40445e53c8baef68",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "def09cccde2f11423e0bff7d8b5eaa424d9adb66",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/receipt.json.gz",
+      "bytes": 409,
+      "sha256": "51d597e0da9b6ed05176c4906b9042648c2e5b15c082edb50f515e6f59640e2b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-green.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-green.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-green.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4cb8afe34a52ded951c937388773cf502942402e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-green.txt.gz",
+      "bytes": 756,
+      "sha256": "9403d0685dcef4243635bc0b20779a0fc0f419df90e96ba12b6976c7f7a174a2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/original-targeted-test.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "71d0235c19720b395aabf4a110698493ed78ac21",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/original-targeted-test.txt.gz",
+      "bytes": 164,
+      "sha256": "ded319b72f0d31243ffaaaac9eced1072e18a78c855000020b027e18b6538660",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/process-trace.jsonl.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "581c85fa60e2f2175ba4035c65e2efed19cfe827",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/process-trace.jsonl.gz",
+      "bytes": 773,
+      "sha256": "d3acc9cc7cab7bb71b1924c809f8f07cdb85921f1c3886639c067398e6321543",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1df66438f8c61c4e4b21370f2f22b3c5f2c73d56",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/receipt.json.gz",
+      "bytes": 1413,
+      "sha256": "f4b86be8a5b1eb8dbf6c6fa82aa3535812e30a509dc508716dcbd232b6637786",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/source-identity.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "df2897d2c7651d51d35de1743efccce8276a6d04",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/source-identity.json.gz",
+      "bytes": 401,
+      "sha256": "e0de8791fa3900fb6d29b9454d2a3df8e361afb59f3e3d404afa0248ca69b14b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/trace-preload.cjs.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "10a20fca282685742c01e7e359329b1a63c089ee",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/trace-preload.cjs.gz",
+      "bytes": 594,
+      "sha256": "5c6cb3ade23bb65e2df1b9c00b1c8c46ed649239d9e69ab1376230a74c6e1a9e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-fault-probe.mjs.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1b13ad17050574039c83f6a723ae913e9bb4ad03",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-fault-probe.mjs.gz",
+      "bytes": 1563,
+      "sha256": "2d369f6e33f2aa0b4de0c52e64617d4b8811dc4037711459c8240d8247c556b8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnosis-push-fa36d35-desktop-entry.md.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "37a8b53dc9e55e44c5a5fb961d54480eb7bfaae8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnosis-push-fa36d35-desktop-entry.md.gz",
+      "bytes": 4797,
+      "sha256": "e0d4ccd107896f9055712751224d0c147e12ba239aa0b61178192b7889e06ba0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnostic-source-lint-112.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnostic-source-lint-112.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnostic-source-lint-112.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9f165914b91efa9a9f05bee12a233078c7d9c2b8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnostic-source-lint-112.txt.gz",
+      "bytes": 324,
+      "sha256": "54316a2dff4dde73b2d15de1a46355148e322906c4f4b3f57176cc542373e443",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final-doc-lint-corrected.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final-doc-lint-corrected.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final-doc-lint-corrected.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f0e311c65e81addd4f1d28f14f5eb623796770f8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final-doc-lint-corrected.txt.gz",
+      "bytes": 324,
+      "sha256": "d83e16271f6d510e3fc018193a732cafe1236468e4643a3995ad8be808bea9c6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-governance114.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2ba824a4d758531dcbc726e5d910d989ba9475a0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-governance114.exit.txt.gz",
+      "bytes": 22,
+      "sha256": "8afc61325213625995e1de8b0d2df70f01b1d5304993484a41cc9df249f00fad",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-governance114.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cb781abdb2714e55e8cb84a13741e7abe0c7bde4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-governance114.txt.gz",
+      "bytes": 57,
+      "sha256": "36713c363c6e1bf9cd3026534414c2e307733ca9eb8aa74944784d27541f7feb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-lint114.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2ba824a4d758531dcbc726e5d910d989ba9475a0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-lint114.exit.txt.gz",
+      "bytes": 22,
+      "sha256": "8afc61325213625995e1de8b0d2df70f01b1d5304993484a41cc9df249f00fad",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-lint114.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "debb74ceacefbc3536ca2bd21c4f429e55bda88b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-lint114.txt.gz",
+      "bytes": 316,
+      "sha256": "4829d97f97916264960431a2efe9534815ae278383d15873eee677c54b7163ae",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/pr-fa36d35-success-verify.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9090a1c2714134a58d7d6473f025ee38cbb8c106",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/pr-fa36d35-success-verify.txt.gz",
+      "bytes": 95987,
+      "sha256": "72cb6d20b994f431908cd785b322f6540494f942e77fd57c64243050e56c51b6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/push-fa36d35-failed-verify.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "47494c2d1c390603cdd8cdc601d36493f260373f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/push-fa36d35-failed-verify.txt.gz",
+      "bytes": 39396,
+      "sha256": "2e53ef652a3728b927e0d4576e833b9db9adcab1a171248b1c892e63d616bfe2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/review-final-fa36d35.md.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a69922bad645b63134ce2d0045682052152ef9aa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/review-final-fa36d35.md.gz",
+      "bytes": 4427,
+      "sha256": "a462c48ceef1532f72465be9f7e909a290e25082c8f15cd6c0220729d7577f74",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/review-source-10577c1.md.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ab6aa16d8f03a82dd1cf76ba0c145374b192e92e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/review-source-10577c1.md.gz",
+      "bytes": 5334,
+      "sha256": "26fc185f97ab8d182ca9d89c2bedea651f3f1d2c6f72088f463f623048d3a45d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-evidence-binding-10577c1.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8a3fc2f3f34a35f654631c417a551426463f432d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-evidence-binding-10577c1.json.gz",
+      "bytes": 1932,
+      "sha256": "3fcf4a833d87ab17178700c9aad9f5a20aecc523ded39c5305b95c77b0eab876",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-integrity-10577c1.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8fff42cb96180ec06128350bd48c048f4dc45de5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-integrity-10577c1.json.gz",
+      "bytes": 1270,
+      "sha256": "87c1bc39edf623fb369e67edb50f10f6e129b7054d52e376c0069f54ddd84f53",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-static-10577c1.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fe51a4bbe82cd7bf251fd33613f763f815be442c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-static-10577c1.json.gz",
+      "bytes": 782,
+      "sha256": "ee3c18e8dc8dcf60d009d00d4628c5ce6e6c89c4ddbc038dc3a3443f08d3f4a4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-unit-10577c1.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8e139299883cafe534cde272dea3259a7c31c18c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-unit-10577c1.json.gz",
+      "bytes": 1337,
+      "sha256": "5f5f354d9ce2d33e8d71e8a7817cd347a56c6977becc0113660b79c143a9ada1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-unit-10577c1.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b35282d26248c7fda466d679b0c10ac506ffed5f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-unit-10577c1.txt.gz",
+      "bytes": 1040,
+      "sha256": "b069bdb2c2a9506b81e1841930f456ad9fd9f2d44e27cf2898b21f0ffadcde81",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/verify-10577c1.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/verify-10577c1.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/verify-10577c1.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2cac443a24b375a39f3ac95daeb0021c36961cfc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/verify-10577c1.txt.gz",
+      "bytes": 55388,
+      "sha256": "cf32f217e87638e424cf295b295e39eeec99ca38224c4471eb024d50508aefb5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

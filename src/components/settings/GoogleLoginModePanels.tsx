@@ -4,12 +4,12 @@ import { resolveResource } from "@tauri-apps/api/path";
 import {
   GEMINI_BRIDGE_DEVELOPMENT_COMMAND,
   packagedGeminiBridgePowerShellCommand,
-} from "../../features/agent/geminiBridgeCommand";
+} from "../../features/agent/index.ts";
 import {
   GEMINI_BRIDGE_DEFAULT_URL,
   resolveGeminiCliLoginStatus,
   type GeminiCliStatus,
-} from "../../features/agent/geminiCliAdapter";
+} from "../../features/agent/index.ts";
 
 export function GoogleLoginModeChoice({
   cli,
@@ -93,16 +93,24 @@ export function GoogleCliSetup({
   }
   return (
     <>
-      <p>
-        用本机 Gemini CLI 登录 Google 账号，经本地桥免 API Key 对话。首次使用：
-      </p>
-      <p>
-        请先安装 Node.js/npm，并使用安装 Gemini CLI 的同一 Node/npm
-        环境完成以下步骤。
-        {desktop
-          ? "桌面版启动桥无需源码目录，请在 PowerShell 中执行复制的命令。"
-          : "网页版开发预览请在 KK Studio 源码根目录的终端中执行启动桥命令。"}
-      </p>
+      <details className="settings-usage-guide">
+        <summary>
+          <span>Gemini CLI 使用说明</span>
+          <span className="settings-usage-guide-toggle">
+            <span className="settings-usage-guide-expand">
+              查看登录与桥接要求
+            </span>
+            <span className="settings-usage-guide-collapse">
+              收起登录与桥接要求
+            </span>
+          </span>
+        </summary>
+        <p>
+          请使用安装 Gemini CLI 的同一 Node/npm
+          环境完成步骤；桌面版启动桥无需源码目录， 在 PowerShell
+          中执行复制的命令，网页版开发预览则在 KK Studio 源码根目录终端中执行。
+        </p>
+      </details>
       <ol className="settings-guide">
         <li>安装：npm install -g @google/gemini-cli</li>
         <li>登录：终端运行 gemini，选择 Login with Google</li>

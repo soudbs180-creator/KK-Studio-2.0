@@ -1,5 +1,5 @@
 import type { ModelSelection } from "../../domain/modelSelection.ts";
-import { readProviderConnections } from "../creation/providerRegistry.ts";
+import { readProviderConnections } from "../../integrations/providers/providerStore.ts";
 import { catalogForConnection } from "./modelCatalog.ts";
 import { modelDisplay } from "./modelFamilies.ts";
 export function selectedModelLabel(selection?: ModelSelection, fallback = "") {

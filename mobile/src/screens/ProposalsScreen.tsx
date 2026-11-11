@@ -76,10 +76,6 @@ export default function ProposalsScreen() {
             void run(() => actions.stageGenerationDraft(id, title, scope))
           }
         />
-        <Action
-          label="编辑画布并暂存提案"
-          onPress={() => router.push(`/canvas/${id}`)}
-        />
         {!project.canvasProposals?.length && (
           <Empty
             title="还没有提案"

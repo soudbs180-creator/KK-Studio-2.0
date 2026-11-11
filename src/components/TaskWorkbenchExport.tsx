@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { CreationTask } from "../features/creation/model";
+import { isEnabled } from "../app/featureFlags.ts";
+import type { CreationTask } from "../features/creation/index.ts";
 import type { ReviewComment, ReviewRegion } from "../domain/reviewWorkflow";
 import type { AgentRole } from "../domain/agentWorkflow";
 import CommentRegion from "./CommentRegion";
@@ -133,7 +134,9 @@ export default function TaskWorkbenchExport({
                       })
                     }
                   >
-                    <option value="planner">Planner</option>
+                    {isEnabled("taskWorkbenchPlanner") && (
+                      <option value="planner">Planner</option>
+                    )}
                     <option value="prompt_compiler">Prompt Compiler</option>
                     <option value="reference_analyst">Reference Analyst</option>
                     <option value="generation_worker">Generation Worker</option>
@@ -163,10 +166,7 @@ export default function TaskWorkbenchExport({
             )}
           </div>
         ))}
-        <p>
-          评论和任务分配保存在当前本地项目。Agent 自动执行与多人同步为
-          Prototype。
-        </p>
+        <p>评论和任务分配保存在当前本地项目。</p>
       </div>
       <div className="provenance-card">
         <h3>Provenance</h3>
@@ -210,13 +210,15 @@ export default function TaskWorkbenchExport({
           </dd>
         </dl>
         <p>覆盖原图和公网分享尚未接入；当前操作不会发送给外部协作者。</p>
-        <button
-          type="button"
-          disabled
-          title="外部分享服务尚未接入，启用前需要人工审批"
-        >
-          外部分享 · Prototype
-        </button>
+        {isEnabled("taskWorkbenchShare") && (
+          <button
+            type="button"
+            disabled
+            title="外部分享服务尚未接入，启用前需要人工审批"
+          >
+            外部分享
+          </button>
+        )}
       </div>
     </div>
   );

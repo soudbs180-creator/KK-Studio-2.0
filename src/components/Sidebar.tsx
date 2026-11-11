@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDismissible } from "./useDismissible";
 import SidebarProjectGroups from "./SidebarProjectGroups";
 import AccountPopup from "./AccountPopup";
@@ -6,8 +6,13 @@ import SidebarIcon from "./SidebarIcon";
 import SidebarNavigation from "./SidebarNavigation";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
+import {
+  getLocalAccountProvider,
+  LOCAL_ACCOUNT_CHANGED_EVENT,
+  type AccountProfile,
+} from "../features/account/index.ts";
 
 export default function Sidebar({
   active,
@@ -37,6 +42,9 @@ export default function Sidebar({
   projectActions: ProjectLibraryActions;
 }) {
   const [menu, setMenu] = useState<"account" | "projects" | null>(null);
+  const [profile, setProfile] = useState<AccountProfile>(() =>
+    getLocalAccountProvider().getProfile(),
+  );
   const account = menu === "account";
   const projectMenuOpen = menu === "projects";
   const root = useRef<HTMLElement>(null);
@@ -52,6 +60,13 @@ export default function Sidebar({
         ? (accountTrigger.current ?? toggle.current)
         : toggle.current,
   );
+  useEffect(() => {
+    const refresh = () => setProfile(getLocalAccountProvider().getProfile());
+    refresh();
+    window.addEventListener(LOCAL_ACCOUNT_CHANGED_EVENT, refresh);
+    return () =>
+      window.removeEventListener(LOCAL_ACCOUNT_CHANGED_EVENT, refresh);
+  }, []);
   useLayoutEffect(() => {
     if (collapsed)
       setMenu((current) => (phone || current === "projects" ? null : current));
@@ -149,6 +164,7 @@ export default function Sidebar({
       {account && (
         <AccountPopup
           popupRef={accountPopup}
+          profile={profile}
           onOpenSettings={(section = "general") => {
             accountTrigger.current?.focus({ preventScroll: true });
             navigate(`settings/${section}`);
@@ -159,15 +175,18 @@ export default function Sidebar({
         <button
           ref={accountTrigger}
           className="sidebar-account sidebar-control"
-          aria-label="个人信息"
+          aria-label={`${profile.displayName}，本地登录`}
           aria-expanded={account}
           onClick={() => setMenu(account ? null : "account")}
         >
-          <span className="logo">
-            <BrandLogo />
+          <span className="logo" aria-hidden="true">
+            {profile.avatarInitials || <BrandLogo variant="sidebarAccount" />}
           </span>
-          <span className="account-name" title="本地前端预览，尚未连接真实账号">
-            Prototype
+          <span
+            className="account-name"
+            title={`${profile.displayName} · 本地登录`}
+          >
+            {profile.displayName} · 本地登录
           </span>
         </button>
         <button

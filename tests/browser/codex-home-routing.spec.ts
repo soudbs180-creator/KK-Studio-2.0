@@ -1,6 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 import { startAgentServer } from "../helpers/agentServer";
-import { expandSidebar, openSeededProject } from "./helpers";
+import {
+  expandSidebar,
+  openSeededProject,
+  selectSettingsSection,
+} from "./helpers";
 import { MODEL_PROVIDER_STORAGE_KEY } from "../../src/domain/modelProvider";
 import { PROVIDER_CONNECTIONS_STORAGE_KEY } from "../../src/features/creation/providerRegistry";
 import {
@@ -14,6 +18,21 @@ import {
   type CreationProject,
   type CreationSnapshot,
 } from "../../src/features/creation/model";
+
+async function connectHomeFixture(page: Page) {
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await selectSettingsSection(page, "模型接入");
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  await dialog.getByRole("tab", { name: /^CLI 直连/ }).click();
+  await dialog
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
+  await dialog.getByRole("button", { name: "连接 Agent", exact: true }).click();
+  await expect(
+    dialog.getByRole("button", { name: "已连接", exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+}
 
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
@@ -59,6 +78,12 @@ async function seed(
       "ordinaryCodex",
       "普通 Codex 聊天",
     );
+    project.chats!.ordinaryCodex.draft.conversationChannel = "codex";
+    project.chats!.ordinaryCodex.draft.modelSelection = {
+      source: "codex",
+      model: "",
+      kind: "text",
+    };
     initial.version = 3;
     initial.projects = [projectChatView(project)];
   }
@@ -199,14 +224,18 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     const builtin = menu.getByRole("menuitemradio", {
       name: /^Codex 内置生图/,
     });
+    await expect(builtin).toHaveAttribute("aria-disabled", "true");
+    await page.keyboard.press("Escape");
+    await connectHomeFixture(page);
+    await page.getByRole("button", { name: "模型", exact: true }).click();
     await expect(builtin).not.toHaveAttribute("aria-disabled", "true");
-    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await menu.getByRole("menuitemradio", { name: /^image-test/ }).click();
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
     ).toContainText("image-test");
     await page.getByRole("button", { name: "模型", exact: true }).click();
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await builtin.click();
     await page.getByLabel("创作提示词").fill("生成一个蓝色玻璃球");
     await page.locator('.start-composer input[type="file"]').setInputFiles({
@@ -217,7 +246,34 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     await page
       .getByRole("button", { name: "开始创建项目", exact: true })
       .click();
-    await expect.poll(() => firstTurnEntered).toBe(true);
+    try {
+      await expect.poll(() => firstTurnEntered).toBe(true);
+    } catch (error) {
+      await test.info().attach("agent-boundary-requests", {
+        body: JSON.stringify({
+          requests: agent.requests,
+          conversation: agent.conversation(),
+        }),
+        contentType: "application/json",
+      });
+      await test.info().attach("home-route-failure", {
+        body: JSON.stringify(
+          await page.evaluate(
+            (key) => ({
+              snapshot: JSON.parse(localStorage.getItem(key) ?? "{}"),
+              feedback: [
+                ...document.querySelectorAll(
+                  ".start-composer-feedback,.start-status,.chat-channel-hint,.chat-agent-banner,[role=alert],.chat-agent-empty",
+                ),
+              ].map((e) => e.textContent),
+            }),
+            CREATION_STORAGE_KEY,
+          ),
+        ),
+        contentType: "application/json",
+      });
+      throw error;
+    }
     await expect(page.getByLabel("对话内容")).toBeEnabled();
     await page.getByLabel("对话内容").fill("首次发送等待期间的新草稿");
     releaseFirstTurn();
@@ -322,7 +378,7 @@ test("聊天选择 Codex 图片后保留意图，普通输入会调用内置生�
     await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const menu = page.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }).click();
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
@@ -630,6 +686,7 @@ test("首页账号生图不把图片意图写入旧项目的普通 Codex 聊天"
       .getByRole("button", { name: "开始创建项目", exact: true })
       .click();
     await expect.poll(() => agent.turns.length).toBe(1);
+    const imageThreadId = agent.conversation().threadId;
     agent.emit("conversation_changed", {
       ...agent.conversation(),
       status: "ready",
@@ -653,6 +710,7 @@ test("首页账号生图不把图片意图写入旧项目的普通 Codex 聊天"
     await expect(page.getByLabel("对话内容")).toHaveValue("");
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
+    expect(agent.conversation().threadId).not.toBe(imageThreadId);
     await page.getByLabel("对话内容").fill("普通聊天只解释颜色");
     await page.getByRole("button", { name: "发送消息", exact: true }).click();
     await expect.poll(() => agent.turns.length).toBe(2);
@@ -735,6 +793,12 @@ test("不同聊天保留各自草稿；同一聊天切换主 Agent 保留输入�
     apiChat.mainAgent = "direct";
     apiChat.draft = { ...emptyDraft(), conversationChannel: "direct" };
     project.chats!.codex = createDefaultChat("codex", "Codex 原聊天");
+    project.chats!.codex.draft.conversationChannel = "codex";
+    project.chats!.codex.draft.modelSelection = {
+      source: "codex",
+      model: "",
+      kind: "text",
+    };
     project.chats!.google = {
       ...createDefaultChat("google", "Google 原聊天"),
       mainAgent: "google",
@@ -759,7 +823,7 @@ test("不同聊天保留各自草稿；同一聊天切换主 Agent 保留输入�
     });
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const menu = page.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await menu.getByRole("searchbox").fill("image-test");
     await menu.getByRole("menuitemradio", { name: /^image-test/ }).click();
     await expect

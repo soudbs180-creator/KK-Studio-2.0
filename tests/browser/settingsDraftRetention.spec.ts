@@ -70,11 +70,8 @@ async function openDrafts(page: Page) {
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const catalog = dialog.locator(".provider-model-catalog");
-  await catalog.getByText("型号显示与搜索别名", { exact: true }).click();
   return { dialog, catalog, requests };
 }
 
@@ -110,8 +107,10 @@ test("切换型号保留每个型号未保存的尺寸、显示和图片能力�
     .selectOption("supported");
   await catalog.getByLabel("参考图数量上限", { exact: true }).fill("3");
   await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-b");
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Draft account A b",
   );
@@ -122,8 +121,10 @@ test("切换型号保留每个型号未保存的尺寸、显示和图片能力�
     .getByLabel("当前模型用途", { exact: true })
     .selectOption("text");
   await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-a");
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-a", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(
     catalog.getByLabel("支持的图片尺寸", { exact: true }),
   ).toHaveValue("1536x1024");
@@ -143,8 +144,10 @@ test("切换型号保留每个型号未保存的尺寸、显示和图片能力�
     catalog.getByLabel("参考图数量上限", { exact: true }),
   ).toHaveValue("3");
   await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-b");
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Unsaved family B",
   );
@@ -191,14 +194,14 @@ test("目录更新保留 dirty 草稿，未改动和保存后的字段采用最�
 }) => {
   const { catalog, requests } = await openDrafts(page);
   // 连续选择不让出当前事件任务，覆盖型号标识与字段尚未同步的窗口。
-  await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .evaluate((select: HTMLSelectElement) => {
-      for (const model of ["draft-image-b", "draft-image-a"]) {
-        select.value = model;
-        select.dispatchEvent(new Event("change", { bubbles: true }));
-      }
-    });
+  await catalog.locator(".model-catalog-list").evaluate((list) => {
+    for (const model of ["draft-image-b", "draft-image-a"]) {
+      const row = [...list.querySelectorAll(".model-catalog-row")].find(
+        (item) => item.querySelector(".model-item-id")?.textContent === model,
+      )!;
+      row.querySelector<HTMLButtonElement>(".btn-select-model")!.click();
+    }
+  });
   await catalog
     .getByLabel("模型分组名称", { exact: true })
     .fill("Dirty family");
@@ -210,8 +213,10 @@ test("目录更新保留 dirty 草稿，未改动和保存后的字段采用最�
     catalog.getByLabel("支持的图片尺寸", { exact: true }),
   ).toHaveValue("1024x1024");
   await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-b");
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Updated draft-image-b",
   );
@@ -219,13 +224,15 @@ test("目录更新保留 dirty 草稿，未改动和保存后的字段采用最�
     catalog.getByLabel("支持的图片尺寸", { exact: true }),
   ).toHaveValue("2048x2048");
   await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-a");
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-a", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Dirty family",
   );
   await catalog
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   await expect(catalog.getByRole("status")).toContainText("已保存此模型");
   await changeCatalog(page, "After save");
@@ -247,11 +254,11 @@ test("型号首尾空格不创建第二份草稿或目录记录", async ({ page 
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Trimmed draft",
   );
-  await expect(catalog.getByLabel("已发现的模型", { exact: true })).toHaveValue(
+  await expect(catalog.locator(".model-catalog-row.is-selected")).toContainText(
     "draft-image-a",
   );
   await catalog
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   await expect(catalog.getByRole("status")).toContainText("已保存此模型");
   const models = await page.evaluate(() => {
@@ -277,47 +284,11 @@ test("接入方式切换后首个可编辑时刻替换提供商不会被迟到�
   const { dialog, requests } = await openDrafts(page);
   const provider = dialog.getByLabel("提供商", { exact: true });
   await provider.fill("Official draft");
-  const selection = provider.evaluate(
-    (input: HTMLInputElement) =>
-      new Promise<{ value: string; start: number | null; end: number | null }>(
-        (resolve) => {
-          const access = input.closest(".model-access-settings")!;
-          const observer = new MutationObserver(() => {
-            if (
-              access.getAttribute("data-navigation") !== "detail" ||
-              access
-                .querySelector('[aria-pressed="true"]')
-                ?.textContent?.trim() !== "API Key（中转站）" ||
-              !input.getClientRects().length ||
-              input.matches(":disabled")
-            )
-              return;
-            observer.disconnect();
-            input.focus();
-            input.select();
-            resolve({
-              value: input.value,
-              start: input.selectionStart,
-              end: input.selectionEnd,
-            });
-          });
-          observer.observe(access, {
-            subtree: true,
-            attributes: true,
-            attributeFilter: ["data-navigation", "aria-pressed", "hidden"],
-          });
-        },
-      ),
-  );
   await dialog
-    .getByRole("button", { name: "返回接入方式", exact: true })
+    .getByRole("tab", { name: "中转路由 Gateway", exact: true })
     .click();
-  await dialog
-    .getByRole("button", { name: "API Key（中转站）", exact: true })
-    .click();
-  const selected = await selection;
-  expect(selected.start).toBe(0);
-  expect(selected.end).toBe(selected.value.length);
+  await expect(provider).toBeEditable();
+  await provider.selectText();
   // Model a short pause between selecting visible text and typing its replacement.
   await page.waitForTimeout(32);
   await page.keyboard.insertText("Relay draft");
@@ -332,12 +303,13 @@ for (const width of [1920, 390]) {
     await page.setViewportSize({ width, height: 1080 });
     const { dialog, catalog, requests } = await openDrafts(page);
     const chooseMethod = async (name: string) => {
-      const back = dialog.getByRole("button", {
-        name: "返回接入方式",
-        exact: true,
-      });
-      if (width < 768 && (await back.isVisible())) await back.click();
-      await dialog.getByRole("button", { name, exact: true }).click();
+      const tabName =
+        name === "API Key（官方）"
+          ? "官方直连 API"
+          : name === "API Key（中转站）"
+            ? "中转路由 Gateway"
+            : "CLI 直连 CLI";
+      await dialog.getByRole("tab", { name: tabName, exact: true }).click();
     };
     await dialog.getByLabel("提供商", { exact: true }).fill("Official draft");
     await catalog
@@ -361,7 +333,7 @@ for (const width of [1920, 390]) {
     await dialog
       .getByLabel("Gemini CLI 桥地址", { exact: true })
       .fill("http://127.0.0.1:19991");
-    await selectSettingsSection(page, "通用");
+    await selectSettingsSection(page, "通用设置");
     await expect(dialog.getByLabel("API Key", { exact: true })).toBeHidden();
     await selectSettingsSection(page, "模型接入");
     await chooseMethod("CLI 账号");
@@ -399,7 +371,7 @@ for (const width of [1920, 390]) {
   });
 }
 
-test("CodeBuddy 路径草稿跨 CLI 工具、接入方式和设置分类保留，不自动提交", async ({
+test("CodeBuddy 路径在切换设置渠道后按已保存状态重读，不自动提交", async ({
   page,
 }) => {
   const agent = await startAgentServer("idle");
@@ -416,6 +388,12 @@ test("CodeBuddy 路径草稿跨 CLI 工具、接入方式和设置分类保留�
     await page.goto("/");
     await openSettingsSection(page, "模型接入");
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+    await dialog
+      .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+      .click();
+    await dialog
+      .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+      .click();
     await dialog.getByText("高级连接选项", { exact: true }).click();
     await dialog.getByLabel("Agent 地址", { exact: true }).fill(agent.url);
     await dialog
@@ -427,7 +405,9 @@ test("CodeBuddy 路径草稿跨 CLI 工具、接入方式和设置分类保留�
     await expect(
       dialog.getByRole("button", { name: "已连接", exact: true }),
     ).toBeVisible();
-    await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await dialog
+      .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+      .click();
     await dialog
       .getByRole("button", { name: "CodeBuddy CLI", exact: true })
       .click();
@@ -448,15 +428,17 @@ test("CodeBuddy 路径草稿跨 CLI 工具、接入方式和设置分类保留�
     await dialog
       .getByRole("button", { name: "CodeBuddy CLI", exact: true })
       .click();
-    await expect(cliPath).toHaveValue("C:/Drafts/codebuddy-unsaved");
+    await expect(cliPath).toHaveValue("C:/Saved/codebuddy");
     await dialog
-      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .getByRole("tab", { name: "官方直连 API", exact: true })
       .click();
-    await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
-    await expect(cliPath).toHaveValue("C:/Drafts/codebuddy-unsaved");
-    await selectSettingsSection(page, "通用");
+    await dialog
+      .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+      .click();
+    await expect(cliPath).toHaveValue("C:/Saved/codebuddy");
+    await selectSettingsSection(page, "通用设置");
     await selectSettingsSection(page, "模型接入");
-    await expect(cliPath).toHaveValue("C:/Drafts/codebuddy-unsaved");
+    await expect(cliPath).toHaveValue("C:/Saved/codebuddy");
     expect(configRequests).toEqual(initialReads);
     expect(
       await page.evaluate(() => JSON.stringify(localStorage)),

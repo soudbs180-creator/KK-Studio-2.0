@@ -1,40 +1,44 @@
+import { positionNewMediaResults } from "./archivedTaskResult.ts";
+import { parsePromptMentions } from "../../domain/promptMentions.ts";
+import { validateMediaTaskInput } from "./mediaTaskInput.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import { assertImageCapabilityConnection } from "./imageCapabilitySubmission.ts";
 import {
   hasImageReferenceSource,
   uniqueImageReferences,
 } from "../../domain/imageReferences.ts";
+import {
+  MODEL_PROVIDER_STORAGE_KEY,
+  parseModelProvider,
+} from "../../domain/modelProvider.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
   protocolBindingMatches,
   providerNeedsKey,
 } from "../../domain/providerProtocol.ts";
-import {
-  MODEL_PROVIDER_STORAGE_KEY,
-  parseModelProvider,
-} from "../../domain/modelProvider.ts";
-import {
-  createTask,
-  modelSupportsKind,
-  type CreateProjectInput,
-  type CreationProject,
-  type CreationAttachment,
-  type CreationTask,
-} from "./model.ts";
+import { catalogForConnection } from "../models/index.ts";
 import {
   loadStoredAsset,
   type StoredGeneratedAsset,
 } from "./assetRepository.ts";
 import { hasApiKey } from "./providerCredentials.ts";
-import { catalogForConnection } from "../models/modelCatalog.ts";
+import {
+  createTask,
+  modelSupportsKind,
+  type CreateProjectInput,
+  type CreationAttachment,
+  type CreationProject,
+  type CreationTask,
+} from "./model.ts";
 import {
   addProviderConnection,
   connectionFromModelProfile,
   readProviderConnections,
 } from "./providerRegistry.ts";
 import {
-  assertSynchronousProviderSubmission,
   assertSubmissionConnection,
+  assertSynchronousProviderSubmission,
   ProviderSubmissionError,
   selectSubmissionConnection,
 } from "./providerSubmission.ts";
@@ -73,11 +77,17 @@ export function assertLiveTextTask(
         authMode: expected.providerAuthMode,
       },
     ) ||
+    task.kind !== expected.kind ||
+    task.originChatId !== expected.originChatId ||
+    task.sourceItemId !== expected.sourceItemId ||
+    JSON.stringify(task.media) !== JSON.stringify(expected.media) ||
+    JSON.stringify(task.attachments) !== JSON.stringify(expected.attachments) ||
+    (task.originChatId !== undefined && !project?.chats?.[task.originChatId]) ||
     !task.sourceItemId ||
     !project?.items.some((item) => item.id === task.sourceItemId)
   )
     throw new ImageTaskCommandError(
-      "文本任务或来源节点已变化，本次未提交；请从当前节点重新生成。",
+      "任务或来源节点已变化，本次未提交；请从当前节点重新生成。",
     );
 }
 
@@ -88,15 +98,18 @@ export function validateImageTaskInput(input: CreateProjectInput): void {
     throw new ImageTaskCommandError("图片描述不能超过 4000 字。");
   if (input.privacyMode === "platform_backed")
     throw new ImageTaskCommandError(
-      "平台额度模式仍为 Prototype；当前不会上传素材或扣费。",
+      "该生成模式未开放；请使用自带 Key 的 BYOK 本地模式提交。",
     );
-  if (input.privacyMode === "local_only")
+  if (input.privacyMode === "local_only" && !input.imageCapability)
     throw new ImageTaskCommandError(
-      "仅本地模式需要可执行的 ComfyUI 工作流；此入口尚未接入，请使用 BYOK 本地模式。",
+      "仅本地模式需要可执行的 ComfyUI 工作流；请使用自带 Key 的 BYOK 本地模式提交。",
     );
   if (!input.model.trim())
     throw new ImageTaskCommandError("请选择本次创作使用的模型。", true);
-  if (!supportsSelectedModel(input) || input.kind !== "image")
+  if (
+    (!input.imageCapability && !supportsSelectedModel(input)) ||
+    input.kind !== "image"
+  )
     throw new ImageTaskCommandError("当前模型不支持图片创作，请改用图片模型。");
   const count = input.outputCount ?? 1;
   if (!Number.isInteger(count) || count < 1 || count > 64)
@@ -148,6 +161,21 @@ export async function prepareImageTask(
   input: CreateProjectInput,
   project?: CreationProject,
 ): Promise<ProviderConnection> {
+  parsePromptMentions(
+    input.prompt,
+    Object.fromEntries(
+      input.attachments.map((attachment, index) => [
+        String(index + 1),
+        attachment.assetId ?? attachment.id,
+      ]),
+    ),
+    Object.fromEntries(
+      input.attachments.map((attachment) => [
+        attachment.id,
+        attachment.assetId ?? attachment.id,
+      ]),
+    ),
+  );
   if (
     !input.providerConnectionId &&
     project?.composerDraft.providerConnectionId
@@ -157,6 +185,8 @@ export async function prepareImageTask(
       providerConnectionId: project.composerDraft.providerConnectionId,
     };
   if (input.kind === "text") {
+    if (input.media !== undefined)
+      throw new ImageTaskCommandError("文案任务不能使用媒体参数。");
     if (!input.prompt.trim() || input.prompt.length > 4000)
       throw new ImageTaskCommandError("请填写不超过 4000 字的文案描述。");
     if (input.privacyMode && input.privacyMode !== "byok_local")
@@ -172,43 +202,38 @@ export async function prepareImageTask(
       throw new ImageTaskCommandError(
         "文案生成仅支持单份纯文本，不接收图片附件。",
       );
-  } else validateImageTaskInput(input);
-  if (input.providerConnectionId) {
-    const selected = readProviderConnections().find(
-      (item) => item.id === input.providerConnectionId,
-    );
-    if (
-      !selected ||
-      !catalogForConnection(selected).some((model) => model.id === input.model)
-    )
+  } else if (input.kind === "video" || input.kind === "audio") {
+    validateMediaTaskInput(input);
+    if (!input.providerConnectionId)
       throw new ImageTaskCommandError(
-        "选择的供应商或模型已移除，请重新选择。",
+        "请先选择视频或语音的模型连接，草稿已保留。",
         true,
       );
-    const binding = {
-      id: selected.id,
-      baseUrl: selected.baseUrl,
-      credentialRef: selected.credentialRef,
-      protocol: selected.protocol,
-      authMode: selected.authMode,
-      referenceCount: input.attachments.length,
-      operation:
-        input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
-          ? ("inpaint" as const)
-          : undefined,
-      localEdit: Boolean(input.imageEdit),
-      outputCount: input.outputCount ?? 1,
-      kind: input.kind === "text" ? ("text" as const) : ("image" as const),
-      model: input.model,
-    };
-    assertSubmissionConnection(binding);
-    if (!(await hasConnectionCredentials(selected)))
-      throw new ImageTaskCommandError(
-        "选择的连接缺少密钥，请配置后重试。",
-        true,
-      );
-    return withValidSize(input, assertSubmissionConnection(binding));
+    await validateMediaReferences();
+    async function validateMediaReferences() {
+      for (const attachment of input.attachments) {
+        const asset = attachment.assetId
+          ? await loadStoredAsset(attachment.assetId)
+          : null;
+        if (
+          !asset ||
+          asset.mime !== attachment.mime ||
+          !asset.preview.startsWith(`data:${asset.mime};base64,`)
+        )
+          throw new ImageTaskCommandError(
+            "参考素材原件缺失或 MIME 不匹配，未提交生成。",
+          );
+      }
+    }
+  } else {
+    if (input.media !== undefined)
+      throw new ImageTaskCommandError("图片任务不能使用媒体参数。");
+    validateImageTaskInput(input);
   }
+  if (input.providerConnectionId) {
+    return prepareSelectedImageConnection(input);
+  }
+
   if (!project) {
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
@@ -279,7 +304,7 @@ export async function prepareImageTask(
         : undefined,
     localEdit: Boolean(input.imageEdit),
     outputCount: input.outputCount ?? 1,
-    kind: input.kind === "text" ? ("text" as const) : ("image" as const),
+    kind: input.kind,
     model: input.model,
   };
   const connection = assertSubmissionConnection(binding);
@@ -316,6 +341,7 @@ export function appendImageTask(
       attachments: input.attachments,
       composerDraft: {
         ...bound.composerDraft,
+        media: input.media,
         outputCount: input.outputCount ?? 1,
         privacyMode: input.privacyMode ?? "byok_local",
       },
@@ -324,6 +350,7 @@ export function appendImageTask(
     providerConnectionId: connection.id,
     imageSize: input.imageSize,
     imageEdit: input.imageEdit,
+    imageCapability: input.imageCapability,
     imageEditContext: input.imageEditContext,
   };
   return {
@@ -352,6 +379,7 @@ export function appendImageTaskResults(
   );
   const items = [...project.items, ...added];
   const canvas = reconcileProjectCanvas(project.canvas, items);
+  positionNewMediaResults(project.canvas, canvas, items);
   if (sourceItemId && project.items.some((item) => item.id === sourceItemId)) {
     canvas.edges = [
       ...canvas.edges,
@@ -376,26 +404,42 @@ export async function canvasImageAttachments(
     .filter((edge) => edge.target === source.id && edge.kind !== "result")
     .map((edge) => project.items.find((item) => item.id === edge.source))
     .filter((item) => item?.kind !== "text");
-  const sources = hasImageReferenceSource(source)
-    ? [source, ...incoming]
-    : incoming;
+  const sources =
+    source.kind === "image" && hasImageReferenceSource(source)
+      ? [source, ...incoming]
+      : incoming;
   if (sources.some((item) => item?.referenceSlot === "Mask"))
     throw new ImageTaskCommandError(
       "蒙版必须通过专用编辑流程绘制，不能作为普通参考图片提交。",
     );
   const attachments: CreationAttachment[] = [];
-  for (const item of uniqueImageReferences(sources)) {
-    if (!item || item.kind !== "image" || !item.assetId)
+  const references =
+    source.kind === "video" || source.kind === "audio"
+      ? sources
+      : uniqueImageReferences(sources);
+  for (const item of references) {
+    if (
+      !item ||
+      (!["video", "audio"].includes(source.kind) && item.kind !== "image") ||
+      !item.assetId
+    )
       throw new ImageTaskCommandError(
         "参考图片尚未归档，未提交生成；请重新导入原件。",
       );
     const asset = await read(item.assetId);
-    if (!asset || !/^image\/(png|jpeg|webp|gif)$/.test(asset.mime))
+    if (
+      !asset ||
+      (source.kind === "image" &&
+        !/^image\/(png|jpeg|webp|gif)$/.test(asset.mime)) ||
+      !/^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm)|audio\/(mpeg|wav|ogg))$/.test(
+        asset.mime,
+      )
+    )
       throw new ImageTaskCommandError(
         "参考素材原件缺失或格式不支持，未提交生成。",
       );
     const encoded = asset.preview.match(
-      /^data:image\/(?:png|jpeg|webp|gif);base64,([A-Za-z0-9+/]+={0,2})$/,
+      /^data:(?:image\/(?:png|jpeg|webp|gif)|video\/(?:mp4|webm)|audio\/(?:mpeg|wav|ogg));base64,([A-Za-z0-9+/]+={0,2})$/,
     )?.[1];
     if (!encoded)
       throw new ImageTaskCommandError("参考素材原件无法读取，未提交生成。");
@@ -407,8 +451,48 @@ export async function canvasImageAttachments(
       mime: asset.mime,
       size,
       ...(item.referenceSlot ? { role: item.referenceSlot } : {}),
+      ...(item.referenceFrame ? { referenceFrame: item.referenceFrame } : {}),
       dataUrl: `kk-asset:${item.assetId}`,
     });
   }
   return attachments;
+}
+
+async function prepareSelectedImageConnection(
+  input: CreateProjectInput,
+): Promise<ProviderConnection> {
+  const selected = readProviderConnections().find(
+    (item) => item.id === input.providerConnectionId,
+  );
+  if (
+    !selected ||
+    !catalogForConnection(selected).some((model) => model.id === input.model)
+  )
+    throw new ImageTaskCommandError(
+      "选择的供应商或模型已移除，请重新选择。",
+      true,
+    );
+  const binding = {
+    imageCapability: input.imageCapability,
+    id: selected.id,
+    baseUrl: selected.baseUrl,
+    credentialRef: selected.credentialRef,
+    protocol: selected.protocol,
+    authMode: selected.authMode,
+    referenceCount: input.attachments.length,
+    operation:
+      input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
+        ? ("inpaint" as const)
+        : undefined,
+    localEdit: Boolean(input.imageEdit),
+    outputCount: input.outputCount ?? 1,
+    kind: input.kind,
+    model: input.model,
+  };
+  assertSubmissionConnection(binding);
+  if (input.imageCapability)
+    return assertImageCapabilityConnection(selected, binding);
+  if (!(await hasConnectionCredentials(selected)))
+    throw new ImageTaskCommandError("选择的连接缺少密钥，请配置后重试。", true);
+  return withValidSize(input, assertSubmissionConnection(binding));
 }

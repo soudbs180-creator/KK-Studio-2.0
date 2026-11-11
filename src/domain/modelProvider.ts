@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
 import {
   providerChannelSchema,
@@ -11,7 +10,7 @@ import {
   isProviderAuthAllowed,
 } from "./providerProtocol.ts";
 
-export const MODEL_PROVIDER_STORAGE_KEY = BROWSER_STORAGE_KEYS.modelProvider;
+export const MODEL_PROVIDER_STORAGE_KEY = "kk-studio-next:model-provider:v1";
 
 export const modelProviderSchema = z
   .object({

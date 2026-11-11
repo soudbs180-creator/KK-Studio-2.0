@@ -400,3 +400,39 @@ test("queued extraction is discarded after clearing while the clear read waits",
   assert.equal(await extraction, 0);
   assert.deepEqual(storage.store.records, []);
 });
+
+test("scoped injection forwards captured project/chat and discards results after reset", async () => {
+  const storage = new FakeStorage();
+  const settings = new FakeSettings();
+  settings.enabled = true;
+  let resolveQuery!: (records: never[]) => void;
+  let markStarted!: () => void;
+  const started = new Promise<void>((resolve) => {
+    markStarted = resolve;
+  });
+  let query: unknown;
+  const service = new MemoryService({
+    storage,
+    settings,
+    queryScoped: (options) => {
+      query = options;
+      markStarted();
+      return new Promise((resolve) => {
+        resolveQuery = resolve;
+      });
+    },
+  });
+  const injection = service.buildInjection("海报", {
+    projectId: "p1",
+    sessionId: "p1/c1",
+  });
+  await started;
+  assert.deepEqual(query, {
+    query: "海报",
+    projectId: "p1",
+    sessionId: "p1/c1",
+  });
+  await service.clearAll();
+  resolveQuery([]);
+  assert.equal(await injection, "");
+});

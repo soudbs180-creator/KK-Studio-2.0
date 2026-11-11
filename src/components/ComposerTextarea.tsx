@@ -9,8 +9,10 @@ export default function ComposerTextarea(
     const input = ref.current;
     if (!input || !input.getClientRects().length) return;
     const style = getComputedStyle(input);
+    const min = parseFloat(style.minHeight) || 0;
+    const max = parseFloat(style.maxHeight) || Infinity;
     input.style.height = "0px";
-    input.style.height = `${Math.max(parseFloat(style.minHeight), Math.min(input.scrollHeight, parseFloat(style.maxHeight)))}px`;
+    input.style.height = `${Math.max(min, Math.min(input.scrollHeight, max))}px`;
   }
   useLayoutEffect(fit, [props.value]);
   useLayoutEffect(() => {

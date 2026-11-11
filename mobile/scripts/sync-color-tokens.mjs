@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-// Phone colors follow their approved mobile reference independently of desktop.
+// Compile the existing native semantic source, including its current Figma provenance.
 const sourceUrl = new URL(
   "../src/ui/mobileColors.source.json",
   import.meta.url,

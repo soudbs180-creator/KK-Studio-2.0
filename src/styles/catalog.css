@@ -33,8 +33,7 @@
   background: var(--kk-bg-card);
 }
 .catalog-tabs button[aria-selected="true"] {
-  border-radius: var(--kk-radius-full);
-  background: var(--kk-neutral-selected);
+  background: transparent;
 }
 .catalog-handle {
   position: absolute;
@@ -51,7 +50,26 @@
   right: 35px;
   width: 24px;
   height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--ui-radius-control);
   color: var(--text-secondary);
+  transition: var(--ui-state-transition);
+}
+.catalog-close:hover {
+  background: var(--ui-state-hover-bg);
+  color: var(--text-primary);
+}
+.catalog-close:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+.catalog-close:focus:not(:focus-visible) {
+  outline: none;
+}
+.catalog-close:active {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
 }
 .catalog-search {
   margin: 50px 44px 32px;
@@ -65,8 +83,8 @@
   gap: var(--kk-space-3);
 }
 .catalog-search > img {
-  width: 15px;
-  height: 15px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .catalog-search input {
   min-width: 0;
@@ -81,33 +99,23 @@
   position: relative;
   display: flex;
   flex-shrink: 0;
-  gap: 18px;
+  gap: var(--kk-space-2);
   padding: 0 43px;
   overflow-x: auto;
-  border-bottom: 1px solid var(--border-default);
+  border: 0;
 }
 .catalog-tabs button {
-  flex: 1;
-  min-width: 116px;
-  height: var(--ui-control-h-standard);
-  font-size: 20px;
+  flex: 0 0 auto;
+  min-width: 32px;
+  height: 40px;
+  padding-inline: var(--kk-space-2);
+  font-size: var(--kk-font-caption);
   white-space: nowrap;
   color: var(--text-secondary);
   border-radius: 0;
 }
 .catalog-tabs button[aria-selected="true"] {
-  color: var(--text-primary);
-}
-.catalog-tab-indicator {
-  position: absolute;
-  bottom: 0;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--text-accent);
-  pointer-events: none;
-  transition:
-    left 160ms ease,
-    width 160ms ease;
+  color: var(--text-secondary);
 }
 .catalog-body {
   flex: 1;
@@ -211,7 +219,7 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  color: #ef6d6d;
+  color: var(--kk-like-start);
 }
 .saved-copy {
   padding: 8px;
@@ -399,10 +407,10 @@
   }
   .catalog-tabs {
     padding: 0 16px;
-    gap: 5px;
+    gap: var(--kk-space-2);
   }
   .catalog-tabs button {
-    min-width: 80px;
+    min-width: 32px;
     font-size: 14px;
   }
   .saved-columns {

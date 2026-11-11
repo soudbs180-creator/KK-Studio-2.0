@@ -43,16 +43,10 @@ export default function ExtensionsScreen() {
               : "先选择或创建一个设备项目。"}
           </Label>
           <Label>
-            添加、移动、编辑或移除节点；管理连接与视口。操作先预览并暂存，批准后才改变画布。
+            管理当前项目的协作角色、扩展能力与生成提案。操作先预览并暂存，批准后生效。
           </Label>
           <Action
             primary
-            label="编辑当前项目画布"
-            disabled={!project}
-            reason={!project ? "在项目页创建或打开项目后可使用。" : undefined}
-            onPress={() => router.push(`/canvas/${project!.id}`)}
-          />
-          <Action
             label="查看提案 / 批准 / 拒绝 / 撤回"
             disabled={!project}
             onPress={() => router.push(`/proposals/${project!.id}`)}

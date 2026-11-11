@@ -13,6 +13,15 @@ async function openPlans(
   { empty = false, summaryOnly = false } = {},
 ) {
   const project = stageProject(empty);
+  for (const stage of project.stagePlans ?? [])
+    for (const item of stage.stages.flatMap((s) => s.workItems))
+      item.model = "stage-text-test";
+  await page.route("http://127.0.0.1:19435/v1/chat/completions", (route) =>
+    route.fulfill({
+      contentType: "text/event-stream",
+      body: 'data: {"choices":[{"delta":{"content":"已生成分镜"}}]}\n\ndata: [DONE]\n\n',
+    }),
+  );
   if (summaryOnly) {
     project.stagePlans![0].stages[1].workItems = [];
     project.stagePlans![0].stages[1].resultSummary = "阶段摘要需要调整";
@@ -31,6 +40,31 @@ async function openPlans(
       }),
     ),
   });
+  await page.evaluate(() =>
+    localStorage.setItem(
+      "kk-studio-next:provider-connections:v1",
+      JSON.stringify([
+        {
+          id: "stage-text",
+          provider: "local fixture",
+          displayName: "Stage text",
+          kind: "user_byok",
+          baseUrl: "http://127.0.0.1:19435/v1",
+          protocol: "openai-chat",
+          authMode: "none",
+          credentialRef: "stage-local",
+          model: "stage-text-test",
+          state: "active",
+          concurrencyLimit: 1,
+          capabilities: {
+            modalities: ["text"],
+            operations: ["chat", "generate"],
+            async: false,
+          },
+        },
+      ]),
+    ),
+  );
   await page.reload();
   if ((page.viewportSize()?.width ?? 1920) >= 768) await expandSidebar(page);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
@@ -50,33 +84,26 @@ async function savedPlan(page: Page) {
   }, CREATION_STORAGE_KEY);
 }
 
-test("计划批准只推进一次并持久化，不创建生成任务", async ({ page }) => {
+test("批准计划签发 Mandate 并只提交一次真实任务，结果待审且重载保留", async ({
+  page,
+}) => {
   await openPlans(page);
-  await expect(page.getByRole("region", { name: "阶段计划" })).toContainText(
-    "等待计划审批",
-  );
-  await expect(page.getByText("编写产品分镜", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "批准计划", exact: true }).dblclick();
+  const approve = page.getByRole("button", {
+    name: "批准计划并签发 Mandate 执行",
+    exact: true,
+  });
+  await approve.click();
   await expect
     .poll(async () => (await savedPlan(page))?.stages[0].status)
-    .toBe("doing");
-  expect((await savedPlan(page)).revision).toBe(1);
-  await expect(page.locator(".task-queue-item")).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "阶段计划" })).toContainText(
-    "自动执行尚未接入",
-  );
+    .toBe("result_review");
+  const plan = await savedPlan(page);
+  expect(plan.stages[0].executionMandate.authorizedBy).toBe("User");
+  expect(plan.stages[0].workItems[0].taskId).toBeTruthy();
+  expect(plan.stages[0].workItems[0].status).toBe("succeeded");
   await page.reload();
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page
-    .locator(".project-library-card")
-    .filter({ hasText: "阶段审批项目" })
-    .click();
-  await page.getByRole("button", { name: "打开任务列表" }).click();
-  await page.getByRole("button", { name: "打开任务工作台" }).click();
-  await page.getByRole("tab", { name: "Plan", exact: true }).click();
-  await expect
-    .poll(async () => (await savedPlan(page))?.stages[0].status)
-    .toBe("doing");
+  expect((await savedPlan(page)).stages[0].workItems[0].taskId).toBe(
+    plan.stages[0].workItems[0].taskId,
+  );
 });
 
 test("计划拒绝和解除阻断沿用原计划，仍须再次审批", async ({ page }) => {
@@ -101,12 +128,17 @@ test("计划拒绝和解除阻断沿用原计划，仍须再次审批", async ({
     .toBe("plan_review");
   expect((await savedPlan(page)).revision).toBe(4);
   expect((await savedPlan(page)).stages[0].planApprovedAt).toBeUndefined();
-  await page.getByRole("button", { name: "批准计划", exact: true }).click();
+  await page
+    .getByRole("button", { name: "批准计划并签发 Mandate 执行", exact: true })
+    .click();
   await expect
     .poll(async () => (await savedPlan(page))?.stages[0].planApprovedAt)
     .toBeTruthy();
-  expect((await savedPlan(page)).revision).toBe(5);
-  await expect(page.locator(".task-queue-item")).toHaveCount(0);
+  expect((await savedPlan(page)).revision).toBeGreaterThanOrEqual(5);
+  await expect
+    .poll(async () => (await savedPlan(page))?.stages[0].status)
+    .toBe("result_review");
+  expect((await savedPlan(page)).stages[0].workItems[0].taskId).toBeTruthy();
 });
 
 test("无工作项的合法结果阶段可以拒绝摘要并保存", async ({ page }) => {
@@ -171,7 +203,9 @@ test("保存失败持续显示原因，审批不宣称已保存", async ({ page 
       return original.apply(this, args);
     };
   });
-  await page.getByRole("button", { name: "批准计划", exact: true }).click();
+  await page
+    .getByRole("button", { name: "批准计划并签发 Mandate 执行", exact: true })
+    .click();
   const panel = page.getByRole("region", { name: "阶段计划" });
   await expect(panel).toContainText("请先处理项目恢复提示");
   await expect(panel.getByRole("status")).toHaveCount(0);
@@ -181,17 +215,23 @@ test("保存失败持续显示原因，审批不宣称已保存", async ({ page 
   ).toBeDisabled();
 });
 
-test("离线审批仍在本地保存，键盘能够提交", async ({ page }) => {
+test("离线执行保留授权与失败回执，不把未提交任务当成成功", async ({ page }) => {
   await openPlans(page);
   await page.context().setOffline(true);
-  const approve = page.getByRole("button", { name: "批准计划", exact: true });
+  const approve = page.getByRole("button", {
+    name: "批准计划并签发 Mandate 执行",
+    exact: true,
+  });
   await approve.focus();
   await approve.press("Enter");
   await expect
     .poll(async () => (await savedPlan(page))?.stages[0].status)
-    .toBe("doing");
+    .toBe("blocked");
+  expect((await savedPlan(page)).stages[0].executionMandate.authorizedBy).toBe(
+    "User",
+  );
   await expect(
-    page.getByRole("region", { name: "阶段计划" }).getByRole("status"),
+    page.getByRole("region", { name: "阶段计划" }).getByRole("alert"),
   ).toBeVisible();
 });
 
@@ -231,22 +271,58 @@ test("空项目显示明确计划来源且保留单一任务队列", async ({ pa
   );
   await expect(page.locator(".task-queue-item")).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "批准计划", exact: true }),
+    page.getByRole("button", {
+      name: "批准计划并签发 Mandate 执行",
+      exact: true,
+    }),
   ).toHaveCount(0);
 });
 
-test("窄屏仍可查看计划与提交审批", async ({ page }) => {
+test("窄屏阶段授权可真实提交并展示结果审批", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPlans(page);
-  const approve = page.getByRole("button", { name: "批准计划", exact: true });
+  const approve = page.getByRole("button", {
+    name: "批准计划并签发 Mandate 执行",
+    exact: true,
+  });
   await approve.scrollIntoViewIfNeeded();
-  await expect(approve).toBeVisible();
   await approve.click();
   await expect
     .poll(async () => (await savedPlan(page))?.stages[0].status)
-    .toBe("doing");
+    .toBe("result_review");
   await page.screenshot({
     path: test.info().outputPath("stage-workbench-390.png"),
     fullPage: true,
   });
+});
+
+test("阶段监督可切换 off、observe、auto，并保留 would accept", async ({
+  page,
+}) => {
+  await openPlans(page);
+  const policy = page.getByRole("combobox", { name: "准入策略", exact: true });
+  await policy.click();
+  await page.getByRole("option", { name: "自动", exact: true }).click();
+  await expect(policy).toContainText("自动");
+  await policy.click();
+  await page.getByRole("option", { name: "观察", exact: true }).click();
+  await expect(page.getByRole("region", { name: "阶段监督" })).toContainText(
+    "would accept",
+  );
+  await policy.click();
+  await page.getByRole("option", { name: "关闭", exact: true }).click();
+  await expect(policy).toContainText("关闭");
+  await page.reload();
+  if ((page.viewportSize()?.width ?? 1920) >= 768) await expandSidebar(page);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "阶段审批项目" })
+    .click();
+  await page.getByRole("button", { name: "打开任务列表" }).click();
+  await page.getByRole("button", { name: "打开任务工作台" }).click();
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
+  await expect(
+    page.getByRole("combobox", { name: "准入策略", exact: true }),
+  ).toContainText("关闭");
 });

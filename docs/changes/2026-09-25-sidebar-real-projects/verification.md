@@ -8,11 +8,11 @@
 
 | 检查 | 结果 | 证据与边界 |
 | --- | --- | --- |
-| `npm run verify`，`KK_TEST_PORT=1424` | PASS | 370 Node、337 Edge browser；lint、治理/功能/Markdown、类型、格式、构建、UI 规则 170 文件/0 违规；[完整日志](evidence/verify-final.log) |
+| `npm run verify`，`KK_TEST_PORT=1424` | PASS | 370 Node、337 Edge browser；lint、治理/功能/Markdown、类型、格式、构建、UI 规则 170 文件/0 违规；[完整日志](evidence-manifest.json) |
 | 真实项目浏览器路径 | PASS | 空库无假行；ID 打开、改名、删除与项目库和刷新一致；搜索来自同一快照；任务状态不明时删除禁用；文件夹拖放、撤销、置顶与刷新边界，见 `tests/browser/sidebar-real-projects.spec.ts` |
-| 响应式可视核对 | PASS | [采集脚本](evidence/capture.mjs)、[指标](evidence/metrics.json)；390/768/1440/1920 视口的 `documentWidth` 与视口相等，侧栏与文件夹可见；[窄屏](evidence/03-real-projects-390.png)、[桌面](evidence/02-real-projects-1440.png) |
+| 响应式可视核对 | PASS | [采集脚本](evidence/capture.mjs)、[指标](evidence/metrics.json)；390/768/1440/1920 视口的 `documentWidth` 与视口相等，侧栏与文件夹可见；[窄屏](evidence-manifest.json)、[桌面](evidence-manifest.json) |
 | Web production 资源 | PASS | [web-runtime.json](evidence/web-runtime.json)：入口 `src/main.tsx`、`production`，JS/CSS 与 `dist` SHA-256 相同，页面错误 0 |
-| `npm run client:build:agent -- --no-bundle` | PASS | fresh Tauri release，[构建日志](evidence/build-desktop.log)；构建产生 5 条已有 Rust dead-code warning，无编译错误 |
+| `npm run client:build:agent -- --no-bundle` | PASS | fresh Tauri release，[构建日志](evidence-manifest.json)；构建产生 5 条已有 Rust dead-code warning，无编译错误 |
 | `node docs/changes/2026-09-25-sidebar-real-projects/evidence/check-desktop.mjs` | PASS | 独立 `--data-dir` 与 WebView profile；原生空库→新建→改名→刷新→同项目打开→创建会话文件夹；[运行记录](evidence/desktop-runtime.json)、[截图](evidence/desktop-native-real-sidebar.png)。原生 JS/CSS 与当前 `dist` SHA-256 相同，页面错误 0 |
 
 Web 与原生实际载入相同的 JS `d9ffe653831195282ed09e251ba31f65f6cbab81f7f5fed3db4ce7ec1b206183`、CSS `812361afa9943d356df744c94a0ae977cf20e12170de9dfbc34722d250c0e1ab`。原生程序 SHA-256 为 `116ab639efee19ae2393188df73cd03de9611026ce366587f883264c3667d236`，仅代表此隔离工作树的构建，不是用户当前安装版。
@@ -29,3 +29,8 @@ Web 与原生实际载入相同的 JS `d9ffe653831195282ed09e251ba31f65f6cbab81f
 - 文件夹、置顶与成员顺序目前只在当前页面会话，刷新后项目回到未分组。要持久化需定义 Web/原生快照与项目包迁移，不得把当前 Prototype 当作永久资产管理。
 - UI-010 的未裁决 Ardot token 与产品视觉验收仍保留。此 PR 依赖 UI-010；未合入主线或正式安装包。
 - WorkBuddy、豆包真实接管、共享记忆、跨平台账号/额度与自动模型调度属于独立 Agent 链路，未由侧栏和 UI 测试证明。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-25-sidebar-real-projects manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

@@ -16,6 +16,7 @@ export interface MaskRegion {
   colorName?: string;
   number?: number;
   instruction?: string;
+  annotation?: "comment";
 }
 export interface MaskDocument {
   width: number;

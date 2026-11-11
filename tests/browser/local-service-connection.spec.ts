@@ -58,7 +58,7 @@ async function openStorageSettings(
   await page.setViewportSize({ width, height: width < 500 ? 800 : 1080 });
   await page.goto("/");
   expect(new URL(page.url()).origin).toBe(productionOrigin);
-  await openSettingsSection(page, "网络");
+  await openSettingsSection(page, "网络与代理");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   return dialog.getByTestId("companion-settings");
 }

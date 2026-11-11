@@ -30,9 +30,9 @@ Agent 首轮 5 个预期失败及后续归属/终态竞争 RED 已修复；HUD 4
 | official Tauri release 2.1.20 | 构建 PASS，17/17 隔离 WebView2 检查 PASS |
 | 独立源码审查 | SOURCE PASS / NO FINDINGS，绑定 4e38351c |
 
-最后 npm run verify 在固定 1423 被其它任务占用时以 1 退出；此前各阶段通过。没有复用或终止它的进程。端口释放后从同一冻结源码、同一 production build 补跑全部 browser，再串行执行 development，所有门禁阶段最终通过；compound 原出口保留为 1，不能称该命令出口 0。见[占用原日志](evidence/final-checks-port-occupied.log.gz)、[最终浏览器日志](evidence/production-browser.log.gz)、[525 项机器报告](evidence/production-browser-results.json)、[开发收据](evidence/development-receipt.json)。
+最后 npm run verify 在固定 1423 被其它任务占用时以 1 退出；此前各阶段通过。没有复用或终止它的进程。端口释放后从同一冻结源码、同一 production build 补跑全部 browser，再串行执行 development，所有门禁阶段最终通过；compound 原出口保留为 1，不能称该命令出口 0。见[占用原日志](evidence-manifest.json)、[最终浏览器日志](evidence-manifest.json)、[525 项机器报告](evidence/production-browser-results.json)、[开发收据](evidence/development-receipt.json)。
 
-首次缺 canvas-agent/dist 和 public/plugins 导致门禁失败；按原 agent:build/plugins:build 流程补齐生成物，未改测试或检查器。依赖最初为 junction，后换为隔离 npm ci --ignore-scripts --no-audit --no-fund，primary 依赖目录保留。原失败见[首轮完整记录](evidence/initial-full-verify-failed.log.gz)与[组合记录](evidence/combined-full-verify-failed.log.gz)。
+首次缺 canvas-agent/dist 和 public/plugins 导致门禁失败；按原 agent:build/plugins:build 流程补齐生成物，未改测试或检查器。依赖最初为 junction，后换为隔离 npm ci --ignore-scripts --no-audit --no-fund，primary 依赖目录保留。原失败见[首轮完整记录](evidence-manifest.json)与[组合记录](evidence-manifest.json)。
 
 ## 实际运行链路与身份
 
@@ -42,7 +42,7 @@ Web production：原 Playwright 配置启动 node node_modules/vite/bin/vite.js 
 
 Desktop：官方 build:agent --no-bundle 经 ensureDesktopRelease 生成 current receipt，官方 start-kk-studio.bat --background --data-dir 启动候选 EXE。http://tauri.localhost/ 的 WebView2、原生创作/记忆数据根、隔离 profile/CODEX_HOME、EXE/PID/启动时间与 CDP9354 后代归属均验证；自有实例已关闭，不接管日常窗口。只有 Agent runtime start/status/stop 使用 loopback transport，真实 invoke/storage/close 透传；没有模型 turn 或 native vault 写入，CDP 接入前活动不宣称验证。
 
-EXE SHA-256：f2b71804a8831d309f7850e846b784b5bb6bb66e3398429a2a1ffb266203e4d1；输入指纹 db01d5500da525ea66962fc44c8e1ea5f376fe80ad2e255e564c81ab155f8f98。加载 JS SHA-256 167a76f10524ed7a9816eb3d9e5f6c7754cac01fa28c14066edc62b6f3c18285、CSS 1cb7490bddae2a2052630abd24b75f600b5043d2912851d3299be749ae1393c8。见[原始收据](evidence/receipt.json)、[构建身份](evidence/desktop-build-identity.json)、[native DOM](evidence/native-running.dom.json)、[折叠截图](evidence/native-collapsed.png)。
+EXE SHA-256：f2b71804a8831d309f7850e846b784b5bb6bb66e3398429a2a1ffb266203e4d1；输入指纹 db01d5500da525ea66962fc44c8e1ea5f376fe80ad2e255e564c81ab155f8f98。加载 JS SHA-256 167a76f10524ed7a9816eb3d9e5f6c7754cac01fa28c14066edc62b6f3c18285、CSS 1cb7490bddae2a2052630abd24b75f600b5043d2912851d3299be749ae1393c8。见[原始收据](evidence/receipt.json)、[构建身份](evidence/desktop-build-identity.json)、[native DOM](evidence/native-running.dom.json)、[折叠截图](evidence-manifest.json)。
 
 ## 保全与范围
 
@@ -52,6 +52,11 @@ EXE SHA-256：f2b71804a8831d309f7850e846b784b5bb6bb66e3398429a2a1ffb266203e4d1�
 
 ## 主目录桌面补验
 
-canonical EXE FileVersion/ProductVersion均为2.1.20；dirty checkout HEAD仍为51fccfc7，本轮src/tests SHA与冻结candidate4e一致。官方EXE SHA-256 e0003b71a2a4223e382e8621abfab026aac2138408afbb693b5069c0d0e0dcce，输入ccb59dfb3742a3ea9e951d50630873257a8f1e5da295b3c390d7dee292961362，receipt current。使用独立data/profile/CODEX_HOME启动主目录EXE后同17/17检查通过、errors=[]，加载JS/CSS与候选SHA相同，自有实例关闭。没有打开用户日常项目。见[canonical收据](evidence/canonical-native-receipt.json)、[DOM](evidence/canonical-native-running.dom.json)、[截图](evidence/canonical-native-running.png)。
+canonical EXE FileVersion/ProductVersion均为2.1.20；dirty checkout HEAD仍为51fccfc7，本轮src/tests SHA与冻结candidate4e一致。官方EXE SHA-256 e0003b71a2a4223e382e8621abfab026aac2138408afbb693b5069c0d0e0dcce，输入ccb59dfb3742a3ea9e951d50630873257a8f1e5da295b3c390d7dee292961362，receipt current。使用独立data/profile/CODEX_HOME启动主目录EXE后同17/17检查通过、errors=[]，加载JS/CSS与候选SHA相同，自有实例关闭。没有打开用户日常项目。见[canonical收据](evidence/canonical-native-receipt.json)、[DOM](evidence/canonical-native-running.dom.json)、[截图](evidence-manifest.json)。
 
 版本化日志使用gzip无损归档，解压SHA与保留原件一致；未删除原件或改写失败。归档仅用于保存原始诊断空白，不放宽源码/Markdown格式门禁。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-14-agent-execution-delivery manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

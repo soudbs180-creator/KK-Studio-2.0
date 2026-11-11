@@ -8,10 +8,12 @@ import {
 } from "react";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
-import { pluginLoader } from "../../features/plugins/pluginLoader";
-import { pluginStore } from "../../features/plugins/pluginStore";
+import { pluginLoader } from "../../features/plugins/index.ts";
+import { pluginStore } from "../../features/plugins/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 import "./plugin-manager.css";
+import RuntimeExtensionSettings from "./RuntimeExtensionSettings.tsx";
+import { Input, Button } from "../ui";
 
 /** 设置中心 · 插件管理：安装（URL）、更新、卸载、启停。 */
 export default function PluginManagerSettings({
@@ -198,12 +200,16 @@ export default function PluginManagerSettings({
           </div>
         </div>
       ))}
+      <RuntimeExtensionSettings
+        busy={busy || state.busy.length > 0}
+        onFeedback={onFeedback}
+      />
       <h3 className="settings-detail-label">从 URL 安装</h3>
       <p className="plugin-manager-trust-note">
         远程插件会以应用权限运行。请仅安装你信任的 HTTPS 插件地址。
       </p>
       <div className="plugin-manager-install">
-        <input
+        <Input
           aria-label="插件地址"
           disabled={busy || state.busy.length > 0}
           placeholder="https://example.com/plugin.js"
@@ -216,14 +222,14 @@ export default function PluginManagerSettings({
             }
           }}
         />
-        <button
+        <Button
           type="button"
           className="settings-action"
           onClick={() => void install()}
           disabled={busy || !url.trim() || state.busy.length > 0}
         >
           安装
-        </button>
+        </Button>
       </div>
       {(error || state.error) && (
         <p className="settings-network-error" role="alert">

@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import UiIcon from "../UiIcon";
 import type { Asset } from "../../domain/assets";
 import AssetProvenanceDetail from "./AssetProvenanceDetail";
 
@@ -33,7 +34,9 @@ export default function AssetDetail({
         {backIcon} 返回资产
       </button>
       <div className="asset-large-preview">
-        {detail.src && !decodeError ? (
+        {detail.type === "text" && detail.text ? (
+          <pre className="asset-text-preview">{detail.text}</pre>
+        ) : detail.src && !decodeError ? (
           detail.src.startsWith("data:audio/") ? (
             <audio
               key={attempt}
@@ -53,11 +56,9 @@ export default function AssetDetail({
             <img key={attempt} {...mediaProps} alt={detail.name} />
           )
         ) : (
-          <img
-            className="asset-icon"
-            src="/design/figma/asset-image.svg"
-            alt=""
-          />
+          <span className="asset-icon">
+            <UiIcon name="image" size={24} />
+          </span>
         )}
       </div>
       {loading && <p role="status">正在读取素材原件…</p>}

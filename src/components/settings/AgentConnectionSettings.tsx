@@ -1,14 +1,16 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { isTauri } from "@tauri-apps/api/core";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { agentConnection } from "../../features/agent/index.ts";
 import {
   readPermissionMode,
   writePermissionMode,
   subscribeAgentPreferences,
-} from "../../features/agent/agentConnection.ts";
-import type { AgentPermissionMode } from "../../features/agent/agentTypes.ts";
-import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle.ts";
+} from "../../features/agent/index.ts";
+import type { AgentPermissionMode } from "../../features/agent/index.ts";
+import { desktopAgentLifecycle } from "../../features/agent/index.ts";
 import DesktopAgentControl from "./DesktopAgentControl.tsx";
+import BrowserBackendSettings from "./BrowserBackendSettings.tsx";
+import SettingsTitleRow from "./SettingsTitleRow";
 
 const PERMISSION_LABELS: Record<AgentPermissionMode, string> = {
   request: "每次询问",
@@ -115,25 +117,27 @@ export default function AgentConnectionSettings({
           className={"settings-status-dot " + statusClass}
           aria-hidden="true"
         />
-        <h3>
-          Codex 主 Agent
-          <span className="settings-version-tag">
-            {state.status === "connected"
-              ? "已连接"
-              : pending
-                ? "连接中"
-                : error
-                  ? "连接失败"
-                  : ready
-                    ? "已就绪"
-                    : "未连接"}
-          </span>
-        </h3>
+        <SettingsTitleRow
+          id="codex-agent"
+          label="查看 Codex 主 Agent 说明"
+          description="使用本机已登录的 Codex 账号，负责对话、任务规划与画布操作。图片任务可使用账号内置能力或你配置的 API。"
+        >
+          <h3>
+            Codex 主 Agent
+            <span className="settings-version-tag">
+              {state.status === "connected"
+                ? "已连接"
+                : pending
+                  ? "连接中"
+                  : error
+                    ? "连接失败"
+                    : ready
+                      ? "已就绪"
+                      : "未连接"}
+            </span>
+          </h3>
+        </SettingsTitleRow>
       </div>
-      <p>
-        使用本机已登录的 Codex 账号，负责对话、任务规划与画布操作。
-        图片任务可使用账号内置能力或你配置的 API。
-      </p>
       {ready && (
         <p role="status">
           {lifecycle.automatic
@@ -213,6 +217,7 @@ export default function AgentConnectionSettings({
         </select>
       </div>
       <p>“每次询问”会在 Agent 执行操作前请求许可，已有连接和对话可持续复用。</p>
+      <BrowserBackendSettings onFeedback={onFeedback} />
       {error && (
         <p className="settings-network-error" role="alert">
           {error}

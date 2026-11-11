@@ -114,6 +114,18 @@ fn project(project: &Value) -> Result<Value, String> {
     let updated = timestamp(&project["updatedAt"], created);
     let mut ids = BTreeMap::new();
     if let Some(thread) = project["agentThreadId"].as_str() {
+        let matching: Vec<_> = chats
+            .iter()
+            .filter(|(_, chat)| chat["agentThreadId"].as_str() == Some(thread))
+            .map(|(id, _)| id.clone())
+            .collect();
+        match matching.as_slice() {
+            [id] if chats[id]["mainAgent"] == "codex" => {
+                ids.insert("codex", id.clone());
+            }
+            [] => (),
+            _ => return Err(bad()),
+        }
         ensure(&mut chats, &mut ids, "codex", created, updated)["agentThreadId"] = json!(thread);
     }
     if project

@@ -1,0 +1,51 @@
+# Review：主线接管与 P6 live 测试基线收口
+
+- Task ID：TASK-DELIVERY-MAIN-20261030
+- 时间与时区：2026-11-01，Asia/Shanghai
+- Reviewer/context/工具或模型：实现者 self-review；独立只读 reviewer（gpt-6-luna）
+- 独立于实现上下文：是；独立 review PASS（W0 范围）
+- Base SHA / head SHA / 规则版本：base `b93b4e7f347f9a01b28b4055668a5412af489303`；fresh reviewed head `56e8b9f26d3312464e61b0a4f481dbf9f6e414c0`；当前规则来自仓库 `AGENTS.md` / `AI_RULES.md`
+- PR / branch / worktree：无 PR；`fix/TASK-HANDOFF-TAKEOVER-20261101`; task worktree
+- Intent / Spec / Plan / Verification：本目录五件套
+
+## 评审范围和方式
+
+- 读取：live spec/test/harness、Figma snapshot manifest、ledger diff、delivery docs。
+- 静态/运行：typecheck、lint、agent runtime targeted test、production build、default-skipped Playwright。
+- 未覆盖：真实 ComfyUI/GPU、Desktop/Tauri、Figma connector、Hosted、全量 browser、发布。
+- self-review 与独立 review：self-review 只证明作者已检查；不能代替独立 review 或用户产品验收。
+
+## Findings
+
+| ID | P0–P3 | Pass | merge/release blocker | 文件/行或证据 | 重现与影响 | 处理/负责人 | 状态/复验 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| IR-HANDOFF-01 | P1 | verification | merge blocker | `verification.md` / external prerequisites | no authorized image checkpoint and no Figma OAuth; real gates cannot run | root/user external input | OPEN |
+| IR-HANDOFF-02 | P2 | governance | merge blocker for this package | `task-ledger.json` active ownership | full verify/Hosted/PR not run | root | OPEN until final gate |
+| IR-HANDOFF-03 | P2 | test boundary | non-blocking for default suite | live test/harness | opt-in path remains unverified without real endpoint/checkpoint | root | OPEN, correctly NOT VERIFIED |
+| IR-HANDOFF-04 | P2 | UI gate | resolved | `npm run ui:check` | Canvas focus extraction plus compact configure callback reduced the file to the enforced limit; semantic tokens are defined | root | RESOLVED, recheck PASS |
+
+## 复核摘要与交接
+
+- 已确认：默认 live test 不会触碰外部服务；任务树依赖生成后 Agent runtime targeted tests 通过；Figma worktree 已保存 73 路径 SHA；W0 UI gate 292 files / 0 violations，ComfyUI browser 1/1。
+- 仍 PARTIAL/NOT VERIFIED：真实 GPU/Comfy image、Desktop、Figma L3/L4、Hosted、发布及全量 browser。
+- 风险交给后续：获得 checkpoint 后运行 opt-in live test；获得 Figma OAuth 后执行 audit pull/L3/L4；修复 227 browser failures 和 Windows rename EPERM。
+
+## 适用门禁
+
+| 门禁 | 真实结果 | 证据与 SHA/时间 | 未满足的影响 |
+| --- | --- | --- | --- |
+| Self-review | PASS WITH FOLLOW-UPS | current diff, 2026-11-01 | not independent |
+| 独立 AI review | PASS | fresh read-only `b93b4e7f..56e8b9f2`, W0 reviewer verdict | W0 scope clear; broader release gates remain open |
+| CI / 定向回归 | PARTIAL | local type/lint/build/targeted tests | full verify not run |
+| GitHub 实际审批 | NOT RUN | no PR | no remote merge |
+| 用户 UI/交互/产品验收 | NOT RUN | no user product acceptance | no REAL/DONE upgrade |
+| 推送/合并/发布授权 | NOT RUN | no push/release | remains local candidate |
+| 恢复/回滚实证 | N/A | no data migration or external writes | later Desktop task owns it |
+
+## 结论
+
+- PASS WITH FOLLOW-UPS
+- 未关闭 blocker：真实 checkpoint、Figma OAuth、full verify/Hosted、origin/main merge；这些不阻断 W0 review 结论。
+- 非阻断后续：live test default gate and snapshot are complete enough for continuation.
+- 当前 review 结论为 PASS WITH FOLLOW-UPS；独立 reviewer 已确认 W0 范围无 blocker。
+- 本结论不代替合并、发布或用户最终验收。

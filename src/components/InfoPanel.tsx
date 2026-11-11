@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import UiIcon from "./UiIcon";
 export default function InfoPanel({
   view,
   onClose,
@@ -18,7 +18,7 @@ export default function InfoPanel({
           aria-label="关闭"
           onClick={onClose}
         >
-          <X size={20} />
+          <UiIcon name="close" size={20} />
         </button>
       </header>
       {view === "tasks" ? (
@@ -47,8 +47,7 @@ export default function InfoPanel({
             点左下角设置调整主题与布局偏好。按 Escape 关闭弹窗，Tab 切换控件。
           </p>
           <p>
-            项目、对话与素材保存在当前设备；连接并验证模型接入后可提交图片任务。演示结果标为本地演示；账号与云端同步仍为
-            Prototype，不代表云端保存。
+            项目、对话与素材仅保存在当前设备；配置好自带 Key 的模型接入后即可提交图片任务。演示结果为本机生成，可直接继续创作。
           </p>
         </div>
       )}

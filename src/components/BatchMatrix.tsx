@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import type {
   CreationTask,
   CreationTaskOutput,
-} from "../features/creation/model";
-import { loadStoredAsset } from "../features/creation/assetRepository";
-import { retryableOutputIndices } from "../features/creation/taskRecovery";
-import { taskRetryAvailability } from "../features/creation/taskRetryAvailability";
+} from "../features/creation/index.ts";
+import { loadStoredAsset } from "../features/creation/index.ts";
+import { retryableOutputIndices } from "../features/creation/index.ts";
+import { taskRetryAvailability } from "../features/creation/index.ts";
 
 export default function BatchMatrix({
   task,

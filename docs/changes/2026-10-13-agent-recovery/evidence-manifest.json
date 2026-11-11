@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-13-agent-recovery",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-13-agent-recovery/evidence/canonical-provider-after-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1fae3305840abf4eb4a44014ec3e00b760a73758",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-13-agent-recovery/evidence/canonical-provider-after-restart.png",
+      "bytes": 391038,
+      "sha256": "9686ffd9dd428a2962f88649420c5eae81b338c5b0d8a98fef3464ff55fe0efa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-13-agent-recovery/verification.md",
+          "line": 53,
+          "originalTarget": "evidence/canonical-provider-after-restart.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-13-agent-recovery/evidence/provider-after-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b3a09e3dbe00dad767ab503e009a5939fab482c2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-13-agent-recovery/evidence/provider-after-restart.png",
+      "bytes": 390791,
+      "sha256": "568c6ab6ca5521dd772eb28beb73cd4af74b2375df4f7ca4ffad5cd4d1e9bdd1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-13-agent-recovery/verification.md",
+          "line": 45,
+          "originalTarget": "evidence/provider-after-restart.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-13-agent-recovery/evidence/reopen-connected.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3bbf306a09206db270ed2f8a3e380d237bb0b2db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-13-agent-recovery/evidence/reopen-connected.png",
+      "bytes": 30896,
+      "sha256": "46d208ff62f7293147365c65e63d57ac7ec33adaccca5f0e8bf4f56521f97275",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-13-agent-recovery/verification.md",
+          "line": 43,
+          "originalTarget": "evidence/reopen-connected.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

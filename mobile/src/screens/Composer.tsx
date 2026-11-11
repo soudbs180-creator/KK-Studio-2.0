@@ -185,7 +185,7 @@ export function Composer({ project }: { project: MobileProject }) {
         style={{
           backgroundColor: t.input,
           borderRadius: 32,
-          paddingHorizontal: active ? 8 : 4,
+          paddingHorizontal: active ? 12 : 4,
           paddingVertical: active ? 12 : 4,
           borderWidth: 1,
           borderColor: t.subtleBorder,

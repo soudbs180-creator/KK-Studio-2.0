@@ -1,5 +1,5 @@
-import type { CreationAttachment } from "../features/creation/model";
-import { storeGeneratedAsset } from "../features/creation/assetRepository";
+import type { CreationAttachment } from "../features/creation/index.ts";
+import { storeGeneratedAsset } from "../features/creation/index.ts";
 
 /** Keep a failed batch out of the draft; local originals already archived remain intact. */
 export async function readAttachmentBatch(

@@ -1,0 +1,7 @@
+# 格式修复范围
+
+唯一清单来自P0保留的pre-existing-format.json：ReferenceThumbnail.tsx与17个feature/index.ts。使用项目已锁定的Prettier，不改测试、依赖、UI设计、业务逻辑或存储。
+
+逐文件比较修复前后TypeScript转译后的JavaScript语法树（相同编译参数、移除注释与位置信息，保留字符串值及运算符），全部相同才能接受。直接转译文本因TypeScript保留原三元表达式换行而不同，原始对照已保存；比较器另以运算符及字符串空格变更作为负例。无需设计变更：仅恢复现有排版，不改变JSX语义；不据此声称Figma视觉验收。
+
+复验P0堆叠候选时，以已具备架构基线的P0提交作为ARCHITECTURE_BASE/GOVERNANCE_BASE；该本地结果不代替最终origin/main集成基线的门禁。禁止扩容架构基线或豁免实际失败。

@@ -1,458 +1,215 @@
-import assert from "node:assert/strict";
 import test from "node:test";
-import { type CreationSnapshotV3, type LegacyV2Snapshot } from "./harness.ts";
-import { validateSnapshotV3 } from "../../src/features/creation/snapshotCodec.ts";
+import assert from "node:assert/strict";
+import {
+  createProject,
+  createDefaultChat,
+  updateActiveChat,
+  projectChatView,
+  emptySnapshot,
+  serializeCreationSnapshot,
+} from "../../src/domain/creationModel.ts";
 import {
   migrateSnapshotV2ToV3,
   sha256Hex,
-} from "../../src/features/creation/chatMigration.ts";
-import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
-
-/* =========================================================================
- * R2: Snapshot v3 contract tests; production transactions also have IDB and Native suites.
- * ========================================================================= */
-
-// -------------------------------------------------------------------------
-// Tier 1: Feature Coverage (Core Contracts & Happy Paths)
-// -------------------------------------------------------------------------
-
-test("R2-T1-01: snapshot v3 schema validates v3 structure with chats dictionary and activeChatId", () => {
-  const validV3: CreationSnapshotV3 = {
+} from "../../src/domain/chatMigrationCore.ts";
+import { validateSnapshotV3 } from "../../src/domain/creationSnapshotCodec.ts";
+import { commitIndexedChatMigration } from "../../src/features/creation/indexedChatMigration.ts";
+import { createIndexedStorageFixture } from "../support/indexedStorageFixture.ts";
+const legacy = () => ({
+  version: 2 as const,
+  revision: 7,
+  activeProjectId: "p",
+  homeDraft: {},
+  projects: [
+    {
+      id: "p",
+      name: "Original",
+      messages: [{ id: "m", role: "user" as const, content: "kept" }],
+      items: [],
+      composerDraft: { prompt: "draft", attachments: [] },
+    },
+  ],
+});
+async function storage(f: ReturnType<typeof createIndexedStorageFixture>) {
+  return new Promise<IDBDatabase>((resolve) => {
+    const open = f.factory.open("fixture");
+    open.onsuccess = () => resolve(open.result);
+  });
+}
+test("R2-T1-01: actual v3 codec validates canonical chats and active identity", () => {
+  const project = createProject({
+    prompt: "test",
+    model: "m",
+    kind: "text",
+    attachments: [],
+  });
+  const snapshot = serializeCreationSnapshot({
+    ...emptySnapshot(),
     version: 3,
-    revision: 10,
-    activeProjectId: "proj-101",
-    homeDraft: {},
-    projects: [
-      {
-        id: "proj-101",
-        name: "Test Creative Project",
-        activeChatId: "chat-primary",
-        chats: {
-          "chat-primary": {
-            id: "chat-primary",
-            name: "主对话",
-            createdAt: 1700000000000,
-            updatedAt: 1700000001000,
-            draft: { text: "Pending concept prompt" },
-            messages: [
-              {
-                id: "msg-1",
-                role: "user",
-                content: "Design a cyberpunk vehicle",
-                createdAt: 1700000000500,
-              },
-            ],
-            mainAgent: "codex",
-            modelAllowlist: ["gpt-4o", "claude-3-5-sonnet"],
-          },
-        },
-        items: [{ id: "item-canvas-1", kind: "image", title: "Ref" }],
-        tasks: [],
-      },
-    ],
-  };
-
-  const validated = validateSnapshotV3(validV3);
-  assert.equal(validated.version, 3);
-  assert.equal(validated.projects[0].activeChatId, "chat-primary");
-  assert.ok(validated.projects[0].chats["chat-primary"]);
-  assert.equal(validated.projects[0].chats["chat-primary"].mainAgent, "codex");
+    projects: [project],
+    activeProjectId: project.id,
+  });
   assert.equal(
-    validated.projects[0].chats["chat-primary"].modelAllowlist.length,
-    2,
+    validateSnapshotV3(snapshot).projects[0].activeChatId,
+    project.activeChatId,
   );
 });
-
-test("R2-T1-02: production migration separates unassigned history from Codex and Google contexts", () => {
-  const legacyV2: LegacyV2Snapshot = {
-    version: 2,
-    revision: 5,
-    activeProjectId: "proj-legacy",
-    homeDraft: {},
-    projects: [
-      {
-        id: "proj-legacy",
-        name: "Legacy Multi-Channel Project",
-        // Mixed legacy fields
-        messages: [
-          {
-            id: "m-direct-1",
-            role: "user",
-            content: "Direct conversation message",
-          },
-          { id: "m-direct-2", role: "assistant", content: "Direct reply" },
-        ],
-        composerDraft: {
-          text: "Unsent direct draft",
-        },
-        agentThreadId: "thread-codex-xyz",
-        googleConversation: { sessionId: "google-session-999" },
-        items: [{ id: "shared-item-1" }],
-        tasks: [{ id: "task-1" }],
-      },
-    ],
-  };
-
-  const v3 = migrateSnapshotV2ToV3(legacyV2);
-
-  assert.equal(v3.version, 3);
-  assert.equal(v3.revision, 6);
-  assert.equal(v3.projects.length, 1);
-
-  const proj = v3.projects[0];
-  // Verify deterministic chat segregation
-  assert.ok(
-    proj.chats["legacy-codex"],
-    "Codex history must be migrated to legacy-codex",
-  );
-  assert.ok(
-    proj.chats["legacy-history"],
-    "Direct history must be migrated to legacy-history",
-  );
-  assert.ok(
-    proj.chats["legacy-google"],
-    "Google history must be migrated to legacy-google",
-  );
-
-  // Content preservation verification
-  assert.equal(proj.chats["legacy-codex"].agentThreadId, "thread-codex-xyz");
-  assert.equal(proj.chats["legacy-history"].messages.length, 2);
-  assert.equal(
-    proj.chats["legacy-history"].messages[0].content,
-    "Direct conversation message",
-  );
-  assert.equal(proj.chats["legacy-history"].draft.text, "Unsent direct draft");
-
-  // Shared assets preserved
-  assert.equal(proj.items?.length, 1);
-  assert.equal(proj.tasks?.length, 1);
-  assert.equal(
-    proj.tasks![0].originChatId,
-    undefined,
-    "Unknown task origin must not be invented",
-  );
-  assert.equal(proj.chats["legacy-codex"].messages.length, 0);
-  assert.equal(proj.chats["legacy-history"].requiresReview, true);
+test("R2-T1-02: production migration preserves transcript and pending draft without modifying v2", () => {
+  const source = legacy(),
+    before = structuredClone(source),
+    result = migrateSnapshotV2ToV3(source);
+  assert.deepEqual(source, before);
+  const chat = result.projects[0].chats[result.projects[0].activeChatId];
+  assert.equal(chat.messages[0].content, "kept");
+  assert.equal(chat.draft.prompt, "draft");
 });
-
-test("R2-T1-03: non-downgradable write barrier enforces strict transaction order and format marker advance", () => {
-  const initialV2Raw = JSON.stringify({
-    version: 2,
-    revision: 1,
-    activeProjectId: "p1",
-    homeDraft: {},
-    projects: [{ id: "p1", name: "P1", items: [] }],
-  });
-
-  const barrier = new NonDowngradableWriteBarrier(initialV2Raw);
-  assert.deepEqual(barrier.formatMarker, {
-    formatVersion: 1,
-    minWriterVersion: 1,
-  });
-
-  const v3Candidate: CreationSnapshotV3 = {
-    version: 3,
-    revision: 2,
-    activeProjectId: "p1",
-    homeDraft: {},
-    projects: [
-      {
-        id: "p1",
-        name: "P1",
-        activeChatId: "chat-default",
-        chats: {
-          "chat-default": {
-            id: "chat-default",
-            name: "默认对话",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            draft: {},
-            messages: [],
-            mainAgent: "codex",
-            modelAllowlist: [],
-          },
-        },
-      },
-    ],
-  };
-
-  const receipt = barrier.executeMigrationWriteBarrier(v3Candidate);
-
-  // 1. Immutable v2 archive exists and matches SHA-256
-  const expectedSha = sha256Hex(initialV2Raw);
-  assert.equal(receipt.archiveSha, expectedSha);
-  assert.ok(barrier.memoryFiles.has(`projects/archive-v2-${expectedSha}.json`));
-
-  // 2. v3 backup exists
-  assert.ok(barrier.memoryFiles.has("projects/creation-backup.json"));
-
-  // 3. v3 main written
-  const mainBytes = barrier.memoryFiles.get("projects/creation-v2.json")!;
-  const mainParsed = JSON.parse(mainBytes);
-  assert.equal(mainParsed.version, 3);
-
-  // 4. Authority marker advanced to formatVersion=2, minWriterVersion=2
-  assert.deepEqual(barrier.formatMarker, {
+test("R2-T1-03: actual migration transaction publishes archives, both barriers and receipt together", async () => {
+  const source = legacy(),
+    raw = JSON.stringify(source),
+    candidate = migrateSnapshotV2ToV3(source);
+  const f = createIndexedStorageFixture({ snapshot: source });
+  await commitIndexedChatMigration(
+    await storage(f),
+    { snapshot: source, backup: undefined, marker: undefined },
+    candidate,
+    { snapshot: raw },
+  );
+  assert.deepEqual(f.records.get("snapshot"), candidate);
+  assert.deepEqual(f.records.get("backup"), candidate);
+  assert.deepEqual(f.records.get("formatMarker"), {
     formatVersion: 2,
     minWriterVersion: 2,
   });
-
-  // 5. Transaction step order log check
-  assert.match(barrier.stepLog[0], /^sha256:/);
-  assert.match(barrier.stepLog[1], /^archived:/);
-  assert.match(barrier.stepLog[2], /^backup_written:/);
-  assert.match(barrier.stepLog[3], /^main_written:/);
-  assert.match(barrier.stepLog[4], /^marker_advanced:/);
-});
-
-test("R2-T1-04: multi-chat architecture isolates drafts, transcripts, and model allowlists while sharing canvas items", () => {
-  const project: CreationProjectV3 = {
-    id: "proj-multi",
-    name: "Collaborative Design",
-    activeChatId: "chat-design",
-    items: [
-      { id: "canvas-layer-1", type: "shape" },
-      { id: "canvas-layer-2", type: "text" },
-    ],
-    tasks: [],
-    chats: {
-      "chat-design": {
-        id: "chat-design",
-        name: "UI 设计",
-        createdAt: 1000,
-        updatedAt: 1000,
-        draft: { text: "Review wireframe token colors" },
-        messages: [{ id: "m-1", role: "user", content: "Check contrast" }],
-        mainAgent: "codex",
-        modelAllowlist: ["gpt-4o"],
-      },
-      "chat-dev": {
-        id: "chat-dev",
-        name: "开发协作",
-        createdAt: 2000,
-        updatedAt: 2000,
-        draft: { text: "Implement Rust validator" },
-        messages: [{ id: "m-2", role: "user", content: "Run cargo check" }],
-        mainAgent: "direct",
-        modelAllowlist: ["claude-3-5-sonnet"],
-      },
-    },
-  };
-
-  // Chats are completely isolated
-  assert.notEqual(
-    project.chats["chat-design"].draft.text,
-    project.chats["chat-dev"].draft.text,
+  assert.equal(
+    (
+      f.records.get(`chat-migration:archive:${sha256Hex(raw)}`) as {
+        rawBytes: string;
+      }
+    ).rawBytes,
+    raw,
   );
-  assert.notDeepEqual(
-    project.chats["chat-design"].modelAllowlist,
-    project.chats["chat-dev"].modelAllowlist,
-  );
-  assert.notEqual(
-    project.chats["chat-design"].messages[0].id,
-    project.chats["chat-dev"].messages[0].id,
-  );
-
-  // Canvas items are shared
-  assert.equal(project.items.length, 2);
-  assert.equal(project.items[0].id, "canvas-layer-1");
-});
-
-test("R2-T1-05: security boundary strictly rejects API keys and access tokens embedded in snapshots", () => {
-  const badSnapshot = {
-    version: 3,
-    revision: 1,
-    activeProjectId: "p-secret",
-    apiKey: "sk-live-synthetic-leak-credentials-987654321",
-    projects: [],
-    homeDraft: {},
-  };
-
-  assert.throws(
-    () => validateSnapshotV3(badSnapshot),
-    /凭据|令牌|密钥/,
-    "Must throw corrupt error when apiKey or secret is present",
+  assert.ok(
+    f.records.has(
+      `chat-migration:receipt:${sha256Hex(JSON.stringify(candidate))}`,
+    ),
   );
 });
-
-// -------------------------------------------------------------------------
-// Tier 2: Boundary & Corner Cases (Recovery, Fallback & Versioning)
-// -------------------------------------------------------------------------
-
-test("R2-T2-01: empty v2 project migration creates chat-default with clean state and codex mainAgent", () => {
-  const emptyV2: LegacyV2Snapshot = {
-    version: 2,
-    revision: 1,
-    activeProjectId: "empty-proj",
-    homeDraft: {},
-    projects: [
-      {
-        id: "empty-proj",
-        name: "Clean Slate",
-        items: [],
-      },
-    ],
-  };
-
-  const v3 = migrateSnapshotV2ToV3(emptyV2);
-  const proj = v3.projects[0];
-
-  assert.equal(proj.activeChatId, "chat-default");
-  assert.ok(proj.chats["chat-default"]);
-  assert.equal(proj.chats["chat-default"].name, "默认对话");
-  assert.equal(proj.chats["chat-default"].mainAgent, "codex");
-  assert.deepEqual(proj.chats["chat-default"].modelAllowlist, []);
-  assert.deepEqual(proj.chats["chat-default"].messages, []);
-});
-
-test("R2-T2-02: crash recovery after v3 backup written restores v3 main without corrupting repository", () => {
-  const initialV2Raw = JSON.stringify({
-    version: 2,
-    revision: 1,
-    projects: [{ id: "p1", items: [] }],
+test("R2-T1-04: production chat updates isolate drafts while preserving shared canvas", () => {
+  const p = createProject({
+    prompt: "",
+    model: "m",
+    kind: "text",
+    attachments: [],
   });
-
-  const barrier = new NonDowngradableWriteBarrier(initialV2Raw);
-
-  // Simulate crash state: backup was written, but main write crashed/failed
-  const v3BackupPayload = JSON.stringify({
-    version: 3,
-    revision: 2,
-    activeProjectId: "p1",
-    homeDraft: {},
-    projects: [
-      {
-        id: "p1",
-        name: "Crash Safe",
-        activeChatId: "chat-default",
-        chats: {
-          "chat-default": {
-            id: "chat-default",
-            name: "默认对话",
-            createdAt: 100,
-            updatedAt: 100,
-            draft: {},
-            messages: [],
-            mainAgent: "codex",
-            modelAllowlist: [],
-          },
-        },
-      },
-    ],
+  p.chats!.other = createDefaultChat("other");
+  const next = updateActiveChat(p, (c) => ({
+    ...c,
+    draft: { ...c.draft, prompt: "first" },
+    modelAllowlist: ["model-a"],
+  }));
+  assert.equal(next.chats!.other.draft.prompt, "");
+  assert.deepEqual(next.chats!.other.modelAllowlist, []);
+  assert.equal(next.items, p.items);
+});
+test("R2-T1-05: real snapshot boundary rejects nested credentials", () => {
+  const candidate = migrateSnapshotV2ToV3(legacy());
+  Object.assign(candidate.homeDraft, {
+    credentials: { apiKey: "synthetic-fixture" },
   });
-  barrier.memoryFiles.set("projects/creation-backup.json", v3BackupPayload);
-
-  // Run crash recovery
-  const recovery = barrier.recoverFromCrash();
-  assert.equal(recovery.state, "v3_recovered");
-
-  const restoredMain = JSON.parse(
-    barrier.memoryFiles.get("projects/creation-v2.json")!,
-  );
-  assert.equal(restoredMain.version, 3);
-  assert.equal(barrier.formatMarker.formatVersion, 2);
+  assert.throws(() => validateSnapshotV3(candidate), /密钥|令牌|凭据/);
 });
-
-test("R2-T2-03: snapshot v3 validator rejects invalid versions, missing activeChatId, or mismatched keys", () => {
-  // Version 2 passed as v3
-  assert.throws(
-    () => validateSnapshotV3({ version: 2, revision: 1, projects: [] }),
-    /Unsupported snapshot version/,
-  );
-
-  // Missing activeChatId
-  assert.throws(
-    () =>
-      validateSnapshotV3({
-        version: 3,
-        revision: 1,
-        activeProjectId: "p1",
-        homeDraft: {},
-        projects: [{ id: "p1", chats: {} }],
-      }),
-    /missing activeChatId/,
-  );
-
-  // activeChatId not in chats dictionary
-  assert.throws(
-    () =>
-      validateSnapshotV3({
-        version: 3,
-        revision: 1,
-        activeProjectId: "p1",
-        homeDraft: {},
-        projects: [{ id: "p1", activeChatId: "missing-chat", chats: {} }],
-      }),
-    /not found in chats/,
-  );
+test("R2-T2-01: empty v2 project gets a real default chat", () => {
+  const candidate = migrateSnapshotV2ToV3({
+    ...legacy(),
+    projects: [{ id: "empty", items: [] }],
+  });
+  const p = candidate.projects[0];
+  assert.equal(p.activeChatId, "chat-default");
+  assert.equal(p.chats[p.activeChatId].mainAgent, "codex");
+  assert.deepEqual(p.chats[p.activeChatId].messages, []);
 });
-
-test("R2-T2-04: active tasks maintain originChatId during multi-chat switching without task cancellation", () => {
-  const project: CreationProjectV3 = {
-    id: "proj-tasks",
-    name: "Task Tracking",
-    activeChatId: "chat-1",
-    chats: {
-      "chat-1": {
-        id: "chat-1",
-        name: "Chat 1",
-        createdAt: 100,
-        updatedAt: 100,
-        draft: {},
-        messages: [],
-        mainAgent: "codex",
-        modelAllowlist: [],
-      },
-      "chat-2": {
-        id: "chat-2",
-        name: "Chat 2",
-        createdAt: 200,
-        updatedAt: 200,
-        draft: {},
-        messages: [],
-        mainAgent: "codex",
-        modelAllowlist: [],
-      },
-    },
+test("R2-T2-02: failed main write rolls the actual migration transaction back to its original records", async () => {
+  const source = legacy(),
+    f = createIndexedStorageFixture({ snapshot: source }, "snapshot");
+  await assert.rejects(
+    commitIndexedChatMigration(
+      await storage(f),
+      { snapshot: source, backup: undefined, marker: undefined },
+      migrateSnapshotV2ToV3(source),
+      { snapshot: JSON.stringify(source) },
+    ),
+  );
+  assert.deepEqual(f.records.get("snapshot"), source);
+  assert.equal(f.records.has("backup"), false);
+  assert.equal(f.records.size, 1);
+});
+test("R2-T2-03: actual migration CAS refuses a concurrent source change", async () => {
+  const source = legacy(),
+    changed = { ...source, revision: 8 },
+    f = createIndexedStorageFixture({ snapshot: changed });
+  await assert.rejects(
+    commitIndexedChatMigration(
+      await storage(f),
+      { snapshot: source, backup: undefined, marker: undefined },
+      migrateSnapshotV2ToV3(source),
+      {},
+    ),
+    /变化/,
+  );
+  assert.deepEqual(f.records.get("snapshot"), changed);
+});
+test("R2-T2-04: switching the actual chat projection keeps accepted tasks bound to their origin", () => {
+  const p = createProject({
+    prompt: "",
+    model: "m",
+    kind: "text",
+    attachments: [],
+  });
+  const id = p.activeChatId;
+  p.chats!.other = createDefaultChat("other");
+  p.activeChatId = "other";
+  const view = projectChatView({
+    ...p,
     tasks: [
-      { id: "task-image-gen-1", originChatId: "chat-1", status: "running" },
+      {
+        id: "t",
+        originChatId: id,
+        status: "running",
+      } as (typeof p.tasks)[number],
     ],
-  };
-
-  // Switch active chat to chat-2
-  project.activeChatId = "chat-2";
-
-  // Invariant: task in chat-1 is NOT deleted or canceled
-  assert.equal(project.tasks?.length, 1);
-  assert.equal(project.tasks?.[0].originChatId, "chat-1");
-  assert.equal(project.tasks?.[0].status, "running");
+  });
+  assert.equal(view.tasks[0].originChatId, id);
+  assert.equal(view.tasks[0].status, "running");
+  assert.equal(view.activeChatId, "other");
 });
-
-test("R2-T2-05: rapid concurrent chat creation maintains draft isolation and unique scoped identifiers", () => {
-  const chats: Record<string, unknown> = {};
-  const chatCount = 10;
-
-  for (let i = 0; i < chatCount; i++) {
-    const chatId = `chat-session-${i}`;
-    chats[chatId] = {
-      id: chatId,
-      name: `Conversation ${i}`,
-      createdAt: Date.now() + i,
-      updatedAt: Date.now() + i,
-      draft: { text: `Draft specific to session ${i}` },
-      messages: [],
-      mainAgent: "codex",
-      modelAllowlist: [],
+test("R2-T2-05: serialization preserves independently updated real chats", () => {
+  let p = createProject({
+    prompt: "",
+    model: "m",
+    kind: "text",
+    attachments: [],
+  });
+  for (let i = 0; i < 10; i++) {
+    const id = `chat-${i}`;
+    p = {
+      ...p,
+      chats: { ...p.chats, [id]: createDefaultChat(id) },
+      activeChatId: id,
     };
+    p = updateActiveChat(p, (c) => ({
+      ...c,
+      draft: { ...c.draft, prompt: `draft-${i}` },
+    }));
   }
-
-  assert.equal(Object.keys(chats).length, chatCount);
-
-  // Verify all drafts are distinct and properly indexed
-  for (let i = 0; i < chatCount; i++) {
+  const snapshot = serializeCreationSnapshot({
+    ...emptySnapshot(),
+    version: 3,
+    projects: [p],
+    activeProjectId: p.id,
+  });
+  for (let i = 0; i < 10; i++)
     assert.equal(
-      chats[`chat-session-${i}`].draft.text,
-      `Draft specific to session ${i}`,
+      snapshot.projects[0].chats![`chat-${i}`].draft.prompt,
+      `draft-${i}`,
     );
-  }
 });

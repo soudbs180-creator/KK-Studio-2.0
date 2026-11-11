@@ -18,6 +18,19 @@ import {
 import type { CanvasAgentOp } from "../../src/features/agent/agentTypes.ts";
 import type { CreationProject } from "../../src/features/creation/model.ts";
 
+test("未知操作不能从对象原型继承非字符串拒绝原因", () => {
+  for (const type of ["toString", "constructor", "__proto__"]) {
+    const result = applyAgentOpsToItems([], [{ type } as CanvasAgentOp]);
+    assert.equal(result.rejected[0].reason, "未知操作类型");
+    assert.equal(
+      JSON.parse(JSON.stringify(result.rejected))[0].reason,
+      "未知操作类型",
+    );
+    assert.deepEqual(result.items, []);
+    assert.deepEqual(result.applied, []);
+  }
+});
+
 /**
  * Agent 画布桥：本项目卡片模型 ↔ Agent 快照/操作翻译。
  * 对照上游 web/src/lib/canvas/canvas-agent-ops.ts 的 add_node/update_node 等。
@@ -31,6 +44,61 @@ const baseItems: CanvasCollectionItem[] = [
   },
   { id: "video1", title: "视频卡片 1", description: "图转视频", kind: "video" },
 ];
+
+test("Agent bulk deletion preserves Comfy output dismissals while leaving other cards intact", () => {
+  const id = "comfy-output-" + "a".repeat(24);
+  const items: CanvasCollectionItem[] = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    {
+      id: "other-card",
+      title: "Other",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "result", kind: "image", description: "ComfyUI · card" },
+    ...baseItems,
+  ];
+  const result = applyAgentOpsToItems(items, [
+    { type: "delete_node", ids: [id, "image"] },
+  ]);
+  assert(!result.items.some((item) => item.id === id || item.id === "image"));
+  assert.deepEqual(result.items[0].comfyWorkflow?.dismissedOutputIds, [id]);
+  assert.deepEqual(result.items[1], items[1]);
+  assert.equal(items[0].comfyWorkflow?.dismissedOutputIds, undefined);
+});
+
+test("renaming a legacy Comfy result cannot erase its source identity before deletion", () => {
+  const id = "comfy-output-" + "b".repeat(24);
+  const items: CanvasCollectionItem[] = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "result", kind: "image", description: "ComfyUI · card" },
+  ];
+  const renamed = applyAgentOpsToItems(items, [
+    {
+      type: "update_node",
+      id,
+      metadata: { description: "User edited caption" },
+    },
+  ]);
+  assert.equal(renamed.items[1].description, "User edited caption");
+  const result = applyAgentOpsToItems(renamed.items, [
+    { type: "delete_node", id },
+  ]);
+  assert.deepEqual(result.items[0].comfyWorkflow?.dismissedOutputIds, [id]);
+});
 
 test("buildAgentSnapshot 生成节点/连线/视口", () => {
   const canvas = createProjectCanvas(baseItems);

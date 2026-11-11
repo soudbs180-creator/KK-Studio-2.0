@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { deduplicateRelayEntries } from "../../src/features/models/modelDeduplication.ts";
+import {
+  deduplicateRelayEntries,
+  aggregateGlobalModelCapabilities,
+} from "../../src/features/models/modelDeduplication.ts";
 import {
   ChannelRegistry,
   type ChannelRegistration,
@@ -406,4 +409,100 @@ test("mixed list with multiple models merges duplicates and preserves singles in
   assert.equal(result[0].detail, "中转 · 2 个连接可用");
   assert.equal(result[1].selection?.model, "gemini-1.5-pro");
   assert.equal(result[1].detail, "Google 官方");
+});
+
+test("aggregateGlobalModelCapabilities merges identical models across official, relay, and local channels", () => {
+  const entries: Entry[] = [
+    {
+      id: "official-deepseek",
+      label: "DeepSeek-R1",
+      detail: "DeepSeek 官方 · 旗舰推理",
+      selection: {
+        source: "api",
+        connectionId: "conn-official-deepseek",
+        model: "deepseek-r1",
+        kind: "text",
+      },
+      metadata: {
+        connectionName: "DeepSeek 官方",
+        priority: 100,
+        latencyMs: 180,
+      },
+    },
+    {
+      id: "relay-deepseek",
+      label: "DeepSeek-R1",
+      detail: "硅基流动 · 满血推理",
+      selection: {
+        source: "api",
+        connectionId: "conn-siliconflow-deepseek",
+        model: "deepseek-r1",
+        kind: "text",
+      },
+      metadata: { connectionName: "硅基流动", priority: 80, latencyMs: 110 },
+    },
+    {
+      id: "local-deepseek",
+      label: "DeepSeek-R1",
+      detail: "Ollama 本地 · 7B量化",
+      selection: {
+        source: "api",
+        connectionId: "conn-ollama-local",
+        model: "deepseek-r1",
+        kind: "text",
+      },
+      metadata: { connectionName: "Ollama 本地", priority: 30, latencyMs: 40 },
+    },
+  ];
+
+  const merged = aggregateGlobalModelCapabilities(entries);
+  assert.equal(
+    merged.length,
+    1,
+    "3 channels for deepseek-r1 must merge into 1 row",
+  );
+  assert.equal(merged[0].label, "DeepSeek-R1");
+  assert.equal(merged[0].selection?.model, "deepseek-r1");
+  assert.equal(merged[0].metadata?.redundancyCount, 3);
+  assert.equal(merged[0].badge, "共 3 个渠道可用");
+  assert.deepEqual(merged[0].metadata?.candidateConnectionIds, [
+    "conn-official-deepseek",
+    "conn-siliconflow-deepseek",
+    "conn-ollama-local",
+  ]);
+});
+
+test("aggregateGlobalModelCapabilities ranks candidates by latency and priority", () => {
+  const entries: Entry[] = [
+    {
+      id: "slow-conn",
+      label: "FLUX Schnell",
+      selection: {
+        source: "api",
+        connectionId: "conn-slow",
+        model: "flux-schnell",
+        kind: "image",
+      },
+      metadata: { priority: 50, latencyMs: 800, connectionName: "Slow API" },
+    },
+    {
+      id: "fast-conn",
+      label: "FLUX Schnell",
+      selection: {
+        source: "api",
+        connectionId: "conn-fast",
+        model: "flux-schnell",
+        kind: "image",
+      },
+      metadata: { priority: 50, latencyMs: 120, connectionName: "Fast API" },
+    },
+  ];
+
+  const [row] = aggregateGlobalModelCapabilities(entries);
+  assert.equal(
+    row.selection?.connectionId,
+    "conn-fast",
+    "Candidate with significantly lower latency must be selected when priorities tie",
+  );
+  assert.equal(row.metadata?.bestLatencyMs, 120);
 });

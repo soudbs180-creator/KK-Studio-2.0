@@ -9,11 +9,11 @@
 
 把所有“UI 已显示但只有本地演示”的能力，逐波次接入真实后端，达到 REAL。当前交付先以 Desktop 为主线，Web 从共享代码逻辑蒸馏，Mobile 最后独立落地。每个平台都必须同时通过 UI/交互门和最小 AI 链路门，才能继续扩展或声明完成；P0 的 UI 状态壳与 AI/API 接线可以并行准备，但必须共同通过双门。原则：
 
-平台交付顺序为 Desktop → Web → Mobile。Desktop 必须可免登录离线使用，也可选择登录；Web/Mobile 的目标为登录后使用。个人项目/素材以设备本地为目标，Web 的账号、会话、积分、会员与用量控制面部署在 VPS，项目/素材云同步另行验收。当前 Web IndexedDB、演示账号和无 Mobile 包仍是现状；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 分别跟踪差距。
+平台交付顺序为 Desktop → Web → Mobile。Desktop 必须可免登录离线使用，也可选择登录；Web/Mobile 的目标为登录后使用。个人项目/素材以设备本地为目标。账号/积分按派工板 `board.md` §5 分层：当前做成本地登录 + 本地积分/用量（本地能力，保留「个人主页」「套餐与积分」本地页，不依赖服务器、不隐藏导航）；Web 的云端账号、会话、会员与计费控制面部署在 VPS 属于云端部分，后置到 ph3-account-cloud，项目/素材云同步另行验收。当前 Web IndexedDB、演示账号和无 Mobile 包仍是现状；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 分别跟踪差距。
 
 1. **先打通链路，再接付费服务**：不依赖外部 Key/服务器的先做；需要 Key 的，代码链路先就绪、用户填 Key 即可用；需要部署的平台服务放最后。
 2. **复用，不新建第二套**：所有模态统一走 FEAT-002 的任务宿主、连接门禁、journal、幂等、取消、素材归档；不得为视频/音频另起队列。
-3. **替换 seam，不混用状态**：每接通一个模态，就从 `useLocalGeneration`（FEAT-025）移除该模态的演示分支，真实与演示结果不得同态展示。
+3. **替换 seam，不混用状态**：四模态生产入口已移除 `useLocalGeneration`（FEAT-025）；新增模态继续走统一真实任务链，真实与演示结果不得同态展示。
 4. **Web 与 Desktop 分别验收**：浏览器验证不替代 Tauri/WebView 运行态；证据不足只能标 PARTIAL。
 5. **每个功能一张卡 + 一个账本任务**：状态变化先改代码与证据，再更新 registry/卡片/账本。
 
@@ -54,9 +54,11 @@
 
 ### Wave 3 — 平台服务（需要服务器/部署/外部授权）
 
+> 口径同步（派工板 `board.md` §5）：FEAT-017/018 的**本地登录 + 本地积分/用量**属当前本地能力，不依赖服务器、不隐藏导航，不在本波；本波仅承接云端身份/计费/VPS 控制面，统一后置到 ph3-account-cloud。
+
 | 功能 | 任务 | 前置 |
 | --- | --- | --- |
-| FEAT-017 账号与登录、FEAT-018 积分计费 | BACKEND-PLATFORM、T10/T10-PREP | VPS、域名/DNS、身份服务、HTTPS、计费集成；账号、会话、积分、会员、用量控制面必须在 VPS 验收 |
+| FEAT-017 账号与登录、FEAT-018 积分计费（仅云端部分） | BACKEND-PLATFORM、T10/T10-PREP、ph3-account-cloud | VPS、域名/DNS、身份服务、HTTPS、计费集成；云端账号、会话、会员与计费控制面必须在 VPS 验收。本地登录 + 本地积分/用量为当前本地能力，不以 VPS 为前置 |
 | FEAT-019 云端保存/同步、FEAT-020 长期记忆 | BACKEND-PLATFORM、T9/T10 | 身份体系、云存储、隐私与保留策略 |
 | 旧 Web/Vercel 退役切换 | T11 | 旧部署权限 |
 | FEAT-027 Astra | BACKEND-ASTRA-001 | 产品定义 + 平台后端 |

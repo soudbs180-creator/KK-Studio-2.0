@@ -40,6 +40,14 @@ import {
   themeTokens,
 } from "../helpers/designSystem";
 
+async function openAdvancedConnection(page: import("@playwright/test").Page) {
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
+  await page.getByText("高级连接选项", { exact: true }).click();
+}
+
 async function openPromptLibrary(page: import("@playwright/test").Page) {
   if (page.viewportSize()!.width < 768) {
     const trigger = page.getByRole("button", { name: "应用功能菜单" });
@@ -55,7 +63,7 @@ async function openPromptLibrary(page: import("@playwright/test").Page) {
   return trigger;
 }
 
-test("text templates change visible input while audio exposes only its demo capability", async ({
+test("text templates change visible input while audio guides model configuration", async ({
   page,
 }) => {
   await openWorkspace(page);
@@ -86,7 +94,7 @@ test("text templates change visible input while audio exposes only its demo capa
   await expect(audio.getByRole("group", { name: "文案创作方式" })).toHaveCount(
     0,
   );
-  await expect(audio).toContainText("本地演示");
+  await expect(audio).toContainText("配置音频模型连接");
 });
 
 test("Agent controls match the vendor protocol fixture, with error feedback and no fallback", async ({
@@ -98,7 +106,7 @@ test("Agent controls match the vendor protocol fixture, with error feedback and 
     const panel = page.locator(".conversation-panel");
     await panel.getByLabel("执行方式").selectOption("codex");
     await panel.getByRole("button", { name: "连接设置", exact: true }).click();
-    await page.getByText("高级连接选项", { exact: true }).click();
+    await openAdvancedConnection(page);
     await page.getByLabel("Agent 地址").fill(server.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await expect(
@@ -215,7 +223,7 @@ for (const status of ["idle", "warning"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
-      await page.getByText("高级连接选项", { exact: true }).click();
+      await openAdvancedConnection(page);
       await page.getByLabel("Agent 地址").fill(server.url);
       await page
         .getByLabel("连接 Token", { exact: true })
@@ -392,7 +400,7 @@ test("migrated chat keeps its thread and disables advanced session replacement",
     const panel = page.locator(".conversation-panel");
     await panel.getByLabel("执行方式").selectOption("codex");
     await panel.getByRole("button", { name: "连接设置", exact: true }).click();
-    await page.getByText("高级连接选项", { exact: true }).click();
+    await openAdvancedConnection(page);
     await page.getByLabel("Agent 地址").fill(server.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
@@ -496,7 +504,7 @@ for (const action of ["interrupt", "turn"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
-      await page.getByText("高级连接选项", { exact: true }).click();
+      await openAdvancedConnection(page);
       await page.getByLabel("Agent 地址").fill(server.url);
       await page
         .getByLabel("连接 Token", { exact: true })
@@ -521,6 +529,7 @@ for (const action of ["interrupt", "turn"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
+      await openAdvancedConnection(page);
       const disconnect = page.getByRole("button", {
         name: "断开",
         exact: true,
@@ -685,7 +694,7 @@ test("plugin menu reflects installed canvas plugins and opens their manager", as
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "扩展与 MCP", exact: true })
     .click();
   await page.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();

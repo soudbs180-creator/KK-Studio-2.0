@@ -1,30 +1,21 @@
-import { z } from "zod";
+import {
+  comfyApiWorkflowSchema as workflowSchema,
+  workflowRecordSchema,
+} from "../../domain/comfyWorkflow.ts";
+import type {
+  ComfyWorkflow,
+  WorkflowRecord,
+} from "../../domain/comfyWorkflow.ts";
+export { workflowRecordSchema };
+export type { ComfyWorkflow, WorkflowRecord };
+import { assertSafeWorkflowPayload } from "./queueWorkflow.ts";
 
 const WORKFLOW_STORAGE_KEY = "kk-studio.comfyui.workflows.v1";
-const workflowNodeSchema = z
-  .object({
-    class_type: z.string().min(1),
-    inputs: z.record(z.string(), z.unknown()).optional(),
-    _meta: z.record(z.string(), z.unknown()).optional(),
-  })
-  .passthrough();
-const workflowSchema = z.record(z.string().min(1), workflowNodeSchema);
-export const workflowRecordSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1).max(120),
-  description: z.string().max(500),
-  source: z.enum(["starter", "imported", "created"]),
-  tags: z.array(z.string().min(1).max(32)).max(12),
-  workflow: workflowSchema,
-  createdAt: z.number().int().nonnegative(),
-  updatedAt: z.number().int().nonnegative(),
-});
-export type ComfyWorkflow = z.infer<typeof workflowSchema>;
-export type WorkflowRecord = z.infer<typeof workflowRecordSchema>;
 export interface WorkflowParseResult {
   workflow: ComfyWorkflow;
   nodeCount: number;
   format: "api" | "ui";
+  editorWorkflow?: Record<string, unknown>;
 }
 function storage(): Storage | null {
   try {
@@ -46,6 +37,7 @@ function asRecord(value: unknown): Record<string, unknown> | null {
     : null;
 }
 export function parseComfyWorkflow(value: unknown): WorkflowParseResult {
+  assertSafeWorkflowPayload(value, 1024 * 1024);
   const root = asRecord(value);
   if (!root) throw new Error("工作流必须是 JSON 对象。");
   const api = workflowSchema.safeParse(root);
@@ -79,6 +71,7 @@ export function parseComfyWorkflow(value: unknown): WorkflowParseResult {
     workflow: ui.data,
     nodeCount: Object.keys(ui.data).length,
     format: "ui",
+    editorWorkflow: root,
   };
 }
 export function createStarterWorkflow(
@@ -92,16 +85,41 @@ export function createStarterWorkflow(
     source: "created",
     tags: ["本地", "模板"],
     workflow: {
-      "1": { class_type: "CheckpointLoaderSimple", inputs: {} },
-      "2": { class_type: "CLIPTextEncode", inputs: { text: "" } },
+      "1": { class_type: "CheckpointLoaderSimple", inputs: { ckpt_name: "" } },
+      "2": {
+        class_type: "CLIPTextEncode",
+        inputs: { text: "", clip: ["1", 1] },
+      },
       "3": {
         class_type: "EmptyLatentImage",
-        inputs: { width: 1024, height: 1024, batch_size: 1 },
+        inputs: { width: 512, height: 512, batch_size: 1 },
       },
-      "4": { class_type: "KSampler", inputs: { seed: 0, steps: 20, cfg: 7 } },
+      "4": {
+        class_type: "KSampler",
+        inputs: {
+          seed: 0,
+          steps: 20,
+          cfg: 7,
+          model: ["1", 0],
+          positive: ["2", 0],
+          negative: ["6", 0],
+          latent_image: ["3", 0],
+          sampler_name: "euler",
+          scheduler: "normal",
+          denoise: 1,
+        },
+      },
       "5": {
         class_type: "SaveImage",
-        inputs: { filename_prefix: "kk-studio" },
+        inputs: { filename_prefix: "kk-studio", images: ["7", 0] },
+      },
+      "6": {
+        class_type: "CLIPTextEncode",
+        inputs: { text: "blur, watermark", clip: ["1", 1] },
+      },
+      "7": {
+        class_type: "VAEDecode",
+        inputs: { samples: ["4", 0], vae: ["1", 2] },
       },
     },
     createdAt: now,
@@ -144,10 +162,16 @@ export function createImportedWorkflow(
     source: "imported",
     tags: ["本地", "已导入"],
     workflow: parsed.workflow,
+    editorWorkflow: parsed.editorWorkflow,
+    needsConversion: parsed.format === "ui",
     createdAt: now,
     updatedAt: now,
   };
 }
 export function workflowToJson(workflow: WorkflowRecord): string {
-  return JSON.stringify(workflow.workflow, null, 2);
+  return JSON.stringify(
+    workflow.needsConversion ? workflow.editorWorkflow : workflow.workflow,
+    null,
+    2,
+  );
 }

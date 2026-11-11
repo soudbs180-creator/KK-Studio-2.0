@@ -16,14 +16,12 @@ export default function ResizeHandle({
   cssVar,
   min,
   max,
-  defaultWidth,
   growDir,
   label,
 }: {
   cssVar: string;
   min: number;
   max: number;
-  defaultWidth: number;
   growDir: "left" | "right";
   label: string;
 }) {
@@ -145,8 +143,12 @@ export default function ResizeHandle({
         event.preventDefault();
         event.stopPropagation();
         followReachableMax.current = event.key === "End" && growDir === "left";
-        if (event.key === "Home" && event.shiftKey) applyWidth(defaultWidth);
-        else if (event.key === "Home") applyWidth(min);
+        if (event.key === "Home" && event.shiftKey) {
+          document.documentElement.style.removeProperty(cssVar);
+          const restored =
+            handle.current?.parentElement?.getBoundingClientRect().width;
+          if (restored) setWidth(Math.round(restored));
+        } else if (event.key === "Home") applyWidth(min);
         else if (event.key === "End") applyWidth(allowedMax());
         else {
           const direction = event.key === "ArrowRight" ? 1 : -1;
@@ -165,7 +167,6 @@ export function ConversationResizeHandle() {
       cssVar="--conversation-width-user"
       min={470}
       max={760}
-      defaultWidth={470}
       growDir="left"
       label="调整对话面板宽度"
     />

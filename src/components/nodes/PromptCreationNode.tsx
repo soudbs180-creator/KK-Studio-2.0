@@ -8,9 +8,8 @@ import type {
   NodeEditingProps,
 } from "../../domain/canvasItems";
 import { CANVAS_KIND_LABELS } from "../../domain/canvasItems";
-import { useLocalGeneration } from "./useLocalGeneration";
 import { GenerationAction, GenerationStatus } from "./GenerationAction";
-import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
+import { useCanvasImageGeneration } from "../../features/creation/index.ts";
 
 const TEXT_MODES = [
   {
@@ -36,7 +35,6 @@ export default function PromptCreationNode({
   selected,
   onChange,
   onExtraHeightChange,
-  onDemoResults,
   onConfigure,
 }: NodeEditingProps & { item: CanvasCollectionItem }) {
   const label = CANVAS_KIND_LABELS[item.kind];
@@ -48,9 +46,8 @@ export default function PromptCreationNode({
     )?.value ?? "custom";
   const [modelOpen, setModelOpen] = useState(false);
   const [status, setStatus] = useState("");
-  const demoGeneration = useLocalGeneration(item.kind, onDemoResults);
   const textGeneration = useCanvasImageGeneration();
-  const generation = item.kind === "text" ? textGeneration : demoGeneration;
+  const generation = textGeneration;
   const busy = generation.phase === "loading";
   useEffect(() => {
     if (!selected || busy) setModelOpen(false);
@@ -66,18 +63,16 @@ export default function PromptCreationNode({
             <UiIcon name={item.kind} />
             {label}
           </span>
-          <span className="demo-badge">
-            {item.kind === "audio" ? "本地演示" : "本地草稿"}
-          </span>
+          <span className="demo-badge">本地草稿</span>
         </header>
         <h3>{item.title}</h3>
         <div className="prompt-creation-placeholder">
-          <UiIcon name={item.kind} size={48} />
+          <UiIcon name={item.kind} size={24} />
           <p>
             {item.kind === "text" && textGeneration.draftText
               ? `正在生成：${textGeneration.draftText.slice(-240)}`
               : item.kind === "audio"
-                ? "当前播放固定演示音频，语音生成尚未接入。"
+                ? "选择语音模型后，输入要朗读的文本。"
                 : "在下方输入内容，开始创作"}
           </p>
         </div>
@@ -141,10 +136,10 @@ export default function PromptCreationNode({
             onChange={(e) => onChange({ prompt: e.target.value })}
           />
           <div className="creation-controls">
-            {item.kind === "text" && (
+            {(item.kind === "text" || item.kind === "audio") && (
               <CreationModelPicker
                 disabled={busy}
-                kind="text"
+                kind={item.kind === "audio" ? "audio" : "text"}
                 value={item.model ?? textGeneration.model}
                 open={!busy && modelOpen}
                 onToggle={() => setModelOpen(!modelOpen)}
@@ -183,13 +178,11 @@ export default function PromptCreationNode({
               generation={generation}
               label={label}
               onRun={() => {
-                if (item.kind === "text")
-                  void textGeneration.run(
-                    item.prompt ?? "",
-                    1,
-                    textGeneration.model,
-                  );
-                else void demoGeneration.run(item.prompt ?? "");
+                void textGeneration.run(
+                  item.prompt ?? "",
+                  1,
+                  textGeneration.model,
+                );
               }}
             />
           </div>
@@ -197,7 +190,7 @@ export default function PromptCreationNode({
           <span className="prompt-composer-label">
             {item.kind === "text"
               ? "写作指令可直接编辑"
-              : "音频演示 · 参数不改变固定素材"}
+              : "语音朗读 · 结果归档到本机项目"}
           </span>
           {status && (
             <p className="prompt-tool-status" role="status">

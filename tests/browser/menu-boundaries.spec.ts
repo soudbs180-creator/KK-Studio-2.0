@@ -9,7 +9,7 @@ for (const width of [1099, 1920]) {
     for (const name of ["文件", "编辑", "窗口", "帮助"]) {
       await page.getByRole("button", { name, exact: true }).click();
       const menu = page.locator(".menu-popover");
-      await expect(menu).toHaveCSS("border-radius", "10px");
+      await expect(menu).toHaveCSS("border-radius", "12px");
       for (const button of await menu.locator("button").all()) {
         await expect(button).toHaveCSS("height", "32px");
         await expect(button).toHaveCSS("border-radius", "8px");
@@ -75,7 +75,7 @@ test("侧栏菜单在同一侧栏中的其他操作开始时关闭", async ({ pa
 
 test("工具菜单切换到资产弹窗后不在背景残留", async ({ page }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
+  await page.getByRole("button", { name: "展开画布工具", exact: true }).click();
   await expect(page.getByRole("menu", { name: "画布工具选择" })).toBeVisible();
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "资产管理" })).toBeVisible();

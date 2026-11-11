@@ -14,8 +14,8 @@
 
 ## Web 与 Desktop 同态运行
 
-- Web：实际启动 `node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort`；访问 `http://127.0.0.1:1423/`，内部设置页选择「网络」。入口链 `ConnectionSettings → AgentConnectionSettings → CodeBuddyConnectionSettings → agentApi`，HTTP 服务链 `server/http → config → codebuddy`。1920×1080 与 390×844 同状态截图见 [桌面宽度](evidence/web-codebuddy-1920.png)、[手机宽度](evidence/web-codebuddy-390.png)；卡片、输入框和按钮均在视口内，无横向溢出。真实账号连接只在下述 Tauri 运行态验证。
-- Desktop：启动最终 `src-tauri/target/release/kk-studio.exe --data-dir <临时目录>`，WebView2 加 `--remote-debugging-port=9352`；实际页面 `http://tauri.localhost/` 的项目画布与设置「网络」。从 UI 启动随包 Agent，保存本机 CLI 路径并点「测试 CodeBuddy 连接」，真实状态到「已验证」。[桌面设置截图](evidence/desktop-codebuddy-verified.png)。随后在 KK 对话明确请求调用工具，Codex 经 `infinite-canvas` MCP 完成 `codebuddy_consult`：最终新包事件记录显示 `status=completed`、`durationMs=8161`、`error=null`，输入仅有 `prompt` 键、42 字且包含测试短句；返回含 `KK_DESKTOP_CODEBUDDY_FINAL_OK`，KK 最终对话显示该回复且 turn 已结束。[桌面对话截图](evidence/desktop-codebuddy-reply.png)、[脱敏事件记录](evidence/desktop-codebuddy-runtime.json)。应用退出后 Agent loopback 健康端点不可达。
+- Web：实际启动 `node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort`；访问 `http://127.0.0.1:1423/`，内部设置页选择「网络」。入口链 `ConnectionSettings → AgentConnectionSettings → CodeBuddyConnectionSettings → agentApi`，HTTP 服务链 `server/http → config → codebuddy`。1920×1080 与 390×844 同状态截图见 [桌面宽度](evidence-manifest.json)、[手机宽度](evidence-manifest.json)；卡片、输入框和按钮均在视口内，无横向溢出。真实账号连接只在下述 Tauri 运行态验证。
+- Desktop：启动最终 `src-tauri/target/release/kk-studio.exe --data-dir <临时目录>`，WebView2 加 `--remote-debugging-port=9352`；实际页面 `http://tauri.localhost/` 的项目画布与设置「网络」。从 UI 启动随包 Agent，保存本机 CLI 路径并点「测试 CodeBuddy 连接」，真实状态到「已验证」。[桌面设置截图](evidence-manifest.json)。随后在 KK 对话明确请求调用工具，Codex 经 `infinite-canvas` MCP 完成 `codebuddy_consult`：最终新包事件记录显示 `status=completed`、`durationMs=8161`、`error=null`，输入仅有 `prompt` 键、42 字且包含测试短句；返回含 `KK_DESKTOP_CODEBUDDY_FINAL_OK`，KK 最终对话显示该回复且 turn 已结束。[桌面对话截图](evidence-manifest.json)、[脱敏事件记录](evidence/desktop-codebuddy-runtime.json)。应用退出后 Agent loopback 健康端点不可达。
 - 第一次 Desktop 尝试只等 120 秒，截图显示 Codex 仍在推理、没有工具调用事件，故当时未通过；[失败截图](evidence/desktop-codebuddy-failure.png) 保留。第二次延长观察后约 120 秒才见第一次工具调用，再约 20 秒显示最终回复。最终新包复测总耗时约 145 秒，其中工具约 8 秒。前置 Codex 推理延迟尚不符合高效自动调配目标，留在路线图中优化；本轮没有实现自动按难度/成本路由。
 
 ## 交付门禁
@@ -25,3 +25,8 @@
 ## 边界
 
 本适配器调用 WorkBuddy 安装包内的 **CodeBuddy CLI**，不等于接入 WorkBuddy 原生第三方应用 OAuth。未读取 WorkBuddy 收藏、账号资料或会话；豆包、千问与素材站也未被此工具接入。记忆不会自动完整外发，Codex 仅能自行转述必要的短片段。FEAT-009 与 TASK-AGENT-002 继续保持 PARTIAL。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-24-codebuddy-delegation manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

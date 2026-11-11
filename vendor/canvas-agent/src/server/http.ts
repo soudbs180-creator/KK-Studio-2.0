@@ -8,6 +8,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { runClaudeTurn } from "../agent/claude.js";
 import { runCodeBuddy, validateCodeBuddyCliPath } from "../agent/codebuddy.js";
 import { readCodexRateLimits } from "../agent/codex.js";
+import { rollbackCodexThread } from "../agent/codex.js";
 import { archiveCodexThread, CodexSkillLookupError, configureCodexSkill, generateCodexSkillDraft, interruptCodexTurn, isRecoverableThreadError, listCodexModels, listCodexSkills, listCodexThreads, readCodexThread, resolveCodexApproval, resolveCodexSkill, resumeCodexThread, runCodexTurn, startCodexThread, summarizeCodexThread } from "../agent/codex.js";
 import type { CodexReasoningEffort, CodexSkillSelector } from "../agent/codex-protocol.js";
 import { messageMetadataStore } from "../agent/message-metadata.js";
@@ -110,7 +111,6 @@ export function startHttpServer() {
     };
     const app = express();
     app.disable("x-powered-by");
-    app.use(express.json({ limit: "30mb" }));
     app.use((req, res, next) => {
         if (!logger.enabled) return next();
         const startedAt = Date.now();
@@ -132,6 +132,14 @@ export function startHttpServer() {
     app.use((req, res, next) => {
         if (validToken(req, requestUrl(req, config), config.token)) return next();
         res.status(401).json({ ok: false, error: "invalid token" });
+    });
+    // Authenticate before decompression; retain a four-argument handler for parser client errors.
+    app.use(express.json({ limit: "30mb" }));
+    app.use((error: Error & { status?: number; type?: string }, req: Request, res: Response, next: NextFunction) => {
+        const status = error.status;
+        if (typeof status !== "number" || status < 400 || status >= 500) return next(error);
+        logger.warn("HTTP request body rejected", { method: req.method, path: req.path, type: error.type, message: error.message });
+        res.status(status).json({ ok: false, error: "invalid request body" });
     });
     app.use((req, res, next) => {
         const scoped = req.path.startsWith("/canvas/") || req.path.startsWith("/agent/attachments/") || /^\/agent\/codex\/(turn|threads|conversation|history|generated-image|approval|interrupt)/.test(req.path) || (req.path === "/events" && req.query.role !== "status");
@@ -386,6 +394,17 @@ export function startHttpServer() {
         session.acknowledgeCodexHistory(threadId, turnIds);
         res.json({ ok: true });
     });
+    app.post("/agent/codex/threads/:threadId/revert", codexMutation(async (req, res) => {
+        const threadId = routeParam(req.params.threadId);
+        const beforeTurnId = String(req.body?.beforeTurnId || "");
+        const expectedTurnIds = req.body?.expectedTurnIds;
+        if (!beforeTurnId || !Array.isArray(expectedTurnIds) || expectedTurnIds.length > 5000 || !expectedTurnIds.every((id: unknown) => typeof id === "string" && id.length <= 160)) return void res.status(400).json({ ok: false, error: "回滚轮次参数无效" });
+        const workspace = ensureSiteWorkspace(config);
+        if (workspace.activeThreadId !== threadId || session.codexBusy) return void res.status(409).json({ ok: false, error: "线程已切换或正在执行" });
+        const result = await rollbackCodexThread(emit, threadId, beforeTurnId, expectedTurnIds, workspace.workspacePath);
+        setActiveThread(threadId, { sourceClientId: requestClient(req) }, true);
+        res.json({ ok: true, ...result, conversation: session.conversationStateSnapshot });
+    }));
     app.post("/agent/codex/threads/:threadId/resume", codexMutation(async (req, res) => {
         const threadId = routeParam(req.params.threadId);
         const clientId = String(req.body?.clientId || "");

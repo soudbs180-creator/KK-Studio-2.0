@@ -57,6 +57,8 @@ async function harness() {
     }).outputText,
     {
       exports,
+      setTimeout,
+      clearTimeout,
       require(name: string) {
         if (name === "react") return hooks;
         if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
@@ -111,12 +113,44 @@ async function harness() {
   function click(item: Element): void {
     (item.props.onClick as () => void)();
   }
+  function cardAction(labelOrId: string): Element {
+    function findButton(val: unknown): Element | undefined {
+      if (Array.isArray(val)) {
+        for (const c of val) {
+          const res = findButton(c);
+          if (res) return res;
+        }
+      } else if (val && typeof val === "object" && "props" in val) {
+        const el = val as Element;
+        if (
+          el.type === "button" &&
+          (text(el.props.children) === "一键填入" ||
+            text(el.props.children) === "前往 Google 配置")
+        ) {
+          return el;
+        }
+        return findButton(el.props.children);
+      }
+      return undefined;
+    }
+    const card = all().find(
+      (entry) =>
+        typeof entry.props?.className === "string" &&
+        entry.props.className.includes("provider-preset-item") &&
+        text(entry.props.children).startsWith(labelOrId),
+    );
+    assert.ok(card, "Missing card for " + labelOrId);
+    const btn = findButton(card);
+    assert.ok(btn, "Missing action button for card " + labelOrId);
+    return btn;
+  }
   render(false);
   return {
     render,
     all,
     text,
     button,
+    cardAction,
     click,
     selected,
     setBusy: (value: boolean) => {
@@ -142,7 +176,11 @@ test("switching to local removes an incompatible category and search before any 
   assert.equal(h.all().find((item) => item.type === "input")!.props.value, "");
   const choices = h
     .all()
-    .filter((item) => item.props.className === "provider-preset-item");
+    .filter(
+      (item) =>
+        typeof item.props?.className === "string" &&
+        item.props.className.includes("provider-preset-item"),
+    );
   assert.ok(
     choices.length > 0,
     "local options remain reachable without resetting hidden filters",
@@ -160,14 +198,21 @@ test("switching to local removes an incompatible category and search before any 
 
 test("a remote detail and its retained apply callback cannot cross into local scope", async () => {
   const h = await harness();
-  h.click(h.button("OpenAIChat Completions"));
-  h.render(false);
-  const staleApply = h.button("使用此预设");
+  const staleApply = h.cardAction("OpenAI");
   h.render(true);
-  const detail = h
+  const openAiCard = h
     .all()
-    .find((item) => item.props.className === "provider-preset-detail")!;
-  assert.equal(detail.props.hidden, true);
+    .find(
+      (item) =>
+        typeof item.props?.className === "string" &&
+        item.props.className.includes("provider-preset-item") &&
+        h.text(item.props.children).startsWith("OpenAI"),
+    );
+  assert.equal(
+    openAiCard,
+    undefined,
+    "remote card must not be present in local scope",
+  );
   h.click(staleApply);
   assert.deepEqual(
     h.selected,
@@ -179,17 +224,7 @@ test("a remote detail and its retained apply callback cannot cross into local sc
 
 test("a stale remote callback cannot open Google after local navigation", async () => {
   const h = await harness();
-  const gemini = PROVIDER_PRESETS.find((preset) => preset.id === "gemini")!;
-  const item = h
-    .all()
-    .find(
-      (entry) =>
-        entry.props.className === "provider-preset-item" &&
-        h.text(entry.props.children).startsWith(gemini.label),
-    )!;
-  h.click(item);
-  h.render(false);
-  const staleApply = h.button("前往 Google 配置");
+  const staleApply = h.cardAction("Gemini");
   h.render(true);
   h.click(staleApply);
   assert.equal(h.googleCalls(), 0);
@@ -202,23 +237,14 @@ test("local presets still apply and busy state is checked by retained callbacks"
   const local = PROVIDER_PRESETS.find(
     (preset) => preset.category === "本地" && !preset.unavailableReason,
   )!;
-  const item = h
-    .all()
-    .find(
-      (entry) =>
-        entry.props.className === "provider-preset-item" &&
-        h.text(entry.props.children).startsWith(local.label),
-    )!;
-  h.click(item);
-  h.render(true);
-  const apply = h.button("使用此预设");
+  const apply = h.cardAction(local.label);
   h.setBusy(true);
   h.render(true);
   h.click(apply);
   assert.deepEqual(h.selected, []);
   h.setBusy(false);
   h.render(true);
-  h.click(h.button("使用此预设"));
+  h.click(h.cardAction(local.label));
   assert.equal(h.selected.length, 1);
   assert.equal(h.selected[0], local);
 });

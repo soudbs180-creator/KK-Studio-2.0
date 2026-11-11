@@ -6,20 +6,20 @@
 - 开始创作入口固定回到默认落地页；点击已建立项目才进入无限画布，项目区新增 `…` 显示/排序菜单与 `+` 新建文件夹入口，支持显示全部/仅未分组及手动、最近打开、优先级排序（优先级入口说明需输入和未读任务优先）。项目库移除标记的装饰串，补齐新建文件夹/上传文件资源卡；Skill 卡片统一悬浮高亮和操作层。
 - 连线命中层收窄，取消粗白焦点框；连线保持原色和 2px 宽度，仅沿路径显示 3 个慢速带拖影粒子。鼠标靠近中点出现 30px 白色剪刀圆钮，悬浮变红并显示「剪开连线」胶囊。卡片选中高亮合并为单层。
 - 账号弹层的切换/退出保留可读默认框并增强悬浮高亮；版本「检测」可进入软件更新，更新页按参考图提供版本就绪、重启、更新详情和自动安装状态卡；账号、网络、记忆等设置补齐截图结构并保持未接入能力明确。
-- 验证：`tsc --noEmit`、Vite 生产构建、`scripts/check-ui-standards.mjs`（74 个文件、0 违规）通过；完整 Edge 回归 91/91 通过。证据见 [`ui-geometry-1115.png`](../evidence/release-2026-09-09/ui-geometry-1115.png) 与 [`ui-geometry-1115-closed.png`](../evidence/release-2026-09-09/ui-geometry-1115-closed.png)。
+- 验证：`tsc --noEmit`、Vite 生产构建、`scripts/check-ui-standards.mjs`（74 个文件、0 违规）通过；完整 Edge 回归 91/91 通过。证据见 [`ui-geometry-1115.png`](../evidence/release-2026-09-09/evidence-manifest.json) 与 [`ui-geometry-1115-closed.png`](../evidence/release-2026-09-09/evidence-manifest.json)。
 
 ## 2026-09-09 红框区域尺寸令牌二次收口
 
 - **本单元Prototype，整体Repairing**。从丢失会话中恢复“红框区域的文字、图标、框高和距离需要统一且可复用”的要求，并重新核对 Figma 导航节点 `100:16335`。新增侧栏 22px 图形槽、导航 10px 图形槽、导航条 26px 高度、工具栏 40/50px 高度等共享令牌；侧栏主导航、项目操作、画布导航、画布工具、会话标题与输入区均消费令牌，不再让通用选择器把加号图标压缩到 16px。
 - 会话标题的记录/收起图形统一为 20px，输入区加号与发送图形为 20px，模型/Skill/插件/语音图形为 16px；所有命中按钮继续保持 30px。右上角仍为缩放 63px、功能组 164px、组间 8px，窄屏展开会话入口固定在导航最右侧，打开后收起按钮回到会话标题行并保持同一 30px 控件尺寸。
 - 输入区改为始终单行，模型、Skill、插件、模式、语音和发送控件共享 4px 间距；自动/询问合并为一个 46px 模式按钮，菜单在按钮上方展开，菜单外点击和 Escape 可关闭。缩放菜单放大到可读尺寸，任务列表和底部工具菜单统一 12px 文字与 30px 级别的命中区域。
-- 验证：`node node_modules/typescript/bin/tsc --noEmit`、`node scripts/check-ui-standards.mjs`（73 个文件、0 违规）、`composer-fidelity.spec.ts`（3/3）、`canvas-navigation.spec.ts`（7/7）、`canvas-actions.spec.ts` 与 `ui-motion.spec.ts`（15/15）、`demo-results.spec.ts`（2/2）通过；证据见 [`ui-geometry-1115.png`](../evidence/release-2026-09-09/ui-geometry-1115.png)。
+- 验证：`node node_modules/typescript/bin/tsc --noEmit`、`node scripts/check-ui-standards.mjs`（73 个文件、0 违规）、`composer-fidelity.spec.ts`（3/3）、`canvas-navigation.spec.ts`（7/7）、`canvas-actions.spec.ts` 与 `ui-motion.spec.ts`（15/15）、`demo-results.spec.ts`（2/2）通过；证据见 [`ui-geometry-1115.png`](../evidence/release-2026-09-09/evidence-manifest.json)。
 
 ## 2026-09-09 红框区域尺寸层级与聊天/画布布局复测
 
 - **本单元Prototype，整体Repairing**。针对最新批注统一红框区域的尺寸层级和复用入口：新增 `ui-tokens.css` 的文字（11/12/14/16px）、图标（14/16/20px）、控件高度（30/40px）和间距（4/8/12px）令牌；侧栏品牌、主导航、项目行、会话标题和输入区改为消费同一层级，避免页面局部字号漂移。
 - 会话面板在窄屏打开时由 `useCanvasViewport` 动态扣除实际面板宽度，面板宽度限制为 360px；画布底部工具栏按剩余可用宽度居中，实测 1071×698 时工具栏右边界 594.5、会话面板左边界 676，无交叠。输入区按钮在可用宽度不足时换行，模型/Skill/插件保持 30px 高度和可读字号，不再溢出面板。
-- 右上角缩放组、导航组和会话收起开关统一放在同一视觉基线，组间固定 8px；会话收起按钮保留 `收起对话` 语义和原 DOM 入口，视觉位置锚定到导航组右侧，窗口尺寸变化不缩放、不漂移。1440×900 和 1071×698 的矩形与截图证据见 [`ui-geometry.json`](../evidence/release-2026-09-09/ui-geometry.json)、[`ui-geometry-1071.png`](../evidence/release-2026-09-09/ui-geometry-1071.png)、[`ui-geometry-1440.png`](../evidence/release-2026-09-09/ui-geometry-1440.png)。
+- 右上角缩放组、导航组和会话收起开关统一放在同一视觉基线，组间固定 8px；会话收起按钮保留 `收起对话` 语义和原 DOM 入口，视觉位置锚定到导航组右侧，窗口尺寸变化不缩放、不漂移。1440×900 和 1071×698 的矩形与截图证据见 [`ui-geometry.json`](../evidence/release-2026-09-09/ui-geometry.json)、[`ui-geometry-1071.png`](../evidence/release-2026-09-09/evidence-manifest.json)、[`ui-geometry-1440.png`](../evidence/release-2026-09-09/evidence-manifest.json)。
 - 实现与验证文件：`src/components/canvas/useCanvasViewport.ts`、`src/components/canvas/CanvasHud.tsx`、`src/styles/ui-tokens.css`、`src/styles/canvas-hud.css`、`src/styles/canvas-navigation.css`、`src/styles/workspace.css`、`tests/browser/composer-fidelity.spec.ts`、`tests/browser/canvas-layout.spec.ts`。`npm run typecheck`、`npm run ui:check` 通过；相关 Edge 回归 14/14 通过。完整浏览器套件仍有已撤出的旧 `DemoLibrary` 断言，未冒充 `npm run verify` 全部通过。
 
 ## 2026-09-09 图片参考图预览与重绘入口
@@ -387,3 +387,8 @@
 ## 下一步
 
 按本文件顶部“下午导航同状态比对交付”的下一步及既有计划执行；两项原失败已回归通过，导航本轮结果和差异已落盘，继续视频参数同状态核对。UI 验收前不启动后端。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[release-2026-09-09 manifest](../evidence/release-2026-09-09/evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

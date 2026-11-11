@@ -2,14 +2,15 @@ import { expect, type Page, type Locator } from "@playwright/test";
 import {
   CREATION_STORAGE_KEY,
   createProject,
+  createTask,
   emptySnapshot,
   projectChatView,
   serializeCreationSnapshot,
   type ChatItem,
+  type CreationTask,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
-import { modelChannels, providerChannel } from "../../src/domain/modelChannels";
 import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
@@ -22,52 +23,40 @@ export async function openWorkspace(
   await openSeededProject(page, chats);
 }
 
-/** Reveal a clipped canvas action by panning the view, leaving node data intact. */
-export async function panCanvasToRevealAction(
-  page: Page,
-  action: Locator,
-): Promise<void> {
-  const hit = () =>
-    action.evaluate((element) => {
-      const box = element.getBoundingClientRect();
-      const target = document.elementFromPoint(
-        box.x + box.width / 2,
-        box.y + box.height / 2,
-      );
-      return element === target || Boolean(target && element.contains(target));
-    });
-  if (await hit()) return;
-  const canvas = page.getByTestId("infinite-canvas");
-  const bounds = (await canvas.boundingBox())!;
-  const usableWidth = await canvas.evaluate(
-    (element) =>
-      (parseFloat(
-        (element as HTMLElement).style.getPropertyValue(
-          "--canvas-usable-width",
-        ),
-      ) *
-        element.getBoundingClientRect().width) /
-      (element as HTMLElement).offsetWidth,
+/** Conversation tools belong to the text variant; fresh home defaults to image. */
+export async function selectHomeConversation(page: Page): Promise<void> {
+  const home = page.getByRole("region", { name: "开始创作", exact: true });
+  await home.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = home.getByRole("menu", { name: "选择模型", exact: true });
+  await menu.getByRole("tab", { name: "对话 / 推理", exact: true }).click();
+  await menu
+    .getByRole("menuitemradio", { name: /^自动调配 \(Auto-Routing\)/ })
+    .click();
+  await ensureHomeMore(page);
+}
+
+export async function ensureHomeMore(page: Page): Promise<void> {
+  const more = page.getByRole("button", { name: "更多创作选项", exact: true });
+  if (
+    (await more.isVisible()) &&
+    (await more.getAttribute("aria-expanded")) !== "true"
+  )
+    await more.click();
+}
+
+/** Persisted paused task fixture; the application must never invent demo tasks. */
+export async function openTaskWorkspace(page: Page): Promise<void> {
+  const task = createTask(
+    createProject({
+      prompt: "任务面板布局回归",
+      model: "fixture-task",
+      kind: "image",
+      attachments: [],
+    }),
   );
-  const button = (await action.boundingBox())!;
-  const hud = (await page.locator(".canvas-hud").boundingBox())!;
-  const editorShell = page.locator(".canvas-composer-screen");
-  const editor = (await editorShell.count())
-    ? await editorShell.boundingBox()
-    : null;
-  const targetY = editor
-    ? (hud.y + hud.height + editor.y) / 2
-    : hud.y + hud.height + 40;
-  const start = { x: bounds.x + 4, y: bounds.y + bounds.height / 2 };
-  await page.mouse.move(start.x, start.y);
-  await page.mouse.down({ button: "middle" });
-  await page.mouse.move(
-    start.x + bounds.x + usableWidth / 2 - (button.x + button.width / 2),
-    start.y + targetY - (button.y + button.height / 2),
-    { steps: 8 },
-  );
-  await page.mouse.up({ button: "middle" });
-  await expect.poll(hit).toBe(true);
+  task.id = "task-panel-paused";
+  task.error = "任务已暂停，待用户恢复";
+  await openSeededProject(page, undefined, [task]);
 }
 
 /** API scenarios explicitly choose their fixture; a fresh home stays on Codex. */
@@ -87,10 +76,7 @@ export async function selectHomeApiModel(
     .getByRole("button", { name: "模型", exact: true })
     .click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  const channel = modelChannels.find(
-    (item) => item.id === providerChannel(profile),
-  )!;
-  await menu.getByRole("tab", { name: channel.label, exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("searchbox").fill(query);
   const choices = menu.getByRole("menuitemradio");
   await expect(choices).toHaveCount(1);
@@ -167,6 +153,7 @@ export async function selectSettingsSection(
 export async function openSeededProject(
   page: Page,
   chats?: Record<string, ChatItem>,
+  tasks?: CreationTask[],
 ): Promise<void> {
   await page.goto("/");
   const providerRaw = await page.evaluate(
@@ -197,6 +184,14 @@ export async function openSeededProject(
     items,
     canvas: createProjectCanvas(items),
     messages: [],
+    ...(tasks
+      ? {
+          tasks: tasks.map((task) => ({
+            ...task,
+            originChatId: base.activeChatId,
+          })),
+        }
+      : {}),
   };
   const snapshot = serializeCreationSnapshot({
     ...emptySnapshot(),
@@ -259,3 +254,42 @@ export async function showCanvasNavigation(page: Page): Promise<void> {
   }
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
 }
+
+/** CI fonts can report sub-pixel boxes; keep layout contracts within half a pixel. */
+export function expectApproxBox(
+  box: { x: number; y: number; width: number; height: number } | null,
+  expected: { x: number; y: number; width: number; height: number },
+  precision = 0,
+): void {
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeCloseTo(expected.x, precision);
+  expect(box!.y).toBeCloseTo(expected.y, precision);
+  expect(box!.width).toBeCloseTo(expected.width, precision);
+  expect(box!.height).toBeCloseTo(expected.height, precision);
+}
+
+/** Hosted Edge may report used px as 116.016 for an authored 116px contract. */
+export async function expectApproxCssPx(
+  locator: {
+    evaluate: (
+      pageFunction: (el: Element, prop: string) => string,
+      arg: string,
+    ) => Promise<string>;
+  },
+  property: string,
+  expected: number,
+  tolerance = 0.5,
+): Promise<void> {
+  const raw = await locator.evaluate(
+    (el, prop) => getComputedStyle(el).getPropertyValue(prop),
+    property,
+  );
+  const actual = Number.parseFloat(raw);
+  expect(
+    Number.isFinite(actual),
+    `expected finite ${property}, got ${raw}`,
+  ).toBe(true);
+  expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tolerance);
+}
+
+export { panCanvasToRevealAction } from "../support/canvasPointer.mjs";

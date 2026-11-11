@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/2026-09-30",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/2026-09-30/canvas-minimap.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2ff9cb2fc3c4728895751473118040f953ac4a5b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/canvas-minimap.png",
+      "bytes": 1703,
+      "sha256": "c99da775323c93f06ebc73209f44a565ff59505dc0643824116018aa33d2ba26",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/catalog-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "593befa3d3077eb361db68bbbc63173edefd22ac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/catalog-1440.png",
+      "bytes": 30508,
+      "sha256": "efed4895d86f11d86bb12a5c179ab78698b24275ac5e0994b68bff1314ae61ef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/catalog-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b0e59d47391b03777cc38a245e193782dc99f253",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/catalog-1920.png",
+      "bytes": 31215,
+      "sha256": "8ccab1f4b971d7033a01fa369455465deb40ea008267bae606d4cde14e730356",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/catalog-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f231297969d5952ec32261297ee0d4c06ac06963",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/catalog-390.png",
+      "bytes": 19179,
+      "sha256": "205fbc2108271f679635262ca3cee12fd62cfdd1e4e7be74bed38ae437fbbcf9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/catalog-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fcea555dc83371e39f6483802834a1589fd09e02",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/catalog-768.png",
+      "bytes": 27721,
+      "sha256": "2f38b32021a233c203db6ee74e20070bbe2eb44e97e8119772f4e1ff69582bdd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/navigation-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "528b13aaa792cd662881861efa56da45b9d61f1f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/navigation-1440.png",
+      "bytes": 81002,
+      "sha256": "825fc81d52d35a371e7211bffaf4feb0e2e26a9903e903291c23a6f059029ef2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/navigation-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ae434aa0a34f35cce0562a953f8926e7ee7ace1d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/navigation-1920.png",
+      "bytes": 86806,
+      "sha256": "6cb9d9ce8cf89bcfa603874f42d9629e279b1d07a9e3f8c6b85c18674c15e68a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/navigation-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "016cb3eafb1eac148f1ff462414efd3a81bc4e3b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/navigation-390.png",
+      "bytes": 27806,
+      "sha256": "d9a0456209c9179d4c01b9bffe28ed98794c7f6bb7e3b94d025bf3f6d25a77b5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/navigation-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2bcbd749db30801c9ee834bef15d3258d639418b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/navigation-768.png",
+      "bytes": 36208,
+      "sha256": "9bd77e1988cfef3c15c4d0c6cb4ace2a039f9c41ca72dbcfd6ea578fef0423e8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-30/video-composer-desktop.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "60d595015059f0a01726ddc2d41532f08918e475",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-30/video-composer-desktop.png",
+      "bytes": 102925,
+      "sha256": "7b27fe5291217778487cad8fc89e5ed1f4ad3e125e0a4758c2bf6816d2492f43",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

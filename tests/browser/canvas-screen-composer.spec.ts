@@ -36,7 +36,7 @@ for (const viewport of [
     const editor = page.getByTestId("image-composer");
     const model = editor.getByRole("button", { name: "画布模型", exact: true });
     const params = editor.getByRole("button", {
-      name: "自适应尺寸",
+      name: "自适应 · 1K · 最小",
       exact: true,
     });
     const expand = editor.getByRole("button", {

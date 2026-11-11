@@ -1,3 +1,4 @@
+import { containsCredentialText as containsSecret } from "../../../packages/creation-contracts/index.ts";
 import { z } from "zod";
 
 export const skillIdSchema = z
@@ -20,15 +21,6 @@ export const skillPermissionSchema = z
     /^(canvas|project|asset|conversation|network|filesystem):(read|list|inspect)$/,
     "Skill 只能声明只读权限",
   );
-const SECRET_PATTERNS = [
-  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
-  /sk-[A-Za-z0-9_-]{12,}/,
-  /-----BEGIN [A-Z ]+ PRIVATE KEY-----/,
-  /(?:Bearer|Basic)\s+[A-Za-z0-9+/._-]{16,}/i,
-];
-function containsSecret(value: string): boolean {
-  return SECRET_PATTERNS.some((pattern) => pattern.test(value));
-}
 const instructionsSchema = z
   .string()
   .trim()

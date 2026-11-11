@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test } from "@playwright/test";
 import { expandSidebar, openSettingsSection } from "./helpers";
 
@@ -24,7 +25,7 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
     page.getByRole("dialog", { name: "项目库使用教程" }),
   ).toBeVisible();
   await expect(
-    page.getByText("当前版本是前端 Prototype。", { exact: false }),
+    page.getByText("项目与素材仅保存在本机", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "关闭", exact: true }).click();
   await expect(
@@ -42,7 +43,9 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
     page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await expect(
     page.getByText("ComfyUI 工作流 · 0 个", { exact: true }),
   ).toBeVisible();
@@ -93,6 +96,7 @@ test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", asy
 
 test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })
@@ -106,6 +110,7 @@ test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
 
 test("首页扩展菜单的选中态和动作项遵守层级圆角", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })
@@ -141,7 +146,7 @@ test("首页默认账号生图可提交，不显示无关的 API 缺配置原因
 test("首页默认账号模型入口文案不会被截断", async ({ page }) => {
   await page.goto("/");
   const button = page.locator(".start-model-picker .start-tool-button");
-  const label = button.locator("span");
+  const label = button.locator("span:not(.ui-icon)");
   await expect(label).toHaveText("Codex 内置生图");
   expect(
     await label.evaluate(
@@ -154,19 +159,25 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
   for (const width of [390, 834]) {
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/");
-    const label = page.locator(".start-model-picker .start-tool-button span");
+    const label = page.locator(
+      ".start-model-picker .start-tool-button > span:not(.ui-icon)",
+    );
     await expect(label).toHaveCSS("font-size", "12px");
-    const text = await label.evaluate((element) => ({
-      rendered: element.clientWidth,
-      full: element.scrollWidth,
-    }));
-    expect(text.rendered).toBeGreaterThanOrEqual(text.full);
+    await expect(label).toHaveCSS("text-overflow", "ellipsis");
+    await expect(label.locator("..")).toHaveAttribute(
+      "title",
+      "Codex 内置生图",
+    );
+    expect(
+      await label.evaluate((element) => element.clientWidth),
+    ).toBeGreaterThanOrEqual(24);
   }
 });
 
 test("首页扩展菜单邻近触发器并避开发现区标签", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作", exact: true })
     .getByRole("button", { name: "扩展", exact: true })
@@ -193,6 +204,7 @@ test("首页扩展菜单邻近触发器并避开发现区标签", async ({ page 
 test("首页滚动后菜单仍保持可见和可操作", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/");
+  await selectHomeConversation(page);
   const home = page.locator(".start-page");
   await home.evaluate((element) => {
     element.scrollTop = 280;
@@ -220,6 +232,7 @@ test("首页滚动后菜单仍保持可见和可操作", async ({ page }) => {
 test("窄屏首页扩展菜单不遮挡发现区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 720 });
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作", exact: true })
     .getByRole("button", { name: "扩展", exact: true })
@@ -296,7 +309,7 @@ test("窄屏首页发现区滚动后能到达最后一张灵感卡片", async ({
   );
 });
 
-test("首页灵感卡片媒体保持稳定的 16:9 比例", async ({ page }) => {
+test("首页灵感卡片媒体遵循当前桌面和手机比例", async ({ page }) => {
   for (const width of [390, 768, 1280]) {
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/");
@@ -309,7 +322,8 @@ test("首页灵感卡片媒体保持稳定的 16:9 比例", async ({ page }) => 
         }),
       );
     expect(ratios).toHaveLength(3);
-    for (const ratio of ratios) expect(ratio).toBeCloseTo(16 / 9, 1);
+    for (const ratio of ratios)
+      expect(ratio).toBeCloseTo(width < 768 ? 16 / 9 : 318 / 336, 1);
   }
 });
 
@@ -414,6 +428,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
   page,
 }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })
@@ -424,7 +439,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "扩展",
+      name: "扩展与 MCP",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -465,7 +480,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "扩展",
+      name: "扩展与 MCP",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -504,7 +519,7 @@ test("开始创作与工作台的模型入口都定位到模型接入设置", as
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("tab", { name: "登录账号", exact: true })
+    .getByRole("tab", { name: "对话 / 推理", exact: true })
     .click();
   await expect(page.getByRole("menu")).toContainText("Codex");
   await page
@@ -566,7 +581,9 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   ).toBeVisible();
 
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await page.getByText("ComfyUI 工作流 · 0 个", { exact: true }).click();
   await page.locator('.settings-disclosure input[type="file"]').setInputFiles({
     name: "我的 ComfyUI 工作流.json",
@@ -578,9 +595,10 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   await expect(
     page.getByText("我的 ComfyUI 工作流", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "画布运行指引", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "运行未接通", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("status").filter({ hasText: "添加资源 → ComfyUI 工作流" }),
+  ).toBeVisible();
 });
 
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {

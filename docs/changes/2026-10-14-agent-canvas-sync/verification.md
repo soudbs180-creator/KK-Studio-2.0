@@ -21,7 +21,7 @@
 
 | 检查 | 结果 |
 | --- | --- |
-| 定向纯函数/调用链回归 | [related-unit.log](evidence/related-unit.log)，exit 0 |
+| 定向纯函数/调用链回归 | [related-unit.log](evidence-manifest.json)，exit 0 |
 | 新增三项浏览器同步/取消/同节点拖动 | 全量 production report 中全部 PASS；另专项含菜单/引用能力为 5/5 PASS |
 | 全量 Node unit/deploy | 1084 pass、0 fail、14 skip（1098 total） |
 | Agent suite | 172 pass、0 fail、2 skip（174 total） |
@@ -31,7 +31,7 @@
 | 单独隔离 development | exit 1；依赖 junction 导致字体 403，不能计 PASS；回写后在 primary 正常依赖路径再验证 |
 | 独立静态预检 | 首轮任务7文件哈希绑定，无新增 P1/P2；不是 committed-HEAD approval |
 
-首次完整检查还因隔离目录缺少 ignored 的 canvas-agent/dist 与 public/plugins 失败；补齐仓库原构建产物后相关单测与菜单通过。未改门禁或依赖版本。当前完整结果以 [原始日志](evidence/full-verify.log) / [生产浏览器报告](evidence/production-browser-results.json) 为准。
+首次完整检查还因隔离目录缺少 ignored 的 canvas-agent/dist 与 public/plugins 失败；补齐仓库原构建产物后相关单测与菜单通过。未改门禁或依赖版本。当前完整结果以 [原始日志](evidence-manifest.json) / [生产浏览器报告](evidence/production-browser-results.json) 为准。
 
 ## 首轮2.1.18独立布局失败（历史与TODO）
 
@@ -66,3 +66,8 @@ Desktop/Tauri 2.1.19 release、真实 Provider、Hosted CI、签名安装和用�
 - 当前207文件快照中186个非任务文件SHA完全不变；另外3份供应商change文档在验证期间由并发任务更新，其当前版本与前后SHA均保留，本任务从未写入这些路径。原暂存内容保持空。仅任务既有源/测试/版本/文档与新证据写入，原始候选、恢复备份、worktrees和运行数据保留。
 
 详见[最终检查收据](evidence/primary-checks.json)、[最终浏览器报告](evidence/final-production-browser-results.json)、[截图](evidence/agent-canvas-sync-primary.png)。Desktop/Tauri2.1.19、真实Provider、Hosted/签名发布和用户原项目人工验收仍未执行。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-14-agent-canvas-sync manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

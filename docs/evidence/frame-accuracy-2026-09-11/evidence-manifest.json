@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/frame-accuracy-2026-09-11",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "131b962455146df26730b2b27ff293d473466d3b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-1440.png",
+      "bytes": 57180,
+      "sha256": "00cb34ee1e04b18ca4dad67d04f5b9cbcd6bde78e1637ca88e3bcbf35e51686c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-1600.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a0f7500d55ca35912b7eb4ba9bfe9a85ace6974a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-1600.png",
+      "bytes": 68479,
+      "sha256": "cfa90e59621862a4bbbdf07f8941e8de0977f52598109f6c3e5132a6173ae233",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "242bf88426b6accb82ffd59da30c94d4d888e7e5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-390.png",
+      "bytes": 26519,
+      "sha256": "f5f4921de236409e78aafe47772621c6387c07825677a7116e9d30e2e10bceb6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-both-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "06d1ace3dc830a9e98aa03c240300458a3b2e115",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-both-collapsed.png",
+      "bytes": 44634,
+      "sha256": "cee1fe33f072baa2286a9086d4fa9295d7b569fa9dec163c9787941ad866ab13",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-expanded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "568c7830a6b6336af5d8431809f77493bb836671",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-expanded.png",
+      "bytes": 73029,
+      "sha256": "3248acba70686ea7f2ae3e3cc5cefce85e11895f77c856f38c970e7fa6f1aee0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-left-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0865a55bd2313d663b53009988b96d3b9e9a24cd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-left-collapsed.png",
+      "bytes": 59885,
+      "sha256": "4c9f032489e65057246fffb52d62e70ae4b7be888519ddd053f0b4708c1b5b4d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-dev-right-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b6900ec7c950f8a71e0615c31f8e1c62658ae505",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-dev-right-collapsed.png",
+      "bytes": 58291,
+      "sha256": "c0c6a40db607485fa2b90e3f9c79aed6893a81edc98b48778fe286d706ab5013",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6bd26af2744f891bda89f01362e726e18795576c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-1440.png",
+      "bytes": 57133,
+      "sha256": "d10c593c39abf0ea05b8542beaf1f40470cdb79ae3f87bb49b5109d3257667e9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-1600.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4ccd709460a5b1effc2390413960302e22692a33",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-1600.png",
+      "bytes": 68468,
+      "sha256": "77485d0878ee1cd37ea5085399bea650493a19f1fcd2f349b99739a6d798892a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "850fc9e97e93be70c6e0140b08fcd0753f371558",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-390.png",
+      "bytes": 26555,
+      "sha256": "c6eddce90ec69b4abc087e437bf9e16a99c134d7072ffcbe761b30acea1d3026",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-both-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "26d6fadcb0c4f7d73dbb58b9b575969d87805556",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-both-collapsed.png",
+      "bytes": 44571,
+      "sha256": "642e32ae9d3cf7bcba7d5caf7dbfe9c1dba6a4591776b5511204a12a2e72b964",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-expanded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8148d293dfd96aef5c4bd0663e34382662594efe",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-expanded.png",
+      "bytes": 73208,
+      "sha256": "a2266f5e37efa37ff205d4cc03f4002476dd04f4c1212837a08ea5ff57ec00bb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-left-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f857fc98bfac2de5cc7af6f970105e14e19539b2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-left-collapsed.png",
+      "bytes": 59846,
+      "sha256": "c6b9208f7407910ae66fa75fad242effbc5f5383bfc2d02c5621efe9b00e60d5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-preview-right-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e6177b9cd63618f69da2926b44be74d85d345581",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-preview-right-collapsed.png",
+      "bytes": 58347,
+      "sha256": "756856c1d72398cfb63de5fedaf72ba1b53cfc238a753f581e01e046111e9f7a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-tauri-chat-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d2df7a5ff4b4c2080be976957736388ab130159c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-tauri-chat-collapsed.png",
+      "bytes": 97413,
+      "sha256": "1af72bfffc74377a1bfabb7460de66c9cf44eef7e91f0a76695d071773e4414b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-tauri-expanded-map-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b6cbb5321d5ca2a4c2d9e9bfd674ba886026d76b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-tauri-expanded-map-open.png",
+      "bytes": 124303,
+      "sha256": "91e43c2d8a15e7d46c41d0cbd47fd476dbcb6df5c4379e5d070df00cdac9b1ea",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/after-tauri-expanded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4d7cffbf904f775cba271ad10c5c97b79337b382",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/after-tauri-expanded.png",
+      "bytes": 122145,
+      "sha256": "98e3825c75de6700d5a829291acfdb3d048bf1604ae2b94bf83b4d68864d3049",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/before-expanded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ceecb67eefa8673ea1ef1c7dbefa105cff6c7706",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/before-expanded.png",
+      "bytes": 74953,
+      "sha256": "9ea08ead1f828eb282b95ed5bd681610959833600738913eae3a46dce1c76b6b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/before-sidebar-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "aa09a4d4cd4377886cd56272552643b2c4d2b9cc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/before-sidebar-collapsed.png",
+      "bytes": 62014,
+      "sha256": "65fd8a1d755c7a8a52963d1ab7a36714685cfc29ec8ca2d5ec1ad40db59aeb2f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/comparison-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "db5557217bd62f8a9854387f8d4f5490898f0141",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/comparison-review.png",
+      "bytes": 94908,
+      "sha256": "855adb7461553183f4f9851ec72b5f74f2197b9bf54368837feece8c8cac04aa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/figma-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b6ad978c0c380035ccd62ea98fb993d31705af5d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/figma-collapsed.png",
+      "bytes": 71519,
+      "sha256": "35204b9f6f80288dbc9fbdb412bd02451e487ede05ce7abccee0a0dd7af88330",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frame-accuracy-2026-09-11/figma-expanded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "86b48c5fa379aa5fec6431ca40f2b09ae80f4177",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frame-accuracy-2026-09-11/figma-expanded.png",
+      "bytes": 175117,
+      "sha256": "87a54512378779bd44401adef1b240ea88c6c6614dd4745e7885a866be448d81",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

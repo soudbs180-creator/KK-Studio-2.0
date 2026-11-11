@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/navigation-fix-2026-09-07",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/count-final.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d3dba7b7e2986011587cbc91585809f9482a6e89",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/count-final.png",
+      "bytes": 1793,
+      "sha256": "6454a633ea2c6fb86960b136fbadf8f6ab268d8db93caf3cae569983436e3c4d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/navigation-and-editor.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "36f6b14b4fbf492bfe280f18412a59d652fabdec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/navigation-and-editor.webm",
+      "bytes": 241271,
+      "sha256": "d1c6cec6bccc6ab4cfc50d0fc20418c102af13217e964ccabd869556523b443a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/navigation-final.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "42e8e8490e122621f1d682f2a6597d75ab3865aa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/navigation-final.png",
+      "bytes": 6667,
+      "sha256": "b1d4ac9a35f8d1326b0f9f845935c1511ad55597919e5161b01b533944a6f7ef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/navigation-local.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2eb3ad5b2ae10dcf0197f7f3b92fd79a37343539",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/navigation-local.png",
+      "bytes": 6780,
+      "sha256": "2bae7ebb06ce4ab3e8f0ce6ac1f5a196c309e704775dc9946092880623bccd26",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/page@82ffb18138aad79177cd058862dff241.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "36f6b14b4fbf492bfe280f18412a59d652fabdec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/page@82ffb18138aad79177cd058862dff241.webm",
+      "bytes": 241271,
+      "sha256": "d1c6cec6bccc6ab4cfc50d0fc20418c102af13217e964ccabd869556523b443a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/same-state-nav-200.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2b1c09865ac101aa26d1e7c1705e176d0249f7b0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/same-state-nav-200.png",
+      "bytes": 6774,
+      "sha256": "12163c395327c03c58353ec0c982d66e4e5784f25fabb645b454ef249ce80c10",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/video-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "94d823858b06fc173b7193df663d6280c56139f3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/video-1440.png",
+      "bytes": 72184,
+      "sha256": "1c5da932c11a24518c81d118e737d5f88137188decadb42cd1c73b22bf24f50d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/video-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "aa9603b24c25249007a72974e5537998c4179036",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/video-1920.png",
+      "bytes": 81996,
+      "sha256": "7a56b9d3809b906a85d0c1c45d78b9e7efb230e6a3fd8eb11836d8c1d76c4cb0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/video-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9fe25e166818213920828a6d7e33add76f8e9f4b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/video-390.png",
+      "bytes": 45414,
+      "sha256": "b63afb3437a624340c3d21da7d6b4b743db089839161dff2d94441f0140875a0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/video-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "43e0d6ad24c0607b637888889b597bcd716e928b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/video-768.png",
+      "bytes": 70788,
+      "sha256": "7ee8f1fa0b21fd3ca84de6ebb8299f3fbab9d0682c14b73aee8676c06b79e96e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-fix-2026-09-07/video-editor-final.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a17dfb8406c5ef5bcad3e44846f6cc26ebfa0a74",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-fix-2026-09-07/video-editor-final.png",
+      "bytes": 12171,
+      "sha256": "a14aa143280c3510e4dac1032dce7d7e26367f89c760fc6dc4b623b31e0b03b5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

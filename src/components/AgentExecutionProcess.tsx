@@ -1,8 +1,12 @@
 import type {
   AgentActivityDetail,
   AgentChatItem,
-} from "../features/agent/agentTypes";
-import { agentActivityState } from "../features/agent/agentEvents";
+} from "../features/agent/index.ts";
+import {
+  agentActivityState,
+  isSubagentFoldbackResult,
+} from "../features/agent/index.ts";
+import AgentFoldbackCard from "./agent/AgentFoldbackCard.tsx";
 
 /** 只展示现有消息活动；折叠状态由原生 details 管理。 */
 export default function AgentExecutionProcess({
@@ -24,6 +28,11 @@ export default function AgentExecutionProcess({
       <ol className="chat-agent-execution-list">
         {items.map((item, index) => {
           const detail = item.detail as AgentActivityDetail | undefined;
+          const foldbackCandidate = isSubagentFoldbackResult(item.detail)
+            ? item.detail
+            : isSubagentFoldbackResult(detail?.foldback)
+              ? detail.foldback
+              : null;
           const state = states[index];
           const rows = [
             ...(Array.isArray(detail?.rows) ? detail.rows : []),
@@ -45,28 +54,34 @@ export default function AgentExecutionProcess({
                   {state.label}
                 </span>
               </div>
-              {item.text && <p>{item.text}</p>}
-              {rows.length > 0 && (
-                <dl>
-                  {rows.map((row, rowIndex) => (
-                    <div key={rowIndex}>
-                      <dt>{row.label}</dt>
-                      <dd>{row.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )}
-              {Array.isArray(detail?.files) &&
-                detail.files.map((file, fileIndex) => (
-                  <p key={fileIndex}>
-                    {file.action} {file.path}
-                  </p>
-                ))}
-              {typeof detail?.output === "string" && detail.output && (
-                <pre>{detail.output}</pre>
-              )}
-              {detail?.error && detail.error !== detail.output && (
-                <p className="chat-agent-execution-error">{detail.error}</p>
+              {foldbackCandidate ? (
+                <AgentFoldbackCard result={foldbackCandidate} />
+              ) : (
+                <>
+                  {item.text && <p>{item.text}</p>}
+                  {rows.length > 0 && (
+                    <dl>
+                      {rows.map((row, rowIndex) => (
+                        <div key={rowIndex}>
+                          <dt>{row.label}</dt>
+                          <dd>{row.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
+                  {Array.isArray(detail?.files) &&
+                    detail.files.map((file, fileIndex) => (
+                      <p key={fileIndex}>
+                        {file.action} {file.path}
+                      </p>
+                    ))}
+                  {typeof detail?.output === "string" && detail.output && (
+                    <pre>{detail.output}</pre>
+                  )}
+                  {detail?.error && detail.error !== detail.output && (
+                    <p className="chat-agent-execution-error">{detail.error}</p>
+                  )}
+                </>
               )}
             </li>
           );

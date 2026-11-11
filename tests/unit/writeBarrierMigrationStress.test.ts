@@ -29,7 +29,7 @@ import {
   type LegacyV2Snapshot,
   type LegacyV2Project,
 } from "../../src/features/creation/chatMigration.ts";
-import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
+import { NonDowngradableWriteBarrier } from "../support/writeBarrierModel.ts";
 import type {
   CreationSnapshotV3,
   CreationAttachment,

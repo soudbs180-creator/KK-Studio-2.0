@@ -1,0 +1,335 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-08-single-row-titlebar",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-model/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "76a21d17bfee1dced0303ec9be53e4b2eef8f291",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-model/parameters-native.png",
+      "bytes": 96809,
+      "sha256": "93908b1985005ad9f15b59ce2b9a4ac178224aa8b68d5898e74f9a54d36c4c97",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-model/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "83680dae8f12a9d93d8c08314c042c250486a9f0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-model/redraw-disabled-native.png",
+      "bytes": 265700,
+      "sha256": "1e47ba298acae3fb08caf2bd64ac8017224db4385c444ecfec509ebe0812b804",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-model/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "39dca35011ffa05d2caa0453ead003000369517c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-model/settings-native.png",
+      "bytes": 216910,
+      "sha256": "7134cab6c020a6f764b3adbbdee43b631c60694fb94edcccd88e548fcd08c037",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-startup/native-landing.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-startup/native-landing.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-startup/native-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e667b8f749e868893640d4abeb599368b3906ae0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-startup/native-settings.png",
+      "bytes": 442398,
+      "sha256": "18219e4ee8a71272c9a0f03ec161ef51c513d0e77db32e0fa820cbba33144333",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-taskhost/native-ui-success.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ee185d25247b2e35224496d465ee316247424fe4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-taskhost/native-ui-success.png",
+      "bytes": 221594,
+      "sha256": "ddbb8bb05e29b06c88d70487344bb93aa490ba6e20da44b654914df71794c4ec",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-taskhost/native-unknown-recovery.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f6c17b6684fcce584e65491d8b985470648219fa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-taskhost/native-unknown-recovery.png",
+      "bytes": 152677,
+      "sha256": "261440bf74a2c21e77d5eb6eeda85623ea5c51d15bc09052c527e9b77ff13a72",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-titlebar/initial.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-titlebar/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-titlebar/single-row.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-titlebar/single-row.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-titlebar/titlebar.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b533f4d6e6fd98ecc2c213ee19d6d9483a2cce8f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-titlebar/titlebar.png",
+      "bytes": 3655,
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fe52366ed8a8e35e2cde6e25c290959d1b425e5c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/asset-actions.png",
+      "bytes": 118961,
+      "sha256": "c3522b039e503fa6639a056bead60f7bcb178c01da9090dd8fee359c0af7cc52",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6f296970be71a3dac1aabd44b062db69835fb1a1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/asset-library.png",
+      "bytes": 219138,
+      "sha256": "f8b6451cadf1e58fe6b0a839ce4a70a3f710c64ae0de8dd54266099ad236fc8b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "094509f1194b7aac7b11b51c4e23b641547efab3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/google-cli.png",
+      "bytes": 167237,
+      "sha256": "bbaaecdd91ab595d01020ca48330ccba01a3fd7a55260e2d0fd3cb67b577ba6e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0032922047bbc551a66c042fe599c002f81a5d8d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/model-actions.png",
+      "bytes": 163162,
+      "sha256": "5f19f088e99b41bda603787940585e0a75d52c255113f6ef76eced5eecdff41a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6987e682e885eb062e15c72d08c139db5e41d54c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/model-settings.png",
+      "bytes": 150562,
+      "sha256": "b84adebb17416c78ba26e3f955ee3a7ae15621f6b732821ac627553452d47000",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e737218e970aa038c45f67c5e1859b15d3ce2743",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/selected-reference.png",
+      "bytes": 236000,
+      "sha256": "914679733566a279d0541b9b732d5f420c86607c08584dce11f2cdaafab63a84",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "592d0e65828148b9a39f3a90441db3a7d22635cb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-export.png",
+      "bytes": 152815,
+      "sha256": "5f4cf03f1ba6e36c34f67bf5f1f955d34ce31dad20043fd992d9e82a971f242e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e1f9bded125cd36cc14037a708a8a0448a11e55f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-generate.png",
+      "bytes": 132579,
+      "sha256": "910a5c1578a9bb46e6d6303406b3d6b95e60a0ec639ca27799819c1cd0851772",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f4c2826cf5183967eee915e701e841961aeb7148",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-plan.png",
+      "bytes": 138660,
+      "sha256": "d9f427d5812ea1657803964caee540ca4ed4d84744fa828b7bfdef1c28d9ff4c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bd553f1b54b086882b8597b19c74204fa920a0d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-prompt.png",
+      "bytes": 125124,
+      "sha256": "40c7f87fef12c7e8f08aac7679d356e3583865ccdfe177c5665bbc3c61cc7c92",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "234d59942ab3f38d8415fac95cfd1c2963d524ba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-queue.png",
+      "bytes": 129929,
+      "sha256": "62e233fa60f391742eb7f5990e594d7f7c4496389afa49bb89c3bfeab5f50115",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "838632ecd1dcd9d52141e244ac6ffdfd7de58549",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/native-ui/workbench-review.png",
+      "bytes": 164986,
+      "sha256": "5884cab8826f46b23353b3926dc231cf8a3bf0b5d694fb921c294a59e7d236b7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-development/topbar-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fe13b1ff6362fd99902a21a250749232b5b498f0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-development/topbar-1099.png",
+      "bytes": 3987,
+      "sha256": "be1959c06b0a32d544d920e59e42d579f33aaf24619a8b1a45357dd91bc679cd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-development/topbar-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fb0cbd2dd6c7235719a972b0ae3279a3fb362885",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-development/topbar-1920.png",
+      "bytes": 3913,
+      "sha256": "94954a9edcba479b4854d3acf0d11ae80771c33a64410c75d1e6eb02024f8f05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-development/topbar-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7ead36ed9eaa3e74c2bc58a8553d8edf39abc117",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-development/topbar-390.png",
+      "bytes": 1651,
+      "sha256": "6a7e1a69deef3b800f57b68d5fc300151b7bc392281ce0008d3478294d2df1c6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/landing-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d0554ddeec12e050a6b6a77cacadb7fb1b30b81b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/landing-1920.png",
+      "bytes": 450181,
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/landing-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "42eb5587b7b1ed9b990632586d56ccae7e745957",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/landing-390.png",
+      "bytes": 120646,
+      "sha256": "e42bc1c6835f252e916f45c7dfb2c82835a0881859bc9fad4a43f79f99bb5d6a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8f007eaabdf29bcef76d6e0ac6766ee83ffc30b2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/settings-1099.png",
+      "bytes": 195443,
+      "sha256": "280b4269dd804614e7f870336feb9790f7020ed201334d5538be88b8af881e91",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0fcf79f724fe0e2a81fb9fdd9d3fd63607f53bcb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/settings-1920.png",
+      "bytes": 514334,
+      "sha256": "9edfb6841b187fd3fd54bda40bfbba79ac0dddeec3434067b52a5e2964e8787b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "77b146661b58fa81e537dd35e564196c76c6b1b4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/main-integration-86e712f/web-production/settings-390.png",
+      "bytes": 151483,
+      "sha256": "9087886111afbfe8485c8b728c85f5b6f397b9e9de3cd5f123eb114f8a0c2bc2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-single-row-titlebar/evidence/titlebar.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b533f4d6e6fd98ecc2c213ee19d6d9483a2cce8f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-single-row-titlebar/evidence/titlebar.png",
+      "bytes": 3655,
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-single-row-titlebar/verification.md",
+          "line": 53,
+          "originalTarget": "evidence/titlebar.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

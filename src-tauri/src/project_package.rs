@@ -19,6 +19,11 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use zip::write::SimpleFileOptions;
 use zip::{CompressionMethod, ZipArchive, ZipWriter};
 
+#[path = "project_package_companion.rs"]
+mod companion;
+#[cfg(test)]
+#[path = "project_package_companion_tests.rs"]
+mod companion_tests;
 #[cfg(test)]
 #[path = "project_package_failure_tests.rs"]
 mod failure_tests;
@@ -242,7 +247,27 @@ fn attachments(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> 
     if let Some(values) = value.get("attachments").and_then(Value::as_array) {
         for attachment in values {
             let id = optional_id(attachment, "assetId", ids)?;
+            optional_id(attachment, "originalAssetId", ids)?;
             media_reference(attachment.get("dataUrl"), id.as_deref(), ids, false)?;
+        }
+    }
+    Ok(())
+}
+
+fn message_references(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> {
+    for message in value["messages"].as_array().into_iter().flatten() {
+        attachments(message, ids)?;
+        if let Some(assets) = message.get("assetIds") {
+            for id in assets
+                .as_array()
+                .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?
+            {
+                let id = id
+                    .as_str()
+                    .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?;
+                asset_id(id)?;
+                ids.insert(id.into());
+            }
         }
     }
     Ok(())
@@ -289,24 +314,11 @@ fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<()
     {
         attachments(project, ids)?;
         attachments(&project["composerDraft"], ids)?;
+        message_references(project, ids)?;
         if let Some(chats) = project["chats"].as_object() {
             for chat in chats.values() {
                 attachments(&chat["draft"], ids)?;
-                for message in chat["messages"].as_array().into_iter().flatten() {
-                    attachments(message, ids)?;
-                    if let Some(assets) = message.get("assetIds") {
-                        for id in assets
-                            .as_array()
-                            .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?
-                        {
-                            let id = id
-                                .as_str()
-                                .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?;
-                            asset_id(id)?;
-                            ids.insert(id.into());
-                        }
-                    }
-                }
+                message_references(chat, ids)?;
             }
         }
         if let Some(tasks) = project["tasks"].as_array() {
@@ -674,6 +686,9 @@ fn read_and_validate(path: &Path) -> Result<ValidatedPackage, String> {
     if bytes.len() as u64 > MAX_TOTAL_BYTES {
         return Err(failure("quota", "项目包超过大小限制"));
     }
+    if bytes.iter().find(|byte| !byte.is_ascii_whitespace()) == Some(&b'{') {
+        return companion::read(path, &bytes);
+    }
     validate_entries(read_zip(&bytes)?)
 }
 
@@ -1006,6 +1021,50 @@ mod tests {
     fn rejects_entry_over_limit_before_writing() {
         let bytes = vec![0u8; 100 * 1024 * 1024 + 1];
         assert!(make_zip(&[("manifest.json".into(), bytes)]).is_err());
+    }
+
+    #[test]
+    fn sidebar_preferences_restore_to_new_root_without_changing_source() {
+        for version in [2, 3] {
+            let source = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .parent()
+                .unwrap()
+                .join(".tmp/task-sidebar-canvas-20261018")
+                .join(format!(
+                    "sidebar-package-{}-{}",
+                    std::process::id(),
+                    nonce()
+                ));
+            fs::create_dir_all(source.join("projects")).unwrap();
+            fs::create_dir_all(source.join("assets")).unwrap();
+            let (snapshots, assets, _, _) = seed(&source);
+            let mut current = snapshots.read().unwrap().snapshot.unwrap();
+            current["revision"] = json!(2);
+            current["activeProjectId"] = Value::Null;
+            current["projects"][0]["trashedAt"] = json!(10);
+            current["projectGroups"] = json!([{"id":"g", "name":"Deleted group", "deletedAt":10}]);
+            current["sidebarPreferences"] =
+                json!({"sortMode":"recent", "pinnedProjectIds":["p1"], "pinnedGroupIds":["g"]});
+            if version == 3 {
+                current = crate::native_root_authority::migrated_snapshot(&current);
+            }
+            snapshots.write(current.clone(), Some(1)).unwrap();
+            let source_snapshot = source.join("projects/creation-v2.json");
+            let source_bytes = fs::read(&source_snapshot).unwrap();
+            let package = source.join("sidebar.kkproject");
+            export_package(&snapshots, &assets, &package).unwrap();
+            preflight_package(&package).unwrap();
+            let restored_root = source.join("restored");
+            import_package(&package, &restored_root).unwrap();
+            let restored = SnapshotRepository::new(restored_root.join("projects/creation-v2.json"));
+            assert_eq!(
+                restored.read().unwrap().snapshot.unwrap()["sidebarPreferences"],
+                current["sidebarPreferences"]
+            );
+            assert_eq!(fs::read(&source_snapshot).unwrap(), source_bytes);
+            assert!(import_package(&package, &restored_root).is_err());
+            assert_eq!(fs::read(&source_snapshot).unwrap(), source_bytes);
+        }
     }
 
     #[test]

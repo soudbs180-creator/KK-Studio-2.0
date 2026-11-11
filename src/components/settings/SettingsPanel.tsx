@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import UiIcon from "../UiIcon";
 import {
   DEFAULT_SETTINGS,
   SETTINGS_STORAGE_KEY,
@@ -8,10 +8,15 @@ import {
 } from "../../domain/settings";
 import type { SettingsPreferences } from "../../domain/settings";
 import GeneralSettings from "./GeneralSettings";
+import AppUpdatePage from "./AppUpdatePage";
+import ProfileUsagePage from "./ProfileUsagePage";
+import ShortcutsManagementPage from "./ShortcutsManagementPage";
 import SettingsSections from "./SettingsSections";
+import SettingsSidebar from "./SettingsSidebar";
 import type { SettingsSection } from "./SettingsSectionData";
 import {
-  SETTINGS_NAV_GROUPS,
+  DEFAULT_SETTINGS_SECTION,
+  getSettingsTier,
   resolveSettingsRoute,
 } from "./SettingsSectionData";
 import {
@@ -19,13 +24,13 @@ import {
   useSettingsNavigationLock,
   updateSettingsBusyOwners,
 } from "./SettingsNavigationContext";
-import type { SettingsSectionItem } from "./SettingsSectionData";
 import type { ExtensionsTab } from "./ExtensionsSettings";
-import type { SaveState } from "../../features/creation/useCreationStorage";
-import type { CreationProject } from "../../features/creation/model";
-import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import type { SaveState } from "../../features/creation/index.ts";
+import type { CreationProject } from "../../features/creation/index.ts";
+import type { SkillRegistry } from "../../features/skills/index.ts";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 import "./settings.css";
+import { Button } from "../ui";
 
 function readInitialSettings(): {
   preferences: SettingsPreferences;
@@ -55,10 +60,11 @@ function readInitialSettings(): {
 
 export default function SettingsPanel({
   onClose,
-  initialSection = "general",
+  initialSection = DEFAULT_SETTINGS_SECTION,
   saveState = "loading",
   revision = 0,
   projects,
+  activeProject,
   registry,
   workflows,
 }: {
@@ -67,6 +73,7 @@ export default function SettingsPanel({
   saveState?: SaveState;
   revision?: number;
   projects: readonly CreationProject[];
+  activeProject?: CreationProject;
   registry: SkillRegistry;
   workflows: LocalWorkflowAccess;
 }) {
@@ -82,16 +89,7 @@ export default function SettingsPanel({
     setBusyOwners((current) => updateSettingsBusyOwners(current, next, owner));
   }, []);
   useSettingsNavigationLock(panelRef, busy);
-  useLayoutEffect(() => {
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
-    const target =
-      navigation === "categories"
-        ? panelRef.current?.querySelector<HTMLElement>('[aria-current="page"]')
-        : panelRef.current?.querySelector<HTMLElement>(".settings-content");
-    if (navigation === "categories")
-      target?.scrollIntoView({ block: "nearest" });
-    target?.focus({ preventScroll: true });
-  }, [navigation]);
+
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
   const [resolved] = useState(() => resolveSettingsRoute(initialSection));
@@ -106,6 +104,17 @@ export default function SettingsPanel({
     message: initial.message,
     error: initial.error,
   });
+
+  useLayoutEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
+    const target =
+      navigation === "categories"
+        ? panelRef.current?.querySelector<HTMLElement>('[aria-current="page"]')
+        : panelRef.current?.querySelector<HTMLElement>(".settings-content");
+    if (navigation === "categories")
+      target?.scrollIntoView({ block: "nearest" });
+    target?.focus({ preventScroll: true });
+  }, [navigation]);
 
   function updatePreferences(
     patch: Partial<SettingsPreferences>,
@@ -141,18 +150,29 @@ export default function SettingsPanel({
     }
   }
 
+  function selectSection(next: SettingsSection): void {
+    if (busy) return;
+    setNavigation("detail");
+    setSection(next);
+    if (next === "providers") setModelsMounted(true);
+    if (next !== "extensions") setExtensionsTab(undefined);
+    setFeedback({ message: "", error: false });
+  }
+
   return (
     <SettingsNavigationContext.Provider value={{ busy, setBusy }}>
       <div
         ref={panelRef}
         className="settings-panel"
         data-section={section}
+        data-settings-tier={getSettingsTier(section)}
         data-navigation={navigation}
         aria-busy={busy}
-        data-figma-node="399:27506"
+        data-figma-node="47:185"
       >
         <div className="settings-phone-navigation">
-          <button
+          <Button
+            heightTier="40px"
             type="button"
             className="settings-action secondary"
             disabled={busy}
@@ -162,47 +182,14 @@ export default function SettingsPanel({
             }}
           >
             返回设置分类
-          </button>
+          </Button>
         </div>
-        <aside className="settings-sidebar">
-          <h1 id="settings-dialog-title">设置</h1>
-          <nav className="settings-nav" aria-label="设置分类">
-            {SETTINGS_NAV_GROUPS.map((group) => (
-              <div key={group.label} className="settings-nav-group">
-                <div className="settings-nav-group-label">{group.label}</div>
-                {group.items.map((item: SettingsSectionItem) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
-                    aria-current={section === item.id ? "page" : undefined}
-                    disabled={busy}
-                    title={
-                      busy ? "连接操作进行中，完成后可切换设置" : undefined
-                    }
-                    onClick={() => {
-                      if (busy) return;
-                      setNavigation("detail");
-                      setSection(item.id);
-                      if (item.id === "providers") setModelsMounted(true);
-                      if (item.id !== "extensions") setExtensionsTab(undefined);
-                      setFeedback({ message: "", error: false });
-                    }}
-                  >
-                    <img
-                      className="settings-nav-icon"
-                      src={`/design/figma/settings-nav-${item.icon}.svg`}
-                      alt=""
-                      width="20"
-                      height="20"
-                    />
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <SettingsSidebar
+          section={section}
+          busy={busy}
+          onSelect={selectSection}
+        />
+
         <main
           className="settings-content"
           aria-labelledby="settings-section-title"
@@ -212,6 +199,8 @@ export default function SettingsPanel({
             <GeneralSettings
               preferences={preferences}
               onChange={updatePreferences}
+              onOpenShortcuts={() => selectSection("shortcuts")}
+              busy={busy}
               generalDetail={resolved.generalDetail}
               onReset={() =>
                 updatePreferences(
@@ -221,9 +210,16 @@ export default function SettingsPanel({
               }
             />
           )}
+          {section === "updates" && <AppUpdatePage />}
+          {section === "shortcuts" && <ShortcutsManagementPage />}
+          {section === "account" && <ProfileUsagePage />}
           {[
             ...(modelsMounted ? ["providers" as const] : []),
-            ...(section !== "general" && section !== "providers"
+            ...(section !== "general" &&
+            section !== "providers" &&
+            section !== "updates" &&
+            section !== "shortcuts" &&
+            section !== "account"
               ? [section]
               : []),
           ].map((item) => (
@@ -234,6 +230,7 @@ export default function SettingsPanel({
               saveState={saveState}
               revision={revision}
               projects={projects}
+              activeProject={activeProject}
               preferences={preferences}
               registry={registry}
               workflows={workflows}
@@ -243,9 +240,10 @@ export default function SettingsPanel({
             />
           ))}
         </main>
+
         <button
           type="button"
-          className="settings-close"
+          className="settings-close kk-control-box"
           aria-label="关闭设置"
           disabled={busy}
           title={busy ? "连接操作进行中，完成后可关闭" : undefined}
@@ -253,13 +251,9 @@ export default function SettingsPanel({
             if (!busy) onClose();
           }}
         >
-          <img
-            src="/design/figma/settings-close.svg"
-            width="14"
-            height="14"
-            alt=""
-          />
+          <UiIcon name="close" size={16} />
         </button>
+
         {feedback.message && (
           <div
             className={`settings-feedback${feedback.error ? " is-error" : ""}`}
@@ -271,7 +265,7 @@ export default function SettingsPanel({
               aria-label="收起设置提示"
               onClick={() => setFeedback({ message: "", error: false })}
             >
-              <X size={15} />
+              <UiIcon name="close" size={16} />
             </button>
           </div>
         )}

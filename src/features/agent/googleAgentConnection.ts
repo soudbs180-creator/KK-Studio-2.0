@@ -183,6 +183,63 @@ export function createGoogleAgentConnection(options: Options = {}) {
     }
     restore();
   }
+  function activateIdentityRecord(nextIdentity: string, fresh: boolean) {
+    identity = nextIdentity;
+    restore();
+    if (fresh || !record || record.identity !== identity) {
+      save({
+        id: crypto.randomUUID(),
+        identity,
+        status: "ready",
+        messages: record?.messages ?? [],
+        archivedImageIds: record?.archivedImageIds ?? [],
+      });
+    }
+  }
+  async function connectCliMode(version: number, fresh: boolean) {
+    const baseUrl = state.settings.bridgeUrl || GEMINI_BRIDGE_DEFAULT_URL;
+    const status = await (options.cliStatus ?? geminiCliStatus)({
+      baseUrl,
+      signal: controller.signal,
+    });
+    if (!isCurrent(version)) return;
+    if (
+      !status.installed ||
+      resolveGeminiCliLoginStatus(status) !== "verified"
+    ) {
+      patch({
+        status: "disconnected",
+        error: geminiCliStatusMessage(status),
+        activity: "",
+      });
+      return;
+    }
+    activateIdentityRecord(`cli:${baseUrl}`, fresh);
+    patch({
+      status: "connected",
+      models: options.cliModels ?? GEMINI_CLI_MODELS,
+      error: null,
+      activity: "Gemini CLI 已连接（Google 账号登录，免 API Key）",
+    });
+  }
+  async function connectApiKeyMode(version: number, fresh: boolean) {
+    const credential = await (options.getCredential ?? getGoogleCredential)();
+    if (!isCurrent(version)) return;
+    const client = (options.clientFactory ?? createGoogleInteractions)({
+      apiKey: credential.apiKey,
+    });
+    const models = await client.models(
+      AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]),
+    );
+    if (!isCurrent(version)) return;
+    activateIdentityRecord(credential.identity, fresh);
+    patch({
+      status: "connected",
+      models,
+      error: record?.status === "unknown" ? UNCERTAIN : null,
+      activity: "Google API 已连接",
+    });
+  }
   async function connect(fresh = false) {
     if (state.sending || state.status === "connecting") return;
     if (fresh && bridge?.getChatScope?.()?.chatId != null) {
@@ -205,68 +262,10 @@ export function createGoogleAgentConnection(options: Options = {}) {
     patch({ status: "connecting", error: null });
     try {
       if (state.settings.loginMode === "cli") {
-        const baseUrl = state.settings.bridgeUrl || GEMINI_BRIDGE_DEFAULT_URL;
-        const status = await (options.cliStatus ?? geminiCliStatus)({
-          baseUrl,
-          signal: controller.signal,
-        });
-        if (!isCurrent(version)) return;
-        if (
-          !status.installed ||
-          resolveGeminiCliLoginStatus(status) !== "verified"
-        ) {
-          patch({
-            status: "disconnected",
-            error: geminiCliStatusMessage(status),
-            activity: "",
-          });
-          return;
-        }
-        identity = `cli:${baseUrl}`;
-        restore();
-        if (fresh || !record || record.identity !== identity) {
-          save({
-            id: crypto.randomUUID(),
-            identity,
-            status: "ready",
-            messages: record?.messages ?? [],
-            archivedImageIds: record?.archivedImageIds ?? [],
-          });
-        }
-        patch({
-          status: "connected",
-          models: options.cliModels ?? GEMINI_CLI_MODELS,
-          error: null,
-          activity: "Gemini CLI 已连接（Google 账号登录，免 API Key）",
-        });
+        await connectCliMode(version, fresh);
         return;
       }
-      const credential = await (options.getCredential ?? getGoogleCredential)();
-      if (!isCurrent(version)) return;
-      const client = (options.clientFactory ?? createGoogleInteractions)({
-        apiKey: credential.apiKey,
-      });
-      const models = await client.models(
-        AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]),
-      );
-      if (!isCurrent(version)) return;
-      identity = credential.identity;
-      restore();
-      if (fresh || !record || record.identity !== identity) {
-        save({
-          id: crypto.randomUUID(),
-          identity,
-          status: "ready",
-          messages: record?.messages ?? [],
-          archivedImageIds: record?.archivedImageIds ?? [],
-        });
-      }
-      patch({
-        status: "connected",
-        models,
-        error: record?.status === "unknown" ? UNCERTAIN : null,
-        activity: "Google API 已连接",
-      });
+      await connectApiKeyMode(version, fresh);
     } catch (error) {
       if (isCurrent(version))
         patch({
@@ -550,8 +549,9 @@ export function createGoogleAgentConnection(options: Options = {}) {
         if (userAdded && record) {
           try {
             save({ ...record, status: uncertain ? "unknown" : "ready" });
-          } catch {
+          } catch (saveError) {
             /* Preserve in-memory uncertainty if local persistence failed. */
+            void saveError;
           }
         }
         patch({

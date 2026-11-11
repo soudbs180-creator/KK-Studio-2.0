@@ -168,3 +168,7 @@ API Key、OAuth refresh token、代理凭据等只进入系统凭据库（Window
 ## Agent 会话归属与连接恢复
 
 项目可保存非敏感 agentThreadId，随原生快照及项目包恢复。旧 kk-agent-thread:<projectId> 缓存保持兼容；Token 与 API 秘密均不进入该字段。服务就绪、项目会话已连接、任务权限和 API 保存是不同状态；未知归属与未完成操作不被自动接管。详见 [ADR-016](adr/ADR-016-agent-and-provider-recovery.md)。
+
+## 确定性作用域记忆候选（2026-11-04）
+
+TASK-E2E-WIRING-20261104 将 MemoryService 正式存储接到 kkMemoryStore。Desktop 文件 V2、旧 API V1 投影、global/project/session 的路径、权重、读写/备份/并发边界以 [记忆契约](../MEMORY-CONTRACT.md) §8 为准；此段取代上文“仅用户级、只支持V1”的当前实现描述。Web 保留原有全局私有库，作用域独立事务；授权目录共享只读。文件内容不进入项目包和云同步。当前实现/验证保持 PARTIAL，见 [验收记录](../changes/2026-11-04-e2e-wiring/verification.md)。

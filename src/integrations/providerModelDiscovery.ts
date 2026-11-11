@@ -7,7 +7,7 @@ import {
 import {
   parseCatalogModels,
   type CatalogModel,
-} from "../features/models/modelCatalog.ts";
+} from "./providers/modelCatalogRepository.ts";
 
 const invalid = () =>
   new Error("模型列表不完整或格式无效，请检查地址和接口协议。");

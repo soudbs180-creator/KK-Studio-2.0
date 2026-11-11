@@ -1,4 +1,4 @@
-import { safeStorage } from "../features/agent/agentConnection";
+import { safeStorage } from "../features/agent/index.ts";
 
 export default function ConversationChannelSelector({
   value,

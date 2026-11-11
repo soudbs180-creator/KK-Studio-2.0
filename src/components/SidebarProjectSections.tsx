@@ -9,7 +9,7 @@ import {
   SIDEBAR_PROJECT_TITLE_TYPE,
   type SidebarFolderItem,
   type SidebarProjectItem,
-} from "../features/projects/sidebarProjectModel";
+} from "../features/projects/index.ts";
 
 /**
  * 侧栏"项目 / 未分组"两个分组的条目渲染。

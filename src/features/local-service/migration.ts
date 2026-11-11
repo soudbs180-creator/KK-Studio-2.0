@@ -1,15 +1,15 @@
-import {
-  assetMetadataSchema,
-  type CompanionAssetMetadata,
-} from "./protocol.ts";
+import type { CapabilityAsset as StoredGeneratedAsset } from "../../../packages/creation-contracts/index.ts";
+import type { CreationSnapshot } from "../../domain/creationModel.ts";
+import { decodeSnapshot } from "../../domain/creationSnapshotCodec.ts";
 import {
   CompanionClient,
   CompanionClientError,
   type CompanionMigrationReceipt,
 } from "./client.ts";
-import { decodeSnapshot } from "../creation/snapshotCodec.ts";
-import type { CreationSnapshot } from "../creation/model.ts";
-import type { StoredGeneratedAsset } from "../creation/assetRepository.ts";
+import {
+  assetMetadataSchema,
+  type CompanionAssetMetadata,
+} from "./protocol.ts";
 
 const CREATION_DATABASE = "kk-studio-next";
 const CREATION_STORE = "creation";
@@ -136,7 +136,6 @@ function metadataFor(
 ): CompanionAssetMetadata {
   const copy = { ...value } as Record<string, unknown>;
   delete copy.preview;
-  delete copy.origins;
   return assetMetadataSchema.parse({ ...copy, size: bytes.byteLength });
 }
 

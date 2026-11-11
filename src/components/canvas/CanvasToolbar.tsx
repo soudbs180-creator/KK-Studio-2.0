@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ToolbarIcon from "./ToolbarIcon";
 import type { CanvasTool } from "./useCanvasPointer";
 import { useDismissible } from "../useDismissible";
+import { ExtensionSlot } from "../../features/extensions/index.ts";
 import "../../styles/canvas-tools.css";
+import { Button } from "../ui";
+import UiIcon from "../UiIcon";
 
 type Popup = "tool" | "help" | "save";
 export default function CanvasToolbar({
@@ -22,6 +25,24 @@ export default function CanvasToolbar({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   useDismissible(popup !== null, toolbarRef, () => setPopup(null), triggerRef);
+  useLayoutEffect(() => {
+    if (!popup) return;
+    const menu =
+      toolbarRef.current?.querySelector<HTMLElement>("[role='menu']");
+    const trigger = triggerRef.current;
+    const toolbar = toolbarRef.current;
+    if (!menu || !trigger || !toolbar) return;
+    const position = () => {
+      const anchor = trigger.getBoundingClientRect();
+      const root = toolbar.getBoundingClientRect();
+      menu.style.left = `${Math.max(8 - root.left, Math.min(anchor.left - root.left, window.innerWidth - 8 - menu.offsetWidth - root.left)) - toolbar.clientLeft}px`;
+      menu.style.bottom = `${root.bottom - toolbar.clientTop - anchor.top + 8}px`;
+      menu.style.maxHeight = `${Math.max(44, anchor.top - 16)}px`;
+    };
+    position();
+    window.addEventListener("resize", position);
+    return () => window.removeEventListener("resize", position);
+  }, [popup]);
   useEffect(() => {
     if (popup)
       toolbarRef.current
@@ -71,7 +92,11 @@ export default function CanvasToolbar({
         buttons[next]?.focus();
       }}
     >
-      <button
+      <Button
+        heightTier="44px"
+        variant="ghost"
+        isPill
+        prefixIcon={<ToolbarIcon name="add" />}
         className="toolbar-add"
         aria-label="添加资源"
         aria-haspopup="menu"
@@ -81,29 +106,36 @@ export default function CanvasToolbar({
           setPopup(null);
           onAdd(event.currentTarget);
         }}
-      >
-        <ToolbarIcon name="add" />
-      </button>
-      <span className="toolbar-divider toolbar-divider-left" aria-hidden="true">
-        <img
-          src="/design/figma/toolbar-divider-left.svg"
-          alt=""
-          draggable={false}
-        />
-      </span>
+      />
+      <span
+        className="toolbar-divider toolbar-divider-left"
+        aria-hidden="true"
+      />
       <button
         className="toolbar-current-tool"
         aria-label="选择画布工具"
         title={tool === "hand" ? "小手工具（按住空格拖拽）" : "移动工具"}
-        aria-haspopup="menu"
-        aria-expanded={popup === "tool"}
-        onClick={(event) => toggle("tool", event.currentTarget)}
+        aria-pressed="true"
+        onClick={() => {
+          setPopup(null);
+          onToolChange(tool);
+        }}
       >
         {tool === "select" ? (
           <ToolbarIcon name="select" />
         ) : (
-          <span className="tool-hand-current" aria-hidden="true" />
+          <UiIcon name="hand" size={28} />
         )}
+      </button>
+      <button
+        className="toolbar-toggle"
+        aria-label="展开画布工具"
+        title="选择移动或小手工具"
+        aria-haspopup="menu"
+        aria-expanded={popup === "tool"}
+        onClick={(event) => toggle("tool", event.currentTarget)}
+      >
+        <ToolbarIcon name="collapse" />
       </button>
       {popup === "tool" && (
         <div className="canvas-tool-menu" role="menu" aria-label="画布工具选择">
@@ -121,24 +153,10 @@ export default function CanvasToolbar({
                 close();
               }}
             >
-              <img
-                className="tool-menu-check"
-                src={
-                  tool === value
-                    ? "/design/figma/tool-check-active.svg"
-                    : "/design/figma/tool-check.svg"
-                }
-                alt=""
-                hidden={tool !== value}
-              />
-              <img
-                className="tool-menu-icon"
-                src={
-                  value === "select"
-                    ? "/design/figma/tool-select.svg"
-                    : "/design/figma/tool-hand.svg"
-                }
-                alt=""
+              {tool === value && <UiIcon name="check" size={16} />}
+              <UiIcon
+                name={value === "select" ? "mouse-pointer-2" : "hand"}
+                size={16}
               />
               <span className="tool-menu-label">
                 {value === "select" ? "移动" : "小手工具"}
@@ -198,13 +216,7 @@ export default function CanvasToolbar({
       <span
         className="toolbar-divider toolbar-divider-right"
         aria-hidden="true"
-      >
-        <img
-          src="/design/figma/toolbar-divider-right.svg"
-          alt=""
-          draggable={false}
-        />
-      </span>
+      />
       <button
         className="toolbar-help"
         aria-label="帮助与快捷键"
@@ -218,8 +230,8 @@ export default function CanvasToolbar({
       {popup === "help" && (
         <div className="canvas-help-menu" role="menu" aria-label="帮助与快捷键">
           {[
-            { view: "help", label: "帮助教程", icon: "help-tutorial" },
-            { view: "shortcuts", label: "快捷按键", icon: "help-shortcuts" },
+            { view: "help", label: "帮助教程", icon: "book-open" as const },
+            { view: "shortcuts", label: "快捷按键", icon: "keyboard" as const },
           ].map((item) => (
             <button
               key={item.view}
@@ -229,17 +241,14 @@ export default function CanvasToolbar({
                 onOpen(item.view);
               }}
             >
-              <img src={"/design/figma/" + item.icon + ".svg"} alt="" />
+              <UiIcon name={item.icon} size={16} />
               <span>{item.label}</span>
-              <img
-                className="help-menu-next"
-                src="/design/figma/help-next.svg"
-                alt=""
-              />
+              <UiIcon name="chevron-right" size={16} />
             </button>
           ))}
         </div>
       )}
+      <ExtensionSlot id="canvas.toolbar" />
     </div>
   );
 }

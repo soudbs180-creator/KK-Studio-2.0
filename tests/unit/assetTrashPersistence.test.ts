@@ -137,7 +137,7 @@ test("real trash hook waits for the persistence acknowledgement and reports fail
   assert.deepEqual(Array.from(trash!.trashedIds), []);
 });
 
-test("asset navigation preserves accessible state, filters and file-opening callbacks", () => {
+test("asset navigation preserves accessible state, filters and view callbacks without duplicating the file list", () => {
   const { default: Navigation } = loadComponent<
     typeof import("../../src/components/assets/AssetPanelNavigation.tsx")
   >(
@@ -187,15 +187,10 @@ test("asset navigation preserves accessible state, filters and file-opening call
     markup,
     /<option value="collection" selected="">本地集合<\/option>/,
   );
-  assert.equal((markup.match(/<span class="file-square"/g) ?? []).length, 4);
-  assert.doesNotMatch(markup, /素材 4/);
-  assert.match(
-    markup,
-    /aria-pressed="true"><span class="file-square"><\/span>素材 1/,
-  );
+  assert.doesNotMatch(markup, /asset-file-nav|file-square/);
 
   const tree = Navigation(props);
-  for (const label of ["展开资产管理", "关闭资产管理", "垃圾箱", "网格视图"])
+  for (const label of ["垃圾箱", "网格视图"])
     findElement(
       tree,
       (element) => element.props["aria-label"] === label,
@@ -206,16 +201,20 @@ test("asset navigation preserves accessible state, filters and file-opening call
   )!.props.onChange({
     target: { value: "新查询" },
   });
-  const fileNav = findElement(
-    tree,
-    (element) => element.props.className === "asset-file-nav",
-  )!;
-  const fileButton = Children.toArray(fileNav.props.children)[1];
-  assert.ok(isValidElement(fileButton));
-  fileButton.props.onClick();
-  assert.deepEqual(events.slice(0, 4), ["compact", "close", "trash", "grid"]);
-  assert.equal((events[4] as { query: string }).query, "新查询");
-  assert.equal(events[5], "asset-1");
+  assert.deepEqual(events.slice(0, 2), ["trash", "grid"]);
+  assert.equal((events[2] as { query: string }).query, "新查询");
+  const { default: Header } = loadComponent<
+    typeof import("../../src/components/assets/AssetPanelHeader.tsx")
+  >(
+    new URL(
+      "../../src/components/assets/AssetPanelHeader.tsx",
+      import.meta.url,
+    ),
+  );
+  const header = renderToStaticMarkup(createElement(Header, props));
+  assert.match(header, /aria-label="展开资产管理"/);
+  assert.match(header, /aria-label="关闭资产管理"/);
+  assert.match(header, /aria-label="移动素材库"/);
 });
 
 test("asset footer retains import controls and archive loading, failure and retry feedback", async () => {

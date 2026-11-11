@@ -161,7 +161,7 @@ export function createAgentApi(options: AgentApiClientOptions) {
               },
               hasCanvas: true,
             }
-          : { hasCanvas: false },
+          : { hasCanvas: false, ...(options.scope ? { projectId: options.scope.projectId } : {}) },
       );
       return true;
     },
@@ -228,6 +228,15 @@ export function createAgentApi(options: AgentApiClientOptions) {
       ),
     readThread: (threadId: string) =>
       requestThread(`/agent/codex/threads/${encodeURIComponent(threadId)}`),
+    revertThread: (
+      threadId: string,
+      beforeTurnId: string,
+      expectedTurnIds: string[],
+    ) =>
+      requestThread(
+        `/agent/codex/threads/${encodeURIComponent(threadId)}/revert`,
+        { beforeTurnId, expectedTurnIds },
+      ),
     async generatedImage(threadId: string, itemId: string): Promise<Blob> {
       const response = await fetchImpl(
         endpoint +

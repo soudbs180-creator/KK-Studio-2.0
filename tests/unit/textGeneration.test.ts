@@ -36,11 +36,6 @@ for (const [label, value] of [
   ["empty", "data: [DONE]\n\n"],
   ["error", event("部分") + 'data: {"error":{"message":"private-secret"}}\n\n'],
   ["limit", event("x".repeat(32769)) + "data: [DONE]\n\n"],
-  [
-    "length finish",
-    event("部分") +
-      'data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n\n',
-  ],
 ] as const)
   test(`text stream rejects ${label} without leaking response body`, async () => {
     await assert.rejects(
@@ -52,6 +47,20 @@ for (const [label, value] of [
         error instanceof Error && !error.message.includes("private-secret"),
     );
   });
+test("text stream gracefully accepts length finish without throwing", async () => {
+  const text = await readTextStream(
+    response(
+      encode.encode(
+        event("部分") +
+          'data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n\n' +
+          "data: [DONE]\n\n",
+      ),
+      1024,
+    ),
+    new AbortController().signal,
+  );
+  assert.equal(text, "部分");
+});
 test("text stream abort cancels a stalled read", async () => {
   let cancelled = false;
   const abort = new AbortController();
@@ -69,4 +78,47 @@ test("text stream abort cancels a stalled read", async () => {
   abort.abort();
   await assert.rejects(pending);
   assert.equal(cancelled, true);
+});
+
+test("chat usage after finish_reason is retained even when split across network chunks", async () => {
+  const received: unknown[] = [];
+  const text = await readTextStream(
+    response(
+      encode.encode(
+        event("done") +
+          'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n' +
+          'data: {"choices":[],"usage":{"prompt_tokens":13,"completion_tokens":5,"total_tokens":18}}\n\n' +
+          "data: [DONE]\n\n",
+      ),
+      3,
+    ),
+    new AbortController().signal,
+    undefined,
+    "openai-chat",
+    (usage) => received.push(usage),
+  );
+  assert.equal(text, "done");
+  assert.deepEqual(received.at(-1), {
+    promptTokens: 13,
+    completionTokens: 5,
+    totalTokens: 18,
+  });
+});
+
+test("chat rejects content after its terminal choice instead of silently appending it", async () => {
+  await assert.rejects(
+    readTextStream(
+      response(
+        encode.encode(
+          event("first") +
+            'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n' +
+            event("late") +
+            "data: [DONE]\n\n",
+        ),
+        3,
+      ),
+      new AbortController().signal,
+    ),
+    /不完整|无效/,
+  );
 });

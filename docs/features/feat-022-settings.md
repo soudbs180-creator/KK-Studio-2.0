@@ -40,7 +40,7 @@ TASK-SETTINGS-LATEST-20261015本地DONE/PASS：在最新c1fae190 UI上完成2.1.
 
 ## 差距与后端化
 
-- 系统集成（开机启动等）在 GeneralSettings 中标注不可用；部分分区视觉基线随 UI-004 补齐。
+- 系统集成（开机启动、系统托盘、防休眠等）尚未接入，在 GeneralSettings 中尚未接入的系统开关默认不渲染，避免一排永远禁用的占位开关；部分分区视觉基线随 UI-004 补齐。
 - 平台类分区（账号/记忆/代理）见 FEAT-017/020/021。
 
 ## 变更记录
@@ -72,3 +72,4 @@ TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入�
 原 UI 收敛的历史结果见[收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)。本轮新协议、CLI 与手机网页的最终源码门禁、实际构建和产物身份由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；真实账号安装/登录、付费供应商调用和 Native Mobile 未验收，状态保持 PARTIAL。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+- 2026-11-09（半成品批次 E）：通用设置去掉假开关，开机自启动/系统托盘/防休眠等尚未接入的系统开关默认不渲染。

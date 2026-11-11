@@ -1,9 +1,28 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  expectApproxCssPx,
+  openWorkspace,
+  showCanvasNavigation,
+} from "./helpers";
 
 test("比例菜单缩放到400%并适应视图，不改变卡片位置或草稿", async ({ page }) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
+  const viewSwitch = page.getByRole("radiogroup", { name: "视图切换" });
+  await expectApproxCssPx(viewSwitch, "width", 116);
+  await expect(viewSwitch).toHaveCSS("height", "36px");
+  await expect(viewSwitch.getByRole("radio").first()).toHaveCSS(
+    "height",
+    "32px",
+  );
+  await expect(viewSwitch.getByRole("radio").first()).toHaveCSS(
+    "color",
+    "rgb(219, 219, 219)",
+  );
+  await expect(viewSwitch.getByRole("radio").nth(1)).toHaveCSS(
+    "color",
+    "rgb(160, 160, 160)",
+  );
   const node = page.getByTestId("canvas-node-image");
   await node.focus();
   await page.keyboard.press("ArrowRight");
@@ -106,7 +125,7 @@ for (const [width, height] of [
     const expectedMinWidth = width <= 800 ? 148 : 196.227 * desktopScale;
     expect(menuBox!.width).toBeGreaterThanOrEqual(expectedMinWidth - 1);
     const firstItem = menu.getByRole("menuitem").first();
-    await expect(firstItem).toHaveCSS("font-size", "14px");
+    await expect(firstItem).toHaveCSS("font-size", "16px");
     const itemBox = await firstItem.boundingBox();
     const expectedItemHeight = width <= 800 ? 28 : 30 * desktopScale;
     expect(itemBox!.height).toBeGreaterThanOrEqual(expectedItemHeight - 1);

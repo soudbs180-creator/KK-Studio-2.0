@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
-import { sidebarProjectItem } from "../features/projects/sidebarProjectModel";
-import SidebarProjectEntry from "./SidebarProjectEntry";
 import UiIcon from "./UiIcon";
+import { InlineSelect } from "./ui";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
+import { sidebarProjectItem } from "../features/projects/index.ts";
+import SidebarProjectEntry from "./SidebarProjectEntry";
 
 export default function ProjectLibraryContent({
   projects,
@@ -56,7 +57,7 @@ export default function ProjectLibraryContent({
               title={!actions?.canEdit ? "项目存储尚未就绪" : undefined}
               onClick={() => actions?.onCreateGroup()}
             >
-              <UiIcon name="folderAdd" size={20} />
+              <UiIcon name="folder-plus" size={24} />
               <span>
                 <strong>新建文件夹</strong>
                 <small>持久保存项目分组</small>
@@ -66,13 +67,16 @@ export default function ProjectLibraryContent({
               type="button"
               className="project-library-action"
               aria-label="上传文件"
+              aria-describedby="project-library-upload-unavailable"
               disabled
-              title="文件上传将在本地资源服务接入后可用"
+              title="上传服务未接入，暂时无法上传文件"
             >
-              <UiIcon name="upload" size={20} />
+              <UiIcon name="upload" size={24} />
               <span>
                 <strong>上传文件</strong>
-                <small>支持批量上传</small>
+                <small id="project-library-upload-unavailable">
+                  上传服务未接入
+                </small>
               </span>
             </button>
           </div>
@@ -93,22 +97,22 @@ export default function ProjectLibraryContent({
       <div className="project-library-group-controls">
         <label>
           项目分组{" "}
-          <select
-            aria-label="筛选项目分组"
+          <InlineSelect
+            label="筛选项目分组"
             value={groupId}
-            onChange={(event) => {
-              setGroupId(event.target.value);
+            options={[
+              { value: "all", label: "全部项目" },
+              { value: "ungrouped", label: "未分组" },
+              ...groups.map((group) => ({
+                value: group.id,
+                label: group.name,
+              })),
+            ]}
+            onChange={(next) => {
+              setGroupId(next);
               setGroupDraft(null);
             }}
-          >
-            <option value="all">全部项目</option>
-            <option value="ungrouped">未分组</option>
-            {groups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
+          />
         </label>
         {selectedGroup && !trash && (
           <>
@@ -186,7 +190,7 @@ export default function ProjectLibraryContent({
             />
             <span>
               {new Date(project.updatedAt).toLocaleDateString("zh-CN")} ·{" "}
-              {trash ? "垃圾箱" : "本地项目"} · {project.items.length}{" "}
+              {trash ? "回收站" : "本地项目"} · {project.items.length}{" "}
               个画布节点
             </span>
           </div>
@@ -195,13 +199,13 @@ export default function ProjectLibraryContent({
       {!visible.length && (
         <div className="catalog-empty" role="status">
           <span className="catalog-empty-mark" aria-hidden="true">
-            ⌕
+            <UiIcon name="folder" size={24} />
           </span>
           <p>
             {search
               ? "没有找到匹配的项目"
               : trash
-                ? "垃圾箱为空，项目移入后可在这里恢复。"
+                ? "回收站为空，移入的项目会在这里显示。"
                 : "还没有本地项目，点击“新建项目”开始创作。"}
           </p>
         </div>

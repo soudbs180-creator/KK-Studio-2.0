@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { SlashCommand } from "../../features/commands/slashCommandRegistry.ts";
+import type { SlashCommand } from "../../features/commands/index.ts";
 
 export default function ComposerSlashMenu({
   commands,

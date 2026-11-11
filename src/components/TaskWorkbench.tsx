@@ -1,14 +1,29 @@
 import { useMemo, useState } from "react";
+import { isEnabled } from "../app/featureFlags.ts";
 import type { ReviewComment } from "../domain/reviewWorkflow";
-import type { CreationProject } from "../features/creation/model";
+import type { CreationProject } from "../features/creation/index.ts";
 import { requiredApprovalGates } from "../domain/agentWorkflow";
 import TaskWorkbenchContent, {
   outputsFor,
   statusLabel,
-  type WorkbenchTab,
 } from "./TaskWorkbenchContent";
 import type { StagePlanActions } from "./TaskWorkbenchStages";
+import {
+  resolveWorkbenchTab,
+  visibleWorkbenchTabs,
+  type WorkbenchTab,
+} from "./TaskWorkbenchVisibility";
 import UiIcon from "./UiIcon";
+import { Button, Badge } from "./ui";
+
+const TAB_LABELS: Record<WorkbenchTab, string> = {
+  queue: "Queue",
+  prompt: "Prompt",
+  generate: "Generate",
+  review: "Review",
+  export: "Export",
+  plan: "Plan",
+};
 
 export default function TaskWorkbench({
   project,
@@ -22,6 +37,8 @@ export default function TaskWorkbench({
   onRetryOutput,
   onCommentsChange,
   onStageDecision,
+  onExecuteStage,
+  onCancelStage,
   onRetryStage,
   onRequestPlanApproval,
   stageWriteDisabledReason,
@@ -42,6 +59,8 @@ export default function TaskWorkbench({
   const tasks = project?.tasks ?? [];
   const selected = tasks.find((task) => task.id === selectedId) ?? tasks.at(-1);
   const outputs = selected ? outputsFor(selected) : [];
+  const tabs = useMemo(() => visibleWorkbenchTabs(), []);
+  const activeTab = resolveWorkbenchTab(tab);
   const gates = useMemo(
     () =>
       selected
@@ -57,9 +76,7 @@ export default function TaskWorkbench({
     <section className="task-workbench" data-testid="task-workbench">
       <header className="task-workbench-header">
         <div>
-          <span className="task-workbench-eyebrow">
-            TASK WORKBENCH · PROTOTYPE
-          </span>
+          <span className="task-workbench-eyebrow">TASK WORKBENCH</span>
           <h2>任务工作台</h2>
           <p>{project?.name ?? "尚未选择项目"} · 队列、批量结果与来源检查</p>
         </div>
@@ -88,7 +105,9 @@ export default function TaskWorkbench({
                 onClick={() => setSelectedId(task.id)}
               >
                 <span>{task.model || "未选模型"}</span>
-                <small>{statusLabel(task)}</small>
+                <Badge height="16px" variant="neutral">
+                  {statusLabel(task)}
+                </Badge>
               </button>
             ))
           ) : (
@@ -96,14 +115,16 @@ export default function TaskWorkbench({
               暂无任务。连接模型后可从画布提交。
             </p>
           )}
-          {!tasks.length && tab !== "plan" && (
-            <button
+          {!tasks.length && activeTab !== "plan" && (
+            <Button
               type="button"
+              heightTier="40px"
+              variant="primary"
               className="primary-button"
               onClick={onConfigure}
             >
               配置模型连接
-            </button>
+            </Button>
           )}
           {(project?.reviewComments ?? []).some(
             (entry) => entry.reviewTaskId,
@@ -118,7 +139,9 @@ export default function TaskWorkbench({
                     key={entry.id}
                     onClick={() => {
                       setSelectedId(entry.sourceTaskId);
-                      setTab("export");
+                      setTab(
+                        isEnabled("taskWorkbenchExport") ? "export" : "review",
+                      );
                     }}
                   >
                     <strong>
@@ -137,42 +160,25 @@ export default function TaskWorkbench({
             role="tablist"
             aria-label="任务阶段"
           >
-            {(
-              [
-                "queue",
-                "prompt",
-                "generate",
-                "review",
-                "export",
-                "plan",
-              ] as WorkbenchTab[]
-            ).map((value) => (
-              <button
-                type="button"
-                role="tab"
-                key={value}
-                aria-selected={tab === value}
-                className={tab === value ? "is-active" : ""}
-                onClick={() => setTab(value)}
-              >
-                {value === "queue"
-                  ? "Queue"
-                  : value === "prompt"
-                    ? "Prompt"
-                    : value === "generate"
-                      ? "Generate"
-                      : value === "review"
-                        ? "Review"
-                        : value === "export"
-                          ? "Export"
-                          : "Plan"}
-              </button>
-            ))}
+            <div className="task-workbench-tab-options">
+              {tabs.map((value) => (
+                <button
+                  type="button"
+                  role="tab"
+                  key={value}
+                  aria-selected={activeTab === value}
+                  className={activeTab === value ? "is-active" : ""}
+                  onClick={() => setTab(value)}
+                >
+                  {TAB_LABELS[value]}
+                </button>
+              ))}
+            </div>
           </nav>
           <TaskWorkbenchContent
             selected={selected}
             outputs={outputs}
-            tab={tab}
+            tab={activeTab}
             onPauseTask={onPauseTask}
             canPauseTask={canPauseTask}
             onCancelTask={onCancelTask}
@@ -184,6 +190,8 @@ export default function TaskWorkbench({
             onCommentsChange={onCommentsChange}
             project={project}
             onStageDecision={onStageDecision}
+            onExecuteStage={onExecuteStage}
+            onCancelStage={onCancelStage}
             onRetryStage={onRetryStage}
             onRequestPlanApproval={onRequestPlanApproval}
             stageWriteDisabledReason={stageWriteDisabledReason}
@@ -191,8 +199,7 @@ export default function TaskWorkbench({
         </div>
       </div>
       <footer className="task-workbench-footer">
-        Prototype ·
-        成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。
+        成本、审批与评论以本地任务快照为准；真实供应商账单尚未接入。
       </footer>
     </section>
   );

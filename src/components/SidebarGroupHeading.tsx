@@ -1,3 +1,5 @@
+import UiIcon from "./UiIcon";
+
 export default function SidebarGroupHeading({
   expanded,
   onToggle,
@@ -19,11 +21,9 @@ export default function SidebarGroupHeading({
         onClick={onToggle}
       >
         未分组
-        <img
-          className="sidebar-heading-chevron"
-          src="/design/figma/project-chevron.svg"
-          alt=""
-        />
+        <span className="sidebar-heading-chevron">
+          <UiIcon name="chevron-down" size={12} />
+        </span>
       </button>
       <div className="project-groups-actions">
         <button
@@ -31,12 +31,7 @@ export default function SidebarGroupHeading({
           aria-label="打开未分组项目库"
           onClick={onOpenLibrary}
         >
-          <img
-            src="/design/figma/project-open-container.svg"
-            width="20"
-            height="21"
-            alt=""
-          />
+          <UiIcon name="folder-open" size={16} />
         </button>
         <button
           className="project-groups-action"
@@ -45,12 +40,7 @@ export default function SidebarGroupHeading({
           title={canCreateProject ? "创建本地项目" : "项目存储尚未就绪"}
           onClick={onCreateProject}
         >
-          <img
-            src="/design/figma/project-add-container.svg"
-            width="20"
-            height="21"
-            alt=""
-          />
+          <UiIcon name="plus" size={16} />
         </button>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import type { ChatItem } from "../features/creation/model.ts";
+import type { ChatItem } from "../features/creation/index.ts";
+import UiIcon from "./UiIcon";
 import ConversationChatTabs from "./ConversationChatTabs.tsx";
 
 export interface ConversationHeaderProps {
@@ -25,34 +26,10 @@ export default function ConversationHeader({
   const hasMultipleChats = Boolean(chats && Object.keys(chats).length > 0);
 
   return (
-    <header
-      data-node-id="407:29267"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--kk-space-1)",
-        height: "auto",
-        minHeight: "var(--kk-control-h-md)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
-          position: "relative",
-        }}
-      >
+    <header className="conversation-header" data-figma-node="2076:42222">
+      <div className="conversation-header-row">
         <strong>{title}</strong>
-        <div
-          className="conversation-header-actions"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--kk-space-2)",
-          }}
-        >
+        <div className="conversation-header-actions">
           <button
             type="button"
             className="conversation-header-history-btn"
@@ -65,12 +42,7 @@ export default function ConversationHeader({
               )
             }
           >
-            <img
-              src="/design/figma/chat-header-history.svg"
-              width="18"
-              height="18"
-              alt=""
-            />
+            <UiIcon name="history" size={16} />
           </button>
           <button
             type="button"
@@ -78,12 +50,7 @@ export default function ConversationHeader({
             aria-label="收起对话"
             onClick={onClose}
           >
-            <img
-              src="/design/figma/chat-open.svg"
-              width="18"
-              height="18"
-              alt=""
-            />
+            <UiIcon name="panel-right-close" size={16} />
           </button>
         </div>
       </div>

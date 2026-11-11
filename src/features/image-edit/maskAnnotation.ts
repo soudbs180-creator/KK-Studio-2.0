@@ -57,20 +57,34 @@ export function drawMaskAnnotation(
     if (regionIds && !regionIds.includes(region.id)) continue;
     ctx.globalAlpha = 0.5;
     ctx.fillStyle = region.color ?? EDIT_COLORS[1].color;
-    for (const [y, x, end] of region.runs) ctx.fillRect(x, y, end - x, 1);
+    if (region.annotation !== "comment")
+      for (const [y, x, end] of region.runs) ctx.fillRect(x, y, end - x, 1);
     ctx.globalAlpha = 1;
     ctx.strokeStyle = ctx.fillStyle;
     ctx.lineWidth = 2 / scale;
     ctx.beginPath();
-    for (const [x, y, a, b] of maskEdges(region.runs)) {
-      ctx.moveTo(x, y);
-      ctx.lineTo(a, b);
-    }
+    if (region.annotation !== "comment")
+      for (const [x, y, a, b] of maskEdges(region.runs)) {
+        ctx.moveTo(x, y);
+        ctx.lineTo(a, b);
+      }
     ctx.stroke();
     if (region.color) {
       const bounds = maskBounds(region.runs),
         x = bounds.x + bounds.width / 2,
         y = bounds.y + bounds.height / 2;
+      if (region.annotation === "comment") {
+        ctx.fillStyle = region.color;
+        ctx.beginPath();
+        ctx.arc(
+          x,
+          y,
+          Math.max(4 / scale, Math.min(12 / scale, bounds.width / 2)),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
       ctx.font = `bold ${Math.max(12 / scale, Math.min(24 / scale, Math.min(bounds.width, bounds.height) / 4))}px sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";

@@ -231,6 +231,7 @@ for (const edit of ["other chat", "sending chat"] as const) {
         model,
         messages: [{ role: "user", content: "Original A request" }],
         stream: true,
+        stream_options: { include_usage: true },
       });
       expect(route.request().headers()["authorization"]).toBeUndefined();
       expect(route.request().headers()["idempotency-key"]).toBeTruthy();
@@ -300,8 +301,18 @@ for (const edit of ["other chat", "sending chat"] as const) {
         ).conversationSaveGate.release(),
       );
       await expect
-        .poll(async () => (await stored(page)).projects[0].tasks[0].status)
-        .toBe("succeeded");
+        .poll(async () => {
+          const task = (await stored(page)).projects[0].tasks[0];
+          return {
+            status: task.status,
+            error: task.error,
+            outputErrors:
+              task.outputs?.flatMap((output) =>
+                output.error ? [output.error] : [],
+              ) ?? [],
+          };
+        })
+        .toEqual({ status: "succeeded", error: undefined, outputErrors: [] });
       await expect(input).toHaveValue(unsent);
       await expect(input).toBeEnabled();
       expect(

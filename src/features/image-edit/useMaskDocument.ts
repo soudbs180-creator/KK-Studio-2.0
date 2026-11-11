@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
-import { CanvasImageCommandContext } from "../creation/CanvasImageCommand.tsx";
-import { loadStoredAsset } from "../creation/assetRepository.ts";
+import { CanvasImageCommandContext } from "../../runtime/canvasCommandRuntime.tsx";
+
 import { decodeImage } from "./imageProcessing.ts";
 import { readMaskDocument, type MaskDocument } from "./mask.ts";
 export function useMaskDocument(source: CanvasCollectionItem) {
@@ -20,7 +20,7 @@ export function useMaskDocument(source: CanvasCollectionItem) {
     void (async () => {
       if (!source.assetId)
         throw new Error("请先导入归档原件，当前图片不能编辑。");
-      const asset = await loadStoredAsset(source.assetId);
+      const asset = await command?.assets?.read(source.assetId);
       if (!asset) throw new Error("原图归档缺失，请重新导入原件。");
       const image = await decodeImage(asset.preview, controller.signal);
       controller.signal.throwIfAborted();

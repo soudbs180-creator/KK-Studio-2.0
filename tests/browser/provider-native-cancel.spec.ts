@@ -5,9 +5,7 @@ async function nativeCancellationFixture(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const form = dialog.getByRole("region", { name: "官方 API Key 配置" });
   await form
     .getByLabel("接口地址", { exact: true })
@@ -59,7 +57,7 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
     form.getByText("正在取消连接测试…", { exact: true }),
   ).toBeVisible();
   await expect(
-    dialog.getByRole("button", { name: "CLI 账号", exact: true }),
+    dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }),
   ).toBeDisabled();
   await page.evaluate(() =>
     (
@@ -71,7 +69,7 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
     0,
   );
   await expect(
-    dialog.getByRole("button", { name: "CLI 账号", exact: true }),
+    dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }),
   ).toBeEnabled();
   await expect.poll(calls).toContain("provider_models_release");
   await expect(form.getByLabel("接口地址", { exact: true })).toBeEnabled();

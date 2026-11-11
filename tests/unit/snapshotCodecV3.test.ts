@@ -14,7 +14,7 @@ import {
   migrateSnapshotV2ToV3,
   type LegacyV2Snapshot,
 } from "../../src/features/creation/chatMigration.ts";
-import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
+import { NonDowngradableWriteBarrier } from "../support/writeBarrierModel.ts";
 
 function sha256Hex(content: string | Buffer): string {
   return createHash("sha256").update(content).digest("hex");

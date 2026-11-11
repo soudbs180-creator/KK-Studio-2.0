@@ -14,9 +14,9 @@ test("latest Figma shell is loaded by the real production page", async ({
     "data-runtime-mode",
     "production",
   );
-  await expect(page.locator(".sidebar")).toHaveCSS("width", "70px");
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "72px");
   await expandSidebar(page);
-  await expect(page.locator(".sidebar")).toHaveCSS("width", "291px");
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "292px");
   await expect(page.locator(".sidebar")).toHaveCSS(
     "background-color",
     "rgb(22, 22, 22)",
@@ -51,9 +51,9 @@ test("latest Figma shell is loaded by the real production page", async ({
     ),
   );
   const figma: Record<string, number[]> = {
-    ".workspace-content": [291, 45, 1619, 1025],
-    ".conversation-panel": [1430, 61, 470, 998],
-    ".canvas-toolbar": [719, 998, 244, 50],
+    ".workspace-content": [292, 52, 1628, 1028],
+    ".conversation-panel": [1432, 67, 472, 996],
+    ".canvas-toolbar": [718, 1016, 288, 52],
   };
   for (const [selector, expected] of Object.entries(figma))
     expected.forEach((value, index) =>
@@ -80,15 +80,15 @@ test("latest Figma shell is loaded by the real production page", async ({
     animations: "disabled",
   });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
-  await expect(page.locator(".sidebar")).toHaveCSS("width", "70px");
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "72px");
   await expect
     .poll(
       async () => (await page.locator(".workspace-content").boundingBox())!.x,
     )
-    .toBe(70);
+    .toBe(72);
   await expect
     .poll(async () => (await page.locator(".canvas-toolbar").boundingBox())!.x)
-    .toBeCloseTo(719, 0);
+    .toBeCloseTo(608, 0);
   await page.screenshot({
     path: test.info().outputPath("runtime/after-collapsed.png"),
     animations: "disabled",
@@ -119,9 +119,7 @@ test("responsive desktop fills the viewport without scaling readable controls", 
   await page.getByLabel("对话内容", { exact: true }).fill("本地 UI 验证草稿");
   await expect(send).toBeDisabled();
   await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("本地 UI 验证草稿");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();

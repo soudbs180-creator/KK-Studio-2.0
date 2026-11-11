@@ -5,7 +5,10 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   // Settings load this dependency lazily; prebundle it before the first dialog opens.
-  optimizeDeps: { include: ["@tauri-apps/api/path"] },
+  optimizeDeps: {
+    entries: ["index.html"],
+    include: ["@tauri-apps/api/path"],
+  },
   plugins: [
     react(),
     {
@@ -53,6 +56,9 @@ export default defineConfig({
             return "vendor-icons";
           }
           if (id.includes("node_modules/zod/")) {
+            // Keep the contract package's validator lazy with the capability dispatcher.
+            if (id.includes("packages/creation-contracts/node_modules/"))
+              return "capability-validation";
             return "vendor-zod";
           }
           if (id.includes("node_modules/@tauri-apps/")) {

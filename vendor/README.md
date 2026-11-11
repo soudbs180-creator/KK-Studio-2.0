@@ -1,6 +1,8 @@
 # Infinite Canvas 后端与插件来源
 
-来源：[basketikun/infinite-canvas](https://github.com/basketikun/infinite-canvas)，审计参考提交 e6d0911e9d509d00150eaab02f9ca05be94ffc46，MIT。各模块保留 LICENSE、作者说明和源码注释。当前目录含 KK 的适配，不能再描述为上游原样副本；当前完整文件指纹见本轮 evidence/vendor-source-manifest.json。
+2026-10-28安全差异：canvas-agent的Zod3运行时升级4.6.7；canvas/schemas.ts仅作record字符串key和ZodObject类型两处兼容适配。上游许可/作者声明不变，测试和审计边界见[本卡验证](../docs/changes/2026-10-28-zod-security/verification.md)。
+
+来源：[basketikun/infinite-canvas](https://github.com/basketikun/infinite-canvas)，审计参考提交 e6d0911e9d509d00150eaab02f9ca05be94ffc46，MIT。各模块保留 LICENSE、作者说明和源码注释。当前目录含 KK 的适配，不能再描述为上游原样副本；历史引入快照指纹见 [vendor-source-manifest.json](../docs/changes/2026-09-22-agent-desktop/evidence/vendor-source-manifest.json)，不代表当前完整文件或固定上游提交。当前本地指纹见[本轮追溯记录](../docs/changes/2026-11-09-local-closure/vendor-current-manifest.json)，各模块的上游固定提交与补丁追溯状态见对应 `UPSTREAM.md`。
 
 | 模块 | 上游位置 | KK 用途 |
 | --- | --- | --- |

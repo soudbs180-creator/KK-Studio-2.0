@@ -1,26 +1,20 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createAgentApi } from "../../features/agent/agentApi.ts";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { agentConnection, createAgentApi } from "../../features/agent/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 import useSettingsBusy from "./useSettingsBusy";
-
-type ConnectionState =
-  | "disconnected"
-  | "loading"
-  | "load-error"
-  | "empty"
-  | "editing"
-  | "saved"
-  | "verified"
-  | "cancelled";
-
+import type { ConnectionState } from "./codeBuddyConnectionState";
+import SettingsInfoHint from "./SettingsInfoHint";
+const CODEBUDDY_DESCRIPTION =
+  "Codex 可把短文案、标签或摘要交给本机 CodeBuddy CLI，设计判断与画布操作仍由 Codex 负责。测试会使用 CodeBuddy 账号额度。";
 /** A bounded text delegation path; Codex remains the primary Agent. */
 export default function CodeBuddyConnectionSettings({
   onFeedback,
   onBusyChange,
+  active = true,
 }: {
   onFeedback: (message: string) => void;
   onBusyChange?: (busy: boolean) => void;
+  active?: boolean;
 }) {
   const connection = useSyncExternalStore(
     agentConnection.subscribe,
@@ -47,7 +41,12 @@ export default function CodeBuddyConnectionSettings({
   const connected = connection.status === "connected";
   const configReady =
     connected && loadedRevision === connection.connectionRevision;
-
+  useEffect(() => {
+    if (active || busy || !configReady) return;
+    setCliPath(savedPath);
+    setStatus(savedPath ? "saved" : "empty");
+    setError("");
+  }, [active, busy, configReady, savedPath]);
   useEffect(() => {
     probeRequest.current?.abort();
     probeRequest.current = null;
@@ -101,7 +100,6 @@ export default function CodeBuddyConnectionSettings({
     connection.clientId,
     loadAttempt,
   ]);
-
   function api(signal?: AbortSignal) {
     return createAgentApi({
       endpoint: connection.endpoint,
@@ -110,7 +108,6 @@ export default function CodeBuddyConnectionSettings({
       signal,
     });
   }
-
   async function save() {
     if (!configReady || busy) return;
     const revision = connection.connectionRevision;
@@ -152,7 +149,6 @@ export default function CodeBuddyConnectionSettings({
       if (current()) setBusy(false);
     }
   }
-
   async function probe() {
     if (!configReady || busy || !savedPath || cliPath.trim() !== savedPath)
       return;
@@ -194,7 +190,6 @@ export default function CodeBuddyConnectionSettings({
       }
     }
   }
-
   function statusText() {
     if (!connected) return "先连接 Codex 主 Agent";
     if (status === "load-error")
@@ -208,7 +203,6 @@ export default function CodeBuddyConnectionSettings({
     if (status === "editing") return "路径有修改，保存后才能测试";
     return "尚未配置";
   }
-
   return (
     <section className="settings-codebuddy-card" aria-label="CodeBuddy 委派">
       <div className="settings-agent-status">
@@ -216,14 +210,18 @@ export default function CodeBuddyConnectionSettings({
           className={`settings-status-dot ${status === "verified" ? "is-online" : connected ? "is-pending" : "is-offline"}`}
           aria-hidden="true"
         />
-        <h3>
-          CodeBuddy 委派<span className="settings-version-tag">可选</span>
-        </h3>
+        <div className="settings-title-row">
+          <h3>
+            CodeBuddy 委派<span className="settings-version-tag">可选</span>
+          </h3>
+          <SettingsInfoHint
+            id="codebuddy-delegation"
+            label="查看 CodeBuddy 委派说明"
+          >
+            {CODEBUDDY_DESCRIPTION}
+          </SettingsInfoHint>
+        </div>
       </div>
-      <p>
-        Codex 可把短文案、标签或摘要交给本机 CodeBuddy
-        CLI，设计判断与画布操作仍由 Codex 负责。测试会使用 CodeBuddy 账号额度。
-      </p>
       <div className="settings-network-field">
         <label htmlFor="codebuddy-cli-path">CodeBuddy CLI 路径</label>
         <input

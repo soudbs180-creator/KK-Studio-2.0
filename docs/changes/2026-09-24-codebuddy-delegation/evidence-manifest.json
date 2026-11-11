@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-24-codebuddy-delegation",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-24-codebuddy-delegation/evidence/desktop-codebuddy-reply.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "808cb200bd282d551c47161c21480f7eb4c3adf2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-codebuddy-delegation/evidence/desktop-codebuddy-reply.png",
+      "bytes": 185111,
+      "sha256": "557316f7f1c7fec075f94f8cde11f6f2d4d8ade0187d004e62230e9c723ecc07",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-24-codebuddy-delegation/verification.md",
+          "line": 18,
+          "originalTarget": "evidence/desktop-codebuddy-reply.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-codebuddy-delegation/evidence/desktop-codebuddy-verified.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "27b7a1b8861f07427df00ea417f933275ed0cb91",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-codebuddy-delegation/evidence/desktop-codebuddy-verified.png",
+      "bytes": 303372,
+      "sha256": "a8d7af0b9cd5ec504584ab7a72062c2d97b7c7d822efde1dc194cf35eded9ce1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-24-codebuddy-delegation/verification.md",
+          "line": 18,
+          "originalTarget": "evidence/desktop-codebuddy-verified.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-codebuddy-delegation/evidence/web-codebuddy-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dff421b05fa622e729eec52c9c3d5dc891e2105c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-codebuddy-delegation/evidence/web-codebuddy-1920.png",
+      "bytes": 262958,
+      "sha256": "0ae0a1dda5514e2afbf250a5847a1c59b2b90728f004ffaa04c50623e2db6385",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-24-codebuddy-delegation/verification.md",
+          "line": 17,
+          "originalTarget": "evidence/web-codebuddy-1920.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-codebuddy-delegation/evidence/web-codebuddy-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5a135e0d98ac2943e4bee29c79c3b633710c6c51",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-codebuddy-delegation/evidence/web-codebuddy-390.png",
+      "bytes": 54732,
+      "sha256": "5ec3f3682c7ef097b60ac4feff5c43821a56d2a36487832d21f9c65df25167a7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-24-codebuddy-delegation/verification.md",
+          "line": 17,
+          "originalTarget": "evidence/web-codebuddy-390.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

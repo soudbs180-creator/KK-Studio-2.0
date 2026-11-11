@@ -49,6 +49,47 @@ test("text cannot submit a deleted source, cancelled task or changed identity", 
     assert.throws(() => assertLiveTextTask(current, task), /已变化/);
 });
 
+for (const kind of ["text", "video", "audio"] as const) {
+  test(`${kind} accepted task survives a chat switch but cannot change its origin`, () => {
+    const project = createProject({ ...input, kind });
+    const originChatId = project.activeChatId!;
+    project.chats!.other = { ...project.chats![originChatId], id: "other" };
+    const task = { ...createTask(project), sourceItemId: project.items[0].id };
+    project.tasks = [task];
+    project.activeChatId = "other";
+    assert.doesNotThrow(() => assertLiveTextTask(project, task));
+    assert.throws(
+      () =>
+        assertLiveTextTask(
+          { ...project, tasks: [{ ...task, originChatId: "other" }] },
+          task,
+        ),
+      /已变化/,
+    );
+    assert.throws(
+      () =>
+        assertLiveTextTask(
+          { ...project, chats: { other: project.chats!.other } },
+          task,
+        ),
+      /已变化/,
+    );
+    const otherSource = { ...project.items[0], id: "other-source" };
+    assert.throws(
+      () =>
+        assertLiveTextTask(
+          {
+            ...project,
+            items: [...project.items, otherSource],
+            tasks: [{ ...task, sourceItemId: otherSource.id }],
+          },
+          task,
+        ),
+      /已变化/,
+    );
+  });
+}
+
 test("text input cannot exceed the durable snapshot prompt limit", async () => {
   await assert.rejects(
     () =>
@@ -143,7 +184,7 @@ test("image task input rejects oversized prompts, invalid counts and unsupported
   );
   expectCommandError(
     () => validateImageTaskInput({ ...input, privacyMode: "platform_backed" }),
-    /Prototype/,
+    /自带 Key/,
   );
   const noModel = { ...input, model: "" };
   assert.throws(

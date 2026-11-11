@@ -4,11 +4,11 @@ import {
   updateActiveChat,
   type CreationDraft,
   type CreationProject,
-} from "../creation/model.ts";
+} from "../creation/index.ts";
 import type { ModelSelection } from "../../domain/modelSelection";
 import type { AgentConnection } from "./agentConnection";
 import type { AgentDraftAttachment } from "./agentAttachments";
-import { sameJson } from "../creation/chatMigration.ts";
+import { sameJson } from "../creation/index.ts";
 
 /** Apply the same proxy identity before either automatic or HOME connection. */
 export function configureAgentProxy(

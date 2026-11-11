@@ -1,4 +1,4 @@
-/* 170:8473 content; shell boundary x=61 comes from 170:8245, not the 89px group. */
+/* 170:8473 content; the collapsed shell is the 72px Figma rail. */
 .sidebar-icon {
   display: block;
   flex: 0 0 auto;
@@ -10,6 +10,21 @@
   height: 100%;
   object-fit: contain;
 }
+/* UiIcon replaced the old img assets. Block layout keeps the glyph on the
+   control center; an inline svg sits on the baseline and reads about 6px low. */
+.sidebar-icon,
+.sidebar-icon .ui-icon,
+.sidebar-icon .ui-icon > svg {
+  display: block;
+}
+.sidebar:not(.is-collapsed) .brand .logo {
+  background: var(--kk-text-secondary);
+  -webkit-mask: url("/design/figma/logo.svg") center / contain no-repeat;
+  mask: url("/design/figma/logo.svg") center / contain no-repeat;
+}
+.sidebar:not(.is-collapsed) .brand .logo img {
+  opacity: 0;
+}
 /* These source SVGs use pale strokes on transparency. In the light
    theme, inversion maps those strokes to the primary text color.
    Two-tone add/search/settings assets retain their original contrast. */
@@ -19,97 +34,129 @@
 :root[data-theme="light"] .sidebar [data-brand-logo] {
   filter: invert(1);
 }
-/* Desktop expanded shell geometry comes directly from Figma 82:15737/82:15730.
-   Keep the hit boxes large enough for keyboard and pointer interaction while
-   centering each exported leaf at its source size. */
+/* Current 03 sources: topbar 4056:145206 and sidebar 732:31905. */
 @media (min-width: 1201px) {
   .app .topbar {
+    height: var(--kk-topbar-height);
+    flex: 0 0 var(--kk-topbar-height);
     align-items: center;
     background: var(--bg-surface);
     gap: 37px;
     padding: 10px 19px;
     color: var(--text-tertiary);
-    font-size: 12px;
-    line-height: 15px;
-    font-weight: 700;
+    font-size: var(--kk-font-caption);
+    line-height: var(--kk-line-caption);
+    font-weight: var(--kk-font-weight-title);
   }
   .app .topbar strong,
   .app .topbar nav,
-  .app .topbar nav button {
-    font-size: 12px;
-    line-height: 15px;
-    font-weight: 700;
+  .app .topbar .top-menu > button {
+    font-size: var(--kk-font-caption);
+    line-height: var(--kk-line-caption);
+  }
+  .app .topbar strong {
+    font-weight: var(--kk-font-weight-title);
   }
   .app .topbar nav {
-    gap: 37px;
+    gap: var(--kk-space-2);
   }
   .app .top-menu > button {
-    padding: 0;
+    height: var(--kk-control-h-md);
+    padding: 0 var(--kk-space-2);
+    border-radius: var(--kk-radius-full);
+    color: var(--kk-text-primary);
+    font-weight: var(--kk-titlebar-menu-weight);
+  }
+  .app .top-menu > button:hover:not(:disabled) {
+    background: var(--kk-control-surface-selected);
+  }
+  .app .top-menu > button:active:not(:disabled) {
+    background: var(--kk-bg-soft);
+  }
+  .app .top-menu > button:disabled {
+    background: var(--kk-bg-card);
+    color: var(--kk-text-tertiary);
+    opacity: 1;
   }
 
   .sidebar:not(.is-collapsed):not(.is-narrow) {
     background: var(--bg-surface);
-    /* Latest Landing/Workspace frames: the header rail begins at y=45,
-       navigation starts at y=131, and the account row ends at y=1040. */
-    padding: 35px 14px 40px;
+    padding: 28px var(--kk-space-4) var(--kk-space-4);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .brand {
-    height: 26px;
-    gap: 6px;
-    margin: 0 6px 30px;
+    height: 44px;
+    flex: 0 0 44px;
+    gap: var(--kk-space-2);
+    margin: 0 0 var(--kk-sidebar-section-gap);
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .brand .logo {
+    width: 24px;
+    height: 24px;
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .brand strong {
-    font-size: 16px;
-    line-height: 23px;
+    font-size: var(--kk-font-body);
+    line-height: var(--kk-line-body);
+    font-weight: var(--kk-font-weight-title);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .primary-nav button {
-    padding-left: 6px;
-    gap: 6px;
+    padding: 0;
+    gap: var(--kk-space-2);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .primary-nav .sidebar-icon {
-    width: 26px;
-    height: 26px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
     display: grid;
     place-items: center;
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .primary-nav .sidebar-icon img {
-    width: auto;
-    height: auto;
-    max-width: 26px;
-    max-height: 26px;
-  }
-  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-archive img {
-    width: 21px;
-    height: 19px;
-  }
-  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-skill img {
-    width: 21.002px;
-    height: 21px;
-  }
-  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-workflow img {
-    width: 19.5px;
-    height: 19.5px;
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups {
-    padding-top: 40px;
+    padding-top: var(--kk-sidebar-section-gap);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups-header,
   .sidebar:not(.is-collapsed):not(.is-narrow) .group-heading {
     margin-left: 0;
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .account-row {
-    padding: 8px 13.5px 7px;
-    background: var(--bg-input);
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    flex-shrink: 0;
+    padding: 0;
+    background: transparent;
+    gap: var(--kk-space-2);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .account-row button:first-child {
-    font-size: 16px;
-    line-height: 23px;
-    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    font-size: var(--kk-font-body);
+    line-height: var(--kk-line-body);
+    font-weight: var(--kk-font-weight-body);
+    gap: var(--kk-space-2);
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-account .logo {
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+    display: grid;
+    place-items: center;
+  }
+  .sidebar .sidebar-account .logo img {
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
+  }
+  .sidebar .account-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-link,
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups-header,
   .sidebar:not(.is-collapsed):not(.is-narrow) .group-heading {
-    font-weight: 500;
+    font-weight: var(--kk-font-weight-body);
   }
 }
 .sidebar-icon-add {
@@ -122,16 +169,16 @@
     padding var(--motion-panel) var(--motion-ease);
 }
 .sidebar-icon-archive {
-  width: 21px;
-  height: 19px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar-icon-skill {
   width: 20px;
   height: 20px;
 }
 .sidebar-icon-workflow {
-  width: 18px;
-  height: 18px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar-icon-search {
   width: 26px;
@@ -139,8 +186,8 @@
 }
 .sidebar-icon-toggle,
 .sidebar-icon-expand {
-  width: 21.5px;
-  height: 21.5px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar-icon-settings {
   width: 20px;
@@ -174,33 +221,33 @@
   flex: 0 0 auto;
 }
 .sidebar-action-ellipsis {
-  width: 11.219px;
-  height: 2.277px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .sidebar-action-plus {
-  width: 11px;
-  height: 11px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .project-external-glyph {
-  width: 8px;
-  height: 8px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   margin-left: 1px;
 }
 .project-pin-glyph {
-  width: 6px;
-  height: 11px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .project-more-glyph {
-  width: 11.219px;
-  height: 2.277px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .project-action-container {
   width: 20px;
   height: 21px;
 }
 .sidebar-heading-chevron {
-  width: 9.5px;
-  height: 5.5px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   /* 折叠/展开瞬时翻转，避免旋转中间态出现斜向（歪）箭头 */
 }
 [aria-expanded="false"] > .sidebar-heading-chevron {
@@ -230,8 +277,8 @@
 }
 .sidebar .sidebar-toggle > .sidebar-icon-toggle,
 .sidebar .sidebar-toggle > .sidebar-icon-expand {
-  width: 21.5px;
-  height: 21.5px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar .sidebar-control .sidebar-icon img {
   width: 100%;
@@ -274,10 +321,6 @@
 /* 338:17211 retains the 61px rail, then an 8px gutter before the x=69 frame. */
 .sidebar.is-collapsed:not(.is-narrow) + .workspace {
   padding-left: 8px;
-}
-.sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
-  left: 19px;
-  width: calc(var(--canvas-usable-width, 100%) - 40px);
 }
 .sidebar.is-collapsed .brand {
   margin: 0 0 25px;
@@ -354,7 +397,7 @@
   z-index: 40;
   top: var(--topbar-height);
   bottom: 0;
-  width: min(var(--sidebar-width), calc(100vw - 32px));
+  width: min(var(--kk-sidebar-width), calc(100vw - 32px));
   box-shadow: var(--ui-shadow);
   border-right: 1px solid var(--border-default);
 }
@@ -390,17 +433,17 @@
   }
 }
 
-/* Desktop state contracts from the latest Runtime frames. Narrow-screen
-   drawers retain their existing 61px touch rail as an engineering supplement. */
+/* Desktop geometry follows the current source variants, including their 32/16 controls. */
 @media (min-width: 1201px) {
   .sidebar {
     transition: width var(--motion-sidebar) linear;
   }
   .sidebar .primary-nav {
-    height: 212px;
-    flex: 0 0 212px;
+    height: 148px;
+    flex: 0 0 148px;
+    gap: var(--kk-space-2);
     align-content: start;
-    width: 263px;
+    width: 260px;
     overflow: hidden;
     transition: width var(--motion-sidebar) linear;
   }
@@ -408,14 +451,36 @@
     border: 0;
     color: var(--ui-sidebar-settings-icon);
     white-space: nowrap;
-    width: 263px;
+    width: 260px;
+    height: 44px;
+    border-radius: var(--kk-radius-control);
+    font-size: var(--kk-font-body);
+    line-height: var(--kk-line-body);
+    font-weight: var(--kk-font-weight-body);
     overflow: hidden;
     transition:
       width var(--motion-sidebar) linear,
-      background-color var(--motion-fast) ease;
+      background-color var(--motion-fast) ease,
+      color var(--motion-fast) ease;
+  }
+  .sidebar .primary-nav button:hover:not([aria-current]) {
+    background: var(--ui-state-hover-bg);
+    color: var(--text-primary);
+  }
+  .sidebar .primary-nav button:focus-visible {
+    outline: 2px solid var(--kk-focus-ring);
+    outline-offset: -2px;
+  }
+  .sidebar .primary-nav button:focus:not(:focus-visible) {
+    outline: none;
+  }
+  .sidebar .primary-nav button:active:not([aria-current]) {
+    background: var(--ui-state-pressed-bg);
   }
   .sidebar .primary-nav button[aria-current] {
-    background: var(--ui-sidebar-control);
+    background: var(--kk-control-surface-selected);
+    color: var(--text-primary);
+    font-weight: var(--kk-font-weight-body);
   }
   .sidebar .nav-label {
     animation: none;
@@ -423,8 +488,11 @@
     transition: opacity var(--motion-sidebar) var(--motion-sidebar-text-ease);
   }
   .sidebar .project-groups-header {
-    min-height: 21px;
-    margin-bottom: 5px;
+    height: 36px;
+    min-height: 36px;
+    padding: var(--kk-space-1);
+    margin-bottom: 0;
+    align-items: center;
   }
   .sidebar .project-groups {
     overflow-x: clip;
@@ -434,14 +502,18 @@
     /* A clipped scroll container can move a focused control mid-click. */
     animation: sidebar-projects-enter var(--motion-sidebar) step-end both;
   }
-  .sidebar .project-groups-header,
+  .sidebar .project-groups-header {
+    width: 259px;
+  }
   .sidebar .project-groups > section {
-    width: 263px;
+    width: 259px;
   }
   .sidebar .project-link {
     white-space: nowrap;
   }
   .sidebar .project-link > span:last-child {
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -449,6 +521,14 @@
   .sidebar .project-yellow,
   .sidebar .project-thumb {
     flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--kk-radius-xs);
+  }
+  .sidebar .project-groups .project-folder > img,
+  .sidebar .project-groups .project-thumb-chat-icon {
+    width: 20px;
+    height: 20px;
   }
   /* Engineering transition: reveal the brand once the moving toggle has
      cleared its fixed 111px area. Project rows keep their source width and
@@ -459,146 +539,245 @@
       calc(var(--motion-sidebar) - var(--motion-fast)) both;
   }
   .sidebar .group-heading {
-    min-height: 21px;
-    margin-bottom: 5px;
+    min-height: 32px;
+    margin-bottom: 0;
     align-items: center;
+  }
+  .sidebar .project-groups .group-heading-row {
+    height: 36px;
+    padding: var(--kk-space-1);
+    margin-bottom: var(--kk-space-1);
   }
   .sidebar .group-heading-row .group-heading {
     margin-bottom: 0;
   }
   .sidebar .project-groups-title,
   .sidebar .group-heading {
-    color: var(--text-tertiary);
-    line-height: 17px;
+    color: var(--text-secondary);
+    font-size: var(--kk-font-caption);
+    line-height: var(--kk-line-caption);
+    font-weight: var(--kk-font-weight-caption);
   }
   .sidebar .project-groups-action,
   .sidebar .project-pin,
   .sidebar .project-more {
-    width: 20px;
-    height: 21px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+    flex-shrink: 0;
+    border-radius: var(--kk-radius-full);
   }
   .sidebar .project-groups-actions {
-    gap: 2px;
-    padding-right: 5px;
+    gap: var(--kk-space-1);
+    padding-right: 0;
+  }
+  .sidebar .project-groups .sidebar-action-glyph,
+  .sidebar .project-groups .project-action-container,
+  .sidebar .project-groups .project-groups-action > img {
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
   }
   .sidebar .project-link {
-    font-size: var(--kk-font-caption);
-    font-weight: 400;
-    color: var(--ui-sidebar-settings-icon);
-    background: var(--bg-card);
+    height: 36px;
+    padding: var(--kk-space-1) 76px var(--kk-space-1) var(--kk-space-1);
+    gap: var(--kk-space-1);
+    font-size: var(--kk-font-body);
+    line-height: var(--kk-line-body);
+    font-weight: var(--kk-font-weight-body);
+    color: var(--text-secondary);
+    background: transparent;
     border-radius: var(--ui-radius-control);
+    transition: var(--ui-state-transition);
+  }
+  .sidebar .project-link:hover:not(.is-selected) {
+    background: var(--ui-state-hover-bg);
+    color: var(--text-primary);
+  }
+  .sidebar .project-link:focus-visible {
+    outline: 2px solid var(--kk-focus-ring);
+    outline-offset: -1px;
+  }
+  .sidebar .project-link:focus:not(:focus-visible) {
+    outline: none;
+  }
+  .sidebar .project-link:active:not(.is-selected) {
+    background: var(--ui-state-pressed-bg);
   }
   .sidebar .project-link.is-selected {
-    background: var(--ui-sidebar-control);
+    background: var(--kk-control-surface-selected);
+    color: var(--text-primary);
+    font-weight: var(--kk-font-weight-body);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-link {
-    font-weight: 400;
+    font-weight: var(--kk-font-weight-body);
   }
   .sidebar .project-yellow {
     background: var(--ui-project-thumbnail);
   }
   .sidebar .project-folder {
-    background: var(--ui-composer-surface);
+    background: transparent;
   }
   .sidebar .project-pin {
-    right: 27px;
+    right: 40px;
   }
   .sidebar .project-more {
-    right: 5px;
+    right: 4px;
   }
   .sidebar .project-groups section + section {
-    margin-top: 13px;
+    margin-top: var(--kk-space-1);
   }
-  .sidebar .project-nested-entry {
-    width: 231px;
-    margin: 5px 0 0 auto;
+  .sidebar .project-groups .project-nested-entry {
+    width: 235px;
+    margin: var(--kk-space-1) 0 0 auto;
+    display: grid;
+    gap: var(--kk-space-1);
+  }
+  .sidebar .project-group-content:not([hidden]) {
+    display: grid;
+    gap: var(--kk-space-1);
+  }
+  .sidebar .project-groups .project-folder-group {
+    margin-top: var(--kk-space-1);
+  }
+  .sidebar .project-groups .folder-heading-row {
+    width: 259px;
+    height: 36px;
+    padding: var(--kk-space-1);
+    border-radius: var(--kk-radius-control);
+    background: var(--kk-bg-elevated);
+    align-items: center;
+  }
+  .sidebar .project-groups .folder-heading-toggle {
+    height: var(--kk-control-h-md);
+    gap: var(--kk-space-1);
+    padding: 0 72px 0 0;
+    border-radius: var(--kk-radius-control);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: var(--kk-font-body);
+    line-height: var(--kk-line-body);
+    font-weight: var(--kk-font-weight-body);
+  }
+  .sidebar .project-groups .folder-heading-toggle .sidebar-heading-chevron {
+    order: -1;
+    margin-left: 0;
+  }
+  .sidebar .project-groups .folder-heading-row .project-pin,
+  .sidebar .project-groups .folder-heading-row .project-more {
+    top: 2px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+  }
+  .sidebar .project-groups .project-entry > .project-title-input {
+    height: 36px;
+    padding-right: 76px;
   }
   .sidebar .account-row button:last-child {
-    width: 26px;
-    height: 26px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+  }
+  .sidebar .sidebar-search,
+  .sidebar .sidebar-toggle {
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+    display: grid;
+    place-items: center;
+  }
+  .sidebar .sidebar-search > .sidebar-icon-search,
+  .sidebar .sidebar-toggle > .sidebar-icon-toggle,
+  .sidebar .sidebar-toggle > .sidebar-icon-expand,
+  .sidebar .sidebar-settings > .sidebar-icon-settings {
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
   }
   .sidebar .sidebar-search {
     position: absolute;
-    top: 35px;
+    top: 34px;
     left: 204px;
     margin: 0;
   }
   .sidebar .sidebar-toggle {
     position: absolute;
-    top: 35px;
+    top: 34px;
     left: auto;
-    right: 20px;
+    right: 16px;
     margin: 0;
     transition: right var(--motion-sidebar) linear;
   }
   .sidebar.is-collapsed {
-    padding: 35px 14px 40px;
+    padding: 28px var(--kk-space-3) var(--kk-space-4);
   }
   .sidebar.is-collapsed .brand {
-    height: 26px;
-    margin: 0 0 30px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    align-self: center;
+    margin: 0 0 var(--kk-space-4);
   }
   .sidebar.is-collapsed .primary-nav {
-    width: 38px;
+    width: 44px;
+    height: 112px;
+    flex: 0 0 112px;
+    align-self: center;
+    justify-items: center;
   }
   .sidebar.is-collapsed .primary-nav button {
-    width: 38px;
-    padding: 0 6px;
-    justify-content: flex-start;
-    gap: 6px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+    padding: 0;
+    justify-content: center;
+    gap: 0;
   }
   .sidebar.is-collapsed .primary-nav .sidebar-icon {
-    width: 26px;
-    height: 26px;
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
     display: grid;
     place-items: center;
   }
-  .sidebar.is-collapsed .sidebar-icon-archive img {
-    width: 21px;
-    height: 19px;
-  }
-  .sidebar.is-collapsed .sidebar-icon-skill img {
-    width: 21.002px;
-    height: 21px;
-  }
-  .sidebar.is-collapsed .sidebar-icon-workflow img {
-    width: 19.5px;
-    height: 19.5px;
+  .sidebar.is-collapsed .primary-nav .sidebar-icon img {
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
   }
   .sidebar.is-collapsed .nav-label {
-    display: block;
-    opacity: 0;
+    display: none;
   }
   .sidebar.is-collapsed .sidebar-toggle {
-    top: 35px;
+    top: 34px;
     left: auto;
-    right: 22px;
+    right: 20px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
   }
   .sidebar.is-collapsed .sidebar-search {
-    /* Fresh 448:472 is part of 410:67357: 26px at (22,942). */
     display: grid;
-    left: 22px;
+    left: 20px;
     top: auto;
-    bottom: 112px;
-    width: 26px;
-    height: 26px;
+    bottom: 96px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
   }
   .sidebar.is-collapsed .sidebar-settings {
-    left: 22px;
-    bottom: 72px;
-    width: 26px;
-    height: 26px;
+    left: 20px;
+    bottom: 16px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
   }
   .sidebar.is-collapsed .sidebar-account {
-    left: 22px;
-    bottom: 32px;
+    left: 20px;
+    bottom: 56px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
+    display: grid;
+    place-items: center;
+  }
+  .sidebar.is-collapsed .sidebar-account .logo {
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
+  }
+  .sidebar.is-collapsed .account-popup {
+    bottom: 96px;
   }
   .sidebar.is-collapsed:not(.is-narrow) + .workspace {
     padding-left: 0;
-  }
-  .sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
-    left: var(--ui-workspace-task-inset);
-    width: auto;
   }
 }
 
@@ -631,6 +810,10 @@
 }
 .sidebar .project-folder-group.is-pinned .folder-heading-toggle,
 .sidebar .project-entry.is-pinned .project-link {
+  border-left: 2px solid var(--ui-selected, var(--kk-accent));
+}
+.sidebar .project-folder-group.is-pinned .folder-heading-toggle.is-selected,
+.sidebar .project-entry.is-pinned .project-link.is-selected {
   background: var(--ui-sidebar-control);
 }
 .sidebar .folder-heading-row {

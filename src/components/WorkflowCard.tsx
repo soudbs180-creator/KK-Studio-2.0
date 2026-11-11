@@ -1,5 +1,5 @@
 import UiIcon from "./UiIcon";
-import type { WorkflowRecord } from "../features/comfyui/workflowRegistry";
+import type { WorkflowRecord } from "../features/comfyui/index.ts";
 
 export default function WorkflowCard({
   workflow,

@@ -17,7 +17,7 @@ type PackageTestWindow = Window & {
 
 async function installNativePackageMock(
   page: Page,
-  options: { preflightError?: string } = {},
+  options: { preflightError?: string; source?: string } = {},
 ): Promise<void> {
   // Finish real Web initialization before enabling only the package IPC seam.
   // This keeps snapshot persistence and unrelated desktop APIs outside this mock.
@@ -46,7 +46,7 @@ async function installNativePackageMock(
             const dialog = args.options as { directory?: boolean };
             return dialog.directory
               ? "C:/KK-Studio-Test/RestoreParent/"
-              : "C:/KK-Studio-Test/backup.kkproject";
+              : (options.source ?? "C:/KK-Studio-Test/backup.kkproject");
           }
           if (command === "preflight_project_package") {
             if (options.preflightError) throw new Error(options.preflightError);
@@ -115,6 +115,61 @@ test("Desktop 取消导出文件选择不会调用项目包写入", async ({ pag
     "plugin:path|resolve_directory",
     "plugin:dialog|save",
   ]);
+});
+
+test("Desktop 旧本机服务清单沿用预检恢复，导出仍仅项目包", async ({ page }) => {
+  const source = "C:/KK-Studio-Test/old-companion/manifest.json";
+  await installNativePackageMock(page, { source });
+  const section = await openPackageSettings(page);
+  await section.getByRole("button", { name: "选择项目包" }).click();
+  await expect(
+    section.getByRole("button", { name: "恢复到新目录" }),
+  ).toBeEnabled();
+  const calls = await nativeCalls(page);
+  const filters = (
+    calls.find((call) => call.command === "plugin:dialog|open")!.args
+      .options as { filters: { extensions: string[] }[] }
+  ).filters;
+  expect(filters.flatMap((filter) => filter.extensions)).toEqual([
+    "kkproject",
+    "json",
+  ]);
+  expect(
+    calls.find((call) => call.command === "preflight_project_package")!.args,
+  ).toEqual({ source });
+  await section.getByRole("button", { name: "恢复到新目录" }).click();
+  await expect
+    .poll(async () =>
+      (await nativeCalls(page)).some(
+        (call) => call.command === "import_project_package",
+      ),
+    )
+    .toBe(true);
+  const imported = (await nativeCalls(page)).find(
+    (call) => call.command === "import_project_package",
+  )!;
+  expect(imported.args.source).toBe(source);
+  expect(imported.args.targetRoot).toMatch(
+    /RestoreParent\/KK-Studio-restored-\d+$/,
+  );
+  await page.evaluate(() =>
+    (window as unknown as PackageTestWindow).packageTest.completeImport!(),
+  );
+  await expect(
+    section.getByRole("button", { name: "打开恢复副本" }),
+  ).toBeEnabled();
+  await section.getByRole("button", { name: "导出项目包" }).click();
+  await expect(section.getByRole("status")).toHaveText(
+    "已取消导出，项目未改动。",
+  );
+  const save = (await nativeCalls(page)).find(
+    (call) => call.command === "plugin:dialog|save",
+  )!;
+  expect(
+    (
+      save.args.options as { filters: { extensions: string[] }[] }
+    ).filters.flatMap((filter) => filter.extensions),
+  ).toEqual(["kkproject"]);
 });
 
 test("项目包预检失败显示错误且不允许恢复", async ({ page }) => {

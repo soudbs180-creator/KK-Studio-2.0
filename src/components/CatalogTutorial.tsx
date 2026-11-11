@@ -46,8 +46,7 @@ export default function CatalogTutorial({
           </li>
         </ol>
         <p className="catalog-tutorial-note" role="status">
-          当前版本是前端
-          Prototype。云端保存、账号同步和文件上传尚未接入，不会伪造成功状态。
+          项目与素材仅保存在本机；新建、打开和整理本地项目均可直接使用。
         </p>
         <button
           type="button"

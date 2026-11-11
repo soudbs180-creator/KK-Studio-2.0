@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/minimax-deep-audit-2026-09-21",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/minimax-deep-audit-2026-09-21/connector-detail.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c2ffcb3b155cdd9a870ca479cf1cc2cffba18bf1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/minimax-deep-audit-2026-09-21/connector-detail.png",
+      "bytes": 95301,
+      "sha256": "776d89b48c039970a85606e63a115b72477a030b064988afce5d4e985d292e72",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-21-minimax-deep-audit/verification.md",
+          "line": 28,
+          "originalTarget": "../../evidence/minimax-deep-audit-2026-09-21/connector-detail.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
+import UiIcon from "../UiIcon";
 import { createPortal } from "react-dom";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { cardLayout } from "../../domain/canvasGraph";
@@ -34,6 +35,17 @@ export default function NodeActions({
   const [preview, setPreview] = useState<Drag | null>(null);
   const [active, setActive] = useState(false);
   const [magnet, setMagnet] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    const button = trigger.current;
+    const preventDragScroll = (event: TouchEvent) => {
+      if (drag.current?.moved) event.preventDefault();
+    };
+    // React 的 touchmove 委托为 passive，拖出连线时需在源按钮取消原生滚动。
+    button?.addEventListener("touchmove", preventDragScroll, {
+      passive: false,
+    });
+    return () => button?.removeEventListener("touchmove", preventDragScroll);
+  }, []);
   function cancel(): void {
     const current = drag.current;
     drag.current = null;
@@ -220,7 +232,9 @@ export default function NodeActions({
             className="node-add-visual"
             style={{ translate: `${magnet.x}px ${magnet.y}px` }}
           >
-            <span className="node-port-plus" aria-hidden="true" />
+            <span className="node-port-plus" aria-hidden="true">
+              <UiIcon name="plus" size={12} />
+            </span>
           </span>
         </button>
       </div>

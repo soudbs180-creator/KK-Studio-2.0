@@ -1,3 +1,4 @@
+// health: allow FILE_LINES -- comprehensive agent connection contract suite
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import {
@@ -23,6 +24,57 @@ import {
 } from "../../src/features/creation/model.ts";
 import { updateProjectChatView } from "../../src/features/agent/chatProjectUpdate.ts";
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
+
+test("disconnected project synchronization reads saved chat history without network or writes", () => {
+  let project: ReturnType<typeof createProject> | undefined = createProject({
+    prompt: "",
+    kind: "text",
+    model: "fixture",
+    attachments: [],
+  });
+  const first = project.chats![project.activeChatId!];
+  first.mainAgent = "codex";
+  first.messages = [{ id: "saved-a", role: "assistant", content: "offline A" }];
+  project.chats!.other = {
+    ...first,
+    id: "other",
+    messages: [{ id: "saved-b", role: "assistant", content: "offline B" }],
+  };
+  let writes = 0;
+  let requests = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    fetcher: (async () => {
+      requests++;
+      throw new Error("offline");
+    }) as typeof fetch,
+  });
+  conn.setBridge(
+    createAgentHost({
+      getProject: () => project,
+      commit: () => {
+        writes++;
+      },
+      generate: async () => ({}),
+    }),
+  );
+  assert.equal(conn.getState().status, "disconnected");
+  assert.deepEqual(
+    conn.getState().messages.map((message) => message.text),
+    ["offline A"],
+  );
+  project.activeChatId = "other";
+  conn.syncProject();
+  assert.deepEqual(
+    conn.getState().messages.map((message) => message.text),
+    ["offline B"],
+  );
+  project = undefined;
+  conn.syncProject();
+  assert.deepEqual(conn.getState().messages, []);
+  assert.equal(writes, 0);
+  assert.equal(requests, 0);
+});
 
 test("home settings can connect without persisting synthetic workspace history into a project", async (t) => {
   const harness = createHarness();
@@ -52,7 +104,7 @@ test("home settings can connect without persisting synthetic workspace history i
   assert.equal(writes, 0);
 });
 
-test("reconnect persists thinner remote history without losing canonical identities or metadata", async (t) => {
+test("reconnect persists thinner remote history without losing metadata and skips identical replay", async (t) => {
   let project = createProject({
     prompt: "",
     model: "",
@@ -79,6 +131,7 @@ test("reconnect persists thinner remote history without losing canonical identit
     codex: { busy: false },
   });
   let saves = 0;
+  let flushes = 0;
   const conn = createAgentConnection({
     storage: memoryStorage(),
     eventSourceFactory: harness.eventSourceFactory,
@@ -119,11 +172,17 @@ test("reconnect persists thinner remote history without losing canonical identit
         project = next;
         saves++;
       },
+      flush: async () => {
+        flushes++;
+      },
       generate: async () => ({}),
     }),
   );
   t.after(() => conn.disconnect());
   for (let attempt = 0; attempt < 2; attempt++) {
+    const beforeProject = project;
+    const beforeSaves = saves;
+    const beforeFlushes = flushes;
     await conn.connect();
     assert.equal(
       conn.getState().status,
@@ -146,12 +205,15 @@ test("reconnect persists thinner remote history without losing canonical identit
       assert.deepEqual(restored.opaqueMetadata, original.opaqueMetadata);
       assert.equal(restored.content, `restored ${original.role}`);
     }
+    assert.ok(flushes > beforeFlushes, "reconnect waits for pending saves");
+    if (attempt === 0) {
+      assert.ok(saves > beforeSaves, "changed remote history is committed");
+    } else {
+      assert.equal(saves, beforeSaves, "identical replay does not commit");
+      assert.strictEqual(project, beforeProject);
+    }
     conn.disconnect();
   }
-  assert.ok(
-    saves >= 2,
-    "real AgentHost canonical persistence ran on reconnect",
-  );
 });
 
 test("migrated legacy-codex resumes its exact old thread while original empty chats receive separate ownership", async (t) => {
@@ -279,6 +341,31 @@ interface FakeSource extends EventSourceLike {
   emit(event: { type: string; data: unknown }): void;
   closed: boolean;
 }
+
+test("configuration tools dispatch to the configuration host and redact host errors before receipts", async (t) => {
+  const harness=createHarness();
+  const receipts: Array<Record<string,unknown>>=[];
+  let called=0,canvasCalls=0,fail=false;
+  const connection=createAgentConnection({storage:memoryStorage(),eventSourceFactory:harness.eventSourceFactory,fetcher:(async (url,init)=>{
+    if(String(url).includes("/canvas/result"))receipts.push(JSON.parse(String(init?.body)));
+    return connectionReadyResponse();
+  }) as typeof fetch});
+  connection.setBridge({getSnapshot:()=>null,applyOps:()=>{canvasCalls++;return{applied:[],rejected:[]};},executeConfigTool:async (name)=>{
+    called++;assert.equal(name,"kk_config_get");
+    if(fail)throw new Error("sk-FAKE-HOST-EXCEPTION-1234567890");
+    return {connections:[],health:[],capabilities:[]};
+  }});
+  t.after(()=>connection.disconnect());
+  await connection.connect();
+  harness.sources[0].emit({type:"tool_call",data:{requestId:"config-get",name:"kk_config_get",input:{}}});
+  await new Promise<void>(setImmediate);
+  assert.equal(called,1);assert.equal(canvasCalls,0);assert.deepEqual(receipts[0].result,{connections:[],health:[],capabilities:[]});
+  fail=true;
+  harness.sources[0].emit({type:"tool_call",data:{requestId:"config-failure",name:"kk_config_get",input:{}}});
+  await new Promise<void>(setImmediate);
+  assert.equal(receipts[1].error,"CONFIG_HOST_FAILED");
+  assert.equal(JSON.stringify(receipts).includes("sk-FAKE"),false);
+});
 
 function createHarness(hello?: unknown) {
   const sources: FakeSource[] = [];

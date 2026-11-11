@@ -1,28 +1,30 @@
+import { mediaConnectionBlockReason } from "../../integrations/generation/mediaSupport.ts";
 import {
   isConnectionReady,
   type ProviderConnection,
 } from "../../domain/providerConnections.ts";
 import {
+  protocolBindingMatches,
+  providerNeedsKey,
+  supportsProviderImages,
+  type ProviderAuthMode,
+  type ProviderProtocol,
+} from "../../domain/providerProtocol.ts";
+import { resolveImageModelCapabilities } from "../models/index.ts";
+import { catalogForConnection } from "../models/index.ts";
+import { hasApiKey } from "./providerCredentials.ts";
+import { assertImageCapabilityConnection } from "./imageCapabilitySubmission.ts";
+import {
   readProviderConnections,
   releaseProviderLease,
   updateProviderConnection,
 } from "./providerRegistry.ts";
-import { hasApiKey } from "./providerCredentials.ts";
-import { catalogForConnection } from "../models/modelCatalog.ts";
-import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
-import {
-  protocolBindingMatches,
-  providerNeedsKey,
-  supportsProviderImages,
-  type ProviderProtocol,
-  type ProviderAuthMode,
-} from "../../domain/providerProtocol.ts";
 
-import type { CreationTask } from "./model.ts";
 import {
   twelveAiApiBase,
   twelveAiModelKind,
 } from "../../integrations/generation/twelveAiTaskProtocol.ts";
+import type { CreationTask } from "./model.ts";
 
 export class ProviderSubmissionError extends Error {}
 
@@ -45,10 +47,12 @@ export function taskProviderOptions(task: CreationTask) {
 }
 export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
   return {
+    imageCapability: task.imageCapability,
+    capabilityOutputIndices: task.retryOutputIndices,
     ...taskProviderOptions(task),
     id: task.providerConnectionId,
     referenceCount: task.attachments.length,
-    kind: task.kind === "text" ? "text" : "image",
+    kind: task.kind,
     model: task.model,
     outputCount: task.requestedOutputs,
     operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
@@ -56,6 +60,8 @@ export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
   };
 }
 export interface SubmissionBinding {
+  capabilityOutputIndices?: number[];
+  imageCapability?: import("../../../packages/creation-contracts/index.ts").ImageCapabilitySpec;
   operation?: "generate" | "edit" | "inpaint";
   localEdit?: boolean;
   id?: string;
@@ -64,7 +70,7 @@ export interface SubmissionBinding {
   protocol?: ProviderProtocol;
   authMode?: ProviderAuthMode;
   referenceCount: number;
-  kind?: "image" | "text";
+  kind?: "image" | "text" | "video" | "audio";
   model?: string;
   outputCount?: number;
 }
@@ -141,6 +147,8 @@ export function assertSubmissionConnection(
       "原绑定连接已移除、未登记或身份重复，请重新确认后创建任务；当前内容已保留。",
     );
   const connection = matches[0];
+  if (binding.imageCapability)
+    return assertImageCapabilityConnection(connection, binding, options);
   if (
     connection.kind !== "user_byok" ||
     !connection.baseUrl ||
@@ -156,25 +164,19 @@ export function assertSubmissionConnection(
     binding.model ?? connection.model ?? "",
   );
   assertBindingIdentity(connection, binding, selectedModel?.kind);
-  assertSynchronousProviderSubmission(
-    connection.baseUrl,
-    binding.model ?? connection.model,
-  );
-  const health =
-    options.explicitRetry && connection.state === "degraded"
-      ? { ...connection, state: "active" as const }
-      : connection;
-  if (!isConnectionReady(health)) {
-    const reason =
-      connection.state === "quarantined"
-        ? "连接已隔离，请核对密钥与项目权限后重新配置。"
-        : connection.state === "disabled"
-          ? "连接已禁用。"
-          : connection.state === "degraded"
-            ? "连接暂不可用，请在原任务中显式重试，或检查连接。"
-            : "连接仍在冷却，请等待冷却结束后重试。";
-    throw new ProviderSubmissionError(reason);
-  }
+  if (binding.kind === "video" || binding.kind === "audio") {
+    const reason = mediaConnectionBlockReason(
+      connection,
+      binding.model ?? connection.model ?? "",
+      binding.kind,
+    );
+    if (reason) throw new ProviderSubmissionError(reason);
+  } else
+    assertSynchronousProviderSubmission(
+      connection.baseUrl,
+      binding.model ?? connection.model,
+    );
+  assertSubmissionHealth(connection, options);
   const activeJobs = Math.max(
     0,
     (connection.activeJobs ?? 0) - (options.ownSlot ? 1 : 0),
@@ -443,4 +445,25 @@ export async function reserveProviderSubmissionAsync(
       },
     };
   });
+}
+
+function assertSubmissionHealth(
+  connection: ProviderConnection,
+  options: SubmissionOptions,
+): void {
+  const health =
+    options.explicitRetry && connection.state === "degraded"
+      ? { ...connection, state: "active" as const }
+      : connection;
+  if (!isConnectionReady(health)) {
+    const reason =
+      connection.state === "quarantined"
+        ? "连接已隔离，请核对密钥与项目权限后重新配置。"
+        : connection.state === "disabled"
+          ? "连接已禁用。"
+          : connection.state === "degraded"
+            ? "连接暂不可用，请在原任务中显式重试，或检查连接。"
+            : "连接仍在冷却，请等待冷却结束后重试。";
+    throw new ProviderSubmissionError(reason);
+  }
 }

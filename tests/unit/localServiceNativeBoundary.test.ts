@@ -63,6 +63,25 @@ test("companion refuses any Native identity before initializing directories", as
   assert.throws(() => new CompanionStore(root), isNativeRoot);
 });
 
+test("companion keeps its own app/ device directory without being refused", () => {
+  // Regression guard: app/ is the companion's own device-metadata directory
+  // (app/companion.json). Treating its presence as a Native marker breaks
+  // every first launch, so admission must stay identity-document-only.
+  const root = freshRoot();
+  mkdirSync(join(root, "app"), { recursive: true });
+  const device = '{"version":1,"deviceId":"device-test"}';
+  writeFileSync(join(root, "app", "companion.json"), device);
+  const store = new CompanionStore(root);
+  try {
+    assert.equal(
+      readFileSync(join(root, "app", "companion.json"), "utf8"),
+      device,
+    );
+  } finally {
+    closeStore(store);
+  }
+});
+
 test("all public store data paths reject a late Native marker and retain staged bytes", () => {
   const root = freshRoot();
   const store = new CompanionStore(root);

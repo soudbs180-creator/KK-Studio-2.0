@@ -118,8 +118,8 @@ test("首页初读期间显式输入和默认选项保留，未修改的已存�
 }, testInfo) => {
   const saved = await pendingBoot(page);
   await page.getByLabel("创作提示词").fill("读取期间正在输入");
-  await page.getByRole("button", { name: "当前模式：自动" }).click();
-  await page.getByRole("menuitemradio", { name: "自动", exact: true }).click();
+  await page.getByRole("button", { name: "生成数量", exact: true }).click();
+  await page.getByRole("button", { name: "生成 2 个", exact: true }).click();
   await page
     .locator('.start-composer input[type="file"]')
     .setInputFiles("public/fixtures/demo/blue-hour.png");
@@ -129,8 +129,8 @@ test("首页初读期间显式输入和默认选项保留，未修改的已存�
   await release(page);
   await expect(page.getByLabel("创作提示词")).toHaveValue("读取期间正在输入");
   await expect(
-    page.getByRole("button", { name: "当前模式：自动" }),
-  ).toBeVisible();
+    page.getByRole("button", { name: "生成数量", exact: true }),
+  ).toContainText("2");
   await expect
     .poll(
       async () => (await durableSnapshot(page))?.homeDraft.attachments.length,
@@ -139,8 +139,8 @@ test("首页初读期间显式输入和默认选项保留，未修改的已存�
   const stored = await durableSnapshot(page);
   expect(stored.homeDraft).toMatchObject({
     prompt: "读取期间正在输入",
-    approvalMode: "auto",
-    outputCount: 4,
+    approvalMode: "ask",
+    outputCount: 2,
     privacyMode: "byok_local",
     providerConnectionId: "saved-route",
     model: "saved-image-model",
@@ -166,7 +166,7 @@ test("首页初读期间显式输入和默认选项保留，未修改的已存�
   await page.screenshot({ path: testInfo.outputPath("loaded-draft.png") });
   await page.reload();
   await expect(page.getByLabel("创作提示词")).toHaveValue("读取期间正在输入");
-  expect((await durableSnapshot(page)).homeDraft.outputCount).toBe(4);
+  expect((await durableSnapshot(page)).homeDraft.outputCount).toBe(2);
 });
 
 test("首页没有用户编辑时，启动默认值不能覆盖保存的数量、模式和模型", async ({
@@ -178,8 +178,8 @@ test("首页没有用户编辑时，启动默认值不能覆盖保存的数量�
     saved.homeDraft.prompt,
   );
   await expect(
-    page.getByRole("button", { name: "当前模式：询问" }),
-  ).toBeVisible();
+    page.getByRole("button", { name: "生成数量", exact: true }),
+  ).toContainText("4");
   const stored = await page.evaluate(
     (key) => JSON.parse(localStorage.getItem(key)!) as CreationSnapshot,
     CREATION_STORAGE_KEY,

@@ -81,7 +81,7 @@ for (const code of ["SNAPSHOT_UNSUPPORTED", "IO"] as const) {
     await expect(page.getByLabel("创作提示词")).toHaveValue(
       "保留在内存的当前草稿",
     );
-    await openSettingsSection(page, "网络");
+    await openSettingsSection(page, "网络与代理");
     const companion = page.getByTestId("companion-settings");
     await expect(companion.locator(".settings-companion-status")).toHaveText(
       code === "SNAPSHOT_UNSUPPORTED" ? "需要更新" : "检查失败",

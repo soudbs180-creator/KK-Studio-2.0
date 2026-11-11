@@ -1,10 +1,10 @@
 # 权威来源地图
 
-更新：2026-10-12。机器可读版本见 [`AUTHORITY_MAP.json`](AUTHORITY_MAP.json)。本页说明冲突处理顺序与事实归属；它不复制其他规范，也不把历史证据升级为当前能力。
+更新：2026-10-21。机器可读版本见 [`AUTHORITY_MAP.json`](AUTHORITY_MAP.json)。本页说明冲突处理顺序与事实归属；它不复制其他规范，也不把历史证据升级为当前能力。
 
 ## 规则冲突的固定顺序
 
-**本页不维护独立的优先级列表。** 权威顺序与冲突裁决的唯一来源是 [`docs/README.md` §权威优先级与冲突裁决](../README.md#权威优先级与冲突裁决)，本页只负责说明事实归属。当两份材料对"应该怎样做"发生冲突，按该文件的顺序解释。
+**本页不维护独立的优先级列表。** 权威顺序与冲突裁决的唯一来源是 [`docs/README.md` §权威优先级与冲突裁决](../README.md#权威优先级与冲突裁决)，本页只负责说明事实归属。当两份材料对"应该怎样做"发生冲突，按该文件的顺序解释。`AUTHORITY_MAP.json` 的 `precedence` 只投影该顺序；`rule_hierarchy` 已由 `precedence` 替代。
 
 要点提示（细节以 `docs/README.md` 为准）：
 
@@ -18,7 +18,7 @@
 - 项目当前事实由 [`PROJECT_STATE.md`](PROJECT_STATE.md) 的 `docId=PROJECT_STATE,status=current` 入口负责；恢复入口由 [`AI_HANDOFF.md`](AI_HANDOFF.md) 的 `docId=AI_HANDOFF,status=current` 入口负责。更新只改 `updatedAt` 和来源，不因日期新建第二条 current；旧内容必须通过 `status=superseded` 与 `supersededBy` 退出当前路由。
 - 功能能力真实程度由 [`docs/features/features.registry.json`](../features/features.registry.json) 和 `feat-*.md` 卡片负责；任务状态与功能状态正交。
 - 存储与跨应用记忆契约由 [`DATA-STORAGE.md`](../architecture/DATA-STORAGE.md) 和 [`MEMORY-CONTRACT.md`](../MEMORY-CONTRACT.md) 负责。记忆同步门禁见 [`MEMORY-GOVERNANCE.md`](../MEMORY-GOVERNANCE.md)。
-- UI 规则先读 [`UI_INDEX.md`](../UI_INDEX.md)，再读该索引指定的唯一承载文件。归档的旧 UI 文件只用于追溯。
+- UI 设计真值是 [`UI_INDEX.md`](../UI_INDEX.md) 登记的当前 Figma；本地文档是派生规范，CSS 是运行时注册处。UI 任务先在 Figma 完成或核实目标设计，再同步本地；归档旧文件只用于追溯。
 - 源码、测试和 `verification.md` 只证明记录的版本、运行模式和边界。构建通过、静态比较或旧截图不能单独证明当前 REAL 能力。
 - 竞品材料统一从 [`docs/reference/competitor/INDEX.md`](../reference/competitor/INDEX.md) 进入；研究材料是只读输入，不能证明 KK 已实现对方能力或已接入供应商。
 

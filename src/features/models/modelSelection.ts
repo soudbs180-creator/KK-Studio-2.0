@@ -13,6 +13,7 @@ export function modelSelectionId(selection: ModelSelection): string {
   ]);
 }
 export interface PickerMemory {
+  capability?: "chat" | "image";
   page: string;
   all: boolean;
   pins: Record<string, string[]>;
@@ -30,6 +31,9 @@ export function readPickerMemory(scope: string): PickerMemory {
         "{}",
     );
     return {
+      ...(data.capability === "chat" || data.capability === "image"
+        ? { capability: data.capability }
+        : {}),
       page: typeof data.page === "string" ? data.page : "root",
       all: data.all === true,
       pins: data.pins && typeof data.pins === "object" ? data.pins : {},
@@ -56,16 +60,30 @@ export function writePickerMemory(scope: string, state: PickerMemory): void {
 
 /** Older family pins expand to exact rows without changing model routing. */
 export function resolvePickerPins(
-  entries: readonly { id: string; legacyPinId?: string }[],
+  entries: readonly {
+    id: string;
+    legacyPinId?: string;
+    selection?: ModelSelection;
+  }[],
   pins: readonly string[],
 ): string[] {
-  const expanded = entries.filter(
-    (item) => item.legacyPinId && pins.includes(item.legacyPinId),
-  );
+  const expanded = entries
+    .map((item) => ({
+      item,
+      aliases: [
+        item.legacyPinId,
+        item.selection?.source === "api"
+          ? `api:${item.selection.connectionId}:${item.selection.model}`
+          : undefined,
+      ],
+    }))
+    .filter(({ aliases }) => aliases.some((id) => id && pins.includes(id)));
   return [
     ...new Set([
-      ...pins.filter((id) => !expanded.some((item) => item.legacyPinId === id)),
-      ...expanded.map((item) => item.id),
+      ...pins.filter(
+        (id) => !expanded.some(({ aliases }) => aliases.includes(id)),
+      ),
+      ...expanded.map(({ item }) => item.id),
     ]),
   ];
 }

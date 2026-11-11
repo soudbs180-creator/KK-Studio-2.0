@@ -187,12 +187,22 @@ export function useCreationStorage(
       }
       delete loadingDraft.current.changes.updatedAt;
     }
+    const previousProjects = new Map(
+      creationRef.current.projects.map((project) => [project.id, project]),
+    );
     next = {
       ...next,
-      projects: next.projects.map((project) => ({
-        ...project,
-        canvas: reconcileProjectCanvas(project.canvas, project.items),
-      })),
+      projects: next.projects.map((project) => {
+        const previous = previousProjects.get(project.id);
+        return previous &&
+          project.items === previous.items &&
+          project.canvas === previous.canvas
+          ? project
+          : {
+              ...project,
+              canvas: reconcileProjectCanvas(project.canvas, project.items),
+            };
+      }),
       revision: Math.max(creationRef.current.revision, next.revision) + 1,
     };
     creationRef.current = next;

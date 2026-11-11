@@ -2,6 +2,27 @@ import {
   isProviderGenerationVerified,
   type ProviderConnection,
 } from "../../domain/providerConnections";
+import {
+  getProbeMetric,
+  getLatencyTierClass,
+} from "../../features/models/index.ts";
+
+function renderConnectionProbeBadge(connectionId: string) {
+  const probe = getProbeMetric(connectionId);
+  if (!probe) return null;
+
+  return (
+    <small
+      className={`kk-model-probe-badge ${getLatencyTierClass(probe.tier)}`}
+      title={`延迟 ${probe.latencyMs}ms${probe.ttftMs ? ` · 首字 ${probe.ttftMs}ms` : ""}`}
+    >
+      <span className="kk-probe-dot" aria-hidden="true" />
+      <span className="kk-probe-val">
+        {probe.tier === "error" ? "异常" : `${probe.latencyMs}ms`}
+      </span>
+    </small>
+  );
+}
 
 export default function ProviderConnectionList({
   connections,
@@ -83,6 +104,7 @@ export default function ProviderConnectionList({
               >
                 {verified ? "已验证生成" : "未验证生成"}
               </small>
+              {renderConnectionProbeBadge(connection.id)}
             </button>
           );
         })}

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
+import * as canvasItems from "../../src/domain/canvasItems.ts";
 import {
   createProject,
   emptyDraft,
@@ -23,11 +24,23 @@ import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
 } from "../../src/domain/modelProvider.ts";
-import {
-  appendImageTask,
-  ImageTaskCommandError,
-} from "../../src/features/creation/imageTaskCommand.ts";
+import { appendImageTask } from "../../src/features/creation/imageTaskCommand.ts";
+import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
+import { createSubmissionLogic } from "../../src/features/creation/useImageCommandSubmission.ts";
 import type useConversationSubmit from "../../src/components/useConversationSubmit.ts";
+
+if (typeof navigator !== "undefined") {
+  try {
+    Object.defineProperty(navigator, "onLine", {
+      value: true,
+      configurable: true,
+      writable: true,
+    });
+  } catch {
+    // Headless environment without navigator
+    void 0;
+  }
+}
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -50,14 +63,26 @@ const appAst = ts.createSourceFile(
   true,
   ts.ScriptKind.TSX,
 );
+const conversationSource = await readFile(
+  new URL("../../src/app/useActiveProjectConversation.ts", import.meta.url),
+  "utf8",
+);
+const conversationAst = ts.createSourceFile(
+  "useActiveProjectConversation.ts",
+  conversationSource,
+  ts.ScriptTarget.Latest,
+  true,
+  ts.ScriptKind.TS,
+);
 function appFunction(name: string): string {
   let result: string | undefined;
   function visit(node: ts.Node) {
     if (ts.isFunctionDeclaration(node) && node.name?.text === name)
-      result = node.getText(appAst);
+      result = node.getText(node.getSourceFile());
     ts.forEachChild(node, visit);
   }
   visit(appAst);
+  visit(conversationAst);
   assert.ok(result, `Missing production App function ${name}`);
   return result;
 }
@@ -70,10 +95,11 @@ function appInitializer(name: string): string {
       ts.isIdentifier(node.name) &&
       node.name.text === name
     )
-      result = node.initializer?.getText(appAst);
+      result = node.initializer?.getText(node.getSourceFile());
     ts.forEachChild(node, visit);
   }
   visit(appAst);
+  visit(conversationAst);
   assert.ok(result, `Missing production App initializer ${name}`);
   return result;
 }
@@ -433,8 +459,10 @@ for (const alias of ["missing", "undefined"] as const) {
     const h = appDraftHarness(loadedSnapshot.projects[0]);
     const original = projectChatView(h.current());
     const rendered = evaluate(
-      `export const draft = ${appInitializer("conversationDraft")};`,
+      `${appFunction("resolveConversationDraft")}
+       export const draft = ${appInitializer("conversationDraft")};`,
       {
+        saveState: "saved",
         activeProject: original,
         selectedChat: original.chats!.A,
       },
@@ -651,6 +679,58 @@ for (const transition of [
   });
 }
 
+for (const agentResult of [undefined, "Agent 拒绝提交"]) {
+  test(`Codex canvas submission stops at its injected Agent port on ${agentResult ?? "success"}`, async () => {
+    const project = projectFixture();
+    project.items = [
+      {
+        id: "codex-source",
+        kind: "text",
+        title: "Codex source",
+        generationSource: "codex",
+        updatedAt: 100,
+      },
+    ];
+    const snapshot = { ...emptySnapshot(), projects: [project] };
+    let agentCalls = 0;
+    let apiCalls = 0;
+    const submission = createSubmissionLogic({
+      creationRef: { current: snapshot },
+      activeProjectIdRef: { current: project.id },
+      persistence: { state: "saved", flush: async () => {} },
+      homeModelConfig: { model: "", configured: false },
+      generateFromCanvas: async (input) => {
+        agentCalls++;
+        assert.equal(input.nodeId, "codex-source");
+        assert.equal(input.validate(), undefined);
+        return agentResult;
+      },
+      prepareTask: async () => {
+        apiCalls++;
+        throw new Error("Codex submission must not fall through to API");
+      },
+      executeTask: async () => assert.fail("must not execute an API task"),
+      cancelTask: () => assert.fail("must not cancel an API task"),
+      commitCreation: () => assert.fail("must not create an API task"),
+      replaceCanvasItems: () => [],
+    });
+    const result = await submission.submitImageCommand({
+      origin: "canvas",
+      input: {
+        sourceItemId: "codex-source",
+        prompt: "Write a caption",
+        model: "",
+        count: 1,
+      },
+    });
+    assert.equal(agentCalls, 1);
+    assert.equal(apiCalls, 0);
+    assert.equal(result, agentResult);
+    assert.equal(submission.submitLock.current, false);
+    assert.deepEqual(snapshot.projects[0].tasks, []);
+  });
+}
+
 function appSubmissionHarness(prepareGate?: Promise<void>) {
   const initial = projectFixture();
   const creationRef = {
@@ -673,7 +753,7 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
     protocol: "openai-chat",
     authMode: "api-key",
   };
-  const loaded = evaluate(`export ${appFunction("submitImageCommand")}`, {
+  const { submitImageCommand } = createSubmissionLogic({
     creationRef,
     activeProjectIdRef,
     submitLock: { current: false },
@@ -684,26 +764,11 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
         return flush.promise;
       },
     },
-    projectChatView,
-    updateProjectChatView,
-    appendImageTask,
-    emptyDraft,
-    createProject,
-    prepareImageTask: async () => {
+    homeModelConfig: { model: "fixture", configured: true },
+    prepareTask: async () => {
       await prepareGate;
-      return connection;
+      return connection as unknown as ProviderConnection;
     },
-    getGenerationUiState: () => "ready",
-    homeModelConfig: { configured: true },
-    navigator: { onLine: true },
-    structuredClone,
-    ImageTaskCommandError,
-    Error,
-    rootItemId: (project: CreationProject) => project.items[0].id,
-    commitCreation(next: typeof creationRef.current) {
-      creationRef.current = next;
-    },
-    replaceCanvasItems() {},
     executeTask: async (
       _projectId: string,
       _taskId: string,
@@ -712,10 +777,13 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
       executed.push(project);
     },
     cancelTask: (id: string) => cancelled.push(id),
+    commitCreation(next: typeof creationRef.current) {
+      creationRef.current = next;
+    },
+    replaceCanvasItems() {
+      return [];
+    },
   });
-  const submit = loaded.submitImageCommand as (
-    request: unknown,
-  ) => Promise<string | undefined>;
   return {
     creationRef,
     activeProjectIdRef,
@@ -724,7 +792,7 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
     executed,
     cancelled,
     submit: () =>
-      submit({
+      submitImageCommand({
         origin: "chat",
         input: { ...initial.composerDraft, prompt: "A draft" },
       }),
@@ -841,8 +909,12 @@ function appHomeSubmissionHarness(accepted: boolean) {
   const calls: { message: string; options: Record<string, unknown> }[] = [];
   const submitLock = { current: false };
   const homeCodexStarting = { current: false };
+  const connectFresh: boolean[] = [];
+  const connectProjectIds: (string | undefined)[] = [];
   const loaded = evaluate(
-    `${appFunction("updateProject")}
+    `${appFunction("validateHomeCodexPreconditions")}
+     ${appFunction("executeHomeCodexProject")}
+     ${appFunction("updateProject")}
      ${appFunction("updateHomeDraft")}
      export ${appFunction("handleCreateProject")}`.replaceAll(
       "import.meta.env.VITE_KK_AGENT_PROXY",
@@ -887,7 +959,12 @@ function appHomeSubmissionHarness(accepted: boolean) {
       setChat() {},
       replaceCanvasItems() {},
       persistence: { async flush() {} },
-      desktopAgentLifecycle: { async connect() {} },
+      desktopAgentLifecycle: {
+        async connect(fresh = false, newProjectId?: string) {
+          connectFresh.push(fresh);
+          connectProjectIds.push(newProjectId);
+        },
+      },
       configureAgentProxy() {},
     },
   );
@@ -901,6 +978,8 @@ function appHomeSubmissionHarness(accepted: boolean) {
     calls,
     submitLock,
     homeCodexStarting,
+    connectFresh,
+    connectProjectIds,
     submit: () =>
       submit({
         prompt: "HOME original",
@@ -1155,3 +1234,81 @@ for (const state of ["saved", "unavailable"] as const)
       existingBytes,
     );
   });
+
+test("App selecting a chat immediately projects its draft, execution channel and messages", () => {
+  let current = projectFixture();
+  current.chats!.B.draft.conversationChannel = "codex";
+  current.chats!.B.draft.modelSelection = {
+    source: "codex",
+    model: "",
+    kind: "text",
+  };
+  current.chats!.B.messages = [
+    { id: "B-message", role: "user", content: "B message", createdAt: 1 },
+  ];
+  const originalA = JSON.stringify(current.chats!.A);
+  const loaded = evaluate(`export ${appFunction("handleSelectChat")}`, {
+    activeProject: current,
+    projectChatView,
+    updateProject(
+      id: string,
+      update: (project: CreationProject) => CreationProject,
+    ) {
+      assert.equal(id, current.id);
+      current = update(current);
+    },
+  });
+  (loaded.handleSelectChat as (id: string) => void)("B");
+  assert.equal(current.activeChatId, "B");
+  assert.equal(current.composerDraft.prompt, "B draft");
+  assert.equal(current.composerDraft.conversationChannel, "codex");
+  assert.equal(current.messages[0].content, "B message");
+  assert.equal(JSON.stringify(current.chats!.A), originalA);
+});
+
+test("App home creation explicitly requests a new Agent conversation for the new project", async () => {
+  const h = appHomeSubmissionHarness(true);
+  const pending = h.submit();
+  await h.entered.promise;
+  h.release.resolve();
+  await pending;
+  assert.deepEqual(h.connectFresh, [true]);
+  assert.deepEqual(h.connectProjectIds, [
+    h.creationRef.current.activeProjectId,
+  ]);
+});
+
+test("App preview deletion preserves the Comfy output dismissal in the original card", () => {
+  const id = "comfy-output-" + "a".repeat(24);
+  let items = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "output", kind: "image", description: "ComfyUI · card" },
+  ] as canvasItems.CanvasCollectionItem[];
+  let callback: ts.Node | undefined;
+  function visit(node: ts.Node) {
+    if (
+      ts.isPropertyAssignment(node) &&
+      node.name.getText(appAst) === "deleteItem"
+    )
+      callback = node.initializer;
+    ts.forEachChild(node, visit);
+  }
+  visit(appAst);
+  assert(callback);
+  const loaded = evaluate(`export const remove = ${callback.getText(appAst)}`, {
+    removeCanvasItems: (canvasItems as Record<string, unknown>)
+      .removeCanvasItems,
+    updateCanvasItems(update: (value: typeof items) => typeof items) {
+      items = update(items);
+    },
+  });
+  (loaded.remove as (id: string) => void)(id);
+  assert(!items.some((item) => item.id === id));
+  assert.deepEqual(items[0].comfyWorkflow?.dismissedOutputIds, [id]);
+});

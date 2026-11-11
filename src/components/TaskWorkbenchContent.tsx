@@ -4,19 +4,26 @@ import type {
   CreationProject,
   CreationTask,
   CreationTaskOutput,
-} from "../features/creation/model";
+} from "../features/creation/index.ts";
 import TaskWorkbenchExport from "./TaskWorkbenchExport";
 import BatchMatrix from "./BatchMatrix";
 import TaskWorkbenchReview from "./TaskWorkbenchReview";
 import TaskWorkbenchStages, {
   type StagePlanActions,
 } from "./TaskWorkbenchStages";
-import { formatCostUsd } from "../features/creation/taskState";
-import { taskRetryAvailability } from "../features/creation/taskRetryAvailability";
-export { taskOutputsForDisplay as outputsFor } from "../features/creation/taskRetryAvailability";
+import {
+  resolveWorkbenchTab,
+  type WorkbenchTab,
+} from "./TaskWorkbenchVisibility";
+import { formatCostUsd } from "../features/creation/index.ts";
+import { taskRetryAvailability } from "../features/creation/index.ts";
+export { taskOutputsForDisplay as outputsFor } from "../features/creation/index.ts";
+export {
+  resolveWorkbenchTab,
+  visibleWorkbenchTabs,
+  type WorkbenchTab,
+} from "./TaskWorkbenchVisibility";
 
-export type WorkbenchTab =
-  "queue" | "prompt" | "generate" | "review" | "export" | "plan";
 
 export function statusLabel(task: CreationTask): string {
   return task.status === "queued"
@@ -57,6 +64,8 @@ export default function TaskWorkbenchContent({
   onCommentsChange,
   project,
   onStageDecision,
+  onExecuteStage,
+  onCancelStage,
   onRetryStage,
   onRequestPlanApproval,
   stageWriteDisabledReason,
@@ -75,12 +84,15 @@ export default function TaskWorkbenchContent({
   onCommentsChange: (comments: ReviewComment[]) => void;
   project?: CreationProject;
 } & StagePlanActions) {
-  if (tab === "plan")
+  const activeTab = resolveWorkbenchTab(tab);
+  if (activeTab === "plan")
     return (
       <TaskWorkbenchStages
         key={project?.id ?? "no-project"}
         project={project}
         onStageDecision={onStageDecision}
+        onExecuteStage={onExecuteStage}
+        onCancelStage={onCancelStage}
         onRetryStage={onRetryStage}
         onRequestPlanApproval={onRequestPlanApproval}
         stageWriteDisabledReason={stageWriteDisabledReason}
@@ -163,7 +175,7 @@ export default function TaskWorkbenchContent({
         </div>
       </div>
       {retryReason && <p role="status">{retryReason}</p>}
-      {tab === "queue" && (
+      {activeTab === "queue" && (
         <div className="task-overview-grid">
           <div>
             <span>预计成本</span>
@@ -190,7 +202,7 @@ export default function TaskWorkbenchContent({
             </strong>
             <small>
               {selected.privacyMode === "platform_backed"
-                ? "数据会离开本机 · Prototype"
+                ? "数据会离开本机"
                 : selected.privacyMode === "byok_local"
                   ? "结果保存在本机；请求会发送到指定 Provider"
                   : "素材保留在本机"}
@@ -198,7 +210,7 @@ export default function TaskWorkbenchContent({
           </div>
         </div>
       )}
-      {tab === "prompt" && (
+      {activeTab === "prompt" && (
         <div className="task-detail-card">
           <h3>Prompt</h3>
           <p className="task-prompt-copy">{selected.prompt || "暂无提示词"}</p>
@@ -215,7 +227,7 @@ export default function TaskWorkbenchContent({
           </div>
         </div>
       )}
-      {tab === "generate" && (
+      {activeTab === "generate" && (
         <BatchMatrix
           task={selected}
           tasks={project?.tasks}
@@ -223,10 +235,10 @@ export default function TaskWorkbenchContent({
           onRetryOutput={onRetryOutput}
         />
       )}
-      {tab === "review" && (
+      {activeTab === "review" && (
         <TaskWorkbenchReview selected={selected} gates={gates} />
       )}
-      {tab === "export" && (
+      {activeTab === "export" && (
         <TaskWorkbenchExport
           key={selected.id}
           selected={selected}

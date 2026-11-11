@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-22-design-system",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/dark-assets.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4ee964026b51560de8bd89512e66996d2492a58e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/dark-assets.png",
+      "bytes": 104309,
+      "sha256": "91544d1ed97062811e5cb4d67694ed6aa1b457f5af22555bcc1c86e7beaed24c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/dark-plugins.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c56b7f4d9f1cb394f70749f108446b990d035444",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/dark-plugins.png",
+      "bytes": 147654,
+      "sha256": "c313b4e99711f4dade1dd50a7ec853c144a479bd2f28bc6091a5bf2b1843b4bf",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/dark-white-provider.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c5c0a0f48a61ffedd73147a98dae74ad85c19c58",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/dark-white-provider.png",
+      "bytes": 237137,
+      "sha256": "5bff9deb1e71a99ec80aeb162ac6f7efb3e222a9d1dc2cf060406c46287865a6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/light-assets.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e6796bd810c7002932199795598824817a7379ee",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/light-assets.png",
+      "bytes": 146347,
+      "sha256": "17af663b8005392110fb938eabdfa1218233a051d89caec68f657187b6a084e6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/light-plugins.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6646f0c52183514be7455943b9047042574ab1da",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/light-plugins.png",
+      "bytes": 191023,
+      "sha256": "4586ecbcfae0b6cf317ae82e31bf908f681e362544a855a635bff3ffb8edf3ef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/light-white-provider.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "33caaac3d800a0bc6f6d96dcf9998fe4e474a559",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/light-white-provider.png",
+      "bytes": 236000,
+      "sha256": "79105fa38d8c2b8e1b8a02f130e317d45929b77aa868c98e61051b4de187950d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7e753fe6ee13c316f2afbd974f6d9ffeeb1d964b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/settings-1920.png",
+      "bytes": 482939,
+      "sha256": "2b2dbcd4d91e069cc5d6b76f44115fddfcb8660cca0de6457e0a34c35d627c5c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system/evidence/settings-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b59e626c902cdd7d19cb0a9b790145648ab5c726",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system/evidence/settings-768.png",
+      "bytes": 110307,
+      "sha256": "9437efd9daf0e96f997301f3832ed2b80b2c228ebba44d1b5480cfeacd032fee",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

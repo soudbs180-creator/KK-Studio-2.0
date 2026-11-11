@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -88,7 +89,7 @@ internal sealed class StartupProcess
 internal sealed class StartupWindow : Form
 {
     private readonly StartupProcess startup = new StartupProcess();
-    private readonly Label status = new Label();
+    private readonly Label subtitle = new Label();
     private readonly Button cancel = new Button();
     private bool finished;
     public int Result { get; private set; }
@@ -99,22 +100,71 @@ internal sealed class StartupWindow : Form
     {
         Text = "KK Studio";
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-        Font = SystemFonts.MessageBoxFont;
-        ClientSize = new Size(440, 155);
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
-        MinimizeBox = false;
+        Font = new Font("Microsoft YaHei UI", 16f, FontStyle.Regular, GraphicsUnit.Pixel);
+        ClientSize = new Size(680, 360);
+        FormBorderStyle = FormBorderStyle.None;
         StartPosition = FormStartPosition.CenterScreen;
+        BackColor = Color.FromArgb(26, 26, 26);
+        ForeColor = Color.FromArgb(219, 219, 219);
+        DoubleBuffered = true;
+        KeyPreview = true;
         Opacity = 0;
         ShowInTaskbar = false;
-        status.SetBounds(20, 18, 400, 48);
-        status.Text = "正在启动 KK Studio…\n更新后首次启动可能需要一些时间，请稍候。";
-        var progress = new ProgressBar { Style = ProgressBarStyle.Marquee };
-        progress.SetBounds(20, 75, 400, 14);
+        var mark = new PictureBox
+        {
+            SizeMode = PictureBoxSizeMode.Zoom,
+            BackColor = BackColor
+        };
+        using (var icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath))
+        {
+            if (icon != null) mark.Image = icon.ToBitmap();
+        }
+        var title = new Label
+        {
+            Text = "KK Studio",
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.FromArgb(219, 219, 219),
+            BackColor = BackColor,
+            Font = new Font(Font.FontFamily, 28f, FontStyle.Bold, GraphicsUnit.Pixel)
+        };
+        subtitle.Text = "正在启动工作空间";
+        subtitle.TextAlign = ContentAlignment.MiddleCenter;
+        subtitle.ForeColor = Color.FromArgb(160, 160, 160);
+        subtitle.BackColor = BackColor;
+        subtitle.Font = new Font(Font.FontFamily, 16f, FontStyle.Bold, GraphicsUnit.Pixel);
+        var caption = new Label
+        {
+            Text = "展示品牌并读取本地启动参数",
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.FromArgb(160, 160, 160),
+            BackColor = BackColor,
+            Font = new Font(Font.FontFamily, 12f, FontStyle.Regular, GraphicsUnit.Pixel)
+        };
         cancel.Text = "取消";
-        cancel.SetBounds(340, 110, 80, 28);
+        cancel.FlatStyle = FlatStyle.Flat;
+        cancel.FlatAppearance.BorderSize = 0;
+        cancel.BackColor = Color.FromArgb(27, 27, 27);
+        cancel.ForeColor = Color.FromArgb(160, 160, 160);
+        cancel.Font = new Font(Font.FontFamily, 16f, FontStyle.Regular, GraphicsUnit.Pixel);
+        cancel.Cursor = Cursors.Hand;
         cancel.Click += (sender, e) => Close();
-        Controls.AddRange(new Control[] { status, progress, cancel });
+        KeyDown += (sender, e) => { if (e.KeyCode == Keys.Escape) Close(); };
+        const int width = 680;
+        var top = 70;
+        mark.SetBounds((width - 56) / 2, top, 56, 56);
+        top += 68;
+        title.SetBounds(40, top, width - 80, 36);
+        top += 48;
+        subtitle.SetBounds(40, top, width - 80, 24);
+        top += 36;
+        caption.SetBounds(40, top, width - 80, 16);
+        top += 28;
+        cancel.SetBounds((width - 96) / 2, top, 96, 40);
+        using (var pill = Rounded(new Rectangle(0, 0, 96, 40), 20))
+            cancel.Region = new Region(pill);
+        Controls.AddRange(new Control[] { mark, title, subtitle, caption, cancel });
+        using (var outline = Rounded(new Rectangle(0, 0, width, 360), 16))
+            Region = new Region(outline);
         var delay = new System.Windows.Forms.Timer { Interval = 800 };
         delay.Tick += (sender, e) => { delay.Stop(); Opacity = 1; ShowInTaskbar = true; Activate(); };
         FormClosing += (sender, e) =>
@@ -122,7 +172,7 @@ internal sealed class StartupWindow : Form
             if (finished) return;
             e.Cancel = true;
             cancel.Enabled = false;
-            status.Text = "正在取消启动…";
+            subtitle.Text = "正在取消启动…";
             Task.Factory.StartNew(() => startup.Cancel());
         };
         FormClosed += (sender, e) => delay.Dispose();
@@ -137,6 +187,30 @@ internal sealed class StartupWindow : Form
                 BeginInvoke(new Action(() => { Result = result; finished = true; delay.Stop(); Close(); }));
             });
         };
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        using (var pen = new Pen(Color.FromArgb(60, 60, 60)))
+        using (var outline = Rounded(new Rectangle(0, 0, Width - 1, Height - 1), 16))
+            e.Graphics.DrawPath(pen, outline);
+        using (var pen = new Pen(Color.FromArgb(60, 60, 60)))
+        using (var outline = Rounded(cancel.Bounds, 20))
+            e.Graphics.DrawPath(pen, outline);
+    }
+
+    private static GraphicsPath Rounded(Rectangle bounds, int radius)
+    {
+        var path = new GraphicsPath();
+        var diameter = radius * 2;
+        path.AddArc(bounds.X, bounds.Y, diameter, diameter, 180, 90);
+        path.AddArc(bounds.Right - diameter, bounds.Y, diameter, diameter, 270, 90);
+        path.AddArc(bounds.Right - diameter, bounds.Bottom - diameter, diameter, diameter, 0, 90);
+        path.AddArc(bounds.X, bounds.Bottom - diameter, diameter, diameter, 90, 90);
+        path.CloseFigure();
+        return path;
     }
 }
 

@@ -15,6 +15,7 @@ import {
 import { connectionFromModelProfile } from "../../src/features/creation/providerRegistry.ts";
 import { compileDesignPrompt } from "../../src/features/creation/promptCompiler.ts";
 import { requiredApprovalGates } from "../../src/domain/agentWorkflow.ts";
+import { decodeSnapshot } from "../../src/domain/creationSnapshotCodec.ts";
 
 test("creation snapshots normalize old drafts without losing project content", () => {
   const snapshot = normalizeCreationSnapshot({
@@ -83,6 +84,57 @@ test("new tasks keep cost unknown until a provider returns a quote", () => {
   });
 
   assert.equal(createTask(project).estimatedCostUsd, undefined);
+});
+
+test("home image parameters survive project, task and persisted chat recovery", () => {
+  const project = createProject({
+    prompt: "Retain image settings",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+    imageSize: "1536x1024",
+    outputCount: 4,
+    modelSelection: {
+      source: "api",
+      model: "image-test",
+      kind: "image",
+      connectionId: "account-a",
+    },
+  });
+  const task = createTask(project);
+  project.tasks = [task];
+  const recovered = decodeSnapshot({
+    version: 3,
+    revision: 1,
+    activeProjectId: project.id,
+    homeDraft: { ...project.composerDraft, prompt: "unsent home" },
+    projects: [project],
+  });
+  assert.equal(recovered.homeDraft.imageSize, "1536x1024");
+  assert.equal(recovered.projects[0].composerDraft.imageSize, "1536x1024");
+  assert.equal(recovered.projects[0].tasks[0].imageSize, "1536x1024");
+  assert.equal(recovered.projects[0].tasks[0].requestedOutputs, 4);
+  assert.equal(
+    recovered.projects[0].items[0].parameters?.imageSize,
+    "1536x1024",
+  );
+  assert.equal(recovered.projects[0].items[0].parameters?.count, "4");
+});
+
+test("snapshot recovery rejects invalid supplied draft image sizes without silently dropping them", () => {
+  for (const imageSize of ["auto", "1024", "0x1024", 1024, null]) {
+    assert.throws(
+      () =>
+        decodeSnapshot({
+          version: 3,
+          revision: 0,
+          activeProjectId: null,
+          projects: [],
+          homeDraft: { prompt: "preserve", imageSize },
+        }),
+      /项目|结构/,
+    );
+  }
 });
 
 test("task source item provenance is optional and survives normalization", () => {

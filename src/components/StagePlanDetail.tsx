@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { stageParameterSummary } from "../domain/stageGenerationParameters.ts";
 import {
   stageApprovalGateFor,
   stageWorkItemCounts,
@@ -6,7 +7,10 @@ import {
   type StagePlan,
   type StageWorkItemStatus,
 } from "../domain/stagePlan";
-import type { StageDecisionInput } from "../features/agent/orchestrator";
+import {
+  stageToTicketPhase,
+  type StageDecisionInput,
+} from "../features/agent/index.ts";
 
 const workStatusLabels: Record<StageWorkItemStatus, string> = {
   queued: "待执行",
@@ -23,6 +27,8 @@ export default function StagePlanDetail({
   busy,
   disabledReason,
   onDecision,
+  onExecute,
+  onCancel,
   onRetry,
   onRequestPlanApproval,
 }: {
@@ -31,6 +37,8 @@ export default function StagePlanDetail({
   busy: boolean;
   disabledReason?: string;
   onDecision: (input: StageDecisionInput) => Promise<void>;
+  onExecute?: () => Promise<void>;
+  onCancel?: () => void;
   onRetry: () => Promise<void>;
   onRequestPlanApproval: () => Promise<void>;
 }) {
@@ -56,12 +64,61 @@ export default function StagePlanDetail({
       ...(ids ? { reworkItems: ids.map((id) => ({ id })) } : {}),
     });
   };
+  function renderExecution() {
+    return (
+      <>
+        {stage.status === "doing" && (
+          <>
+            <p className="stage-plan-guidance">
+              {needsPlanApproval
+                ? "计划审批尚未通过，请重新提交计划审批。"
+                : "用户确认后签发 Mandate，按依赖执行真实任务；已成功结果保留。"}
+            </p>
+            {!needsPlanApproval && onExecute && (
+              <button
+                type="button"
+                className="primary-button"
+                disabled={disabled}
+                onClick={() => void onExecute()}
+              >
+                执行已批准阶段
+              </button>
+            )}
+            {busy && onCancel && (
+              <button type="button" className="ui-button" onClick={onCancel}>
+                取消执行
+              </button>
+            )}
+            {stage.executionMandate && (
+              <p>Mandate：{stage.executionMandate.id}</p>
+            )}
+            {needsPlanApproval && (
+              <div className="stage-plan-actions">
+                <button
+                  type="button"
+                  className="primary-button"
+                  disabled={disabled}
+                  onClick={() => void onRequestPlanApproval()}
+                >
+                  {busy ? "保存中…" : "重新提交计划审批"}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </>
+    );
+  }
   return (
     <section
       className="stage-plan-detail"
       aria-label={`阶段详情：${stage.name}`}
     >
       <h3>{stage.name}</h3>
+      <p>
+        工单阶段：
+        {stageToTicketPhase(stage.status, stage.planApprovedAt !== undefined)}
+      </p>
       <p>{stage.goal}</p>
       <p>
         {counts.succeeded} / {counts.total} 工作项已成功 · {counts.failed}{" "}
@@ -75,6 +132,11 @@ export default function StagePlanDetail({
               {item.id} · {item.kind} · {workStatusLabels[item.status]}
             </strong>
             <p>{item.prompt}</p>
+            <p>生成参数：{stageParameterSummary(item)}</p>
+            <p>
+              实际模型：{item.model || "尚未配置"}
+              {item.taskId ? ` · 任务 ${item.taskId}` : ""}
+            </p>
             {item.reworkPrompt && <p>返工指令：{item.reworkPrompt}</p>}
             {item.dependencies.length > 0 && (
               <p>依赖：{item.dependencies.join("、")}</p>
@@ -86,27 +148,7 @@ export default function StagePlanDetail({
           </li>
         ))}
       </ul>
-      {stage.status === "doing" && (
-        <>
-          <p className="stage-plan-guidance">
-            {needsPlanApproval
-              ? "计划审批尚未通过，请重新提交计划审批。"
-              : "计划自动执行尚未接入；审批不会自动提交或重复创建生成任务。"}
-          </p>
-          {needsPlanApproval && (
-            <div className="stage-plan-actions">
-              <button
-                type="button"
-                className="primary-button"
-                disabled={disabled}
-                onClick={() => void onRequestPlanApproval()}
-              >
-                {busy ? "保存中…" : "重新提交计划审批"}
-              </button>
-            </div>
-          )}
-        </>
-      )}
+      {renderExecution()}
       {gate && !rework && (
         <div className="stage-plan-actions">
           <button
@@ -115,7 +157,11 @@ export default function StagePlanDetail({
             disabled={disabled}
             onClick={() => decide("approve")}
           >
-            {busy ? "保存中…" : gate === "plan" ? "批准计划" : "批准结果"}
+            {busy
+              ? "执行中…"
+              : gate === "plan"
+                ? "批准计划并签发 Mandate 执行"
+                : "批准结果"}
           </button>
           <button
             type="button"
@@ -196,7 +242,7 @@ export default function StagePlanDetail({
             解除阻断
           </button>
           <p>
-            只重置失败或部分成功的工作项；已成功结果保留，不会自动提交生成。
+            重置失败、部分成功或已取消的工作项；已成功结果保留，不会自动提交生成。
           </p>
         </div>
       )}

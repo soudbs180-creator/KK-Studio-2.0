@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-22-codex-default-agent",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-22-codex-default-agent/evidence/codex-continuous-dialog.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0e45dbd014433f47570540119d44e6ae87b1960f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-codex-default-agent/evidence/codex-continuous-dialog.png",
+      "bytes": 95164,
+      "sha256": "b546f75746db0242fdb903675fa0bb99e0024c6fe0bfb24183c5da15104dd8cb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-codex-default-agent/evidence/codex-current-usage.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "724e95ce0231fddbf1bbc2764e9fd0515e3300bf",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-codex-default-agent/evidence/codex-current-usage.png",
+      "bytes": 95643,
+      "sha256": "6f8d784fa6800f9ef63c4aa4622b35b0c76c3bcc09e6ed7f3ad8095ae180c597",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-codex-default-agent/evidence/codex-mcp-canvas.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "13f71a771c0b73e989daa85528eee4785c17952b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-codex-default-agent/evidence/codex-mcp-canvas.png",
+      "bytes": 129005,
+      "sha256": "673e5d57fc280fc51c792d3ed7aed8507b70dd3acb2f80337c2d9539076af4b0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-codex-default-agent/evidence/codex-native-image.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5304d2d399aa1296c2c93d3a3e06e84757106d43",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-codex-default-agent/evidence/codex-native-image.png",
+      "bytes": 196304,
+      "sha256": "42b2532efde35ebe32206d6a4be958afb52d0530e256fbc164b2d9408f28600a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

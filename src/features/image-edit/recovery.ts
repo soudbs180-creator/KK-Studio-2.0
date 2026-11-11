@@ -1,4 +1,4 @@
-import type { CreationTask } from "../creation/model.ts";
+import type { CreationTask } from "../../domain/creationTypes.ts";
 import { formatEditPrompt } from "./prompt.ts";
 import {
   readImageEditContext,

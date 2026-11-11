@@ -17,9 +17,7 @@ async function setup(
       .getByRole("menu")
       .getByRole("button", { name: "模型接入…", exact: true })
       .click();
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     await page.getByLabel("接口地址").fill(baseUrl);
     await page.getByLabel("API Key", { exact: true }).fill("fixture-text-key");
     await page.getByLabel("模型名称").fill("gpt-text-test");
@@ -55,6 +53,7 @@ test("文本请求经真实产品链生成中文、保存并在刷新后恢复",
       model: "gpt-text-test",
       messages: [{ role: "user", content: "给这件产品写一句中文介绍" }],
       stream: true,
+      stream_options: { include_usage: true },
     });
     expect(route.request().headers()["authorization"]).toBe(
       "Bearer fixture-text-key",

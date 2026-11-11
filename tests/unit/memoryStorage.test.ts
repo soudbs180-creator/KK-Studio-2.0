@@ -4,6 +4,7 @@ import {
   createMemoryStorage,
   normalizeStore,
   readFsaStore,
+  readFsaScopedStore,
   KK_MEMORY_DIR_NAME,
   KK_MEMORY_FILE_NAME,
 } from "../../src/features/memory/storage.ts";
@@ -101,4 +102,81 @@ test("createMemoryStorage exposes the shared storage contract", () => {
   assert.equal(typeof storage.leaveSharedDirectory, "function");
   assert.equal(typeof storage.statusText, "function");
   assert.equal(typeof storage.mode, "function");
+});
+
+test("shared V2 files project safely to legacy management without changing records", async () => {
+  const timestamp = "2026-11-04T00:00:00Z";
+  const value = {
+    version: 2,
+    namespace: "global",
+    records: [],
+    updatedAt: timestamp,
+    metadata: {
+      scope: "global",
+      recordCount: 0,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    },
+  };
+  const handle = {
+    getFileHandle: async () => ({
+      getFile: async () => new File([JSON.stringify(value)], "memory.json"),
+    }),
+  };
+  assert.deepEqual(await readFsaStore(handle), {
+    version: 1,
+    namespace: "",
+    records: [],
+  });
+  value.metadata.recordCount = 1;
+  await assert.rejects(() => readFsaStore(handle), /元数据无效/);
+});
+
+test("shared scoped reads use Desktop SHA256 filenames and propagate permission errors", async () => {
+  const { createHash } = await import("node:crypto");
+  const timestamp = "2026-11-04T00:00:00Z";
+  const raw = JSON.stringify({
+    version: 2,
+    namespace: "project:项目/../p1",
+    records: [],
+    updatedAt: timestamp,
+    metadata: {
+      scope: "project",
+      scopeId: "项目/../p1",
+      recordCount: 0,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    },
+  });
+  let directory = "",
+    file = "";
+  const handle = {
+    name: ".kk-memory",
+    getFileHandle: async () => {
+      throw new Error("unexpected global read");
+    },
+    getDirectoryHandle: async (name: string) => {
+      directory = name;
+      return {
+        name,
+        getFileHandle: async (filename: string) => {
+          file = filename;
+          return { getFile: async () => new File([raw], filename) };
+        },
+      };
+    },
+  };
+  assert.equal(await readFsaScopedStore(handle, "project:项目/../p1"), raw);
+  assert.equal(directory, "projects");
+  assert.equal(
+    file,
+    createHash("sha256").update("项目/../p1").digest("hex") + ".json",
+  );
+  handle.getDirectoryHandle = async () => {
+    throw new DOMException("denied", "NotAllowedError");
+  };
+  await assert.rejects(
+    () => readFsaScopedStore(handle, "project:p1"),
+    /denied/,
+  );
 });

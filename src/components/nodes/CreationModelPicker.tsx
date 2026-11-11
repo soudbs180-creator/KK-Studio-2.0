@@ -2,9 +2,9 @@ import { useContext, useRef } from "react";
 import { useDismissible } from "../useDismissible";
 import BrandLogo from "../BrandLogo";
 import ModelPickerMenu from "../ModelPickerMenu";
-import { selectedModelLabel } from "../../features/models/modelPresentation";
-import { CanvasImageNodeContext } from "../../features/creation/CanvasImageCommand";
-import type { ModelSelection } from "../../features/models/modelSelection";
+import { selectedModelLabel } from "../../features/models/index.ts";
+import { CanvasImageNodeContext } from "../../features/creation/index.ts";
+import type { ModelSelection } from "../../features/models/index.ts";
 export default function CreationModelPicker({
   kind,
   value,
@@ -15,7 +15,7 @@ export default function CreationModelPicker({
   disabled = false,
 }: {
   disabled?: boolean;
-  kind: "image" | "video" | "text";
+  kind: "image" | "video" | "text" | "audio";
   value: string;
   open: boolean;
   onToggle: () => void;
@@ -65,7 +65,9 @@ export default function CreationModelPicker({
               ? "canvas-text"
               : kind === "image"
                 ? "canvas-image"
-                : "canvas-video"
+                : kind === "audio"
+                  ? "canvas-audio"
+                  : "canvas-video"
           }
           kind={kind}
           current={{

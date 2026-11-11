@@ -1,29 +1,86 @@
-/* Canvas content clips naturally beneath screen-space panels and controls. */
+/* Canvas content clips beneath screen-space panels and controls. */
 .image-selection-toolbar {
   position: absolute;
   z-index: var(--kk-z-base);
   transform-origin: top left;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: var(--kk-space-1);
   width: max-content;
-  padding: var(--kk-space-1);
-  border: var(--kk-border-width) solid var(--kk-border-default);
-  border-radius: var(--kk-radius-full);
-  background: var(--kk-bg-surface);
+  min-height: var(--kk-control-h-md);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--kk-text-primary);
-  box-shadow: var(--kk-elevation-2);
+  box-shadow: none;
 }
 
 .image-selection-toolbar > .kk-button {
   flex: 0 0 auto;
+  min-height: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+  padding-block: calc((var(--kk-hit-touch) - var(--kk-control-h-md)) / 2);
+  padding-inline: var(--kk-control-px-md);
+  gap: var(--kk-space-2);
+  border: 0;
+  background-clip: content-box;
   border-radius: var(--kk-radius-full);
+  color: var(--kk-control-idle-fg);
+  font-size: var(--kk-font-toolbar);
+  line-height: var(--kk-line-toolbar);
+  font-weight: var(--kk-font-weight-toolbar);
+  text-align: center;
+}
+
+.image-selection-toolbar > .kk-button:hover:not(:disabled),
+.image-selection-toolbar > .kk-button:focus-visible {
+  background: var(--kk-control-hover-bg);
+  color: var(--kk-control-selected-fg);
+}
+
+.image-selection-toolbar > .kk-button[aria-pressed="true"],
+.image-selection-toolbar > .kk-button[aria-selected="true"] {
+  background: var(--kk-control-selected-bg);
+  color: var(--kk-control-selected-fg);
+}
+.image-selection-toolbar
+  > .kk-button.like-action[aria-pressed="true"]
+  .kk-icon-slot {
+  animation: kk-confirm-spring 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes kk-confirm-spring {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.image-selection-toolbar > .kk-button .kk-icon-slot {
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 
 .image-selection-toolbar > .ui-icon-button {
   flex: 0 0 auto;
-  width: var(--kk-icon-button-h);
-  height: var(--kk-icon-button-h);
+  width: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+}
+
+.image-selection-toolbar .tag-editor-trigger {
+  width: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+  min-height: var(--kk-hit-touch);
+  padding: calc((var(--kk-hit-touch) - var(--kk-control-h-md)) / 2);
+  border: 0;
+  background-clip: content-box;
 }
 
 .uploaded-image,

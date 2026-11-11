@@ -1,5 +1,8 @@
 import type { ApprovalGate } from "../domain/agentWorkflow";
-import type { CreationTask } from "../features/creation/model";
+import type { CreationTask } from "../features/creation/index.ts";
+import { visibleReviewAgents } from "./TaskWorkbenchVisibility";
+
+export { visibleReviewAgents } from "./TaskWorkbenchVisibility";
 
 const GATE_LABELS: Record<ApprovalGate, string> = {
   remote_transfer: "远程传输",
@@ -8,15 +11,19 @@ const GATE_LABELS: Record<ApprovalGate, string> = {
   external_share: "外部分享",
   account_or_billing_change: "账户或计费变更",
 };
-const AGENTS = [
-  ["Planner", "拆解目标与审批边界 · Prototype"],
-  ["Prompt Compiler", "本地规则编译提示词与参数"],
-  ["Reference Analyst", "五类参考用途 · 视觉分析未接入"],
-  ["Generation Worker", "按连接提交批量任务"],
-  ["Asset Tagger", "归档 SHA-256 与 AI 标签"],
-  ["Reviewer", "人工审阅与区域评论"],
-  ["Compositor / Exporter", "外部导出服务未接入 · Prototype"],
-] as const;
+
+function agentStatus(label: string, selected: CreationTask): string {
+  if (label === "Generation Worker") {
+    return selected.status === "running" ? "运行中" : "待命";
+  }
+  if (label === "Asset Tagger") {
+    return selected.completedOutputs ? "已归档" : "等待结果";
+  }
+  if (label === "Reviewer") return "人工";
+  if (label === "Prompt Compiler") return "本地规则";
+  return "待命";
+}
+
 export default function TaskWorkbenchReview({
   selected,
   gates,
@@ -24,6 +31,7 @@ export default function TaskWorkbenchReview({
   selected: CreationTask;
   gates: ApprovalGate[];
 }) {
+  const agents = visibleReviewAgents();
   return (
     <div className="review-grid">
       <div className="approval-card">
@@ -55,28 +63,14 @@ export default function TaskWorkbenchReview({
       </div>
       <div className="agent-card-list">
         <h3>Agent Cards</h3>
-        {AGENTS.map(([label, detail], index) => (
+        {agents.map(([label, detail], index) => (
           <div className="agent-card" key={label}>
             <span className="agent-avatar">{index + 1}</span>
             <div>
               <strong>{label}</strong>
               <small>{detail}</small>
             </div>
-            <em>
-              {label === "Generation Worker"
-                ? selected.status === "running"
-                  ? "运行中"
-                  : "待命"
-                : label === "Asset Tagger"
-                  ? selected.completedOutputs
-                    ? "已归档"
-                    : "等待结果"
-                  : label === "Reviewer"
-                    ? "人工"
-                    : label === "Prompt Compiler"
-                      ? "本地规则"
-                      : "Prototype"}
-            </em>
+            <em>{agentStatus(label, selected)}</em>
           </div>
         ))}
       </div>

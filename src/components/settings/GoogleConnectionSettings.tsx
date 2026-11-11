@@ -1,24 +1,20 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { loadApiKey } from "../../features/creation/providerCredentials";
+import { loadApiKey } from "../../features/creation/index.ts";
 import {
   createGoogleInteractions,
   GOOGLE_API_BASE,
-} from "../../features/agent/googleInteractions";
-import {
   GOOGLE_CREDENTIAL_REF,
   getGoogleCredential,
   readGoogleCliPreference,
   saveGoogleApiKeyConnection,
   writeGoogleCliPreference,
-} from "../../features/agent/googleAgentConfig";
-import { googleAgentConnection } from "../../features/agent/googleAgentConnection";
-import {
+  googleAgentConnection,
   geminiCliStatus,
   geminiCliStatusMessage,
   type GeminiCliStatus,
   GEMINI_BRIDGE_DEFAULT_URL,
   normalizeGeminiBridgeUrl,
-} from "../../features/agent/geminiCliAdapter";
+} from "../../features/agent/index.ts";
 import GoogleConnectionActions from "./GoogleConnectionActions";
 import {
   GoogleCliSetup,
@@ -28,7 +24,7 @@ import {
 import useSettingsBusy from "./useSettingsBusy";
 import { useProviderCredentialState } from "./useProviderCredentialState";
 import ProviderCredentialStatus from "./ProviderCredentialStatus";
-import { providerSaveErrorMessage } from "../../features/creation/providerSaveRecovery";
+import { providerSaveErrorMessage } from "../../features/creation/index.ts";
 export default function GoogleConnectionSettings({
   onFeedback,
   mode = "all",
@@ -240,12 +236,14 @@ export default function GoogleConnectionSettings({
       className="settings-network-row settings-agent-card"
       aria-label="Google Gemini 配置"
     >
-      <h3>
-        Google Gemini
-        <span className="settings-version-tag">
-          {cli ? "仅对话" : "对话与生图"}
-        </span>
-      </h3>
+      <div className="settings-title-row">
+        <h3>
+          Google Gemini
+          <span className="settings-version-tag">
+            {cli ? "仅对话" : "对话与生图"}
+          </span>
+        </h3>
+      </div>
       {mode === "all" && (
         <GoogleLoginModeChoice
           cli={cli}

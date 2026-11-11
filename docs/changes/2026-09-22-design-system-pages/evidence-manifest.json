@@ -1,0 +1,388 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-22-design-system-pages",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/dark-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a4f4ca5bc37138387b4672cda48154646775d4d3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/dark-ComfyUI 工作流.png",
+      "bytes": 302181,
+      "sha256": "f43fb11e51830bf11afbd6668a909a618b447eaf0d32ec595722086a07810804",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/dark-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4d72230b5622ea10d7804b10bdced9f7475a0c27",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/dark-Skill.png",
+      "bytes": 855274,
+      "sha256": "4e63020f185e55ece346920ca5edb641dbac89e865cab9b661d52f882d2509bc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/dark-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "25b1aed4de7da36e3c851a1323e6b00b941a2336",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/dark-项目库.png",
+      "bytes": 94469,
+      "sha256": "47ce68b5b7aa47875a1b4c531b40450cbe9c7b5c0652841df3476efbb8f16228",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/light-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "502e5d1c7417e4fb069260873631146e81e0cfd6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/light-ComfyUI 工作流.png",
+      "bytes": 290180,
+      "sha256": "097a6bd90f789502edf958b9b6b875558f9283207f2ce242215aef65c9da423a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/light-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e57c0eb5842458f59ff7b06ab684b3adfeb79ca6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/light-Skill.png",
+      "bytes": 856510,
+      "sha256": "20e9947d5217312e0b351beb8ee7129cf79b850d2e99beaf5f42ee6f6899fed2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/light-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "75c4c4a8951d5e3b1825c1d56d0ab7d83f07e300",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/light-项目库.png",
+      "bytes": 94987,
+      "sha256": "d4d0b7e534909d4423e56bcc8f8160d02e1348bc8684d35bbae13592efd83492",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/restarted-skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "65a3d2c828f9db263e821aaa0e1818b83e481550",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/restarted-skill.png",
+      "bytes": 866271,
+      "sha256": "90ee80252715cc267e44d7741fcd99c27806d07e762f2e4c9ef7b3565887671e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/skill-editor.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d107d3d86a809c9a790fb2443b59343c311bf83f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-before-icons/skill-editor.png",
+      "bytes": 420740,
+      "sha256": "08c1e0c8760a74d6616317784f66205de359882afa4cafef4787f2c7b8a5ccf8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/dark-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a4f4ca5bc37138387b4672cda48154646775d4d3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/dark-ComfyUI 工作流.png",
+      "bytes": 302181,
+      "sha256": "f43fb11e51830bf11afbd6668a909a618b447eaf0d32ec595722086a07810804",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/dark-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d4002d63ef7d137eb22a1996631f2cf7dffccd79",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/dark-Skill.png",
+      "bytes": 854437,
+      "sha256": "b5b104c72c89999296b38254004ac8fdc27f6858334b6605cf578848092de5d8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/dark-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "25b1aed4de7da36e3c851a1323e6b00b941a2336",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/dark-项目库.png",
+      "bytes": 94469,
+      "sha256": "47ce68b5b7aa47875a1b4c531b40450cbe9c7b5c0652841df3476efbb8f16228",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/light-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "260798101ad2fde14f10e2ddfd5b99989c9786ff",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/light-ComfyUI 工作流.png",
+      "bytes": 290703,
+      "sha256": "879b622a762cd15c30df6f95dbabbef3722ab0b8677fd2437d5b8372c07deb33",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/light-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6f2ef16caa5844540c8a70a8c4fc2a645ba61633",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/light-Skill.png",
+      "bytes": 857161,
+      "sha256": "288158a9c998b5ebdfadea807550ca45f4789dfd3e46bcc45e471813edcf0e51",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/light-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5fb8c111589e048bbc4cf3b8ca92f5fe452970bc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/light-项目库.png",
+      "bytes": 95591,
+      "sha256": "7e680de514aa4ea5827fffa064a88be2fd92addb7c078cd6576a4b6044c3192e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/restarted-skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6c54a50c5c1945ad59621894a8d13bde1ac18c22",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/restarted-skill.png",
+      "bytes": 866710,
+      "sha256": "80b7325170505248305e5f03a691410a1259b0b2fdeac8f626bcc355ea442781",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/skill-editor.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f25f8bcf38d5b1ba45b414b36f546f135f0e90d0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/desktop-worktree/skill-editor.png",
+      "bytes": 425003,
+      "sha256": "e73b6116ad7dad03f87115c8f9aedaafab818bd76ecb49074e176f78a13477cc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-Skill--0e6c3-ve-cancel-and-focus-at-1920/skill-editor-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2e2233d78edf9c4802619d93bd4cc9f7d8bb4e95",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-Skill--0e6c3-ve-cancel-and-focus-at-1920/skill-editor-1920.png",
+      "bytes": 249127,
+      "sha256": "8c86b2612992168f5ec17055789446d1ce2712174f73c86e9764fe9784e19529",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-Skill--fb664-ave-cancel-and-focus-at-390/skill-editor-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c965b12a9efbbd0355463b315ecf38a6f018e11a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-Skill--fb664-ave-cancel-and-focus-at-390/skill-editor-390.png",
+      "bytes": 39994,
+      "sha256": "f63f0c2173e3555d58898f06e258a0746daa68823668c94fa238c3079f1d3487",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fd76dc61e1fab730613fbec67edc82f10faa2bdb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-ComfyUI 工作流.png",
+      "bytes": 46660,
+      "sha256": "eb10d1665b157a3a61c5a93da92f9eae1f556b8df9fce7a8cbfbd87f69b8e4ef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "07f36070b6b75e269af3d4f18a32c694b1040eef",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-Skill.png",
+      "bytes": 151308,
+      "sha256": "4570e37d561988ca6ea3eb0535421284a75266d7edfd6546e28204caa43d61c3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7dd665b70ceb060ce73e60bd77c4c95a151f7627",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-项目库.png",
+      "bytes": 33993,
+      "sha256": "dc1a09c62bf83c8dc03c423483bb3e86ef27bd56e86098d98c83c0ef8e2396ae",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "982b5e1f90aeb5fa742f1134856bc30105e944d5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-ComfyUI 工作流.png",
+      "bytes": 185838,
+      "sha256": "77e85263f2ec64e92ee223c018ab184c6dfd40622555bd9376cea78e3ff084df",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "effdf7189cf3a8c8ed75f97edf05bf08392f8067",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-Skill.png",
+      "bytes": 425319,
+      "sha256": "8534fbbff74f0998cec3ca04f79cc6549409e1cde04221b6a62b7ecb5547ea68",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b3b3bb8c4f17e59ce73eaabcfefda70d24c8e6e7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-项目库.png",
+      "bytes": 57679,
+      "sha256": "2e8bd2076ebea483aa39a44991fe29da8a1347bec1b0dc2785f1d5a2a95557b7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cc62cddcf614394e6a30ba837e168f7c725bf7b2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-ComfyUI 工作流.png",
+      "bytes": 82155,
+      "sha256": "a01f179bb8aa75b0df4990889198e76f22579483391689ccc9e87b8a7836efbb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "897a15d4787e6d68f0425ff5341cf99bd5f6006d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-Skill.png",
+      "bytes": 238276,
+      "sha256": "ef55de93d179e1a19c2134a88ee27d1dc8af84bdcd0b253eb37725a0a86a159d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c94039829c027d7c968f118e984a3bc9fcd744ec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-项目库.png",
+      "bytes": 37182,
+      "sha256": "7cf448c155844e5c533cc9d8cf664469b7e4d0436a3303d92ad7ff8431c61cc9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7fef333fcd1cd0be4f6629acb63bd4fd2c779d7c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-ComfyUI 工作流.png",
+      "bytes": 185801,
+      "sha256": "d5e860b9c462443d06a5f98644aeea1fbd0483d12d42b045ca2ee1a28021a0f8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "35bed923ee250e8d472df0d8c6e25caf9cf69910",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-Skill.png",
+      "bytes": 425515,
+      "sha256": "94428022842d666bb020332a248a682157329cd94fb1fb6a8e8ec48b87e747cc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3843327749a345c25a87e39fee6418f06a2be4ff",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-项目库.png",
+      "bytes": 57686,
+      "sha256": "748755569240998124526fdcc985ee8b50acd0c87926fef2ffb6ba3d0cda3dbe",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0c0abaf888a166ad175e62b01683d2a25f7a7e89",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-ComfyUI 工作流.png",
+      "bytes": 184622,
+      "sha256": "d5b81897e1745f625864b44598fa15864378e222670733a8f8a1dd0347e99812",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8cfcca1a62e3b4f02e33154f94a44c9f06a05a9b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-Skill.png",
+      "bytes": 427362,
+      "sha256": "bafd8ecf092191ee58ed8fc28408ca5c7395bfa17f43426a649abd978cc06fc9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6e85634d056a141bd3c4f6ee39ab6a8102884c3d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-项目库.png",
+      "bytes": 57593,
+      "sha256": "4a0d3711293ec67a3e35a771584b3b2d7fe4393b948419e8342b388f63f80b6d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-dark-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6f36b40f626b980b7c9226d9b20826dbc748781a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-dark-1920.png",
+      "bytes": 252019,
+      "sha256": "d94366f6c7325d34977fd29d90c17137d6b2bd31d81f16a465ab332f8464f977",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-light-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "78fc5aec14436ea870d4348b362d217e6d5fbf8c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-light-1920.png",
+      "bytes": 254163,
+      "sha256": "76dfcc757fd25ef70444c04c7dc75b0d4051cf7edd614b5c8e9a15c342a6457d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-dark-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "54e3b416bc7fd9dfffc2de558ddc77623a2fd5fc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-dark-390.png",
+      "bytes": 45655,
+      "sha256": "67f699eb962c016d1fdbefbf8e5a3bc9cbb7ce2da0beb13992634c23a13c4265",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-light-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "50a7074b07fc0b7271b17b1368de936ce3916ad6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-design-system-pages/evidence/web/screenshots/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-light-390.png",
+      "bytes": 45773,
+      "sha256": "b717161db4378025445439495675dab8a5738c349082a6d31785e2372e32ea94",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

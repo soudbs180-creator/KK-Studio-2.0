@@ -19,7 +19,7 @@ function git(cwd, args, missingAllowed = false) {
 /** Install into common Git storage, independent of the task worktree lifetime. */
 export function installGitGuards(
   projectRoot,
-  { upgradeReviewedV1 = false } = {},
+  { upgradeReviewedV1 = false, upgradeReviewedPolicy = false } = {},
 ) {
   const root = git(projectRoot, ["rev-parse", "--show-toplevel"]);
   const common = git(projectRoot, [
@@ -69,51 +69,71 @@ export function installGitGuards(
       "2d595c0063121910526a92259de75611c47bddffa58ac7160be695b08b8dafd7",
     ];
     if (
-      upgradeReviewedV1 &&
       existing.length === files.length &&
       files.every((file) => fs.lstatSync(file.target).isFile()) &&
-      files.every(
-        (file, index) =>
-          createHash("sha256")
-            .update(fs.readFileSync(file.target))
-            .digest("hex") === reviewedV1[index],
-      ) &&
-      fs.readFileSync(files[1].target).equals(files[1].content)
+      createHash("sha256")
+        .update(fs.readFileSync(files[1].target))
+        .digest("hex") === reviewedV1[1] &&
+      ((upgradeReviewedV1 &&
+        createHash("sha256")
+          .update(fs.readFileSync(files[0].target))
+          .digest("hex") === reviewedV1[0]) ||
+        (upgradeReviewedPolicy &&
+          fs.readFileSync(files[0].target).equals(files[0].content)))
     ) {
-      const hook = files[0];
-      const mode = fs.statSync(hook.target).mode;
-      if (process.platform !== "win32" && !(mode & 0o111))
+      if (
+        process.platform !== "win32" &&
+        !(fs.statSync(files[0].target).mode & 0o111)
+      )
         throw new Error(
           "Existing pre-push is not executable; inspect its permissions before upgrading.",
         );
-      const backup = `${hook.target}.kk-studio-v1.bak`;
-      const temporary = `${hook.target}.kk-studio-v2.tmp`;
-      if (fs.existsSync(backup) || fs.existsSync(temporary))
+      const upgrades = files
+        .filter((file) => !fs.readFileSync(file.target).equals(file.content))
+        .map((file) => ({
+          ...file,
+          mode: fs.statSync(file.target).mode & 0o777,
+          backup: `${file.target}.kk-studio-v1.bak`,
+          temporary: `${file.target}.kk-studio-v2.tmp`,
+        }));
+      if (
+        upgrades.some(
+          (file) => fs.existsSync(file.backup) || fs.existsSync(file.temporary),
+        )
+      )
         throw new Error(
           "Upgrade backup or temporary path already exists; refusing to overwrite.",
         );
-      let createdTemporary = false;
+      const createdTemporary = [];
       try {
-        fs.writeFileSync(temporary, hook.content, {
-          flag: "wx",
-          mode: mode & 0o777,
-        });
-        createdTemporary = true;
-        // Creation mode is filtered by umask; Git ignores non-executable hooks.
-        fs.chmodSync(temporary, mode & 0o777);
-        fs.writeFileSync(backup, fs.readFileSync(hook.target), {
-          flag: "wx",
-          mode: mode & 0o777,
-        });
-        fs.chmodSync(backup, mode & 0o777);
-        // Until the atomic replacement succeeds, the old guard remains active.
-        fs.renameSync(temporary, hook.target);
+        for (const file of upgrades) {
+          fs.writeFileSync(file.temporary, file.content, {
+            flag: "wx",
+            mode: file.mode,
+          });
+          createdTemporary.push(file.temporary);
+          // Creation mode is filtered by umask; Git ignores non-executable hooks.
+          fs.chmodSync(file.temporary, file.mode);
+          fs.writeFileSync(file.backup, fs.readFileSync(file.target), {
+            flag: "wx",
+            mode: file.mode,
+          });
+          fs.chmodSync(file.backup, file.mode);
+        }
+        // Each replacement keeps a working guard active, even if a later rename fails.
+        for (const file of upgrades) fs.renameSync(file.temporary, file.target);
       } catch (error) {
-        if (createdTemporary && fs.existsSync(temporary))
-          fs.unlinkSync(temporary);
+        for (const temporary of createdTemporary)
+          if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
         throw error;
       }
-      return { installed: true, upgraded: true, backup, hooks, worktrees };
+      return {
+        installed: true,
+        upgraded: true,
+        backup: upgrades.map((file) => file.backup).join(", "),
+        hooks,
+        worktrees,
+      };
     }
     if (
       existing.length !== files.length ||
@@ -154,20 +174,28 @@ if (
 ) {
   try {
     const args = process.argv.slice(2);
-    if (args.some((arg) => arg !== "--upgrade-reviewed-v1"))
+    if (
+      args.some(
+        (arg) =>
+          !["--upgrade-reviewed-v1", "--upgrade-reviewed-policy"].includes(arg),
+      )
+    )
       throw new Error(
-        "Usage: node scripts/install-git-guards.mjs [--upgrade-reviewed-v1]",
+        "Usage: node scripts/install-git-guards.mjs [--upgrade-reviewed-v1|--upgrade-reviewed-policy]",
       );
     const result = installGitGuards(
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."),
-      { upgradeReviewedV1: args.includes("--upgrade-reviewed-v1") },
+      {
+        upgradeReviewedV1: args.includes("--upgrade-reviewed-v1"),
+        upgradeReviewedPolicy: args.includes("--upgrade-reviewed-policy"),
+      },
     );
     console.log(
       `${result.installed ? "Installed" : "Already installed"}: ${result.hooks}`,
     );
     if (result.upgraded)
       console.log(
-        `Upgraded reviewed v1; original hook preserved at ${result.backup}`,
+        `Upgraded reviewed policy/guard; originals preserved at ${result.backup}`,
       );
     console.log(
       `Scope: common Git hooks shared by ${result.worktrees.length} registered worktree(s); no local, worktree or global Git config was changed.`,

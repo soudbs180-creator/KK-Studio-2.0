@@ -9,13 +9,13 @@
 
 ## 1. 现行基准锚点
 
-| 主题 | 现行出处 |
-|---|---|
-| 颜色 / 字阶 / 基础组件 | [DESIGN-SYSTEM](./DESIGN-SYSTEM.md) |
+| 主题                     | 现行出处                                                       |
+| ------------------------ | -------------------------------------------------------------- |
+| 颜色 / 字阶 / 基础组件   | [DESIGN-SYSTEM](./DESIGN-SYSTEM.md)                            |
 | 输入、胶囊按钮与方形上传 | [UI_RULES](./UI_RULES.md)、[DESIGN-SYSTEM](./DESIGN-SYSTEM.md) |
-| 响应式与屏幕面板 | [DESIGN_TOKENS](./DESIGN_TOKENS.md)、[UI_RULES](./UI_RULES.md) |
-| 零件 / 交互 / 对齐规则 | [`UI_RULES.md`](./UI_RULES.md) |
-| 页面类型 | [`UI_ARCHETYPES.md`](./UI_ARCHETYPES.md) |
+| 响应式与屏幕面板         | [DESIGN_TOKENS](./DESIGN_TOKENS.md)、[UI_RULES](./UI_RULES.md) |
+| 零件 / 交互 / 对齐规则   | [`UI_RULES.md`](./UI_RULES.md)                                 |
+| 页面类型                 | [`UI_ARCHETYPES.md`](./UI_ARCHETYPES.md)                       |
 
 **冲突处理**：按 [UI_INDEX](UI_INDEX.md#2-冲突裁决) 的当前用户反馈与来源顺序裁决，在验证记录说明旧断言为何更新；截图内文字不是行为授权。
 历史日期章节中的坐标测量**只作来源追溯**，不覆盖现行规则。
@@ -27,11 +27,13 @@
 固定链路：
 
 ```
-用户 Design System + 页面来源 → 语义 Tokens → 共享组件 → 实际源码 → 浏览器验证
+当前 Figma 规范与页面 → 在 Figma 完成或核实目标设计 → 回读并登记来源 → 本地派生规范与语义 Tokens → 共享组件 → 实际源码 → 同状态浏览器验证
 ```
 
-"代码已修改""测试已通过""Figma 已读取"**都不是视觉完成的证据**。完成记录必须能回答：
+首次修改本地 UI 前须满足 [AGENTS.md 的设计前置证据](../AGENTS.md#设计与交互)。"代码已修改""测试已通过""Figma 已读取"**都不是视觉完成的证据**。完成记录必须能回答：
 
+- 本次 Figma 规范与页面链接、node ID、版本或读取时间、主题/视口/状态，以及先完成的设计修改或无需修改的依据；
+- 对应变量/Text Style/组件变体到本地文档、token 和共享组件的映射及未迁移差异；
 - 浏览器访问的 URL 和端口；
 - 它是 development / preview / Tauri 哪种运行模式；
 - 当前 route；
@@ -58,10 +60,23 @@
 
 ## 4. 设计读取与对照
 
-每次视觉修改读取用户本次指定的设计来源。页面几何 / 图层 / 变量仍需对应的在线节点上下文；
+每次视觉修改读取 [UI_INDEX](UI_INDEX.md#当前-figma-来源状态) 登记的当前 Figma 及本次目标节点。设计有变更时先修改 Figma 并回读，再开始本地实现；已有目标设计时记录无需修改的依据。页面几何 / 图层 / 变量仍需对应的在线节点上下文；
 **PDF 无法证明的属性明确标"未知"**。记录 frame 尺寸、层级、Auto Layout、padding、gap、尺寸、字体、行高、颜色、边框、圆角与状态。
 
-对照顺序是 **Figma（或 Ardot）→ 当前源代码 → 当前浏览器实际效果**，三者必须使用同一状态和视口。
+对照顺序是 **当前 Figma → 本地派生规范/映射 → 当前源代码 → 当前浏览器实际效果**，使用同一状态和视口。来源缺失、无权限或目标状态未定义时，按 AGENTS.md 暂停依赖该设计的本地 UI 修改，不能从代码反推设计后再补 Figma。
+
+### 4.1 分层差异审计
+
+上述对照顺序已由 [`scripts/figma-audit/`](reference/figma-audit.md) 工具化，分四层判定：
+
+| 层      | 比对内容                   | 判定标准                                   |
+| ------- | -------------------------- | ------------------------------------------ |
+| L1 结构 | 图层树、组件变体、命名映射 | 确定性对照                                 |
+| L2 令牌 | 颜色、字阶、间距、圆角     | `DESIGN.md` ↔ `tokens.css`，含别名体系分歧 |
+| L3 几何 | 坐标、尺寸、盒模型         | 误差 ≤ 0.5px                               |
+| L4 像素 | 位图                       | **有界差异**，非逐点相等                   |
+
+L4 不存在严格逐点相等的物理前提：Figma 渲染器与浏览器栅格化器在字体 hinting、抗锯齿和阴影模糊上本质不同。2026-09-11 帧级取证实测展开态像素差异 22.4%、收纳态 16.8%，差异形态为点阵背景相位差，结构性元素轮廓对齐。因此"一致"的可验收定义是 **L1–L3 确定性 100% + L4 容差门禁**，像素参考图必须来自 Figma 导出，不得用本地渲染结果冒充。
 
 ---
 
@@ -71,16 +86,16 @@
 相同语义使用同一层级；Figma 指定的特殊几何在部件样式内保留来源注释，不能为了统一而抹掉原稿分工。
 已有相同功能组件必须复用，**不得为一个未接入 route 的旧页面复制第二套实现**。
 
-| 范围 | 唯一入口与复用方式 | 验证要求 |
-|---|---|---|
-| 颜色、边框 | `global.css` 语义背景/文字/边框；`ui-tokens.css` 状态色、边框宽度 | 深浅均按设计系统；可访问性修正逐项记录 |
-| 间距、字体、行高 | `ui-tokens.css` 的 gap / font / line-height 层级；特殊 Frame 数值保留来源 | 检查 computed style 和实际文字矩形，不仅检查 token 声明 |
-| 圆角、控件高度、图标 | `ui-tokens.css` 尺寸层级、`UiIcon.tsx`、Figma 导出资产；工具栏复用 `ToolbarIcon.tsx` | 区分可见图形、图标槽位和命中区域 |
-| Panel、Sidebar、Toolbar | `ConversationPanel.tsx` / `Sidebar.tsx` / `CanvasToolbar.tsx`；布局复用 `useSidebarLayout`、`useCanvasViewport` | 展开/收起、窄屏及有无聊天面板用同状态矩形验证 |
-| Modal、Dropdown | `Modal.tsx` 与 `useDismissible.ts`；添加节点复用 `AddNodeMenu.tsx` | Escape、外部点击、键盘移动、关闭回焦和 disabled 原因 |
-| Button、Input | 共享 `.ui-button` 与原生 button/input/textarea；设置复用 `SettingsControls.tsx` | 普通按钮默认 32px，紧凑/标准/Figma 专项尺寸分别消费对应层级，不全局强制相同高度 |
-| Tabs、Selected | 现有 tablist/tab 及 `aria-selected`；可切换分类使用真实状态与 `aria-pressed` | 点击后的可见 selected 必须与状态一致 |
-| Tooltip | 复用原生 `title`，图标同时提供可访问名称 | 原生提示外观由浏览器控制，不能报告为自定义 tooltip 已还原 |
+| 范围                    | 唯一入口与复用方式                                                                                              | 验证要求                                                               |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 颜色、边框              | `global.css` 语义背景/文字/边框；`ui-tokens.css` 状态色、边框宽度                                               | 深浅均按设计系统；可访问性修正逐项记录                                 |
+| 间距、字体、行高        | `ui-tokens.css` 的 gap / font / line-height 层级；特殊 Frame 数值保留来源                                       | 检查 computed style 和实际文字矩形，不仅检查 token 声明                |
+| 圆角、控件高度、图标    | `ui-tokens.css` 尺寸层级、`UiIcon.tsx`、Figma 导出资产；工具栏复用 `ToolbarIcon.tsx`                            | 区分可见图形、图标槽位和命中区域                                       |
+| Panel、Sidebar、Toolbar | `ConversationPanel.tsx` / `Sidebar.tsx` / `CanvasToolbar.tsx`；布局复用 `useSidebarLayout`、`useCanvasViewport` | 展开/收起、窄屏及有无聊天面板用同状态矩形验证                          |
+| Modal、Dropdown         | `Modal.tsx` 与 `useDismissible.ts`；添加节点复用 `AddNodeMenu.tsx`                                              | Escape、外部点击、键盘移动、关闭回焦和 disabled 原因                   |
+| Button、Input           | 共享 `.ui-button` 与原生 button/input/textarea；设置复用 `SettingsControls.tsx`                                 | 按当前 Figma 母版/变体核对，标准图文按钮40px；本地旧32px默认不覆盖设计 |
+| Tabs、Selected          | 现有 tablist/tab 及 `aria-selected`；可切换分类使用真实状态与 `aria-pressed`                                    | 点击后的可见 selected 必须与状态一致                                   |
+| Tooltip                 | 复用原生 `title`，图标同时提供可访问名称                                                                        | 原生提示外观由浏览器控制，不能报告为自定义 tooltip 已还原              |
 
 异步控件按实际能力覆盖 loading / success / error / cancel / 离线；未支持的模式必须禁用并解释，
 未接后端的行为明确标注 Prototype。
@@ -95,6 +110,7 @@
 `npm run typecheck`、`npm run build` 和适用的 UI / screenshot tests 通过后，**仍须报告任何尚未与设计源对齐的部分**。
 
 **报告规则**
+
 - 分开列：类型检查 / 构建 / 测试 vs 视觉验收。
 - 如果渲染结果没有变化，先查 import、缓存和进程，再继续调 CSS。
 - 保留未提交的工作和用户数据。
@@ -106,8 +122,8 @@
 
 ## 7. 变更记录
 
-| 版本 | 内容 |
-|---|---|
+| 版本 | 内容                                                                                                                                      |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | v2.0 | 按 `UI_INDEX.md` 收敛：删除 2026-09-10 / 09-11 日期流水账（原文归档），改为引用现行基准锚点；保留运行核对、设计读取、复用入口与浏览器验证 |
 
 ## 本轮 UI 契约复证
@@ -122,20 +138,20 @@
 
 ## DESIGN.md 与独立预览
 
-根 [DESIGN.md](../DESIGN.md) 提供全局设计概览、专项规范链接和由当前 tokens.css 生成的 YAML。UI_INDEX 继续路由各主题唯一承载文件；CSS 仍是唯一数值源。
+根 [DESIGN.md](../DESIGN.md) 提供 Figma 派生设计概览、专项规范链接和由当前 tokens.css 生成的 YAML。Figma 决定设计值，CSS 是唯一运行时注册处；YAML 展示现有实现与源 hash，可能含尚未迁移的旧值。`design:sync` 不读取或修改 Figma，`design:check` 只验证 CSS 投影一致性。
 
-| 命令 | 用途 |
-| --- | --- |
-| `npm run design:sync` | 从当前 CSS 同步生成角色、完整作用域与源 hash，保留人工正文、未知 YAML 和注释 |
-| `npm run design:check` | 只读检查 YAML、引用、章节和 CSS 漂移；失败不改文件 |
-| `npm run design:lint` | 固定版本 Google DESIGN.md 官方校验 |
-| `npm run design:diff -- <before.md> <after.md>` | 显式比较两份文档的语义差异，不假设未跟踪文件已在 Git 中 |
-| `npm run design:export` | 输出 DTCG JSON 到 stdout；扩展中的原始 CSS 作用域仍保留在源文档 |
-| `npm run design:spec` | 查看所用 alpha 格式与规则 |
-| `npm run design:dev` | 独立开发预览，固定 1421，编辑器修改后自动刷新 |
-| `npm run design:build` | 类型检查并构建独立预览到 .tmp/design-md-preview |
-| `npm run design:preview` | 重建后在 1423 预览；修改源文件后需重新构建 |
-| `npm run test:design` | 定向单测、构建与真实 Edge 预览回归 |
+| 命令                                            | 用途                                                                         |
+| ----------------------------------------------- | ---------------------------------------------------------------------------- |
+| `npm run design:sync`                           | 从当前 CSS 同步生成角色、完整作用域与源 hash，保留人工正文、未知 YAML 和注释 |
+| `npm run design:check`                          | 只读检查 YAML、引用、章节和 CSS 漂移；失败不改文件                           |
+| `npm run design:lint`                           | 固定版本 Google DESIGN.md 官方校验                                           |
+| `npm run design:diff -- <before.md> <after.md>` | 显式比较两份文档的语义差异，不假设未跟踪文件已在 Git 中                      |
+| `npm run design:export`                         | 输出 DTCG JSON 到 stdout；扩展中的原始 CSS 作用域仍保留在源文档              |
+| `npm run design:spec`                           | 查看所用 alpha 格式与规则                                                    |
+| `npm run design:dev`                            | 独立开发预览，固定 1421，编辑器修改后自动刷新                                |
+| `npm run design:build`                          | 类型检查并构建独立预览到 .tmp/design-md-preview                              |
+| `npm run design:preview`                        | 重建后在 1423 预览；修改源文件后需重新构建                                   |
+| `npm run test:design`                           | 定向单测、构建与真实 Edge 预览回归                                           |
 
 预览 import 链为 design/preview/index.html → main.tsx → 当前 tokens/global/ui-tokens/ui-governance、SettingsControls、UiIcon 与 DESIGN.md 原文。它不读写产品 storage、不调用 Provider，示例反馈只在页内存中生效；文档中的 HTML 以文字显示、不执行。
 

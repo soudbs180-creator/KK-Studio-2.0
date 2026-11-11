@@ -1,16 +1,23 @@
 import type { SettingsPreferences } from "../../domain/settings";
-import { SETTINGS_SECTIONS, type SettingsSection } from "./SettingsSectionData";
+import {
+  SETTINGS_SECTIONS,
+  getSettingsTier,
+  type SettingsSection,
+} from "./SettingsSectionData";
 import ConnectionSettings from "./ConnectionSettings";
-import ProjectPackageActions from "../../features/projects/ProjectPackageActions";
-import type { SaveState } from "../../features/creation/useCreationStorage";
-import type { CreationProject } from "../../features/creation/model";
+import { ProjectPackageActions as ProjectPackageActions } from "../../features/projects/index.ts";
+import type { SaveState } from "../../features/creation/index.ts";
+import type { CreationProject } from "../../features/creation/index.ts";
 import PlansSettings from "./PlansSettings";
 import StorageOverview from "./StorageOverview";
 import PreferencesBackup from "./PreferencesBackup";
-import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import type { SkillRegistry } from "../../features/skills/index.ts";
 import ExtensionsSettings, { type ExtensionsTab } from "./ExtensionsSettings";
 import ShortcutsPanel from "../ShortcutsPanel";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
+import SettingsInfoHint, {
+  isLongSettingsDescription,
+} from "./SettingsInfoHint";
 export { SETTINGS_SECTIONS } from "./SettingsSectionData";
 export type { SettingsSection } from "./SettingsSectionData";
 
@@ -22,6 +29,7 @@ interface SettingsSectionsProps {
   saveState: SaveState;
   revision: number;
   projects: readonly CreationProject[];
+  activeProject?: CreationProject;
   registry: SkillRegistry;
   extensionsTab?: ExtensionsTab;
   initialModelMethod?: "local";
@@ -36,23 +44,55 @@ export default function SettingsSections({
   saveState,
   revision,
   projects,
+  activeProject,
   registry,
   extensionsTab,
   initialModelMethod,
   workflows,
 }: SettingsSectionsProps) {
   const item = SETTINGS_SECTIONS.find((entry) => entry.id === section);
+  const longDescription = isLongSettingsDescription(item?.description)
+    ? item.description
+    : undefined;
   return (
-    <div hidden={!active}>
+    <div hidden={!active} data-settings-tier={getSettingsTier(section)}>
       {active && (
-        <h2 className="settings-page-title" id="settings-section-title">
-          {item?.label}
-        </h2>
+        <div className="settings-page-title-row">
+          <h2 className="settings-page-title" id="settings-section-title">
+            {item?.label}
+          </h2>
+          {longDescription && (
+            <SettingsInfoHint
+              id={`section-${section}`}
+              label={`查看${item?.label ?? "当前页面"}说明`}
+            >
+              {longDescription}
+            </SettingsInfoHint>
+          )}
+        </div>
       )}
-      {item?.description && (
-        <p className="settings-section-intro settings-page-description">
-          {item.description}
-        </p>
+      {section === "network" ? (
+        <details className="settings-usage-guide" data-figma-node="214:703">
+          <summary>
+            <span>使用说明</span>
+            <span className="settings-usage-guide-toggle">
+              <span className="settings-usage-guide-expand">
+                查看详细使用方法
+              </span>
+              <span className="settings-usage-guide-collapse">
+                收起详细使用方法
+              </span>
+            </span>
+          </summary>
+          <p>{item?.description}</p>
+        </details>
+      ) : (
+        item?.description &&
+        !longDescription && (
+          <p className="settings-section-intro settings-page-description">
+            {item.description}
+          </p>
+        )
       )}
       <div className="settings-section-body">
         {section === "extensions" ? (
@@ -68,6 +108,7 @@ export default function SettingsSections({
             onFeedback={onFeedback}
             initialModelMethod={initialModelMethod}
             workflows={workflows}
+            activeProject={activeProject}
           />
         )}
         {section === "usage" && (

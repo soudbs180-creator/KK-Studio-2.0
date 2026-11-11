@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 import { runCodeBuddy } from "../agent/codebuddy.js";
+import { isConfigToolName, parseConfigToolInput, safeConfigToolResult } from "../config/tools.js";
 import {
   toolDescriptions,
   toolInputSchemas,
@@ -84,8 +85,22 @@ function registerCanvasTool(
   const schema = toolInputSchemas[name];
   server.registerTool(
     name,
-    { description: toolDescriptions[name], inputSchema: schema.shape },
+    { description: toolDescriptions[name], inputSchema: schema.shape,
+      ...(isConfigToolName(name)
+        ? {annotations:{readOnlyHint:["kk_config_get","kk_config_propose","kk_capability_status","kk_connection_test"].includes(name),destructiveHint:false}}
+        : name === "canvas_get_result"
+          ? {annotations:{readOnlyHint:true,destructiveHint:false}}
+          : {}),
+    },
     async (input: unknown) => {
+      if (isConfigToolName(name)) {
+        try {
+          const result = safeConfigToolResult(name, await postCanvasAgentTool(config,name,parseConfigToolInput(name,input)));
+          return {content:[{type:"text" as const,text:JSON.stringify(result)}]};
+        } catch {
+          return {isError:true,content:[{type:"text" as const,text:"CONFIG_TOOL_FAILED：配置工具未完成；请读取当前配置并检查无密钥回执。"}]};
+        }
+      }
       const result = await postCanvasAgentTool(
         config,
         name,

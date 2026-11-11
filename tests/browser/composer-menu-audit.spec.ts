@@ -1,5 +1,9 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { openSeededProject } from "./helpers";
+import {
+  openSeededProject,
+  selectHomeConversation,
+  ensureHomeMore,
+} from "./helpers";
 
 test.use({ reducedMotion: "reduce" });
 
@@ -204,6 +208,7 @@ for (const width of [390, 768, 900]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1024 });
     await useLongModel(page);
     await page.goto("/");
+    await selectHomeConversation(page);
     await page.evaluate(() => document.fonts.ready);
     const footer = page.locator(".start-composer-footer");
     const controls = footer.locator("button, select");
@@ -216,9 +221,10 @@ for (const width of [390, 768, 900]) {
       footer.getByRole("button", { name: "扩展", exact: true }),
       footer.getByRole("button", { name: /^当前模式：/ }),
     ];
-    for (const trigger of triggers) {
+    for (const [index, trigger] of triggers.entries()) {
+      if (index > 0) await ensureHomeMore(page);
       await trigger.click();
-      const menu = footer.locator('[role="menu"], [role="dialog"]');
+      const menu = trigger.locator("..").getByRole("menu");
       await expectMenuUsable(page, menu);
       await expectStableControls(footer, baseline);
       const option = menu.locator("button").first();
@@ -227,11 +233,16 @@ for (const width of [390, 768, 900]) {
       await expect(menu).toHaveCount(0);
       await expect(trigger).toBeFocused();
     }
+    if (width === 390) {
+      await page.keyboard.press("Escape");
+      await expect(
+        footer.getByRole("button", { name: "更多创作选项", exact: true }),
+      ).toBeFocused();
+    }
     await triggers[0].click();
+    await ensureHomeMore(page);
     await triggers[1].click();
-    await expect(footer.locator('[role="menu"], [role="dialog"]')).toHaveCount(
-      1,
-    );
+    await expect(footer.getByRole("menu")).toHaveCount(1);
     await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
     await page.getByLabel("创作提示词").click();
     await expect(footer.locator('[role="menu"], [role="dialog"]')).toHaveCount(

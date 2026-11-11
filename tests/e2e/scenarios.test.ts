@@ -1,641 +1,244 @@
-import assert from "node:assert/strict";
 import test from "node:test";
+import assert from "node:assert/strict";
 import {
-  ActionButtonStateMachine,
-  validateSnapshotV3,
-  migrateSnapshotV2ToV3,
-  NonDowngradableWriteBarrier,
-  deduplicateRelayModels,
-  createTestChannelRegistry,
-  createPixelBuffer,
-  verifyAlphaIntegrity,
+  createTurnFreezingController,
+  createAgentHost,
+  createConversationRewind,
+} from "../../src/features/agent/index.ts";
+import {
+  createProject,
+  createTask,
+  createDefaultChat,
+  projectChatView,
+  updateActiveChat,
+} from "../../src/domain/creationModel.ts";
+import { migrateSnapshotV2ToV3 } from "../../src/domain/chatMigrationCore.ts";
+import { validateSnapshotV3 } from "../../src/domain/creationSnapshotCodec.ts";
+import { deduplicateRelayEntries } from "../../src/features/models/modelDeduplication.ts";
+import { blendMaskedPixels } from "../../src/features/image-edit/pixels.ts";
+import { imageResultContext } from "../../src/features/image-edit/context.ts";
+import {
+  resolveTargetImageMime,
   calculateAdaptiveResize,
-  parseComfyUiOutputs,
-  calculateWebSocketProgress,
-  type CreationSnapshotV3,
-  type LegacyV2Snapshot,
-  type ModelMenuEntry,
-  type ComfyUiHistoryOutputs,
-} from "./harness.ts";
-import type { ChannelRegistration } from "../../src/features/ai-gateway/channels/registry.ts";
-import type { ChannelAdapter } from "../../src/features/ai-gateway/channels/adapter.ts";
-
-/* =========================================================================
- * Tiers 3 & 4: Cross-Feature Interactions & Real-World Application Scenarios
- * ========================================================================= */
-
-const mockAdapter = (provider: string): ChannelAdapter => ({
-  provider,
-  estimate: async () => ({
-    currency: "cny",
-    minimumUnits: 1,
-    maximumUnits: 1,
-    billingMode: "free",
-  }),
-  submit: async () => ({
-    providerJobId: `job-${provider}-${Date.now()}`,
-    async: true,
-    status: "queued",
-  }),
-  getStatus: async (id) => ({
-    providerJobId: id,
-    async: true,
-    status: "succeeded",
-  }),
-  cancel: async () => {},
-  listResults: async () => [],
+  detectAlphaTransparency,
+} from "../../src/domain/mediaAlpha.ts";
+import { extractComfyUiOutputs } from "../../src/integrations/generation/localComfyUiAdapter.ts";
+import { parseComfyUiProgressMessage } from "../../src/features/comfyui/comfyUiProgress.ts";
+import { gatewayFixture } from "../support/gatewayFixture.ts";
+import { CanvasMcpServer } from "../../src/domain/canvasOperations.ts";
+import { createCanvasOperationFixture } from "../support/canvasOperationFixture.ts";
+const input = {
+  prompt: "draft",
+  model: "model",
+  kind: "image" as const,
+  attachments: [],
+};
+test("SCENARIO-T3-01: turn freezing leaves actual accepted task polling independent", async () => {
+  const c = createTurnFreezingController(),
+    f = gatewayFixture({ asyncPrimary: true });
+  c.onTurnStart();
+  const end = c.beginStep();
+  const result = await f.scheduler.dispatch(f.request);
+  const pause = c.pause();
+  end();
+  await pause;
+  await assert.rejects(
+    f.scheduler.poll(result.channelId, "accepted-job", f.request),
+  );
+  assert.equal(c.isPaused(), true);
+  assert.deepEqual(f.polls, ["primary"]);
+  assert.deepEqual(f.submissions, ["primary"]);
+  c.reset();
 });
-
-// -------------------------------------------------------------------------
-// Tier 3: Cross-Feature Interactions (Pairwise Permutations)
-// -------------------------------------------------------------------------
-
-test("SCENARIO-T3-01 (R1 + R5): pausing action button during ComfyUI video task freezes turn dispatch while background polling continues", async () => {
-  const button = new ActionButtonStateMachine("executing");
-  button.setRemotePolling(true); // ComfyUI video generation running
-
-  // ComfyUI task running
-  const comfyTask = {
-    promptId: "prompt-h3-render-001",
-    status: "running",
-    progress: 45,
-  };
-
-  // User clicks pause on Action Button
-  await button.handleClick(); // executing -> pausing
-  button.completeStepAndFreeze(); // pausing -> paused
-
-  // Assert button state
-  assert.equal(button.state, "paused");
-  assert.equal(
-    button.isTurnQueueFrozen,
-    true,
-    "Subsequent turn scheduling must be frozen",
-  );
-
-  // Assert ComfyUI video task continues polling in background
-  assert.equal(
-    button.isRemotePollingActive,
-    true,
-    "Background video polling must NOT be cancelled",
-  );
-
-  // Background ComfyUI finishes while turn is paused
-  comfyTask.progress = 100;
-  comfyTask.status = "succeeded";
-  const history: ComfyUiHistoryOutputs = {
-    "node-vhs": {
-      videos: [
-        { filename: "final_render.mp4", subfolder: "renders", type: "output" },
-      ],
+test("SCENARIO-T3-02: real model catalog selection remains scoped to the active chat", () => {
+  let p = createProject(input);
+  p.chats!.other = createDefaultChat("other");
+  const row = deduplicateRelayEntries([
+    {
+      id: "a",
+      label: "model",
+      selection: { source: "api", model: "model", connectionId: "a" },
     },
-  };
-  const parsed = parseComfyUiOutputs(
-    comfyTask.promptId,
+    {
+      id: "b",
+      label: "model",
+      selection: { source: "api", model: "model", connectionId: "b" },
+    },
+  ])[0];
+  p = updateActiveChat(p, (c) => ({
+    ...c,
+    draft: { ...c.draft, model: row.selection!.model },
+    modelAllowlist: [row.selection!.model],
+  }));
+  const original = p.activeChatId!;
+  const view = projectChatView({ ...p, activeChatId: "other" });
+  assert.deepEqual(view.chats![original].modelAllowlist, ["model"]);
+  assert.deepEqual(view.chats!.other.modelAllowlist, []);
+});
+test("SCENARIO-T3-03: actual edit contexts from separate chat tasks preserve their shared original", () => {
+  const p = createProject(input),
+    a = createTask(p),
+    b = createTask({ ...p, activeChatId: "other" });
+  const first = imageResultContext(a, "asset-master"),
+    second = imageResultContext(
+      { ...b, imageEditContext: first },
+      "asset-derivative",
+    );
+  assert.equal(second.originalAssetId, "asset-master");
+  assert.notEqual(a.originChatId, b.originChatId);
+});
+test("SCENARIO-T3-04: real freeze controllers are independently scoped while chat drafts remain durable", async () => {
+  const a = createTurnFreezingController(),
+    b = createTurnFreezingController();
+  a.onTurnStart();
+  b.onTurnStart();
+  await a.pause();
+  assert.equal(a.isPaused(), true);
+  assert.equal(b.isExecuting(), true);
+  await a.resume();
+  assert.equal(a.isExecuting(), true);
+  a.reset();
+  b.reset();
+});
+test("SCENARIO-T3-05: real alpha-safe compositing and Comfy output adaptation preserve modality", () => {
+  const original = new Uint8ClampedArray([0, 0, 0, 0]),
+    generated = new Uint8ClampedArray([200, 100, 0, 255]);
+  const composed = blendMaskedPixels(
+    original,
+    generated,
+    new Uint8Array([0]),
+    1,
+    1,
+    0,
+  );
+  assert.equal(detectAlphaTransparency(composed), true);
+  assert.equal(resolveTargetImageMime(true, "image/jpeg"), "image/png");
+  const [output] = extractComfyUiOutputs(
+    { node: { videos: [{ filename: "out.mp4" }] } },
+    "job",
     "http://127.0.0.1:8188",
-    history,
   );
-
-  assert.equal(parsed.length, 1);
-  assert.equal(parsed[0].mime, "video/mp4");
-  assert.equal(
-    button.state,
-    "paused",
-    "Button remains safely in paused state upon background completion",
-  );
+  assert.equal(output.kind, "video");
 });
-
-test("SCENARIO-T3-02 (R2 + R3): switching multi-chat tabs isolates deduplicated model selections and allowlists between chats", () => {
-  // Model catalog with deduplicated entries
-  const modelEntries: ModelMenuEntry[] = [
-    {
-      id: "r1-gpt4o",
-      modelId: "gpt-4o",
-      displayName: "GPT-4o",
-      connectionId: "c1",
-      connectionName: "Relay 1",
-      priority: 100,
-      weight: 50,
-      state: "active",
-      kind: "text",
+test("SCENARIO-T4-01: actual project and task creation retain frozen chat and source identities", async () => {
+  let p = createProject(input);
+  let calls = 0;
+  const host = createAgentHost({
+    getProject: () => p,
+    commit: (n) => {
+      p = n;
     },
-    {
-      id: "r2-gpt4o",
-      modelId: "gpt-4o",
-      displayName: "GPT-4o",
-      connectionId: "c2",
-      connectionName: "Relay 2",
-      priority: 90,
-      weight: 50,
-      state: "active",
-      kind: "text",
+    modelAllowlist: ["model"],
+    generate: async (node) => {
+      calls++;
+      const task = { ...createTask(p), sourceItemId: node.id };
+      p = { ...p, tasks: [...p.tasks, task] };
+      return { taskId: task.id };
     },
-    {
-      id: "r3-claude",
-      modelId: "claude-3-5-sonnet",
-      displayName: "Claude 3.5 Sonnet",
-      connectionId: "c3",
-      connectionName: "Official",
-      priority: 100,
-      weight: 100,
-      state: "active",
-      kind: "text",
-    },
-  ];
-
-  const deduplicated = deduplicateRelayModels(modelEntries);
-  assert.equal(deduplicated.length, 2);
-
-  // Snapshot v3 project with two chats having different model permissions
-  const project: CreationSnapshotV3["projects"][0] = {
-    id: "proj-1",
-    name: "Model Gated Project",
-    activeChatId: "chat-gpt",
-    chats: {
-      "chat-gpt": {
-        id: "chat-gpt",
-        name: "GPT 助理",
-        createdAt: 100,
-        updatedAt: 100,
-        draft: { text: "Use GPT-4o for code generation" },
-        messages: [],
-        mainAgent: "codex",
-        modelAllowlist: ["gpt-4o"],
-      },
-      "chat-claude": {
-        id: "chat-claude",
-        name: "Claude 创意",
-        createdAt: 200,
-        updatedAt: 200,
-        draft: { text: "Use Claude for creative writing" },
-        messages: [],
-        mainAgent: "codex",
-        modelAllowlist: ["claude-3-5-sonnet"],
-      },
-    },
-  };
-
-  // Chat 1 allowlist check
-  assert.deepEqual(project.chats[project.activeChatId].modelAllowlist, [
-    "gpt-4o",
-  ]);
-
-  // Switch to Chat 2
-  project.activeChatId = "chat-claude";
-  assert.deepEqual(project.chats[project.activeChatId].modelAllowlist, [
-    "claude-3-5-sonnet",
-  ]);
-
-  // Cross-chat isolation check: Chat 1's draft did not overwrite Chat 2's draft
-  assert.equal(
-    project.chats["chat-gpt"].draft.text,
-    "Use GPT-4o for code generation",
-  );
-  assert.equal(
-    project.chats["chat-claude"].draft.text,
-    "Use Claude for creative writing",
-  );
-});
-
-test("SCENARIO-T3-03 (R2 + R4): multi-chat tabs sharing canvas assets preserve pristine originalAssetId across image edits from different chats", () => {
-  const masterAssetId = "asset-transparent-logo-master";
-
-  // Shared project canvas item
-  const sharedItem = {
-    id: "item-canvas-logo",
-    assetId: masterAssetId,
-    mime: "image/png",
-    hasAlpha: true,
-  };
-
-  // Chat A crops the logo
-  const taskFromChatA = {
-    taskId: "task-crop-chat-a",
-    originChatId: "chat-a",
-    sourceItemId: sharedItem.id,
-    originalAssetId: masterAssetId,
-    parameters: { crop: { width: 500, height: 500 } },
-  };
-
-  // Chat B performs background cleanup on the same logo
-  const taskFromChatB = {
-    taskId: "task-cleanup-chat-b",
-    originChatId: "chat-b",
-    sourceItemId: sharedItem.id,
-    originalAssetId: masterAssetId, // Must preserve same pristine master ID
-    parameters: { prompt: "remove stray marks" },
-  };
-
-  assert.equal(taskFromChatA.originalAssetId, masterAssetId);
-  assert.equal(taskFromChatB.originalAssetId, masterAssetId);
-  assert.notEqual(taskFromChatA.originChatId, taskFromChatB.originChatId);
-});
-
-test("SCENARIO-T3-04 (R1 + R2): action button turn freeze state and composer draft are strictly isolated per chat during tab switching", async () => {
-  // Chat A state machine
-  const chatAMachine = new ActionButtonStateMachine("executing");
-  chatAMachine.setDraft("Draft for Chat A (Turn Paused)");
-
-  // Pause turn in Chat A
-  await chatAMachine.handleClick(); // executing -> pausing
-  chatAMachine.completeStepAndFreeze(); // pausing -> paused
-
-  assert.equal(chatAMachine.state, "paused");
-  assert.equal(chatAMachine.isTurnQueueFrozen, true);
-
-  // User switches tab to Chat B
-  const chatBMachine = new ActionButtonStateMachine("idle");
-  chatBMachine.setDraft("Fresh draft for Chat B");
-
-  assert.equal(chatBMachine.state, "idle");
-  assert.equal(chatBMachine.isTurnQueueFrozen, false);
-  assert.equal(chatBMachine.isButtonDisabled(), false);
-
-  // User executes Chat B
-  await chatBMachine.handleClick(); // idle -> executing
-  assert.equal(chatBMachine.state, "executing");
-
-  // User switches back to Chat A: Chat A remains paused with its draft intact
-  assert.equal(chatAMachine.state, "paused");
-  assert.equal(chatAMachine.isTurnQueueFrozen, true);
-  assert.equal(chatAMachine.draft.text, "Draft for Chat A (Turn Paused)");
-});
-
-test("SCENARIO-T3-05 (R4 + R5): alpha-preserved PNG asset submitted to ComfyUI video workflow yields correctly parsed .mp4 task result", () => {
-  // 1. Prepare PNG with alpha transparency
-  const buffer = createPixelBuffer(64, 64, { r: 10, g: 20, b: 30, a: 0 }); // Alpha background
-  const integrity = verifyAlphaIntegrity(buffer);
-  assert.equal(integrity.hasTransparency, true);
-
-  // 2. Adaptive resize for video generation input
-  const resized = calculateAdaptiveResize(buffer.width, buffer.height, 1024);
-  assert.equal(resized.width, 64);
-  assert.equal(resized.height, 64);
-
-  // 3. ComfyUI produces video output from input image
-  const history: ComfyUiHistoryOutputs = {
-    "node-svd-video": {
-      videos: [
-        {
-          filename: "alpha_motion_output.mp4",
-          subfolder: "svd",
-          type: "output",
-        },
-      ],
-    },
-  };
-
-  const parsed = parseComfyUiOutputs(
-    "prompt-svd-001",
-    "http://127.0.0.1:8188",
-    history,
-  );
-  assert.equal(parsed.length, 1);
-  assert.equal(parsed[0].mime, "video/mp4");
-  assert.ok(parsed[0].url.includes("alpha_motion_output.mp4"));
-});
-
-// -------------------------------------------------------------------------
-// Tier 4: Real-World Application Scenarios (Full Lifecycle Journeys)
-// -------------------------------------------------------------------------
-
-test("SCENARIO-T4-01 (Complete Creative Studio Lifecycle): project creation -> multi-chat -> alpha PNG import -> relay model selection -> turn execution -> pause/resume -> completion", async () => {
-  // Step 1: Create project with multi-chat
-  const project: CreationSnapshotV3["projects"][0] = {
-    id: "proj-studio-001",
-    name: "Cyberpunk Game Asset",
-    activeChatId: "chat-main",
-    chats: {
-      "chat-main": {
-        id: "chat-main",
-        name: "概念设计",
-        createdAt: 1000,
-        updatedAt: 1000,
-        draft: { text: "Render floating neon logo" },
-        messages: [],
-        mainAgent: "codex",
-        modelAllowlist: ["gpt-4o"],
-      },
-    },
-    items: [],
-  };
-
-  // Step 2: Import alpha PNG logo
-  const logoBuffer = createPixelBuffer(200, 200, {
-    r: 0,
-    g: 255,
-    b: 128,
-    a: 120,
   });
-  const logoIntegrity = verifyAlphaIntegrity(logoBuffer);
-  assert.equal(logoIntegrity.hasTransparency, true);
-
-  project.items!.push({
-    id: "item-logo",
-    assetId: "asset-raw-logo-master",
-    title: "Neon Logo",
-  });
-
-  // Step 3: Model selection via deduplicated relays
-  const entries: ModelMenuEntry[] = [
+  const result = await host.applyOps([
     {
-      id: "relay-a-gpt4o",
-      modelId: "gpt-4o",
-      displayName: "GPT-4o",
-      connectionId: "conn-a",
-      connectionName: "Relay Fast",
-      priority: 100,
-      weight: 50,
-      state: "active",
-      kind: "text",
+      type: "add_node",
+      id: "source",
+      nodeType: "image",
+      metadata: { prompt: "draw", model: "model" },
     },
     {
-      id: "relay-b-gpt4o",
-      modelId: "gpt-4o",
-      displayName: "GPT-4o",
-      connectionId: "conn-b",
-      connectionName: "Relay Backup",
-      priority: 80,
-      weight: 50,
-      state: "active",
-      kind: "text",
+      type: "run_generation",
+      nodeId: "source",
+      model: "model",
+      prompt: "draw",
     },
-  ];
-  const [dedupModel] = deduplicateRelayModels(entries);
-  assert.equal(dedupModel.candidateCount, 2);
-  assert.equal(dedupModel.badgeLabel, "中转 · 2 个可用");
-
-  // Step 4: Turn execution with Action Button
-  const button = new ActionButtonStateMachine("idle");
-  button.setDraft(project.chats["chat-main"].draft.text || "");
-
-  // Send turn
-  await button.handleClick(); // idle -> executing
-  assert.equal(button.state, "executing");
-
-  // User pauses turn
-  await button.handleClick(); // executing -> pausing
-  button.completeStepAndFreeze(); // pausing -> paused
-  assert.equal(button.state, "paused");
-  assert.equal(button.isTurnQueueFrozen, true);
-
-  // User alters draft while paused
-  button.setDraft("Render floating neon logo with cinematic lighting");
-  assert.equal(
-    button.draft.text,
-    "Render floating neon logo with cinematic lighting",
-  );
-
-  // User resumes turn
-  let autoSent = false;
-  await button.handleClick(
-    () => {
-      autoSent = true;
-    },
-    undefined,
-    () => {},
-  );
-  button.acknowledgeUnfreeze();
-
-  assert.equal(autoSent, false, "Resume must NOT automatically send draft");
-  assert.equal(button.state, "executing");
-
-  // Step 5: Turn completion
-  button.completeExecution();
-  assert.equal(button.state, "completed");
-  button.resetToIdle();
-  assert.equal(button.state, "idle");
+  ]);
+  assert.equal(calls, 1);
+  assert.equal(result.tasks?.[0].taskId, p.tasks[0].id);
+  assert.equal(p.tasks[0].originChatId, p.activeChatId);
+  assert.equal(p.tasks[0].sourceItemId, "source");
 });
-
-test("SCENARIO-T4-02 (Legacy Project Upgrade & Migration Continuity): v2 snapshot upgrade -> write barrier -> v3 chats -> multi-chat tabs -> transcript integrity", () => {
-  const legacyV2: LegacyV2Snapshot = {
-    version: 2,
-    revision: 12,
-    activeProjectId: "proj-legacy-game",
+test("SCENARIO-T4-02: actual legacy migration remains editable with intact thread and transcript", () => {
+  const legacy = {
+    version: 2 as const,
+    revision: 1,
+    activeProjectId: "p",
     homeDraft: {},
     projects: [
       {
-        id: "proj-legacy-game",
-        name: "Legacy Game Project",
-        messages: [
-          { id: "msg-dir-1", role: "user", content: "Create level map" },
-          { id: "msg-dir-2", role: "assistant", content: "Level map created" },
-        ],
-        composerDraft: { text: "Unfinished draft in v2" },
-        agentThreadId: "thread-agent-old",
-        items: [{ id: "item-tile-map" }],
-        tasks: [{ id: "task-map-gen" }],
+        id: "p",
+        messages: [{ id: "u", role: "user" as const, content: "history" }],
+        agentThreadId: "thread-1",
+        composerDraft: { prompt: "draft" },
+        items: [],
       },
     ],
   };
-
-  // 1. Migrate v2 -> v3
-  const v3Snapshot = migrateSnapshotV2ToV3(legacyV2);
-  const validatedV3 = validateSnapshotV3(v3Snapshot);
-  assert.equal(validatedV3.version, 3);
-
-  // 2. Non-downgradable write barrier
-  const rawV2 = JSON.stringify(legacyV2);
-  const barrier = new NonDowngradableWriteBarrier(rawV2);
-  const receipt = barrier.executeMigrationWriteBarrier(validatedV3);
-
-  assert.ok(receipt.archiveSha);
-  assert.equal(barrier.formatMarker.formatVersion, 2);
-
-  // 3. Multi-chat tabs accessible without data loss
-  const proj = validatedV3.projects[0];
-  assert.ok(proj.chats["legacy-direct"]);
-  assert.ok(proj.chats["legacy-codex"]);
-  assert.equal(proj.chats["legacy-direct"].messages.length, 2);
+  const upgraded = migrateSnapshotV2ToV3(legacy);
+  validateSnapshotV3(upgraded);
+  const chat = upgraded.projects[0].chats[upgraded.projects[0].activeChatId];
+  assert.equal(chat.messages[0].content, "history");
+  assert.ok(
+    Object.values(upgraded.projects[0].chats).some(
+      (c) => c.agentThreadId === "thread-1",
+    ),
+  );
+  assert.equal(chat.draft.prompt, "draft");
+  assert.equal(legacy.version, 2);
+});
+test("SCENARIO-T4-03: real progress and completion events remain observable during a frozen turn", async () => {
+  const c = createTurnFreezingController();
+  c.onTurnStart();
+  await c.pause();
   assert.equal(
-    proj.chats["legacy-direct"].draft.text,
-    "Unfinished draft in v2",
+    parseComfyUiProgressMessage({
+      type: "progress",
+      data: { value: 50, max: 100 },
+    }).percent,
+    50,
   );
-  assert.equal(proj.chats["legacy-codex"].agentThreadId, "thread-agent-old");
-  assert.equal(proj.items?.length, 1);
+  assert.equal(
+    parseComfyUiProgressMessage({ type: "executing", data: { node: null } })
+      .stage,
+    "completed",
+  );
+  assert.equal(c.isPaused(), true);
+  c.reset();
 });
-
-test("SCENARIO-T4-03 (ComfyUI Video Generation Lifecycle with Live Tracking & Interruption): submit prompt -> WebSocket progress stream -> pause turn -> background completion -> video archived", async () => {
-  const promptId = "comfy-task-vid-999";
-  const progressUpdates: number[] = [];
-
-  // 1. Simulate WebSocket progress stream
-  const steps = [
-    { value: 0, max: 20 },
-    { value: 5, max: 20 },
-    { value: 10, max: 20 },
-    { value: 18, max: 20 },
-    { value: 20, max: 20 },
+test("SCENARIO-T4-04: real rate-limit failover does not replay an accepted task", async () => {
+  const f = gatewayFixture({ failPrimary: true, asyncPrimary: true });
+  const result = await f.scheduler.dispatch(f.request);
+  assert.equal(result.channelId, "secondary");
+  await assert.rejects(
+    f.scheduler.poll("secondary", "accepted-job", f.request),
+  );
+  assert.deepEqual(f.submissions, ["primary", "secondary"]);
+});
+test("SCENARIO-T4-05: real rewind refuses concurrent writes and canvas rejects hostile ID without mutation", async () => {
+  let p = createProject(input);
+  p.chats![p.activeChatId!].messages = [
+    { id: "u", role: "user", content: "keep" },
   ];
-
-  for (const step of steps) {
-    const pct = calculateWebSocketProgress(step.value, step.max);
-    progressUpdates.push(pct);
-  }
-
-  assert.deepEqual(progressUpdates, [0, 25, 50, 90, 100]);
-
-  // 2. Action button pause while generation was running
-  const button = new ActionButtonStateMachine("executing");
-  button.setRemotePolling(true);
-  await button.handleClick();
-  button.completeStepAndFreeze();
-  assert.equal(button.state, "paused");
-
-  // 3. ComfyUI finishes outputting video
-  const history: ComfyUiHistoryOutputs = {
-    "node-video": {
-      videos: [
-        {
-          filename: "cyber_walk_cycle.mp4",
-          subfolder: "animations",
-          type: "output",
-        },
-      ],
+  const rewind = createConversationRewind({
+    getProject: () => p,
+    getBlockReason: () => undefined,
+    isBusy: () => true,
+    commit: (n) => {
+      p = n;
     },
-  };
-
-  const results = parseComfyUiOutputs(
-    promptId,
-    "http://127.0.0.1:8188",
-    history,
+    flush: async () => {},
+  });
+  await assert.rejects(rewind("u"), /in-flight/);
+  assert.equal(p.chats![p.activeChatId!].messages.length, 1);
+  const bridge = createCanvasOperationFixture();
+  const before = structuredClone(bridge.getState());
+  assert.equal(
+    new CanvasMcpServer(bridge).executeOp({
+      op: "move_card",
+      payload: { id: "__proto__", x: 1, y: 1 },
+    }).success,
+    false,
   );
-  assert.equal(results.length, 1);
-  assert.equal(results[0].mime, "video/mp4");
-  assert.ok(results[0].url.includes("cyber_walk_cycle.mp4"));
-});
-
-test("SCENARIO-T4-04 (Resilient Multi-Relay Model Routing Under Rate Limiting): deduplicated selection -> primary relay 429 -> automatic tier failover -> upstream acceptance -> non-replay invariant", () => {
-  const primaryChannel: ChannelRegistration = {
-    id: "channel-relay-alpha",
-    adapter: mockAdapter("alpha"),
-    kind: "api",
-    enabled: true,
-    priority: 100, // Highest tier
-    weight: 50,
-    baseUrl: "https://alpha.api.com",
-    capabilities: {
-      operations: ["generate"],
-      modalities: ["text"],
-      limits: {},
-    },
-    modelMapping: { "gpt-4o": "gpt-4o" },
-    timeoutMs: 15000,
-  };
-
-  const secondaryChannel: ChannelRegistration = {
-    id: "channel-relay-beta",
-    adapter: mockAdapter("beta"),
-    kind: "api",
-    enabled: true,
-    priority: 80, // Fallback tier
-    weight: 50,
-    baseUrl: "https://beta.api.com",
-    capabilities: {
-      operations: ["generate"],
-      modalities: ["text"],
-      limits: {},
-    },
-    modelMapping: { "gpt-4o": "gpt-4o" },
-    timeoutMs: 15000,
-  };
-
-  const registry = createTestChannelRegistry([
-    primaryChannel,
-    secondaryChannel,
-  ]);
-  const candidates = registry.candidates("gpt-4o", "generate");
-
-  // Routing attempt 1: Candidate 0 hits 429 rate limit prior to acceptance
-  let currentCandidateIndex = 0;
-  const dispatchAttempt = () => {
-    const candidate = candidates[currentCandidateIndex];
-    if (candidate.channelId === "channel-relay-alpha") {
-      currentCandidateIndex++;
-      return { accepted: false, status: 429 };
-    }
-    return {
-      accepted: true,
-      status: 200,
-      upstreamId: "accepted-relay-beta-job-uuid",
-    };
-  };
-
-  const attempt1 = dispatchAttempt();
-  assert.equal(attempt1.accepted, false);
-
-  // Automatic failover to next candidate in registry
-  const attempt2 = dispatchAttempt();
-  assert.equal(attempt2.accepted, true);
-  assert.equal(attempt2.upstreamId, "accepted-relay-beta-job-uuid");
-
-  // Invariant check: Accepted work cannot failover or replay
-  const replayAllowed = !attempt2.accepted;
-  assert.equal(replayAllowed, false, "Accepted work must never be replayed");
-});
-
-test("SCENARIO-T4-05 (High-Concurrency Stress & Adversarial Boundary Protection): rapid clicks -> panorama transparent image -> secret injection rejection -> fast tab switching -> data integrity", async () => {
-  // 1. Rapid clicks on action button
-  const machine = new ActionButtonStateMachine("executing");
-  let pauseTriggered = 0;
-  for (let i = 0; i < 5; i++) {
-    await machine.handleClick(
-      undefined,
-      () => {
-        pauseTriggered++;
-      },
-      undefined,
-    );
-  }
-  // Debounce and disabled state ensure only exactly 1 pause trigger fired
-  assert.equal(pauseTriggered, 1);
-  assert.equal(machine.state, "pausing");
-
-  // 2. Extreme panorama image with transparency
-  const panorama = calculateAdaptiveResize(8000, 120, 2048);
-  assert.equal(panorama.width, 2048);
-  assert.ok(panorama.height >= 1);
-
-  // 3. Security secret rejection check
-  assert.throws(
-    () =>
-      validateSnapshotV3({
-        version: 3,
-        revision: 1,
-        activeProjectId: "p1",
-        homeDraft: {},
-        projects: [],
-        apiKey: "sk-malicious-leak",
-      }),
-    /凭据|令牌|密钥/,
-  );
-
-  // 4. Fast switching across 10 chat tabs in snapshot v3
-  const project: CreationSnapshotV3["projects"][0] = {
-    id: "proj-stress",
-    name: "Stress Test",
-    activeChatId: "chat-0",
-    chats: {},
-  };
-  for (let i = 0; i < 10; i++) {
-    project.chats[`chat-${i}`] = {
-      id: `chat-${i}`,
-      name: `Tab ${i}`,
-      createdAt: 100 + i,
-      updatedAt: 100 + i,
-      draft: { text: `Unique Draft for Tab ${i}` },
-      messages: [],
-      mainAgent: "codex",
-      modelAllowlist: [],
-    };
-  }
-
-  // Switch tabs rapidly
-  for (let i = 9; i >= 0; i--) {
-    project.activeChatId = `chat-${i}`;
-    assert.equal(
-      project.chats[project.activeChatId].draft.text,
-      `Unique Draft for Tab ${i}`,
-    );
-  }
+  assert.deepEqual(bridge.getState(), before);
+  assert.deepEqual(calculateAdaptiveResize(10000, 100, 2048), {
+    width: 2048,
+    height: 20,
+  });
 });

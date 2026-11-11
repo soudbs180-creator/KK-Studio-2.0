@@ -10,13 +10,25 @@ import { createPortal } from "react-dom";
 import { useDismissible } from "../useDismissible";
 import type { CanvasItemKind } from "../../domain/canvasItems";
 import type { AddMenuState } from "./useCanvasAddMenu";
-import { pluginStore } from "../../features/plugins/pluginStore";
+import { pluginStore } from "../../features/plugins/index.ts";
 import {
-  getPluginNodesRevision,
   listPluginNodeDefinitions,
+  getPluginNodesRevision,
   subscribePluginNodes,
-} from "../../features/plugins/nodeRegistry";
+} from "../../features/plugins/index.ts";
+import UiIcon, { type UiIconName } from "../UiIcon";
 import "../../styles/node-menu.css";
+
+const NODE_ICONS: Record<string, UiIconName> = {
+  text: "type",
+  table: "table-2",
+  image: "image",
+  video: "video",
+  audio: "music",
+  edit: "video-edit",
+  workflow: "workflow",
+  director: "frame-capture",
+};
 
 const ITEMS: {
   key: string;
@@ -30,12 +42,6 @@ const ITEMS: {
   { key: "image", label: "图片", kind: "image" },
   { key: "video", label: "视频", kind: "video", badge: "MiniMax H3" },
   { key: "audio", label: "音频", kind: "audio" },
-  {
-    key: "director",
-    label: "3D 导演台",
-    badge: "新",
-    reason: "3D 导演台尚未接入",
-  },
   {
     key: "edit",
     label: "视频剪辑",
@@ -54,11 +60,19 @@ export default function AddNodeMenu({
   menu,
   onChoose,
   onChoosePlugin,
+  onChooseWorkflow,
+  onOpenStoryboard,
+  onOpenDirector,
+  onOpenBlueprint,
   onDismiss,
 }: {
   menu: AddMenuState;
   onChoose: (kind: CanvasItemKind) => void;
   onChoosePlugin?: (type: string) => void;
+  onChooseWorkflow?: () => void;
+  onOpenStoryboard?: () => void;
+  onOpenDirector?: () => void;
+  onOpenBlueprint?: () => void;
   onDismiss: (restoreFocus?: boolean) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -85,12 +99,6 @@ export default function AddNodeMenu({
       enabledIds.has(entry.pluginId) &&
       entry.definition.showInCreateMenu !== false,
   );
-  const touch = useRef<{
-    key: string;
-    id: number;
-    x: number;
-    y: number;
-  } | null>(null);
   const [position, setPosition] = useState({ x: 16, y: 16 });
   useLayoutEffect(() => {
     const place = (): void => {
@@ -122,6 +130,14 @@ export default function AddNodeMenu({
       document.removeEventListener("focusin", outside, true);
     };
   }, [menu.trigger, menu.atPoint, onDismiss]);
+  const choices = ITEMS.map((item) => ({
+    ...item,
+    choose: item.kind
+      ? () => onChoose(item.kind!)
+      : item.key === "workflow"
+        ? onChooseWorkflow
+        : undefined,
+  }));
   return createPortal(
     <div
       ref={ref}
@@ -161,69 +177,30 @@ export default function AddNodeMenu({
     >
       <p className="add-node-title">添加节点</p>
       <div className="add-node-items">
-        {ITEMS.map((item) => (
+        {choices.map((item) => (
           <button
             key={item.key}
             role="menuitem"
             aria-label={item.label}
             aria-description={
-              item.reason ??
+              (item.choose ? undefined : item.reason) ??
               (item.key === "video"
-                ? "创建视频节点；当前仅支持本地演示素材，API未连接"
+                ? "创建视频节点；请在模型设置中配置视频连接"
                 : undefined)
             }
-            disabled={!item.kind}
+            disabled={!item.choose}
             title={
-              item.reason ??
+              (item.choose ? undefined : item.reason) ??
               (item.key === "video"
-                ? "创建视频节点；当前仅支持本地演示素材，API未连接"
+                ? "创建视频节点；请在模型设置中配置视频连接"
                 : undefined)
             }
-            onPointerDown={(event) => {
-              if (event.pointerType === "touch")
-                touch.current = {
-                  key: item.key,
-                  id: event.pointerId,
-                  x: event.clientX,
-                  y: event.clientY,
-                };
-            }}
-            onPointerMove={(event) => {
-              if (
-                touch.current &&
-                Math.hypot(
-                  event.clientX - touch.current.x,
-                  event.clientY - touch.current.y,
-                ) > 8
-              )
-                touch.current = null;
-            }}
-            onPointerCancel={() => {
-              touch.current = null;
-            }}
-            onPointerUp={(event) => {
-              const tap = touch.current;
-              touch.current = null;
-              if (
-                event.pointerType !== "touch" ||
-                tap?.key !== item.key ||
-                tap.id !== event.pointerId ||
-                !item.kind
-              )
-                return;
-              // Captured touch drags may suppress the following compatibility click.
-              event.preventDefault();
-              onChoose(item.kind);
-            }}
             onClick={() => {
-              if (item.kind) onChoose(item.kind);
+              item.choose?.();
             }}
           >
             <span className="add-node-icon-box">
-              <span
-                className={`add-node-icon add-node-icon-${item.key}`}
-                aria-hidden="true"
-              />
+              <UiIcon name={NODE_ICONS[item.key] ?? "circle-help"} size={20} />
             </span>
             <span className="add-node-label">{item.label}</span>
             {item.badge && (
@@ -234,14 +211,30 @@ export default function AddNodeMenu({
               </span>
             )}
             {item.key === "workflow" && (
-              <span
-                className="add-node-icon add-node-icon-next"
-                aria-hidden="true"
-              />
+              <UiIcon name="chevron-right" size={16} />
             )}
             {item.reason && (
               <span className="add-node-unavailable">{item.reason}</span>
             )}
+          </button>
+        ))}
+        <p className="add-node-title add-node-title-plugin">创作工具</p>
+        {[
+          ["漫剧分镜工作流", onOpenStoryboard],
+          ["3D 导演镜头台", onOpenDirector],
+          ["架构蓝图映射", onOpenBlueprint],
+        ].map(([label, choose]) => (
+          <button
+            key={String(label)}
+            role="menuitem"
+            type="button"
+            aria-label={String(label)}
+            disabled={!choose}
+            onClick={() => {
+              if (typeof choose === "function") choose();
+            }}
+          >
+            <span className="add-node-label">{label as string}</span>
           </button>
         ))}
         {pluginEntries.length > 0 && (

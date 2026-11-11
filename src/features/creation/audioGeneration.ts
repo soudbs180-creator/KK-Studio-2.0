@@ -1,3 +1,6 @@
+import { providerError } from "./imageGeneration.ts";
+import { audioMediaSchema } from "../../../packages/creation-contracts/media.ts";
+import { readMediaResponse } from "./mediaResponse.ts";
 /**
  * 音频生成选项与 OpenAI 兼容 TTS 请求（移植自 infinite-canvas
  * web/src/lib/audio-generation.ts 与 web/src/services/api/audio.ts）。
@@ -89,6 +92,8 @@ export type AudioGenerationConfig = {
 };
 
 export type AudioGenerationOptions = {
+  strictMedia?: boolean;
+  fetch?: typeof fetch;
   signal?: AbortSignal;
 };
 
@@ -100,6 +105,14 @@ export async function requestAudioGeneration(
 ): Promise<Blob> {
   if (!prompt.trim()) throw new Error("请输入要朗读的文本");
   assertAudioConfig(config);
+  if (options?.strictMedia)
+    audioMediaSchema.parse({
+      kind: "audio",
+      voice: config.voice,
+      format: config.format,
+      speed: Number(config.speed),
+    });
+  options?.signal?.throwIfAborted();
   const format = normalizeAudioFormatValue(config.format || "");
   const speed = Number(normalizeAudioSpeedValue(config.speed || ""));
   const instructions = (config.instructions || "").trim();
@@ -109,8 +122,10 @@ export async function requestAudioGeneration(
     "/audio/speech",
     config.localProxyUrl,
   );
-  const response = await fetch(url, {
+  const response = await (options?.fetch ?? fetch)(url, {
     method: "POST",
+    credentials: "omit",
+    redirect: "error",
     headers: {
       Authorization: `Bearer ${config.apiKey}`,
       "Content-Type": "application/json",
@@ -126,6 +141,19 @@ export async function requestAudioGeneration(
     signal: options?.signal,
   });
 
+  if (options?.strictMedia && !response.ok) {
+    await response.body?.cancel();
+    const error = providerError(response);
+    error.message = error.message.replaceAll("图片", "语音");
+    throw error;
+  }
+  if (options?.strictMedia)
+    return readMediaResponse(
+      response,
+      "audio",
+      options.signal,
+      format as "mp3" | "wav",
+    );
   if (!response.ok) {
     const text = await response.text().catch(() => "");
     throw new Error(

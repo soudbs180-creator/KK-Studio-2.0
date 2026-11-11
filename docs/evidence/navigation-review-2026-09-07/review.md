@@ -29,7 +29,7 @@
 
 ![Edge 导航 200% 与比例菜单展开](navigation-200-menu.png)
 
-[修改前截图](navigation-before.png) · [完整同状态截图](workspace-1920-same-state.png) · [导航与聊天间距](navigation-chat-spacing.png) · [测量 JSON](comparison.json) · [修改前测量](comparison-before.json) · [可重复采集脚本](capture.cjs)
+[修改前截图](evidence-manifest.json) · [完整同状态截图](evidence-manifest.json) · [导航与聊天间距](evidence-manifest.json) · [测量 JSON](comparison.json) · [修改前测量](comparison-before.json) · [可重复采集脚本](capture.cjs)
 
 ## 验证
 
@@ -62,3 +62,8 @@
 交付只读复查：`review_navigation_evidence` 对本轮两行 CSS、源稿、修改前后测量与日志统计检查后无阻断意见；确认字重为 500，12/44/14 项验证统计一致，缓存时效与残余差异没有被夸大。复查未修改文件或重跑测试，不覆盖其余遗留工作树。
 
 沿既有视频参数组件继续核对 `170:8853`（297×229 参数弹层）及 `170:8490`：读取已有来源，对照比例、分辨率、时长和菜单关闭/回焦状态；数量 1/2/4/6/8 与声音切换已实现，不再重复施工。最新远端状态与背景弹层证据需要 Figma 设计读取恢复。整体保持 Repairing。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[navigation-review-2026-09-07 manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。
