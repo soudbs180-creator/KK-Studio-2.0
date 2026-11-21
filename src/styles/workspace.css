@@ -32,7 +32,12 @@
   opacity: 0;
 }
 body:has(.workspace-content[data-content-view="settings"])
-  > :is(.canvas-context-menu, .add-node-menu) {
+  > :is(
+    .canvas-context-menu,
+    .add-node-menu,
+    .tag-editor-popover.is-floating,
+    .connection-drag-preview
+  ) {
   display: none;
 }
 .workspace-surface {

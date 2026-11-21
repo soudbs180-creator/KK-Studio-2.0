@@ -16,6 +16,7 @@ export interface CanvasProps {
   onAgentViewChange?: () => void;
   projectStatus?: ReactNode;
   covered?: boolean;
+  suspendViewport?: boolean;
   initialCanvas?: ProjectCanvas;
   onCanvasChange?: (canvas: ProjectCanvas) => void;
   onOpen?: (view: string) => void;

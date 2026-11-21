@@ -6,6 +6,7 @@ test("workspace settings sit beside chat and preserve canvas, form, and focus", 
 }, info) => {
   await openWorkspace(page);
   const canvas = page.getByTestId("infinite-canvas");
+  await page.getByTestId("canvas-node-image").click();
   const canvasState = await canvas
     .locator(".canvas-stage")
     .getAttribute("style");
@@ -23,6 +24,10 @@ test("workspace settings sit beside chat and preserve canvas, form, and focus", 
   await expect(settings).toHaveAttribute("aria-modal", "false");
   await expect(page.locator("dialog[open]")).toHaveCount(0);
   await expect(canvas).toHaveAttribute("inert", "");
+  await expect(canvas.locator(".canvas-stage")).toHaveAttribute(
+    "style",
+    canvasState!,
+  );
   const area = (await settings.boundingBox())!;
   const peer = (await chat.boundingBox())!;
   expect(area.x + area.width).toBeLessThanOrEqual(peer.x);
@@ -76,6 +81,19 @@ test("workspace settings sit beside chat and preserve canvas, form, and focus", 
     canvasState!,
   );
   await expect(page.getByLabel("对话内容")).toHaveValue("并列显示保留对话草稿");
+  for (const width of [1099, 390]) {
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await trigger.click();
+    await page.setViewportSize({ width, height: 640 });
+    await expect(
+      settings.getByRole("button", { name: "关闭设置", exact: true }),
+    ).toBeVisible();
+    await settings.locator(".settings-content").press("Escape");
+    await expect(settings).toBeHidden();
+    await expect(
+      page.getByRole("button", { name: "打开设置", exact: true }),
+    ).toBeFocused();
+  }
 });
 
 test("workspace routing waits for settings credential writes", async ({
@@ -163,4 +181,35 @@ test("Agent advanced conversation disclosure uses the shared outline", async ({
   await expect(summary).toBeFocused();
   await summary.press("Space");
   await expect(summary.locator("..")).not.toHaveAttribute("open", "");
+});
+
+test("workspace settings cover the canvas tag editor without losing collection state", async ({
+  page,
+}) => {
+  await openWorkspace(page);
+  await page.getByRole("button", { name: "喜欢与标签", exact: true }).click();
+  await page.getByRole("menuitem", { name: "画布标签", exact: true }).click();
+  const tags = page.getByTestId("canvas-tags-panel");
+  const query = tags.getByLabel("搜索标签素材");
+  await query.fill("蓝调");
+  const edit = tags
+    .getByRole("button", { name: "编辑标签", exact: true })
+    .first();
+  if (!(await edit.count())) await query.fill("");
+  await edit.click();
+  const editor = page.locator(".tag-editor-popover.is-floating");
+  const editorClose = editor.getByRole("button", {
+    name: "关闭标签编辑",
+    exact: true,
+  });
+  await expect(editor).toBeVisible();
+  const filter = await query.inputValue();
+  await editorClose.press("Control+,");
+  const settings = page.getByRole("dialog", { name: "设置", exact: true });
+  await expect(settings).toBeVisible();
+  await expect(editor).toBeHidden();
+  await expect(tags).toBeHidden();
+  await settings.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await expect(tags).toBeVisible();
+  await expect(query).toHaveValue(filter);
 });

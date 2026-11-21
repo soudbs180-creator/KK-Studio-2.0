@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
-test("current Figma modal shells keep dimensions and settings content origin", async ({
+test("existing modal settings, search and asset shells keep dimensions and content origin", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await openWorkspace(page);
+  await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const panel = page.locator(".settings-panel");
   await expect(panel).toHaveCSS("width", "960px");
@@ -27,6 +27,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
     "软件更新",
   ]);
   await page.keyboard.press("Escape");
+  await openWorkspace(page);
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await expect(page.locator(".catalog-panel")).toHaveCSS("height", "696px");
   await page.keyboard.press("Escape");

@@ -35,6 +35,7 @@ export default function Canvas({
   onAgentViewChange,
   projectStatus,
   covered = false,
+  suspendViewport = false,
   onOpen,
   chatOpen = true,
   onOpenChat,
@@ -56,6 +57,7 @@ export default function Canvas({
     items,
     onItemsChange,
     initialCanvas,
+    suspendViewport,
   });
   useAgentCanvasView(controls, projectId, agentViewRef, onAgentViewChange);
   const {

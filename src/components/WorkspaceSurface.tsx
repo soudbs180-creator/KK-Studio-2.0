@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 import DeferredPanelBoundary from "./DeferredPanelBoundary";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
@@ -57,12 +57,20 @@ export default function WorkspaceSurface({
       ) {
         requestAnimationFrame(() => {
           if (document.activeElement !== document.body) return;
+          const canRestore = (element: HTMLElement) =>
+            element !== document.body &&
+            element.isConnected &&
+            element.getClientRects().length > 0 &&
+            !element.matches(":disabled") &&
+            getComputedStyle(element).visibility !== "hidden";
           const target =
-            origin?.isConnected && origin.getClientRects().length
+            origin && canRestore(origin)
               ? origin
-              : document.querySelector<HTMLButtonElement>(
-                  'button[aria-label="打开设置"]',
-                );
+              : Array.from(
+                  document.querySelectorAll<HTMLButtonElement>(
+                    'button[aria-label="打开设置"]',
+                  ),
+                ).find(canRestore);
           target?.focus({ preventScroll: true });
         });
       }
@@ -72,6 +80,22 @@ export default function WorkspaceSurface({
     if (document.activeElement === document.body)
       ref.current?.focus({ preventScroll: true });
   }, [routeKey]);
+  useEffect(() => {
+    const closeAfterFocusLoss = (event: KeyboardEvent) => {
+      if (
+        event.key !== "Escape" ||
+        event.defaultPrevented ||
+        event.isComposing ||
+        document.activeElement !== document.body ||
+        document.querySelector("dialog[open]")
+      )
+        return;
+      event.preventDefault();
+      onClose();
+    };
+    window.addEventListener("keydown", closeAfterFocusLoss);
+    return () => window.removeEventListener("keydown", closeAfterFocusLoss);
+  }, [onClose]);
 
   return (
     <section

@@ -3103,6 +3103,7 @@ export default function App() {
       key={settingsSection}
       initialSection={settingsSection}
       onNavigationBusyChange={onSettingsBusyChange}
+      workspace={workspaceSettings}
       saveState={saveState}
       revision={creation.revision}
       projects={creation.projects}
@@ -3351,6 +3352,7 @@ export default function App() {
                     if (activeProject) retryTask(activeProject.id, taskId);
                   }}
                   chatOpen={chat}
+                  suspendViewport={workspaceSettings}
                   covered={
                     workspaceSettings ||
                     (chatCoversCanvas && mobileChat && chat)

@@ -22,7 +22,10 @@ export function useAppPanelNavigation(active: string) {
     if (settingsBusy.current) return;
     if (view === "settings" && modalRef.current !== view) {
       const focused = document.activeElement;
-      workspaceOrigin.current = currentPage.current === "workspace";
+      workspaceOrigin.current =
+        currentPage.current === "workspace" &&
+        matchMedia("(min-width: 1201px)").matches &&
+        !document.querySelector("dialog[open]");
       settingsOrigin.current = focused instanceof HTMLElement ? focused : null;
     }
     setModalState(view);
