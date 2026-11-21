@@ -9,6 +9,7 @@ import "../styles/collection-panels.css";
 export default function CanvasCollectionsPanels({
   items,
   likedIds,
+  covered,
   likesOpen,
   tagsOpen,
   customTags,
@@ -25,6 +26,7 @@ export default function CanvasCollectionsPanels({
 }: {
   items: CanvasCollectionItem[];
   likedIds: Set<string>;
+  covered: boolean;
   likesOpen: boolean;
   tagsOpen: boolean;
   customTags: string[];
@@ -61,6 +63,7 @@ export default function CanvasCollectionsPanels({
     <>
       <FloatingCollectionPanel
         id="likes"
+        covered={covered}
         title="喜欢"
         open={likesOpen}
         activation={activation.likes}
@@ -95,6 +98,7 @@ export default function CanvasCollectionsPanels({
       </FloatingCollectionPanel>
       <FloatingCollectionPanel
         id="tags"
+        covered={covered}
         title="标签"
         open={tagsOpen}
         activation={activation.tags}

@@ -176,3 +176,29 @@
 .primary-button {
   border-radius: var(--kk-radius-full);
 }
+
+:is(.settings-disclosure, .model-access-manual, .chat-agent-advanced)
+  > summary {
+  display: block;
+  list-style: none;
+}
+:is(.settings-disclosure, .model-access-manual, .chat-agent-advanced)
+  > summary::-webkit-details-marker {
+  display: none;
+}
+:is(.settings-disclosure, .model-access-manual, .chat-agent-advanced)
+  > summary::before {
+  display: inline-block;
+  inline-size: var(--kk-icon-glyph-sm);
+  block-size: var(--kk-icon-glyph-sm);
+  margin-inline-end: var(--kk-space-2);
+  vertical-align: middle;
+  background: var(--kk-text-secondary);
+  mask: url("/design/pen/disclosure-chevron.svg") center / contain no-repeat;
+  transform: rotate(-90deg);
+  content: "";
+}
+:is(.settings-disclosure, .model-access-manual, .chat-agent-advanced)[open]
+  > summary::before {
+  transform: none;
+}

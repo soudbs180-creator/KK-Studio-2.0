@@ -8,13 +8,13 @@
 
 现行文档 `b1c8c2e7-1733-4af4-843e-5c7962ed3f49`。通过 Pen MCP 更新并保存 `CzGXd` 与 `d7z7Ci`。保存后回读边界无裁剪。展开图标由 gSHZ5 原样导出，CSS mask 继承语义文字色。收起旋转对应 ToSeM。证据为 pen-before/QnbwN.png、pen-after/QnbwN.png 和 pen-readback.txt。
 
-## desktop-settings-content-disclosure
+## 首批 Desktop 折叠证据（Git 历史）
 
 证据文件 evidence/desktop-settings-content-disclosure.json
 
 先用 start-kk-studio.bat --background --data-dir <隔离目录> 重建实际桌面产物，再在私有 Windows 桌面启动同 SHA-256 的 EXE，以独立数据目录和 WebView2 profile 验证七个共享样式消费者。访问 http://tauri.localhost/，通过仅绑定本机的 DevTools 连接检查。每个入口均验证标记隐藏、两方向图标、Enter、Space、焦点和截图。H3 视频模型候选来自本机手动硬件检测步骤。见 desktop-build-receipt.json、native-expanded/native-disclosure.json 和同目录截图。
 
-## web-settings-content-disclosure
+## 首批 Web 折叠证据（Git 历史）
 
 证据文件 evidence/web-settings-content-disclosure.json
 
@@ -35,3 +35,28 @@
 ## 待处理
 
 主线设置、资产与搜索仍走 modal，Pen 场景是工作台内容区。需要分批移植并验证资产选择、滚动、搜索、焦点与草稿状态。对话记录的业务行为在 Pen 与本地有冲突。真正的会话列表功能须经单项裁决。未检查的页面与独立原生 Mobile 留在 ui-tasks.json。
+
+## 工作台设置与会话折叠复验
+
+## desktop-settings-content-disclosure
+
+证据文件 evidence/desktop-settings-content-disclosure.json
+
+## web-settings-content-disclosure
+
+证据文件 evidence/web-settings-content-disclosure.json
+
+## desktop-settings-workspace
+
+证据文件 evidence/desktop-settings-workspace.json
+
+## web-settings-workspace
+
+证据文件 evidence/web-settings-workspace.json
+
+第二批证据 D:/kk-studio/output/kk-design-pen-workspace-20261121。当前候选 Desktop 2.1.45 / Web 2.1.44。Pen 通过 MCP 回读 hgib1、BnwUr 与资源/搜索相邻目标，并导出局部原稿。设计文档本批沿用已保存规则。
+
+- Desktop 实机在私有 Windows 桌面运行已验 EXE。测量宽屏设置、会话相邻且不重叠，1099/390/1366px 无横向溢出，保留草稿、Esc 返回触发器，复验七处设置折叠和高级会话操作。
+- Edge 生产预览 38 项通过。包括窄屏恢复、实际加载的 JS/CSS 字节一致、连接保存挂起期间导航拦截、摘要 Space 键及首页原弹窗回归。连接提交场景使用隔离 IPC 夹具。
+- 运行前保留早期类型、表单裁切与预览端口占用证据。Lint、类型、版本与 UI 规则通过；App 代码健康检查保留三项非阻断告警。
+- 原有会话历史语义、独立 Mobile、远端及生产部署仍待处理。

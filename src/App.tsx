@@ -23,6 +23,8 @@ import Canvas from "./components/Canvas";
 import ConversationPanel from "./components/ConversationPanel";
 import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
+import WorkspaceSurface from "./components/WorkspaceSurface";
+import { useAppPanelNavigation } from "./components/useAppPanelNavigation";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
 import {
   requiredApprovalGates,
@@ -219,12 +221,6 @@ import {
   BASE_CANVAS_ITEMS,
   type CanvasCollectionItem,
 } from "./domain/canvasItems";
-import {
-  SETTINGS_STORAGE_KEY,
-  parseSettings,
-  DEFAULT_SETTINGS,
-  type SettingsPreferences,
-} from "./domain/settings";
 import { useLocalWorkflows } from "./features/comfyui/useLocalWorkflows";
 // App owns lazy panel styles before the final screen overrides.
 import "./components/assets/assets.css";
@@ -266,7 +262,16 @@ export default function App() {
   useEffect(() => {
     if (active === "workspace") setWorkspaceVisited(true);
   }, [active]);
-  const [modal, setModal] = useState("");
+  const {
+    modal,
+    setModal,
+    settingsSection,
+    setSettingsSection,
+    workspaceSettings,
+    settingsOrigin,
+    onSettingsBusyChange,
+    settingsNavigationLocked,
+  } = useAppPanelNavigation(active);
   const [likesOpen, setLikesOpen] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
   const [activeCollection, setActiveCollection] = useState<"likes" | "tags">(
@@ -276,7 +281,6 @@ export default function App() {
     likes: 0,
     tags: 0,
   });
-  const [settingsSection, setSettingsSection] = useState("general");
   const sidebar = useSidebarLayout();
   const chatCoversCanvas =
     sidebar.surface === "phone" ||
@@ -2940,6 +2944,7 @@ export default function App() {
     return nextProject.id;
   }
   function openSavedProject(id: string): void {
+    if (settingsNavigationLocked()) return;
     if (
       !creationRef.current.projects.some(
         (project) => project.id === id && project.trashedAt === undefined,
@@ -2950,58 +2955,8 @@ export default function App() {
     setActive("workspace");
     setModal("");
   }
-  useEffect(() => {
-    const shortcut = (event: KeyboardEvent): void => {
-      if (event.isComposing || event.defaultPrevented) return;
-      if ((event.ctrlKey || event.metaKey) && event.key === ",") {
-        event.preventDefault();
-        setSettingsSection("general");
-        setModal("settings");
-      }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setModal("search");
-      }
-    };
-    window.addEventListener("keydown", shortcut);
-    return () => window.removeEventListener("keydown", shortcut);
-  }, []);
-  useEffect(() => {
-    const media = matchMedia("(prefers-color-scheme: dark)");
-    let preferences: SettingsPreferences = DEFAULT_SETTINGS;
-    try {
-      preferences = parseSettings(
-        localStorage.getItem(SETTINGS_STORAGE_KEY),
-      ).preferences;
-    } catch {
-      // Browser storage can be denied; retain the default theme preferences.
-      preferences = DEFAULT_SETTINGS;
-    }
-    const apply = () => {
-      document.documentElement.dataset.accent = preferences.accent;
-      document.documentElement.dataset.theme =
-        preferences.theme === "system"
-          ? media.matches
-            ? "dark"
-            : "light"
-          : preferences.theme;
-      document.documentElement.dataset.floatingLayout = String(
-        preferences.floatingLayout,
-      );
-    };
-    const listener = (event: Event) => {
-      preferences = (event as CustomEvent<SettingsPreferences>).detail;
-      apply();
-    };
-    apply();
-    window.addEventListener("kk:settings-changed", listener);
-    media.addEventListener("change", apply);
-    return () => {
-      window.removeEventListener("kk:settings-changed", listener);
-      media.removeEventListener("change", apply);
-    };
-  }, []);
   function open(view: string): void {
+    if (settingsNavigationLocked()) return;
     if (view === "skills" || view.startsWith("skills/")) {
       setPartnerProjectId(
         active === "workspace" ? creationRef.current.activeProjectId : null,
@@ -3026,6 +2981,7 @@ export default function App() {
       return;
     }
     if (view === "new-project") {
+      setModal("");
       handleNewBlankProject();
       return;
     }
@@ -3142,6 +3098,20 @@ export default function App() {
     }
   }
 
+  const settingsPanel = modal === "settings" && (
+    <SettingsPanel
+      key={settingsSection}
+      initialSection={settingsSection}
+      onNavigationBusyChange={onSettingsBusyChange}
+      saveState={saveState}
+      revision={creation.revision}
+      projects={creation.projects}
+      registry={skillRegistry}
+      workflows={workflows}
+      onClose={() => setModal("")}
+    />
+  );
+
   return (
     <div
       className="app"
@@ -3154,6 +3124,9 @@ export default function App() {
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
         onToggleChat={() => open("chat")}
+        canvasHistoryDisabledReason={
+          workspaceSettings ? "关闭设置后可撤销或重做画布操作。" : undefined
+        }
         newWindowDisabledReason="多窗口仓库协调尚未完成，暂不可新建窗口。"
         newChatDisabledReason="多聊天隔离尚未完成，暂不可新建聊天。"
         newTempChatDisabledReason="临时聊天的历史与记忆隔离尚未完成，暂不可用。"
@@ -3183,9 +3156,20 @@ export default function App() {
           projects={creation.projects}
           activeProjectId={creation.activeProjectId}
           canEditProjects={saveState === "saved" || saveState === "saving"}
-          onCreateProject={handleNewBlankProject}
+          onCreateProject={() => {
+            if (settingsNavigationLocked()) return "";
+            setModal("");
+            return handleNewBlankProject();
+          }}
           onOpenProject={openSavedProject}
-          projectActions={projectLibrary.actions}
+          projectActions={
+            workspaceSettings
+              ? {
+                  ...projectLibrary.actions,
+                  trashDisabledReason: () => "关闭设置后可删除项目。",
+                }
+              : projectLibrary.actions
+          }
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
           <CreationStorageNotice
@@ -3210,7 +3194,11 @@ export default function App() {
             />
           )}
           {(active === "workspace" || workspaceVisited) && (
-            <div className="workspace-content" hidden={active !== "workspace"}>
+            <div
+              className="workspace-content"
+              hidden={active !== "workspace"}
+              data-content-view={workspaceSettings ? "settings" : undefined}
+            >
               <CanvasImageCommandContext.Provider
                 value={{
                   items: activeProject?.items,
@@ -3363,7 +3351,10 @@ export default function App() {
                     if (activeProject) retryTask(activeProject.id, taskId);
                   }}
                   chatOpen={chat}
-                  covered={chatCoversCanvas && mobileChat && chat}
+                  covered={
+                    workspaceSettings ||
+                    (chatCoversCanvas && mobileChat && chat)
+                  }
                   onOpenChat={() => {
                     setChat(true);
                     setMobileChat(true);
@@ -3382,6 +3373,17 @@ export default function App() {
                   />
                 )}
               </CanvasImageCommandContext.Provider>
+              {workspaceSettings && (
+                <WorkspaceSurface
+                  title="设置"
+                  penNode="hgib1"
+                  origin={settingsOrigin.current}
+                  routeKey={settingsSection}
+                  onClose={() => setModal("")}
+                >
+                  {settingsPanel}
+                </WorkspaceSurface>
+              )}
               <div className={"chat-container " + (!chat ? "chat-hidden" : "")}>
                 <ConversationPanel
                   overlay={sidebar.narrow && mobileChat && chat}
@@ -3512,7 +3514,11 @@ export default function App() {
                         document.activeElement === document.body
                       )
                         document
-                          .querySelector<HTMLButtonElement>(".chat-reopen")
+                          .querySelector<HTMLElement>(
+                            workspaceSettings
+                              ? ".workspace-surface"
+                              : ".chat-reopen",
+                          )
                           ?.focus({ preventScroll: true });
                     });
                   }}
@@ -3553,6 +3559,7 @@ export default function App() {
           tags: effectiveTags(item.tags, favoriteIds.has(item.id)),
         }))}
         likedIds={likedIds}
+        covered={workspaceSettings}
         likesOpen={active === "workspace" && likesOpen}
         tagsOpen={active === "workspace" && tagsOpen}
         customTags={activeProject?.customTags ?? []}
@@ -3575,7 +3582,7 @@ export default function App() {
           onCancel={() => resolveTaskApproval(false)}
         />
       )}
-      {modal && (
+      {modal && !workspaceSettings && (
         <Modal
           title={
             modal === "search"
@@ -3646,16 +3653,7 @@ export default function App() {
             ) : modal === "shortcuts" ? (
               <ShortcutsPanel onClose={() => setModal("")} />
             ) : modal === "settings" ? (
-              <SettingsPanel
-                key={settingsSection}
-                initialSection={settingsSection}
-                saveState={saveState}
-                revision={creation.revision}
-                projects={creation.projects}
-                registry={skillRegistry}
-                workflows={workflows}
-                onClose={() => setModal("")}
-              />
+              settingsPanel
             ) : modal === "assets" ? (
               <AssetPanel
                 onClose={() => setModal("")}

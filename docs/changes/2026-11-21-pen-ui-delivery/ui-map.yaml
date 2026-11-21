@@ -1,7 +1,7 @@
 version: 1
 pen:
   documentId: b1c8c2e7-1733-4af4-843e-5c7962ed3f49
-  readbackSha256: e3a25e962612f6909be16ce402d0866424d1d66a65b3fb8308635215d94f315a
+  readbackSha256: 5bf7ffca1984b508e88f0d8ca1aeab30bc02f5dbdc2ba2cdd714c37dc72606cc
   uri: file:///C:/Users/Administrator/.pencil/documents/b1c8c2e7-1733-4af4-843e-5c7962ed3f49/untitled.pen
   policyNodes:
     - QnbwN
@@ -14,8 +14,10 @@ mappings:
       - d7z7Ci
       - gSHZ5
       - ToSeM
+      - rD3yd
     files:
       - src/components/settings/settings.css
+      - src/styles/ui-governance.css
       - public/design/pen/disclosure-chevron.svg
     locator: details.settings-disclosure > summary; details.model-access-manual > summary
     kind: common-component
@@ -42,36 +44,95 @@ mappings:
       - src/components/settings/LocalVideoPackages.tsx
       - src/components/settings/LocalWorkflowSettings.tsx
       - src/components/settings/PreferencesBackup.tsx
+      - src/components/AgentConversationMessages.tsx
+      - src/components/canvas/useCanvasPointer.ts
+      - src/main.tsx
     evidence:
       desktop:
         status: verified
-        sha256: 90f2d0593a669915fdce36e16b8befe02003b8793e77637d16ffb63ce7726675
+        sha256: 6efaa47f630c6309ce3e3d50bb4cfa573c086bdcb9dac4f867b7e083c6dcc07c
       web:
         status: verified
-        sha256: dfab2217d6ab364e5de8511a312d521368ece8957c7b4deb1fd9987cbbca6110
+        sha256: e5f589b5d71409881ca79a64a42702a017d34d32bf736280264d76cf97bbb03b
+  - id: settings.workspace
+    kind: functional-instance
+    route: / → 项目库 → 打开或新建项目 → 画布 → 打开设置 / 对话前往模型设置 / Ctrl+,
+    locator: .workspace-content[data-content-view=settings] > .workspace-surface[data-pen-node=hgib1]
+    nodes:
+      - hgib1
+      - BnwUr
+      - WHXX3
+      - C5yCOp
+    files:
+      - src/App.tsx
+      - src/components/WorkspaceSurface.tsx
+      - src/components/useAppPanelNavigation.ts
+      - src/components/TopBar.tsx
+      - src/components/settings/SettingsPanel.tsx
+      - src/components/DeferredPanelBoundary.tsx
+      - src/components/CanvasCollectionsPanels.tsx
+      - src/components/FloatingCollectionPanel.tsx
+      - src/components/canvas/useCanvasPointer.ts
+      - src/styles/workspace.css
+      - src/styles/collection-panels.css
+    dependencies:
+      - src/styles/tokens.css
+      - src/styles/conversation-panel.css
+      - config/platform-versions.json
+      - src/components/Canvas.tsx
+      - src/components/useSidebarLayout.ts
+      - src/components/useHiddenControlFocus.ts
+      - src/components/settings/SettingsSectionData.ts
+      - src/components/settings/settings.css
+      - src/components/settings/SettingsNavigationContext.ts
+      - src/components/settings/ModelProviderSettings.tsx
+    states:
+      - wide-adjacent-chat
+      - compact-settings-only
+      - transactions-pending
+      - restore-origin-focus
+    remaining: 仅验证设置宿主、表单和既有分类；Pen 导航组与设置搜索保留栏目级差异。
+    evidence:
+      desktop:
+        status: verified
+        sha256: 061f7ca84fae0449b26263a9ebf3c492d20fb649a3b72477bd2d33f9d219d914
+      web:
+        status: verified
+        sha256: b36d25121eb03aab70a7d72d4917eedef3ff7046570f721a7dffa6fa1828e411
 inputs:
-  src/components/settings/settings.css: b3826cd50a698aa21c66fc1049b10908c6e61b74
+  src/components/settings/settings.css: 7cb2a6ef49e06ad7b000908a0e9215c398cc4d0b
   public/design/pen/disclosure-chevron.svg: 279c00e17f98a0368e076328fe2bbd4a9e3f4ff1
   src/styles/tokens.css: adb43817b00412044118a073662afe4730de7550
   src/components/settings/GeneralAdvancedPreferences.tsx: f0887127e8d0f3d4c29e2d61a5d97b53db114fca
   src/components/settings/ConnectionSettings.tsx: a82505cc40b92c07f0690bbbfdf1611ccecc1b42
   src/components/settings/AgentConnectionSettings.tsx: b253bc9ef6348d22a4f20994e363183b5e7ff3ba
-  config/platform-versions.json: e711aeac4d18345a19624bd78a274ce1eff18d6b
-  src/App.tsx: c22b3fbae43e4cb02c786cade8da425203754ab4
+  config/platform-versions.json: 39df7c795cd726c46786483be6786b668a0c0e6e
+  src/App.tsx: a2b1de85e4f1012e9ffdc76e25e36488fa1dcecb
   src/components/settings/GeneralSettings.tsx: d977a046d7b34a8ef05f2301dfbf2d71a85ab641
   src/components/settings/LocalVideoPackages.tsx: cfc2b8159e36610a83e5758ef152c4af2c3e5f11
   src/components/settings/LocalWorkflowSettings.tsx: 40d6e645bf56c597e87a27fdb2abb96aae65e50f
   src/components/settings/PreferencesBackup.tsx: 99d2ef0a6beb4ee4780a2006a2e719cff432d03e
+  src/styles/ui-governance.css: c83f22ff9e0c63296ce4537c1d3f05a34e2c7299
+  src/components/AgentConversationMessages.tsx: 1cfcbc9935ef9f7cccb5c09351602da36ff210d9
+  src/components/canvas/useCanvasPointer.ts: d9f43947483951ceda1edbcd88356c3a134601cc
+  src/main.tsx: e1b6e73966bf78f70aae7181caa5fcf7637e3572
+  src/components/WorkspaceSurface.tsx: de7317f2b2a7d40c8efd4e4eaa406b6bc5664aad
+  src/components/useAppPanelNavigation.ts: a7ff8c610980a169aea22696ccff4c5dd0eaf98c
+  src/components/TopBar.tsx: 6fb6e9d625920bd488506e6b4eda3ece9678ee47
+  src/components/settings/SettingsPanel.tsx: dcf99d79ec0f6e57f5e2e02c7f19031c94014d9b
+  src/components/DeferredPanelBoundary.tsx: deffb43f603cc31ca3c57b433188299c88713dcd
+  src/components/CanvasCollectionsPanels.tsx: 7c6b8943a1a189ccd220378b98f51c431f7e3daa
+  src/components/FloatingCollectionPanel.tsx: 1ac683746bcf71390c0762cdd7246a59ec414423
+  src/styles/workspace.css: d843b6937a96ba96f4c5fb138f7e6c79231bea5d
+  src/styles/collection-panels.css: 057bab7dec1fc1a4253033ab4864d196a41827f4
+  src/styles/conversation-panel.css: b774a8b731f5b3df90347daf4b401a04458be1cd
+  src/components/Canvas.tsx: 72babadf330a2bac1d8a3dec021af06243c0839b
+  src/components/useSidebarLayout.ts: 4ab854c9dde7d3f7fe49f55e1c714cd65e5d3bc1
+  src/components/useHiddenControlFocus.ts: cf3282e3d879d5e944383ed4a70ba369f5b2407a
+  src/components/settings/SettingsSectionData.ts: 3026fda2704589a08d3e4d8efbc3ba9b103cb003
+  src/components/settings/SettingsNavigationContext.ts: 4b5660cfde7d33e7944c022d592850117c3151d4
+  src/components/settings/ModelProviderSettings.tsx: 036cf52bd78d984340bda00ce9db93ee1edc94ba
 inventory:
-  - id: settings.workspace
-    nodes:
-      - hgib1
-      - BnwUr
-    status: 未验收
-    local:
-      - src/App.tsx
-      - src/components/settings/SettingsPanel.tsx
-    note: 从 main App 的 modal 进入，Pen 为工作台内容区并排会话；属于独立宿主迁移。
   - id: assets.workspace
     nodes:
       - GuAqj
@@ -189,3 +250,16 @@ instances:
     verifiedRuntime:
       - Desktop
       - Web
+  - id: conversation.advanced-disclosure
+    component: settings.content-disclosure
+    label: 高级会话操作
+    route: / → 项目画布 → Agent 对话
+    local: src/components/AgentConversationMessages.tsx
+    locator: .chat-agent-advanced > summary
+    states:
+      - collapsed
+      - expanded
+    verifiedRuntime:
+      - Desktop
+      - Web
+    penPageBinding: d7z7Ci 的共享折叠规则，rD3yd 记录会话设置状态；业务动作沿用当前代码。

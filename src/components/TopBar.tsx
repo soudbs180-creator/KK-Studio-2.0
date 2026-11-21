@@ -15,6 +15,7 @@ export default function TopBar({
   newWindowDisabledReason,
   newChatDisabledReason,
   newTempChatDisabledReason,
+  canvasHistoryDisabledReason,
   onUndo,
   onRedo,
 }: {
@@ -27,6 +28,7 @@ export default function TopBar({
   newWindowDisabledReason?: string;
   newChatDisabledReason?: string;
   newTempChatDisabledReason?: string;
+  canvasHistoryDisabledReason?: string;
   onUndo?: () => void;
   onRedo?: () => void;
 }) {
@@ -94,6 +96,7 @@ export default function TopBar({
     编辑: [
       {
         text: "撤销",
+        disabledReason: canvasHistoryDisabledReason,
         action: () => {
           if (onUndo) onUndo();
           else window.dispatchEvent(new CustomEvent("kk:canvas-undo"));
@@ -101,6 +104,7 @@ export default function TopBar({
       },
       {
         text: "重做",
+        disabledReason: canvasHistoryDisabledReason,
         action: () => {
           if (onRedo) onRedo();
           else window.dispatchEvent(new CustomEvent("kk:canvas-redo"));

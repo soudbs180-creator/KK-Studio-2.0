@@ -1,0 +1,22 @@
+{
+  "mappingId": "settings.workspace",
+  "platform": "desktop",
+  "versionBindingSha256": "e15e2153c14f880b9bb848e5aa2eab5bb7d0cbb6b0e4455d64b6ec3666902657",
+  "rawEvidenceFile": "native-runtime.json",
+  "rawEvidenceSha256": "e218443b5c326c245eb4d92bf2859ada3dd2a688d6cb3955f75e302dda54a1b0",
+  "entry": "kk-studio.exe",
+  "entrySha256": "3f67a146d0e21bcb03f8123cb0d361d9f39e8c21baa8df96e60c5f31e27564d3",
+  "desktopBuildInputSha256": "e51ece5e50669d042b6f0bcdb9757faf2fa2a1d69b98bedda8b4bdfb5002be8d",
+  "launch": "start-kk-studio.bat --background --data-dir <isolated>; same EXE checked in private Desktop",
+  "url": "http://tauri.localhost/",
+  "version": "2.1.45",
+  "checks": [
+    "wide inline surface beside chat",
+    "resize draft and overflow",
+    "resize draft and overflow",
+    "resize draft and overflow",
+    "Escape restores trigger and canvas"
+  ],
+  "passed": 5,
+  "failed": 0
+}

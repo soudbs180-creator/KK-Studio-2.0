@@ -43,16 +43,18 @@
       ],
       "evidence": [
         "D:/kk-studio/output/kk-design-pen-sync-20261121/native-expanded/native-disclosure.json",
-        "D:/kk-studio/output/kk-design-pen-sync-20261121/expanded-browser-results.json"
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/expanded-browser-results.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/native-runtime.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-results.json"
       ],
       "next": "变更源图标、设置样式或消费者后重新验收",
       "allowed": "settings.css、Pen 原样 Glyph 和七个共享消费者",
-      "checkpoint": "本地实现提交 d81b218c 与版本收据",
+      "checkpoint": "第二批生产绑定见 ui-map.yaml、证据和验证记录",
       "dependencies": [
         "PEN-01"
       ],
       "acceptance": "Desktop 与 Web 各入口的收起、展开、焦点和键盘，定位和共享依赖一致",
-      "expectedImpact": "共享选择器覆盖通用、网络、模型接入、数据管理的七处内容折叠",
+      "expectedImpact": "七处设置折叠和高级会话操作使用同一真实 Pen 16px Glyph",
       "blocker": null
     },
     {
@@ -86,26 +88,32 @@
     {
       "id": "PEN-04",
       "target": "设置工作台宿主",
-      "status": "待执行",
-      "basis": "Pen hgib1/BnwUr 与 App modal 宿主差异",
+      "status": "待验收",
+      "basis": "Pen MCP 已回读 hgib1 / BnwUr：工作台内容区与 Agent 会话并列，设置导航与正文独立滚动，保护分类、草稿、进入焦点及连接写事务。",
       "scope": [
         "已核验、有共同功能语义的控件"
       ],
       "protected": [
-        "未裁决交互行为",
-        "非本批平台与布局"
+        "用户偏好与凭据",
+        "画布缩放与选区",
+        "Agent 会话与输入",
+        "非画布设置弹窗",
+        "无关任务工作树"
       ],
       "evidence": [
-        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/native-runtime.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-results.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-loaded-assets.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen/hgib1.png"
       ],
-      "next": "以现行设置路由为基础建立工作台插槽，逐项验证深链接和焦点。",
+      "next": "复核候选，推进 PEN-05。",
       "blocker": null,
       "dependencies": [],
-      "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
+      "acceptance": "宽屏并列、窄屏连续缩放保持同一设置实例；深链接、独立滚动、连接忙碌保护、Esc 和触发器焦点；分别验证桌面与 Web。",
       "expectedImpact": "单批次页面或入口",
-      "checkpoint": "e4383a1e 与当前 Pen 回读",
-      "remainingScope": "需要在同一工作台宿主下验证设置深链接、菜单返回、桌面和窄屏焦点。按独立迁移批次承接。",
-      "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
+      "checkpoint": "aa56c64b 到当前候选；源码版本见 ui-map.yaml 和生产运行收据",
+      "remainingScope": "现行设置导航搜索和 11 类示例独立核对。当前批次完成宿主、保护与并列布局的本地运行证据，等待最终复审。",
+      "allowed": "现有 App 的画布设置宿主、局部样式和交付记录。保留既有非画布设置入口和业务组件。"
     },
     {
       "id": "PEN-05",
@@ -204,6 +212,30 @@
       "checkpoint": "5d64ae2a94827bbca0762fc3caff9bedb736df3d",
       "blocker": null,
       "next": "在授权的分支交付环节验证托管门禁。"
+    },
+    {
+      "id": "PEN-09",
+      "target": "设置导航 Pen 分组与设置搜索",
+      "status": "待执行",
+      "basis": "Pen BnwUr 描述 11 个分类和搜索，当前 SettingsSectionData 的分类和现行产品用途需逐项核对",
+      "dependencies": [
+        "PEN-04"
+      ],
+      "evidence": [
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen/BnwUr.png"
+      ],
+      "protected": [
+        "现有设置分类深链接",
+        "偏好与凭据存储"
+      ],
+      "scope": [
+        "BnwUr",
+        "本地设置分类"
+      ],
+      "blocker": null,
+      "checkpoint": "当前 Pen 设计回读",
+      "next": "先建立现有业务项与设计入口的逐项对应",
+      "acceptance": "分类和搜索动作对应真实目标，覆盖键盘及短屏"
     }
   ]
 }

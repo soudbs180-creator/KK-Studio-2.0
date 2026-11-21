@@ -1,22 +1,22 @@
 {
   "mappingId": "settings.content-disclosure",
   "platform": "web",
-  "versionBindingSha256": "173d1c03c710ed6c651f7251f5000e856440d4172a1d759076f19f643994a0e8",
-  "rawEvidenceSha256": "11bba44101a54536fb68549be24213afe2943c25c8fb84c4fc64d73c0f7c119d",
-  "rawEvidenceFile": "expanded-browser-results.json",
-  "entry": "/assets/index-B7uPXtPs.js",
-  "entrySha256": "9566200609a93bf8727748ff6776aae2c6e72a6e23a8f0938253608473cb9bb7",
-  "loadedAssetSha256": {
-    "/assets/SettingsPanel-D3kZ3wrt.js": "ac874d284dce2325f32b005b8bacf02d1400794c3890ec06b2addd22af794431",
-    "/assets/index-B7uPXtPs.js": "9566200609a93bf8727748ff6776aae2c6e72a6e23a8f0938253608473cb9bb7",
-    "/assets/index-HfztjAyf.css": "a03cf04e33d6cf5146ba8afaec2b1a0fefa1e618b2f8a01bcc26c5188a24a447"
+  "versionBindingSha256": "676785e552ad265011fc1d7d2415837361deee4f78b0358ac4c174b47aa0dc18",
+  "rawEvidenceFile": "web-production-results.json",
+  "rawEvidenceSha256": "9958d39fbd9925bf6bc33225e7ef773a2165b2a8d7f99ecc8887e6e92302cc0e",
+  "entry": "/assets/index-BAese529.js",
+  "entrySha256": "16f517095b3ae0ec2fe468d51af233098a9336d512946b7f1580207b0247077a",
+  "loadedAssetsSha256": {
+    "/assets/SettingsPanel-BeBsLmhr.js": "f00ae5269743d20d2a6d9a74e6c5033b806c032c95acdb182bbed3df0bacacd6",
+    "/assets/index-BAese529.js": "16f517095b3ae0ec2fe468d51af233098a9336d512946b7f1580207b0247077a",
+    "/assets/index-RhK3_1pH.css": "859f35f04198551eaf8ed79086e2af5967e3a0e454e50d2c6beb99adc5275a81"
   },
-  "loadedAssetEvidenceSha256": "452f41ba2892840339df7e9b2caac4595eced7a6814249b1688addcf071a1223",
-  "sourceHead": "d81b218c402de382a544332426a55f173228bbd3",
+  "assetEvidenceSha256": "794acd1ac503741c598ea8981af3bd40997ca7788361388f9ff00ce0a3da01fb",
+  "launch": "Playwright Edge, production Vite preview, fixed 1423",
   "url": "http://127.0.0.1:1423/",
-  "launch": "Playwright Edge on Vite production preview at fixed port 1423",
-  "passed": 27,
-  "failed": 0,
-  "note": "Six actual browser states and one hardware response fixture. See verification.md.",
-  "webVersion": "2.1.43"
+  "version": "2.1.44",
+  "browseCoverage": "Settings disclosures and Agent summary",
+  "runSourceHead": "aa56c64b1e61f472c4941cf2d8d40ff6f51cb1d8",
+  "passed": 38,
+  "failed": 0
 }

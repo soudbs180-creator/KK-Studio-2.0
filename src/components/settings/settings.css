@@ -2030,28 +2030,6 @@
   line-height: var(--kk-line-body);
   font-weight: var(--kk-weight-medium);
 }
-:is(.settings-disclosure, .model-access-manual) > summary {
-  display: block;
-  list-style: none;
-}
-:is(.settings-disclosure, .model-access-manual)
-  > summary::-webkit-details-marker {
-  display: none;
-}
-:is(.settings-disclosure, .model-access-manual) > summary::before {
-  display: inline-block;
-  inline-size: var(--kk-icon-glyph-sm);
-  block-size: var(--kk-icon-glyph-sm);
-  margin-inline-end: var(--kk-space-2);
-  vertical-align: middle;
-  background: var(--kk-text-secondary);
-  mask: url("/design/pen/disclosure-chevron.svg") center / contain no-repeat;
-  transform: rotate(-90deg);
-  content: "";
-}
-:is(.settings-disclosure, .model-access-manual)[open] > summary::before {
-  transform: none;
-}
 .settings-disclosure > summary:focus-visible {
   outline: var(--kk-focus-width-subtle) solid var(--kk-focus-ring-subtle);
   outline-offset: var(--kk-focus-offset-subtle);

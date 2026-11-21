@@ -1,0 +1,22 @@
+{
+  "mappingId": "settings.workspace",
+  "platform": "web",
+  "versionBindingSha256": "e15e2153c14f880b9bb848e5aa2eab5bb7d0cbb6b0e4455d64b6ec3666902657",
+  "rawEvidenceFile": "web-production-results.json",
+  "rawEvidenceSha256": "9958d39fbd9925bf6bc33225e7ef773a2165b2a8d7f99ecc8887e6e92302cc0e",
+  "entry": "/assets/index-BAese529.js",
+  "entrySha256": "16f517095b3ae0ec2fe468d51af233098a9336d512946b7f1580207b0247077a",
+  "loadedAssetsSha256": {
+    "/assets/SettingsPanel-BeBsLmhr.js": "f00ae5269743d20d2a6d9a74e6c5033b806c032c95acdb182bbed3df0bacacd6",
+    "/assets/index-BAese529.js": "16f517095b3ae0ec2fe468d51af233098a9336d512946b7f1580207b0247077a",
+    "/assets/index-RhK3_1pH.css": "859f35f04198551eaf8ed79086e2af5967e3a0e454e50d2c6beb99adc5275a81"
+  },
+  "assetEvidenceSha256": "794acd1ac503741c598ea8981af3bd40997ca7788361388f9ff00ce0a3da01fb",
+  "launch": "Playwright Edge, production Vite preview, fixed 1423",
+  "url": "http://127.0.0.1:1423/",
+  "version": "2.1.44",
+  "browseCoverage": "Settings host, resize, routing and credential fixture",
+  "runSourceHead": "aa56c64b1e61f472c4941cf2d8d40ff6f51cb1d8",
+  "passed": 38,
+  "failed": 0
+}

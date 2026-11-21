@@ -55,6 +55,7 @@ function readInitialSettings(): {
 
 export default function SettingsPanel({
   onClose,
+  onNavigationBusyChange,
   initialSection = "general",
   saveState = "loading",
   revision = 0,
@@ -63,6 +64,7 @@ export default function SettingsPanel({
   workflows,
 }: {
   onClose: () => void;
+  onNavigationBusyChange: (busy: boolean) => void;
   initialSection?: string;
   saveState?: SaveState;
   revision?: number;
@@ -78,6 +80,10 @@ export default function SettingsPanel({
     () => new Set(),
   );
   const busy = busyOwners.size > 0;
+  useLayoutEffect(() => {
+    onNavigationBusyChange(busy);
+    return () => onNavigationBusyChange(false);
+  }, [busy, onNavigationBusyChange]);
   const setBusy = useCallback((next: boolean, owner: symbol) => {
     setBusyOwners((current) => updateSettingsBusyOwners(current, next, owner));
   }, []);
@@ -203,7 +209,7 @@ export default function SettingsPanel({
             ))}
           </nav>
         </aside>
-        <main
+        <section
           className="settings-content"
           aria-labelledby="settings-section-title"
           tabIndex={0}
@@ -242,7 +248,7 @@ export default function SettingsPanel({
               onFeedback={(message) => setFeedback({ message, error: false })}
             />
           ))}
-        </main>
+        </section>
         <button
           type="button"
           className="settings-close"
