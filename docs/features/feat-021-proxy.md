@@ -2,18 +2,18 @@
 
 - 状态：PARTIAL
 - 领域：platform
-- 最近更新：2026-09-22
-- 关联任务：TASK-UI-005、BACKEND-PLATFORM
+- 最近更新：2026-11-21
+- 关联任务：TASK-UI-005、BACKEND-PLATFORM、TASK-KKD-DESKTOP-PROXY-20261121
 
 ## 用户可见入口
 
 - 设置 › 网络 › 本地服务：展示本地转发代理启动命令 `npm run proxy` 与地址 `http://127.0.0.1:23210`。
-- 设置 › 连接 › 网络代理：应用级代理开关仍标注未接入（请求使用运行环境网络设置）。
+- 设置 › 网络 › 模型请求线路：桌面候选支持跟随系统、直连和手动代理，显示三类模型请求最近采用的线路。验证状态见[当前变更](../changes/2026-11-21-desktop-provider-proxy/verification.md)。
 
 ## 代码位置
 
 - 本地转发代理（已移植，零依赖）：`vendor/canvas-proxy/index.js`（CORS 转发、OPTIONS、SSE 透传、`import.meta.main` 守卫）
-- UI：`src/components/settings/ConnectionSettings.tsx`（本地服务信息卡）
+- 模型出站：`src-tauri/src/task_host_network.rs`（线路选择与设置）及 `src/components/settings/ProviderNetworkSettings.tsx`（桌面入口）
 - 服务层：`src/features/sync/webdav.ts` 支持 `localProxyUrl` 走该代理
 
 ## 测试与证据
@@ -24,11 +24,11 @@
 ## 当前能力
 
 - 代理进程可独立启动并真实转发（含 SSE 流式透传）；设置中心提供启动指引。
-- 应用级代理设置（在设置内填代理地址并全局生效）与一键启停待接。
+- 桌面模型 API 的出站设置覆盖检测、文字、生图与其同源图片取回。
 
 ## 差距与后端化
 
-- 设置 › 连接 › 网络代理接入代理地址配置并全局生效。
+- 各类浏览器、外部 CLI 和传统本地转发进程各自管理网络。
 - Tauri 一键启停（拉起/停止 Node 子进程）。
 
 ## TASK-UI-005 更新

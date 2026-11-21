@@ -107,6 +107,13 @@ for (const width of [390, 1099, 1920]) {
   });
 }
 
+test("网页网络设置不显示桌面线路控件", async ({ page }) => {
+  await page.goto("/");
+  await openSettingsSection(page, "网络");
+  await expect(page.getByText("出站代理选项仅适用于桌面端。")).toBeVisible();
+  await expect(page.getByLabel("模型请求线路")).toHaveCount(0);
+});
+
 test("本地检测仅点击后执行，网页明确需要本机能力", async ({ page }) => {
   await page.goto("/");
   await openSettingsSection(page, "模型接入");

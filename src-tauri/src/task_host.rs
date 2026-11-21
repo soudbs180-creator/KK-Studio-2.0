@@ -18,12 +18,16 @@ use tokio::sync::Notify;
 
 #[path = "asset_io.rs"]
 mod io;
+#[path = "task_host_network.rs"]
+mod network;
 #[path = "task_host_protocol_stream.rs"]
 mod protocol_stream;
 #[path = "task_host_provider.rs"]
 mod provider;
 #[path = "task_host_text.rs"]
 mod text;
+use network::{Operation, OutboundProxy, Route};
+pub(crate) use network::{Preferences, ProviderNetwork, Routes};
 pub(crate) use provider::{discover_models, validate_provider_options};
 
 const MAX_ID: usize = 160;
@@ -148,14 +152,17 @@ pub struct TaskHost {
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
     journal_lock: Mutex<()>,
+    pub(crate) network: ProviderNetwork,
     access: crate::native_repository_lock::RepositoryAccess,
     snapshots: Option<Arc<crate::creation_storage::SnapshotRepository>>,
 }
 
 impl TaskHost {
     pub fn new(root: PathBuf, assets: Arc<AssetRepository>) -> Result<Self, String> {
+        let network_path = root.join("provider-network.json");
         Self::initialize(
             root,
+            network_path,
             assets,
             crate::native_repository_lock::RepositoryAccess::Standalone,
             None,
@@ -167,12 +174,14 @@ impl TaskHost {
         assets: Arc<AssetRepository>,
         access: crate::native_repository_lock::RepositoryAccess,
         snapshots: Arc<crate::creation_storage::SnapshotRepository>,
+        network_path: PathBuf,
     ) -> Result<Self, String> {
-        Self::initialize(root, assets, access, Some(snapshots))
+        Self::initialize(root, network_path, assets, access, Some(snapshots))
     }
 
     fn initialize(
         root: PathBuf,
+        network_path: PathBuf,
         assets: Arc<AssetRepository>,
         access: crate::native_repository_lock::RepositoryAccess,
         snapshots: Option<Arc<crate::creation_storage::SnapshotRepository>>,
@@ -183,6 +192,7 @@ impl TaskHost {
             assets,
             jobs: Mutex::new(HashMap::new()),
             journal_lock: Mutex::new(()),
+            network: ProviderNetwork::new(network_path),
             access,
             snapshots,
         };
@@ -537,10 +547,10 @@ impl TaskHost {
         }
         let provider_base = reqwest::Url::parse(&request.base_url)
             .map_err(|_| RunError::failed("invalid_request", "供应商地址无效"))?;
-        let provider_client = tokio::select! {
+        let (provider_client, route) = tokio::select! {
             biased;
             _ = text::cancelled(control) => return Err(RunError::failed("cancelled", "任务在发送前已取消")),
-            result = pinned_download_client(&provider_base) => result
+            result = self.network.client(&provider_base) => result
                 .map_err(|message| RunError::failed("invalid_request", message))?,
         };
         if control.cancelled.load(Ordering::Acquire) {
@@ -548,7 +558,14 @@ impl TaskHost {
         }
         if request.kind.as_deref() == Some("text") {
             return self
-                .perform_text(request, fingerprint, control, provider_client, &secret)
+                .perform_text(
+                    request,
+                    fingerprint,
+                    control,
+                    provider_client,
+                    route,
+                    &secret,
+                )
                 .await;
         }
         let endpoint = if attachments.is_empty() {
@@ -559,18 +576,17 @@ impl TaskHost {
         } else {
             format!("{}/images/edits", request.base_url.trim_end_matches('/'))
         };
-        let mut builder = provider_client
+        let builder = provider_client
             .post(&endpoint)
             .bearer_auth(&secret)
             .header("Idempotency-Key", &request.idempotency_key);
         let count = request.output_indices.len() as u32;
-        let send = if attachments.is_empty() {
+        let builder = if attachments.is_empty() {
             let mut payload = json!({"model": request.model, "prompt": request.prompt, "n": count, "response_format": "b64_json"});
             if let Some(size) = request.size.as_ref().filter(|value| !value.is_empty()) {
                 payload["size"] = json!(size);
             }
-            builder = builder.json(&payload);
-            builder.send()
+            builder.json(&payload)
         } else {
             let mut form = reqwest::multipart::Form::new()
                 .text("model", request.model.clone())
@@ -621,13 +637,18 @@ impl TaskHost {
                         .map_err(|_| RunError::failed("invalid_request", "编辑蒙版格式无效"))?,
                 );
             }
-            builder.multipart(form).send()
+            builder.multipart(form)
         };
+        let http_request = builder
+            .build()
+            .map_err(|_| RunError::failed("invalid_request", "图像请求格式或认证无效"))?;
         let response = tokio::select! {
             biased;
             _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像生成，供应商最终状态需核对", vec![])),
-            result = send => result
-                .map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?,
+            result = async {
+                self.network.record(Operation::Image, route);
+                provider_client.execute(http_request).await
+            } => result.map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?,
         };
         let status = response.status();
         let retry = response
@@ -736,7 +757,7 @@ impl TaskHost {
                 tokio::select! {
                     biased;
                     _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像结果下载，供应商最终状态需核对", ids)),
-                    result = download_result(&provider_base, url) => result
+                    result = download_result_with_limit(&provider_client, &provider_base, url, MAX_RESPONSE_BYTES) => result
                         .map_err(|e| RunError::unknown("provider_unavailable", e, ids.clone()))?,
                 }
             } else {
@@ -880,14 +901,8 @@ fn upstream_error_detail(body: &[u8]) -> Option<String> {
         .map(|message| message.chars().take(400).collect::<String>())
 }
 
-async fn download_result(
-    provider_base: &reqwest::Url,
-    value: &str,
-) -> Result<(Vec<u8>, &'static str), &'static str> {
-    download_result_with_limit(provider_base, value, MAX_RESPONSE_BYTES).await
-}
-
 async fn download_result_with_limit(
+    client: &Client,
     provider_base: &reqwest::Url,
     value: &str,
     max_bytes: usize,
@@ -905,8 +920,7 @@ async fn download_result_with_limit(
     if parsed.scheme() == "http" && !is_loopback_host(parsed.host_str().unwrap_or_default()) {
         return Err("供应商结果地址不安全");
     }
-    let download_client = pinned_download_client(&parsed).await?;
-    let response = download_client
+    let response = client
         .get(parsed)
         .send()
         .await
@@ -1017,10 +1031,24 @@ fn is_public_ipv6(value: Ipv6Addr) -> bool {
         && !documentation
 }
 
-/// Resolve a provider/result host once and force reqwest to connect to that
-/// address.  Redirects are disabled on the client, so a later response cannot
-/// escape the origin or bypass the pinned DNS answer.
-async fn pinned_download_client(url: &reqwest::Url) -> Result<Client, &'static str> {
+fn accepts_provider_answer(address: IpAddr, local: bool, proxy_dns: bool) -> bool {
+    if local {
+        return address.is_loopback();
+    }
+    // Some local proxies synthesize this benchmark range for DNS names.
+    // Only a named proxy route may use it, and the proxy receives the hostname.
+    is_public_ip(address)
+        || (proxy_dns
+            && matches!(address, IpAddr::V4(ip) if matches!(ip.octets(), [198, 18 | 19, _, _])))
+}
+
+/// Validate the configured origin before selecting a transport. Direct traffic is
+/// pinned to the checked IP. An explicitly selected CONNECT proxy resolves the
+/// same origin itself; TLS verification and the redirect ban still apply.
+async fn validated_provider_client(
+    url: &reqwest::Url,
+    proxy: Option<OutboundProxy>,
+) -> Result<Client, &'static str> {
     let host = url.host_str().ok_or("供应商地址缺少主机名")?;
     let lookup_host = normalized_host(host);
     let port = url.port_or_known_default().ok_or("供应商地址缺少端口")?;
@@ -1031,38 +1059,40 @@ async fn pinned_download_client(url: &reqwest::Url) -> Result<Client, &'static s
     if url.scheme() != "https" && url.scheme() != "http" {
         return Err("供应商地址协议不安全");
     }
-    let addresses: Vec<SocketAddr> = if let Ok(address) = lookup_host.parse::<IpAddr>() {
-        vec![SocketAddr::new(address, port)]
-    } else {
-        tokio::net::lookup_host((lookup_host, port))
-            .await
-            .map_err(|_| "供应商地址解析失败")?
-            .collect()
+    let proxy_resolves_host = proxy.as_ref().is_some_and(|route| route.remote_dns);
+    let (addresses, proxy_dns) = match lookup_host.parse::<IpAddr>() {
+        Ok(address) => (vec![SocketAddr::new(address, port)], false),
+        Err(_) => (
+            tokio::net::lookup_host((host, port))
+                .await
+                .map_err(|_| "供应商地址解析失败")?
+                .collect(),
+            proxy_resolves_host,
+        ),
     };
     if addresses.is_empty() {
         return Err("供应商地址解析失败");
     }
     let mut selected = None;
     for address in addresses {
-        let accepted = if local {
-            address.ip().is_loopback()
-        } else {
-            is_public_ip(address.ip())
-        };
-        if !accepted {
+        if !accepts_provider_answer(address.ip(), local, proxy_dns) {
             return Err("供应商地址解析到了受限网络");
         }
         selected.get_or_insert(address);
     }
     let target = selected.ok_or("供应商地址解析失败")?;
-    Client::builder()
+    let mut client = Client::builder()
         .connect_timeout(PROVIDER_CONNECT_TIMEOUT)
         .timeout(PROVIDER_REQUEST_TIMEOUT)
         .redirect(reqwest::redirect::Policy::none())
-        .no_proxy()
-        .resolve(lookup_host, target)
-        .build()
-        .map_err(|_| "io: 原生任务网络客户端不可用")
+        .no_proxy();
+    if !proxy_resolves_host {
+        client = client.resolve(host, target);
+    }
+    if let Some(proxy) = proxy {
+        client = client.proxy(proxy.transport);
+    }
+    client.build().map_err(|_| "io: 原生任务网络客户端不可用")
 }
 
 fn append_bounded_chunk(
@@ -1698,7 +1728,22 @@ mod tests {
                 .unwrap();
         assert_eq!(detail.chars().count(), 400);
     }
-    fn root() -> PathBuf {
+    #[test]
+    fn only_proxied_names_accept_proxy_dns_placeholders() {
+        let answer = "198.18.0.200".parse().unwrap();
+        assert!(accepts_provider_answer(answer, false, true));
+        assert!(!accepts_provider_answer(answer, false, false));
+        assert!(!accepts_provider_answer(answer, true, true));
+        for restricted in ["127.0.0.1", "10.0.0.2", "169.254.169.254", "::1"] {
+            assert!(!accepts_provider_answer(
+                restricted.parse().unwrap(),
+                false,
+                true
+            ));
+        }
+    }
+
+    pub(super) fn root() -> PathBuf {
         let path = std::env::temp_dir().join(format!(
             "kk-task-host-{}-{}",
             std::process::id(),

@@ -161,6 +161,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
+| TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3109,3 +3110,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
+
+## TASK-KKD-DESKTOP-PROXY-20261121 — 桌面模型代理与线路显示
+
+- Goal: 桌面模型检测、文本和生图统一出站规则并显示使用线路
+- Scope: 仅桌面模型 API 请求和网络设置
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: ledger:TASK-KKD-DESKTOP-PROXY-20261121
+- Feature IDs: FEAT-021
+- Owner role: repository-maintainer
+- Acceptance: 默认跟随系统，可直连或手动代理; 三种模型请求共用出站策略并显示采用的线路; 代理失败不重发，回环直连，凭据与历史数据安全
+- Branch: `codex/TASK-KKD-DESKTOP-PROXY-20261121`
+- Worktree: `D:/kk-studio/.worktrees/TASK-KKD-DESKTOP-PROXY-20261121`
+- Modules: src-tauri/src/task_host.rs, src-tauri/src/main.rs, src/components/settings/ConnectionSettings.tsx, src-tauri/src/task_host_network.rs, src-tauri/src/task_host_provider.rs, src/components/settings/ProviderNetworkSettings.tsx
+- Verification: PARTIAL — Desktop 2.1.43 隔离 WebView2 验证系统代理、强制直连和手动代理。三项请求线路、回环生成、重启配置与真实系统代理探测通过。Rust 230 PASS/1 ignore，设置 Web 11 PASS；完整 verify 阻于主线同样失败的 Codex 配置测试。付费生成和独审未验。
+- Evidence: [docs/changes/2026-11-21-desktop-provider-proxy/intent.md](../../docs/changes/2026-11-21-desktop-provider-proxy/intent.md), [docs/changes/2026-11-21-desktop-provider-proxy/verification.md](../../docs/changes/2026-11-21-desktop-provider-proxy/verification.md)
+- Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
+- Last verified: 2026-11-21
+- Updated: 2026-11-21

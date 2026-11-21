@@ -183,6 +183,7 @@ fn model_page(value: &Value, protocol: Protocol) -> Result<(Vec<String>, Option<
 
 /// GET-only discovery. Caller owns vault lookup; the helper never returns a key/body.
 pub(crate) async fn discover_models(
+    network: &super::network::ProviderNetwork,
     base_url: &str,
     protocol: Option<&str>,
     auth_mode: Option<&str>,
@@ -192,10 +193,12 @@ pub(crate) async fn discover_models(
     if auth == AuthMode::ApiKey && secret.is_none_or(|key| key.trim().is_empty()) {
         return Err("credential: 供应商凭据不可用".into());
     }
-    let client = pinned_download_client(&url).await.map_err(str::to_owned)?;
+    let (client, route) = network.client(&url).await.map_err(str::to_owned)?;
     tokio::time::timeout(
         PROVIDER_REQUEST_TIMEOUT,
-        discover_with_client(&client, url, protocol, auth, secret),
+        discover_with_client(&client, url, protocol, auth, secret, || {
+            network.record(Operation::Discovery, route);
+        }),
     )
     .await
     .map_err(|_| "models: 模型列表读取超时")?
@@ -207,6 +210,7 @@ async fn discover_with_client(
     protocol: Protocol,
     auth: AuthMode,
     secret: Option<&str>,
+    record_route: impl FnOnce(),
 ) -> Result<Vec<String>, String> {
     let path = format!("{}/models", url.path().trim_end_matches('/'));
     url.set_path(&path);
@@ -214,8 +218,9 @@ async fn discover_with_client(
     let mut cursors = HashSet::new();
     let mut models = Vec::new();
     let mut received = 0usize;
+    let mut record_route = Some(record_route);
     for _ in 0..MAX_MODEL_PAGES {
-        let response = authentication(
+        let request = authentication(
             client
                 .get(url.clone())
                 .header(header::ACCEPT, "application/json"),
@@ -223,9 +228,15 @@ async fn discover_with_client(
             auth,
             secret,
         )?
-        .send()
-        .await
-        .map_err(|_| "models: 无法读取供应商模型列表")?;
+        .build()
+        .map_err(|_| "models: 模型列表请求格式或认证无效")?;
+        if let Some(record) = record_route.take() {
+            record();
+        }
+        let response = client
+            .execute(request)
+            .await
+            .map_err(|_| "models: 无法读取供应商模型列表")?;
         if !response.status().is_success() {
             return Err(format!(
                 "models: 供应商拒绝了模型列表请求 (HTTP {})",
@@ -277,6 +288,30 @@ async fn discover_with_client(
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn invalid_authentication_does_not_publish_a_route() {
+        let network = test_network();
+        let result = discover_models(
+            &network,
+            "http://127.0.0.1:9/v1",
+            None,
+            None,
+            Some("fixture\ninvalid"),
+        )
+        .await;
+        assert!(result.unwrap_err().contains("请求格式或认证无效"));
+        assert_eq!(
+            serde_json::to_value(network.routes().unwrap()).unwrap()["discovery"],
+            Value::Null
+        );
+    }
+
+    fn test_network() -> super::super::network::ProviderNetwork {
+        super::super::network::ProviderNetwork::new(
+            std::env::temp_dir().join("kk-unused-loopback-network-test.json"),
+        )
+    }
+
     async fn serve_pages(pages: Vec<String>) -> (String, tokio::task::JoinHandle<Vec<String>>) {
         use tokio::io::{AsyncReadExt, AsyncWriteExt};
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -308,7 +343,7 @@ mod tests {
     async fn local_discovery_is_get_only_and_sends_no_key() {
         let (base, server) =
             serve_pages(vec![json!({"data":[{"id":"fixture-local"}]}).to_string()]).await;
-        let models = discover_models(&base, Some("ollama"), Some("none"), None)
+        let models = discover_models(&test_network(), &base, Some("ollama"), Some("none"), None)
             .await
             .unwrap();
         assert_eq!(models, vec!["fixture-local"]);
@@ -324,6 +359,7 @@ mod tests {
                 .to_string();
         let (base, server) = serve_pages(vec![page.clone(), page]).await;
         let error = discover_models(
+            &test_network(),
             &base,
             Some("anthropic"),
             Some("api-key"),

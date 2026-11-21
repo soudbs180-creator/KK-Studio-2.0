@@ -1025,15 +1025,25 @@
     "area": "platform",
     "status": "PARTIAL",
     "card": "docs/features/feat-021-proxy.md",
-    "summary": "本地转发代理（vendor/canvas-proxy：零依赖 CORS 转发、SSE 透传）已移植并可在设置 › 网络查看启动命令与地址；应用级代理设置与一键启停待接。",
-    "entryPoints": ["设置 › 连接 › 网络代理"],
-    "code": ["src/components/settings/ConnectionSettings.tsx"],
+    "summary": "桌面候选统一模型检测、文字和生图的出站线路与反馈。独立本地转发器仍可在网络设置查看启动方式。",
+    "entryPoints": ["设置 › 网络 › 模型请求线路", "设置 › 网络 › 独立转发代理"],
+    "code": [
+      "src/components/settings/ConnectionSettings.tsx",
+      "src/components/settings/ProviderNetworkSettings.tsx",
+      "src-tauri/src/task_host_network.rs"
+    ],
     "tests": [
       "tests/unit/proxyForward.test.ts",
-      "tests/browser/ui-feature-parity.spec.ts"
+      "tests/browser/ui-feature-parity.spec.ts",
+      "tests/browser/settings-consolidation.spec.ts",
+      "src-tauri/src/task_host_network.rs"
     ],
-    "tasks": ["BACKEND-PLATFORM", "TASK-UI-005"],
-    "updated": "2026-09-22",
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "TASK-UI-005",
+      "TASK-KKD-DESKTOP-PROXY-20261121"
+    ],
+    "updated": "2026-11-21",
     "platforms": ["web", "desktop"]
   },
   {

@@ -138,7 +138,9 @@ export async function openSettingsSection(
   page: Page,
   name: string,
 ): Promise<void> {
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const settings = page.getByRole("button", { name: "打开设置", exact: true });
+  await expect(settings).toHaveCount(1);
+  await settings.click();
   await selectSettingsSection(page, name);
 }
 export async function showSettingsCategories(page: Page): Promise<Locator> {

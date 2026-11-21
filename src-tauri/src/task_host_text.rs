@@ -198,15 +198,21 @@ impl TaskHost {
         fingerprint: &str,
         control: &JobControl,
         client: Client,
+        route: Route,
         secret: &str,
     ) -> Result<Vec<String>, RunError> {
         let (builder, protocol) = provider::text_request(&client, request, secret)
             .map_err(|_| RunError::failed("invalid_request", "文本协议或认证配置无效"))?;
-        let send = builder.send();
+        let http_request = builder
+            .build()
+            .map_err(|_| RunError::failed("invalid_request", "文本请求格式或认证无效"))?;
         let response = tokio::select! {
             biased;
             _ = cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待文本生成，供应商最终状态需核对", vec![])),
-            result = send => result.map_err(|_| RunError::unknown("network", "文本服务连接中断，受理状态需核对", vec![]))?,
+            result = async {
+                self.network.record(Operation::Text, route);
+                client.execute(http_request).await
+            } => result.map_err(|_| RunError::unknown("network", "文本服务连接中断，受理状态需核对", vec![]))?,
         };
         if !response.status().is_success() {
             // An explicit HTTP rejection is terminal; no response body is

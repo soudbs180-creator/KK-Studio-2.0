@@ -2,11 +2,15 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-19
+- updatedAt: 2026-11-21
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
+
+## 桌面模型出站候选
+
+TASK-KKD-DESKTOP-PROXY-20261121 从[验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)恢复。
 
 ## 当前恢复入口：统一42公开下载资产名修复（2026-10-19）
 

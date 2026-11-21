@@ -51,6 +51,7 @@
 | [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)       | 旧工程能力 keep/migrate/rebuild/reject 清单 |
 | `architecture/adr/`                                        | 架构决策记录                                |
 | [ADR-025](architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 |
+| [ADR-026](architecture/adr/ADR-026-desktop-provider-network.md) | 桌面模型 API 出站线路 |
 
 ## UI 文档
 

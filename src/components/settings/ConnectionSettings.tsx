@@ -3,6 +3,7 @@ import ModelAccessSettings from "./ModelAccessSettings";
 import MemorySettingsSection from "./MemorySettingsSection";
 import CompanionSettings from "./CompanionSettings";
 import SecuritySettings from "./SecuritySettings";
+import ProviderNetworkSettings from "./ProviderNetworkSettings";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 
 export default function ConnectionSettings({
@@ -52,13 +53,7 @@ export default function ConnectionSettings({
   if (section === "network")
     return (
       <div className="settings-detail-stack">
-        <div className="settings-info-row">
-          <span>全局代理</span>
-          <strong>尚未接入</strong>
-        </div>
-        <p className="settings-section-intro">
-          当前没有可保存的全局代理配置；模型连接与本地推理服务在「模型接入」中管理。
-        </p>
+        <ProviderNetworkSettings active={active} />
         <details className="settings-disclosure">
           <summary>独立转发代理</summary>
           <p className="settings-section-intro">

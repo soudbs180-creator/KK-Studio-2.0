@@ -9934,5 +9934,47 @@
       "https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-KKD-DESKTOP-PROXY-20261121",
+    "title": "桌面模型代理与线路显示",
+    "goal": "桌面模型检测、文本和生图统一出站规则并显示使用线路",
+    "scope": "仅桌面模型 API 请求和网络设置",
+    "acceptance": [
+      "默认跟随系统，可直连或手动代理",
+      "三种模型请求共用出站策略并显示采用的线路",
+      "代理失败不重发，回环直连，凭据与历史数据安全"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "codex/TASK-KKD-DESKTOP-PROXY-20261121",
+    "worktree": "D:/kk-studio/.worktrees/TASK-KKD-DESKTOP-PROXY-20261121",
+    "affectedModules": [
+      "src-tauri/src/task_host.rs",
+      "src-tauri/src/main.rs",
+      "src/components/settings/ConnectionSettings.tsx",
+      "src-tauri/src/task_host_network.rs",
+      "src-tauri/src/task_host_provider.rs",
+      "src/components/settings/ProviderNetworkSettings.tsx"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-11-21-desktop-provider-proxy/intent.md",
+      "docs/changes/2026-11-21-desktop-provider-proxy/verification.md"
+    ],
+    "verification": "Desktop 2.1.43 隔离 WebView2 验证系统代理、强制直连和手动代理。三项请求线路、回环生成、重启配置与真实系统代理探测通过。Rust 230 PASS/1 ignore，设置 Web 11 PASS；完整 verify 阻于主线同样失败的 Codex 配置测试。付费生成和独审未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-11-21",
+    "requirementRefs": [
+      "ledger:TASK-KKD-DESKTOP-PROXY-20261121"
+    ],
+    "featureIds": [
+      "FEAT-021"
+    ],
+    "lastVerified": "2026-11-21",
+    "nextAction": "处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
+    "displayStatus": "进行中",
+    "ownerRole": "repository-maintainer"
   }
 ]

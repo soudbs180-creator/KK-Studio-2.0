@@ -332,11 +332,15 @@ mod tests {
             });
             let requests = ModelRequests::default();
             requests.prepare(ID, "main").unwrap();
+            let network = crate::task_host::ProviderNetwork::new(
+                std::env::temp_dir().join("kk-unused-loopback-network-test.json"),
+            );
             let running =
                 requests
                     .claim(ID, "main")
                     .unwrap()
                     .run(crate::task_host::discover_models(
+                        &network,
                         &base_url,
                         Some("ollama"),
                         Some("none"),
