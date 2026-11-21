@@ -45,11 +45,13 @@
         "D:/kk-studio/output/kk-design-pen-sync-20261121/native-expanded/native-disclosure.json",
         "D:/kk-studio/output/kk-design-pen-sync-20261121/expanded-browser-results.json",
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/native-runtime.json",
-        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-results.json"
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-results.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-final-results.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-loaded-assets-final.json"
       ],
-      "next": "变更源图标、设置样式或消费者后重新验收",
+      "next": "共享样式、画布键盘或 Pen Glyph 再变动时重新验收八处控件。",
       "allowed": "settings.css、Pen 原样 Glyph 和七个共享消费者",
-      "checkpoint": "第二批生产绑定见 ui-map.yaml、证据和验证记录",
+      "checkpoint": "9063ed14451c7978f9e812da7173728a9cbee950",
       "dependencies": [
         "PEN-01"
       ],
@@ -88,7 +90,7 @@
     {
       "id": "PEN-04",
       "target": "设置工作台宿主",
-      "status": "待验收",
+      "status": "已完成",
       "basis": "Pen MCP 已回读 hgib1 / BnwUr：工作台内容区与 Agent 会话并列，设置导航与正文独立滚动，保护分类、草稿、进入焦点及连接写事务。",
       "scope": [
         "已核验、有共同功能语义的控件"
@@ -104,14 +106,18 @@
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/native-runtime.json",
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-results.json",
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-loaded-assets.json",
-        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen/hgib1.png"
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen/hgib1.png",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/verify-workspace.log",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/canvas-freeze-dev.log",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-final-results.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-loaded-assets-final.json"
       ],
-      "next": "复核候选，推进 PEN-05。",
+      "next": "推进资源和搜索宿主；保留仍待单独对照的设置导航和控件。",
       "blocker": null,
       "dependencies": [],
       "acceptance": "宽屏并列、窄屏连续缩放保持同一设置实例；深链接、独立滚动、连接忙碌保护、Esc 和触发器焦点；分别验证桌面与 Web。",
       "expectedImpact": "单批次页面或入口",
-      "checkpoint": "aa56c64b 到当前候选；源码版本见 ui-map.yaml 和生产运行收据",
+      "checkpoint": "9063ed14451c7978f9e812da7173728a9cbee950",
       "remainingScope": "现行设置导航搜索和 11 类示例独立核对。当前批次完成宿主、保护与并列布局的本地运行证据，等待最终复审。",
       "allowed": "现有 App 的画布设置宿主、局部样式和交付记录。保留既有非画布设置入口和业务组件。"
     },
@@ -128,9 +134,10 @@
         "非本批平台与布局"
       ],
       "evidence": [
-        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/next-surfaces-preflight.txt"
       ],
-      "next": "按资源、搜索分开核对状态所有权并迁移。",
+      "next": "搜索关键词、类型和标签目前在 CatalogPanel 内部，资源面板从 EMPTY_FILTER 初始化。先明确实际输入对象和返回路径，再迁移搜索宿主。资产停靠与全页需保持同一 AssetPanel 状态实例。",
       "blocker": null,
       "dependencies": [
         "PEN-04"
@@ -138,7 +145,7 @@
       "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
       "expectedImpact": "单批次页面或入口",
       "checkpoint": "e4383a1e 与当前 Pen 回读",
-      "remainingScope": "停靠和页面宿主的迁移需要先验证资产选择、滚动、搜索结果、键盘和草稿状态延续。按独立迁移批次承接。",
+      "remainingScope": "已核对 Pen GuAqj/CUSuY/av3nU 及当前实现。需保护资产范围、分区、关键词、类型、标签、视图和选中项。当前资源兼具画布素材、主体和垃圾箱，逐项对应后实施。",
       "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
     },
     {
@@ -178,9 +185,10 @@
         "非本批平台与布局"
       ],
       "evidence": [
-        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/next-surfaces-preflight.txt"
       ],
-      "next": "核对独立 Mobile 的可达导航、主题令牌与对应 Pen 布局。",
+      "next": "已定位 Expo workspace 设置、搜索和 theme.tsx。设备和真实业务状态待该平台验收。",
       "blocker": null,
       "dependencies": [],
       "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
@@ -215,14 +223,16 @@
     },
     {
       "id": "PEN-09",
-      "target": "设置导航 Pen 分组与设置搜索",
+      "target": "设置导航、返回入口和通用控件的 Pen 差异",
       "status": "待执行",
       "basis": "Pen BnwUr 描述 11 个分类和搜索，当前 SettingsSectionData 的分类和现行产品用途需逐项核对",
       "dependencies": [
         "PEN-04"
       ],
       "evidence": [
-        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen/BnwUr.png"
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen/BnwUr.png",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/desktop-settings-beside-chat.png",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-settings-beside-chat-final.png"
       ],
       "protected": [
         "现有设置分类深链接",
@@ -235,7 +245,8 @@
       "blocker": null,
       "checkpoint": "当前 Pen 设计回读",
       "next": "先建立现有业务项与设计入口的逐项对应",
-      "acceptance": "分类和搜索动作对应真实目标，覆盖键盘及短屏"
+      "acceptance": "分类和搜索动作对应真实目标，覆盖键盘及短屏",
+      "remainingScope": "对照三份同态截图。Pen 设置有搜索、四组导航、返回工作区文字按钮与不同主题控件。Pen 标注撤销默认 50 步，当前运行与存储契约是 20 步，需把默认值裁决独立绑定规则。"
     }
   ]
 }

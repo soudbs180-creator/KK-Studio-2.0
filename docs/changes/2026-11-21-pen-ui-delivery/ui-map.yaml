@@ -50,10 +50,10 @@ mappings:
     evidence:
       desktop:
         status: verified
-        sha256: 6efaa47f630c6309ce3e3d50bb4cfa573c086bdcb9dac4f867b7e083c6dcc07c
+        sha256: 1a5f175074228a23c759743f83943f00bf6826116e91731aba7d585812862260
       web:
         status: verified
-        sha256: e5f589b5d71409881ca79a64a42702a017d34d32bf736280264d76cf97bbb03b
+        sha256: 295d25c38e248ca82840e046dea57ec38be181a03b1a4d6d399ea4c9de17d1c2
   - id: settings.workspace
     kind: functional-instance
     route: / → 项目库 → 打开或新建项目 → 画布 → 打开设置 / 对话前往模型设置 / Ctrl+,
@@ -75,11 +75,14 @@ mappings:
       - src/components/canvas/useCanvasPointer.ts
       - src/styles/workspace.css
       - src/styles/collection-panels.css
+      - src/components/Canvas.tsx
+      - src/components/canvas/CanvasProps.ts
+      - src/components/canvas/useCanvasControls.ts
+      - src/components/canvas/useCanvasViewport.ts
     dependencies:
       - src/styles/tokens.css
       - src/styles/conversation-panel.css
       - config/platform-versions.json
-      - src/components/Canvas.tsx
       - src/components/useSidebarLayout.ts
       - src/components/useHiddenControlFocus.ts
       - src/components/settings/SettingsSectionData.ts
@@ -91,14 +94,14 @@ mappings:
       - compact-settings-only
       - transactions-pending
       - restore-origin-focus
-    remaining: 仅验证设置宿主、表单和既有分类；Pen 导航组与设置搜索保留栏目级差异。
+    remaining: 宿主和受测交互已验收。Pen 的设置搜索、导航分组、返回样式和通用控件仍要单独对照。
     evidence:
       desktop:
         status: verified
-        sha256: 061f7ca84fae0449b26263a9ebf3c492d20fb649a3b72477bd2d33f9d219d914
+        sha256: 1a3e3a4740614f946d9623a6c44aeb0de47059e2bc0aed9aa22c61faf3f457a3
       web:
         status: verified
-        sha256: b36d25121eb03aab70a7d72d4917eedef3ff7046570f721a7dffa6fa1828e411
+        sha256: ef451e73252e226a7895c767b14a9fd34ff5f504af54ac58e790094d3684aa93
 inputs:
   src/components/settings/settings.css: 7cb2a6ef49e06ad7b000908a0e9215c398cc4d0b
   public/design/pen/disclosure-chevron.svg: 279c00e17f98a0368e076328fe2bbd4a9e3f4ff1
@@ -107,7 +110,7 @@ inputs:
   src/components/settings/ConnectionSettings.tsx: a82505cc40b92c07f0690bbbfdf1611ccecc1b42
   src/components/settings/AgentConnectionSettings.tsx: b253bc9ef6348d22a4f20994e363183b5e7ff3ba
   config/platform-versions.json: 39df7c795cd726c46786483be6786b668a0c0e6e
-  src/App.tsx: a2b1de85e4f1012e9ffdc76e25e36488fa1dcecb
+  src/App.tsx: 93821e2315ad4ef8daafac43692c853659ff1976
   src/components/settings/GeneralSettings.tsx: d977a046d7b34a8ef05f2301dfbf2d71a85ab641
   src/components/settings/LocalVideoPackages.tsx: cfc2b8159e36610a83e5758ef152c4af2c3e5f11
   src/components/settings/LocalWorkflowSettings.tsx: 40d6e645bf56c597e87a27fdb2abb96aae65e50f
@@ -116,22 +119,25 @@ inputs:
   src/components/AgentConversationMessages.tsx: 1cfcbc9935ef9f7cccb5c09351602da36ff210d9
   src/components/canvas/useCanvasPointer.ts: d9f43947483951ceda1edbcd88356c3a134601cc
   src/main.tsx: e1b6e73966bf78f70aae7181caa5fcf7637e3572
-  src/components/WorkspaceSurface.tsx: de7317f2b2a7d40c8efd4e4eaa406b6bc5664aad
-  src/components/useAppPanelNavigation.ts: a7ff8c610980a169aea22696ccff4c5dd0eaf98c
+  src/components/WorkspaceSurface.tsx: 54b89fc73fc3e572d211656e08328c43fa7a829f
+  src/components/useAppPanelNavigation.ts: 8ca33baaca2a1d93890e00fb305a54947796028a
   src/components/TopBar.tsx: 6fb6e9d625920bd488506e6b4eda3ece9678ee47
-  src/components/settings/SettingsPanel.tsx: dcf99d79ec0f6e57f5e2e02c7f19031c94014d9b
+  src/components/settings/SettingsPanel.tsx: 2020cac95bc44dd74ad0f2400c2c2c6377ad29a9
   src/components/DeferredPanelBoundary.tsx: deffb43f603cc31ca3c57b433188299c88713dcd
   src/components/CanvasCollectionsPanels.tsx: 7c6b8943a1a189ccd220378b98f51c431f7e3daa
   src/components/FloatingCollectionPanel.tsx: 1ac683746bcf71390c0762cdd7246a59ec414423
-  src/styles/workspace.css: d843b6937a96ba96f4c5fb138f7e6c79231bea5d
+  src/styles/workspace.css: 581dc23b235822cc91b3f67fd816c52e2a610409
   src/styles/collection-panels.css: 057bab7dec1fc1a4253033ab4864d196a41827f4
   src/styles/conversation-panel.css: b774a8b731f5b3df90347daf4b401a04458be1cd
-  src/components/Canvas.tsx: 72babadf330a2bac1d8a3dec021af06243c0839b
+  src/components/Canvas.tsx: 3673cefc4a33210f31ef8ea168ceeb07b7a5e38e
   src/components/useSidebarLayout.ts: 4ab854c9dde7d3f7fe49f55e1c714cd65e5d3bc1
   src/components/useHiddenControlFocus.ts: cf3282e3d879d5e944383ed4a70ba369f5b2407a
   src/components/settings/SettingsSectionData.ts: 3026fda2704589a08d3e4d8efbc3ba9b103cb003
   src/components/settings/SettingsNavigationContext.ts: 4b5660cfde7d33e7944c022d592850117c3151d4
   src/components/settings/ModelProviderSettings.tsx: 036cf52bd78d984340bda00ce9db93ee1edc94ba
+  src/components/canvas/CanvasProps.ts: a775333f39c4f616d70844d32c831ee58aa95cd5
+  src/components/canvas/useCanvasControls.ts: 546412faf8863a00d391d0c39e4fc00cce838837
+  src/components/canvas/useCanvasViewport.ts: 066ffe0d16934f10ac4cfb068cbfa2b4ee71ec9d
 inventory:
   - id: assets.workspace
     nodes:
