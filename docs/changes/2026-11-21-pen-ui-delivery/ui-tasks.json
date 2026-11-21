@@ -110,7 +110,9 @@
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/verify-workspace.log",
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/canvas-freeze-dev.log",
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-production-final-results.json",
-        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-loaded-assets-final.json"
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-loaded-assets-final.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-full-final-results.json",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen-final-readback.txt"
       ],
       "next": "推进资源和搜索宿主；保留仍待单独对照的设置导航和控件。",
       "blocker": null,
@@ -215,11 +217,12 @@
       "acceptance": "已审候选对应的远端 CI、实际保护规则和版本收据",
       "evidence": [
         "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-exact.log",
-        "D:/kk-studio/output/kk-design-pen-sync-20261121/independent-recheck.md"
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/independent-recheck.md",
+        "D:/kk-studio/output/kk-design-pen-workspace-20261121/design-port-occupied.log"
       ],
       "checkpoint": "5d64ae2a94827bbca0762fc3caff9bedb736df3d",
       "blocker": null,
-      "next": "在授权的分支交付环节验证托管门禁。"
+      "next": "远端工作流和发布仍待验收。独立设计说明页预览在固定 1423 可用时补跑。"
     },
     {
       "id": "PEN-09",

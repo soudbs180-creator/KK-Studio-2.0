@@ -1,8 +1,8 @@
 # Verification · Pen 同步与展开控件
 
-- 基线 `e4383a1e323c895286d9f08fe901a27e341a10da`。实现提交 `d81b218c402de382a544332426a55f173228bbd3`。运行产物中的源码输入由同包 ui-map.yaml 和桌面启动器收据绑定。
-- 当前候选 Desktop 2.1.44、Web 2.1.43。独立 Mobile 2.1.42。正式分发未开始。
-- 证据根目录 `D:/kk-studio/output/kk-design-pen-sync-20261121`。历史失败和实际重试都保留。
+- 基线 `e4383a1e323c895286d9f08fe901a27e341a10da`。第二批当前源码 `9063ed14451c7978f9e812da7173728a9cbee950`。运行产物中的源码输入由同包 ui-map.yaml 和桌面启动器收据绑定。
+- 当前候选 Desktop 2.1.45、Web 2.1.44。独立 Mobile 2.1.42。正式分发未开始。
+- 当前证据目录 `D:/kk-studio/output/kk-design-pen-workspace-20261121`。首批 Desktop 2.1.44 / Web 2.1.43 的历史原件保存在 `D:/kk-studio/output/kk-design-pen-sync-20261121`。
 
 ## Pen
 
@@ -10,13 +10,13 @@
 
 ## 首批 Desktop 折叠证据（Git 历史）
 
-证据文件 evidence/desktop-settings-content-disclosure.json
+首批收据见 Git 提交 `5d64ae2a` 内的 Desktop 折叠证据。
 
 先用 start-kk-studio.bat --background --data-dir <隔离目录> 重建实际桌面产物，再在私有 Windows 桌面启动同 SHA-256 的 EXE，以独立数据目录和 WebView2 profile 验证七个共享样式消费者。访问 http://tauri.localhost/，通过仅绑定本机的 DevTools 连接检查。每个入口均验证标记隐藏、两方向图标、Enter、Space、焦点和截图。H3 视频模型候选来自本机手动硬件检测步骤。见 desktop-build-receipt.json、native-expanded/native-disclosure.json 和同目录截图。
 
 ## 首批 Web 折叠证据（Git 历史）
 
-证据文件 evidence/web-settings-content-disclosure.json
+首批收据见 Git 提交 `5d64ae2a` 内的 Web 折叠证据。
 
 实际 production dist 由 Playwright 启动 Edge，preview 为 http://127.0.0.1:1423/。首页设置按钮 → App modal → SettingsPanel → 通用／网络／模型接入／数据管理。1366×768 深色与 390×640 浅色检查六个入口的 mask、方向、标记、文字宽度、点击、Enter、Space 与焦点。第七个 H3 候选在 Web 的硬件响应夹具中检查实际 DOM 与指针展开，真实硬件路径由 Desktop 收据覆盖。设置相关 27 项通过，无失败、重试或跳过。扩展初跑曾错误等待桌面隐藏的窄屏返回键，修正导航后复验通过。同一生产页实际加载脚本 index-B7uPXtPs.js、SettingsPanel-D3kZ3wrt.js 和样式 index-HfztjAyf.css，HTTP 字节与磁盘 dist 一致。收据记录各资源 SHA-256。见 web-loaded-bundle.json、expanded-browser-results.json、expanded-browser.log 与运行目录截图。
 
@@ -67,3 +67,9 @@
 - 第一轮全量验证在 Browser 836 通过、8 失败处停止。确认原生嵌套设置应保留顶层模态，首页扩展语义与原来一致，隐藏画布视口应暂停计算。三项重绘指针冲突由保存上次可用视口恢复。首次失败和定向后的真实结果分开留存。
 - 同尺度 Pen 与 Desktop/Web 局部截图已目视复对。该批接受的是宿主、焦点、保护和折叠，Pen 导航、设置搜索、返回式样、主题选择和撤销默认值仍记录为差异。
 - 宽屏并列保留当前会话。桌面从嵌套对话框和在窄屏开始时保留现有模态版，宿主在当次打开期间不迁移。Web 的事务用例采用隔离夹具。
+
+- 最终生产 Edge 全量 845 项通过，失败、重试、跳过均为 0。报告 web-full-final-results.json，源码 9063ed14451c7978f9e812da7173728a9cbee950，报告 SHA-256 3c2586e1d5385b90a33d5a138ea9cf66900cdf0371817538fe72f92a45c42cad。
+- Pen MCP 再回读 hgib1、BnwUr、d7z7Ci 和 rD3yd，见 pen-final-readback.txt。与本批采用的宿主及折叠规范保持一致。
+- 独立复核核对了 35 个映射 Git blob、4 份收据、Desktop EXE 和浏览器实际加载的 3 份 Web 资源。首批历史收据仍可由对应 Git 提交复现。
+- 当前 lint、typecheck、UI 检查、格式检查和开发插件联测通过。根单测串行复跑 1981 通过、20 跳过、0 失败。并行运行时桌面 Agent 启动曾未在时限内就绪，单文件复跑 3/3 及串行全量均通过，保留原失败。
+- App 有三条仓库设为 advisory 的体积与复杂度告警。独立设计说明页预览的固定 1423 被另一任务占用，当前批次未复跑该页面。实际产品预览与本机 EXE 均已有独立实测证据。
