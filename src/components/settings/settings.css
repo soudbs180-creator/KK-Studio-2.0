@@ -2003,6 +2003,12 @@
   overflow-wrap: anywhere;
 }
 
+@media (pointer: coarse) {
+  .settings-panel .settings-provider-network :is(input, select, button) {
+    min-height: 44px;
+  }
+}
+
 .settings-panel .settings-action.secondary[aria-pressed="true"] {
   background: var(--kk-neutral-selected);
   border-color: var(--kk-text-accent);

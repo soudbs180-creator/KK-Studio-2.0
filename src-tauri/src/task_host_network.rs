@@ -6,8 +6,24 @@ use std::path::PathBuf;
 use std::sync::Mutex;
 
 const MAX_PREFERENCES_BYTES: usize = 4096;
+const MAX_PROXY_URL_BYTES: usize = 2048;
 const SETTINGS_ERROR: &str = "网络设置不可用，请在设置中重新保存";
 const INVALID_PROXY: &str = "出站代理地址或协议不可用";
+
+pub(super) struct OutboundProxy {
+    pub(super) transport: Proxy,
+    pub(super) remote_dns: bool,
+}
+
+impl OutboundProxy {
+    fn parse(url: &str) -> Result<Self, &'static str> {
+        let url = Url::parse(url).map_err(|_| INVALID_PROXY)?;
+        Ok(Self {
+            remote_dns: !matches!(url.scheme(), "socks4" | "socks5"),
+            transport: Proxy::all(url).map_err(|_| INVALID_PROXY)?,
+        })
+    }
+}
 
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[serde(tag = "mode", rename_all = "camelCase", deny_unknown_fields)]
@@ -27,11 +43,12 @@ impl Preferences {
             return Ok(self);
         };
         const INVALID: &str = "请输入不含账号、密码或路径的 HTTP(S) 代理地址";
-        if proxy_url.len() > 2048 {
+        if proxy_url.len() > MAX_PROXY_URL_BYTES {
             return Err(INVALID);
         }
         let url = Url::parse(proxy_url.trim()).map_err(|_| INVALID)?;
-        if !matches!(url.scheme(), "http" | "https")
+        if url.as_str().len() > MAX_PROXY_URL_BYTES
+            || !matches!(url.scheme(), "http" | "https")
             || url.host().is_none()
             || !url.username().is_empty()
             || url.password().is_some()
@@ -47,16 +64,13 @@ impl Preferences {
         })
     }
 
-    async fn proxy(&self, target: &Url) -> Result<(Option<Proxy>, Route), &'static str> {
+    async fn proxy(&self, target: &Url) -> Result<(Option<OutboundProxy>, Route), &'static str> {
         if target.host_str().is_some_and(is_loopback_host) {
             return Ok((None, Route::Local));
         }
         let (proxy, route) = match self {
             Self::Direct => (None, Route::Direct),
-            Self::Manual { proxy_url } => (
-                Some(Proxy::all(proxy_url.as_str()).map_err(|_| INVALID_PROXY)?),
-                Route::Manual,
-            ),
+            Self::Manual { proxy_url } => (Some(OutboundProxy::parse(proxy_url)?), Route::Manual),
             Self::System => {
                 let Some(proxy) = system_proxy(target).await? else {
                     return Ok((None, Route::Direct));
@@ -68,7 +82,7 @@ impl Preferences {
     }
 }
 
-fn match_proxy(target: &Url, matcher: Matcher) -> Result<Option<Proxy>, &'static str> {
+fn match_proxy(target: &Url, matcher: Matcher) -> Result<Option<OutboundProxy>, &'static str> {
     let uri = target
         .origin()
         .ascii_serialization()
@@ -77,22 +91,22 @@ fn match_proxy(target: &Url, matcher: Matcher) -> Result<Option<Proxy>, &'static
     let Some(intercept) = matcher.intercept(&uri) else {
         return Ok(None);
     };
-    let mut proxy = Proxy::all(intercept.uri().to_string()).map_err(|_| INVALID_PROXY)?;
+    let mut proxy = OutboundProxy::parse(&intercept.uri().to_string())?;
     if let Some(auth) = intercept.basic_auth() {
-        proxy = proxy.custom_http_auth(auth.clone());
+        proxy.transport = proxy.transport.custom_http_auth(auth.clone());
     } else if let Some((user, password)) = intercept.raw_auth() {
-        proxy = proxy.basic_auth(user, password);
+        proxy.transport = proxy.transport.basic_auth(user, password);
     }
     Ok(Some(proxy))
 }
 
 #[cfg(not(windows))]
-async fn system_proxy(target: &Url) -> Result<Option<Proxy>, &'static str> {
+async fn system_proxy(target: &Url) -> Result<Option<OutboundProxy>, &'static str> {
     match_proxy(target, Matcher::from_system())
 }
 
 #[cfg(windows)]
-async fn system_proxy(target: &Url) -> Result<Option<Proxy>, &'static str> {
+async fn system_proxy(target: &Url) -> Result<Option<OutboundProxy>, &'static str> {
     use windows::core::HSTRING;
     use windows::Foundation::Uri;
     use windows::Networking::Connectivity::NetworkInformation;
@@ -122,7 +136,7 @@ async fn system_proxy(target: &Url) -> Result<Option<Proxy>, &'static str> {
     if candidates.Size().map_err(|_| UNAVAILABLE)? > 0 {
         let first = candidates.GetAt(0).map_err(|_| UNAVAILABLE)?;
         let proxy_url = first.AbsoluteUri().map_err(|_| UNAVAILABLE)?.to_string();
-        return Proxy::all(proxy_url).map(Some).map_err(|_| INVALID_PROXY);
+        return OutboundProxy::parse(&proxy_url).map(Some);
     }
     if config.CanConnectDirectly().map_err(|_| UNAVAILABLE)? {
         Ok(None)
@@ -133,7 +147,7 @@ async fn system_proxy(target: &Url) -> Result<Option<Proxy>, &'static str> {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
-enum Route {
+pub(super) enum Route {
     Local,
     Direct,
     System,
@@ -189,7 +203,15 @@ impl ProviderNetwork {
         let _guard = self.access.lock().map_err(|_| SETTINGS_ERROR)?;
         let bytes = serde_json::to_vec(&preferences).map_err(|_| SETTINGS_ERROR)?;
         io::checked_metadata(&self.path).map_err(|_| SETTINGS_ERROR)?;
-        io::atomic_write(&self.path, &bytes, true).map_err(|_| SETTINGS_ERROR)?;
+        if io::atomic_write(&self.path, &bytes, true).is_err()
+            && io::read(&self.path, MAX_PREFERENCES_BYTES)
+                .ok()
+                .flatten()
+                .as_deref()
+                != Some(bytes.as_slice())
+        {
+            return Err(SETTINGS_ERROR);
+        }
         Ok(preferences)
     }
 
@@ -197,11 +219,7 @@ impl ProviderNetwork {
         Ok(self.access.lock().map_err(|_| SETTINGS_ERROR)?.clone())
     }
 
-    pub(super) async fn client(
-        &self,
-        target: &Url,
-        operation: Operation,
-    ) -> Result<Client, &'static str> {
+    pub(super) async fn client(&self, target: &Url) -> Result<(Client, Route), &'static str> {
         let preferences = if target.host_str().is_some_and(is_loopback_host) {
             Preferences::Direct
         } else {
@@ -209,13 +227,18 @@ impl ProviderNetwork {
         };
         let (proxy, route) = preferences.proxy(target).await?;
         let client = validated_provider_client(target, proxy).await?;
-        let mut recent = self.access.lock().map_err(|_| SETTINGS_ERROR)?;
+        Ok((client, route))
+    }
+
+    pub(super) fn record(&self, operation: Operation, route: Route) {
+        let Ok(mut recent) = self.access.lock() else {
+            return;
+        };
         match operation {
             Operation::Discovery => recent.discovery = Some(route),
             Operation::Text => recent.text = Some(route),
             Operation::Image => recent.image = Some(route),
         }
-        Ok(client)
     }
 }
 
@@ -224,6 +247,14 @@ mod tests {
     use super::*;
     use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
     use tokio::net::TcpListener;
+
+    #[test]
+    fn socks_preserves_the_configured_dns_side() {
+        for scheme in ["socks4", "socks5", "socks4a", "socks5h", "http", "https"] {
+            let proxy = OutboundProxy::parse(&format!("{scheme}://127.0.0.1:7890")).unwrap();
+            assert_eq!(proxy.remote_dns, !matches!(scheme, "socks4" | "socks5"));
+        }
+    }
 
     #[tokio::test]
     async fn saved_proxy_serves_all_model_operations_but_bypasses_loopback() {
@@ -240,6 +271,14 @@ mod tests {
         assert!(settings
             .save(Preferences::Manual {
                 proxy_url: "http://user:password@127.0.0.1:7890".into(),
+            })
+            .is_err());
+        let expanded = format!("http://{}example", "é.".repeat(400));
+        assert!(expanded.len() <= MAX_PROXY_URL_BYTES);
+        assert!(Url::parse(&expanded).unwrap().as_str().len() > MAX_PROXY_URL_BYTES);
+        assert!(settings
+            .save(Preferences::Manual {
+                proxy_url: expanded,
             })
             .is_err());
         let settings = ProviderNetwork::new(path);
@@ -273,7 +312,8 @@ mod tests {
         };
         let calls = async {
             for operation in [Operation::Discovery, Operation::Text, Operation::Image] {
-                let client = settings.client(&remote, operation).await.unwrap();
+                let (client, route) = settings.client(&remote).await.unwrap();
+                settings.record(operation, route);
                 assert!(client
                     .get(remote.clone())
                     .bearer_auth("fixture")
@@ -293,19 +333,17 @@ mod tests {
         assert_eq!(routes.image, Some(Route::Manual));
 
         let local = Url::parse("http://127.0.0.1:11434").unwrap();
-        settings.client(&local, Operation::Discovery).await.unwrap();
-        assert_eq!(settings.routes().unwrap().discovery, Some(Route::Local));
+        let (_, route) = settings.client(&local).await.unwrap();
+        assert_eq!(route, Route::Local);
+        assert_eq!(settings.routes().unwrap().discovery, Some(Route::Manual));
         assert!(settings
-            .client(
-                &Url::parse("https://192.168.1.1").unwrap(),
-                Operation::Image
-            )
+            .client(&Url::parse("https://192.168.1.1").unwrap())
             .await
             .is_err());
 
         settings.save(Preferences::Direct).unwrap();
-        settings.client(&remote, Operation::Text).await.unwrap();
-        assert_eq!(settings.routes().unwrap().text, Some(Route::Direct));
+        let (_, route) = settings.client(&remote).await.unwrap();
+        assert_eq!(route, Route::Direct);
         std::fs::remove_dir_all(root).unwrap();
     }
 }

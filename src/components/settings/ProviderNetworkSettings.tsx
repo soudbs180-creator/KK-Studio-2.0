@@ -115,7 +115,10 @@ export default function ProviderNetworkSettings({
 
   return (
     <>
-      <form className="settings-detail-stack" onSubmit={save}>
+      <form
+        className="settings-detail-stack settings-provider-network"
+        onSubmit={save}
+      >
         <label className="settings-field">
           模型请求线路
           <select

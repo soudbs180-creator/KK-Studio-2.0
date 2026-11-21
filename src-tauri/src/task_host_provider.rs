@@ -193,10 +193,8 @@ pub(crate) async fn discover_models(
     if auth == AuthMode::ApiKey && secret.is_none_or(|key| key.trim().is_empty()) {
         return Err("credential: 供应商凭据不可用".into());
     }
-    let client = network
-        .client(&url, super::network::Operation::Discovery)
-        .await
-        .map_err(str::to_owned)?;
+    let (client, route) = network.client(&url).await.map_err(str::to_owned)?;
+    network.record(Operation::Discovery, route);
     tokio::time::timeout(
         PROVIDER_REQUEST_TIMEOUT,
         discover_with_client(&client, url, protocol, auth, secret),

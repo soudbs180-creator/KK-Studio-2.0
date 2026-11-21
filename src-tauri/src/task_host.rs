@@ -26,7 +26,7 @@ mod protocol_stream;
 mod provider;
 #[path = "task_host_text.rs"]
 mod text;
-use network::Operation;
+use network::{Operation, OutboundProxy, Route};
 pub(crate) use network::{Preferences, ProviderNetwork, Routes};
 pub(crate) use provider::{discover_models, validate_provider_options};
 
@@ -547,15 +547,10 @@ impl TaskHost {
         }
         let provider_base = reqwest::Url::parse(&request.base_url)
             .map_err(|_| RunError::failed("invalid_request", "供应商地址无效"))?;
-        let operation = if request.kind.as_deref() == Some("text") {
-            Operation::Text
-        } else {
-            Operation::Image
-        };
-        let provider_client = tokio::select! {
+        let (provider_client, route) = tokio::select! {
             biased;
             _ = text::cancelled(control) => return Err(RunError::failed("cancelled", "任务在发送前已取消")),
-            result = self.network.client(&provider_base, operation) => result
+            result = self.network.client(&provider_base) => result
                 .map_err(|message| RunError::failed("invalid_request", message))?,
         };
         if control.cancelled.load(Ordering::Acquire) {
@@ -563,7 +558,14 @@ impl TaskHost {
         }
         if request.kind.as_deref() == Some("text") {
             return self
-                .perform_text(request, fingerprint, control, provider_client, &secret)
+                .perform_text(
+                    request,
+                    fingerprint,
+                    control,
+                    provider_client,
+                    route,
+                    &secret,
+                )
                 .await;
         }
         let endpoint = if attachments.is_empty() {
@@ -641,8 +643,10 @@ impl TaskHost {
         let response = tokio::select! {
             biased;
             _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像生成，供应商最终状态需核对", vec![])),
-            result = send => result
-                .map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?,
+            result = async {
+                self.network.record(Operation::Image, route);
+                send.await
+            } => result.map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?,
         };
         let status = response.status();
         let retry = response
@@ -1041,7 +1045,7 @@ fn accepts_provider_answer(address: IpAddr, local: bool, proxy_dns: bool) -> boo
 /// same origin itself; TLS verification and the redirect ban still apply.
 async fn validated_provider_client(
     url: &reqwest::Url,
-    proxy: Option<reqwest::Proxy>,
+    proxy: Option<OutboundProxy>,
 ) -> Result<Client, &'static str> {
     let host = url.host_str().ok_or("供应商地址缺少主机名")?;
     let lookup_host = normalized_host(host);
@@ -1053,6 +1057,7 @@ async fn validated_provider_client(
     if url.scheme() != "https" && url.scheme() != "http" {
         return Err("供应商地址协议不安全");
     }
+    let proxy_resolves_host = proxy.as_ref().is_some_and(|route| route.remote_dns);
     let (addresses, proxy_dns) = match lookup_host.parse::<IpAddr>() {
         Ok(address) => (vec![SocketAddr::new(address, port)], false),
         Err(_) => (
@@ -1060,7 +1065,7 @@ async fn validated_provider_client(
                 .await
                 .map_err(|_| "供应商地址解析失败")?
                 .collect(),
-            proxy.is_some(),
+            proxy_resolves_host,
         ),
     };
     if addresses.is_empty() {
@@ -1074,17 +1079,18 @@ async fn validated_provider_client(
         selected.get_or_insert(address);
     }
     let target = selected.ok_or("供应商地址解析失败")?;
-    let client = Client::builder()
+    let mut client = Client::builder()
         .connect_timeout(PROVIDER_CONNECT_TIMEOUT)
         .timeout(PROVIDER_REQUEST_TIMEOUT)
         .redirect(reqwest::redirect::Policy::none())
         .no_proxy();
-    match proxy {
-        Some(proxy) => client.proxy(proxy),
-        None => client.resolve(lookup_host, target),
+    if !proxy_resolves_host {
+        client = client.resolve(lookup_host, target);
     }
-    .build()
-    .map_err(|_| "io: 原生任务网络客户端不可用")
+    if let Some(proxy) = proxy {
+        client = client.proxy(proxy.transport);
+    }
+    client.build().map_err(|_| "io: 原生任务网络客户端不可用")
 }
 
 fn append_bounded_chunk(
