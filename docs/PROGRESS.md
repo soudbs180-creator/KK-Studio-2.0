@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-11-21 Pen 同步与展开控件
+
+当前隔离候选已接入 Pen 交付映射与 Git blob 检查。设置的内容折叠沿用现行 Pen 描边。参见[本次验证](changes/2026-11-21-pen-ui-delivery/verification.md)与恢复清单。
+
 ## 2026-11-21 桌面模型请求线路
 
 桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。

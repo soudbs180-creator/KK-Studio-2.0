@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { checkDeliveryFiles } from "./governance/delivery.mjs";
+import { checkUiDelivery } from "./governance/ui-delivery.mjs";
 
 const args = process.argv.slice(2);
 const option = (name) =>
@@ -75,6 +76,16 @@ try {
     branch,
   });
   if (ledgerError) issues.push(ledgerError);
+  issues.push(
+    ...checkUiDelivery(
+      changed,
+      (file) => git(["show", head + ":" + file]),
+      (file) =>
+        headExists(file)
+          ? git(["rev-parse", "--verify", head + ":" + file]).trim()
+          : undefined,
+    ),
+  );
   issues.forEach((issue) => console.error(issue));
   console.log(
     `Delivery: ${changed.length} files; ${issues.length} violations. Structure only; not proof of review quality.`,

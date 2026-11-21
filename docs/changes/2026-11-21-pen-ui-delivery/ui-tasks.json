@@ -1,0 +1,73 @@
+{
+  "parent": "TASK-KKD-PEN-SYNC-20261121",
+  "base": "e4383a1e323c895286d9f08fe901a27e341a10da",
+  "worktree": "D:/kk-studio/.worktrees/KKD-FIRST-WAVE-BASELINE-LF-8f9c1a2",
+  "items": [
+    {
+      "id": "PEN-01",
+      "target": "当前设计同步入口",
+      "status": "已完成",
+      "basis": "Pen QnbwN/CzGXd 与 d7z7Ci 保存及回读",
+      "scope": [
+        "UI index",
+        "现行 Pen 对接说明",
+        "候选工作树"
+      ],
+      "protected": [
+        "历史 Git、其他候选与页面"
+      ],
+      "evidence": [
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/pen-after/QnbwN.png"
+      ],
+      "next": "设计依赖变化后重新回读"
+    },
+    {
+      "id": "PEN-02",
+      "target": "设置内容折叠",
+      "status": "待验收",
+      "basis": "Pen gSHZ5/ToSeM；主线原生三角",
+      "scope": [
+        "settings-disclosure",
+        "model-access-manual"
+      ],
+      "protected": [
+        "原生 summary 语义",
+        "偏好与请求行为",
+        "其他类别图标"
+      ],
+      "evidence": [
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/candidate-browser-retry.log"
+      ],
+      "next": "完成 Native 运行与主题回归"
+    },
+    {
+      "id": "PEN-03",
+      "target": "当前 UI 交付门禁",
+      "status": "待验收",
+      "basis": "现有 delivery 只校验结构",
+      "scope": [
+        "已有 delivery CI"
+      ],
+      "protected": [
+        "其他门禁和纯领域逻辑"
+      ],
+      "evidence": [],
+      "next": "核对精确提交的 CLI、独立评审与远端运行"
+    },
+    {
+      "id": "PEN-04",
+      "target": "设置、资源、搜索、会话和新增功能差距",
+      "status": "执行中",
+      "basis": "现行 Pen 各业务主节点与主线运行宿主不一致",
+      "scope": [
+        "已核验、有共同功能语义的控件"
+      ],
+      "protected": [
+        "未裁决交互行为",
+        "非本批平台与布局"
+      ],
+      "evidence": [],
+      "next": "逐项登记当前主线节点和已知业务差异"
+    }
+  ]
+}

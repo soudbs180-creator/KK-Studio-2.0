@@ -72,7 +72,7 @@ test(browser): 补充侧栏窄屏关闭优先级回归
 - 历史遗留 worktree 分布在容器级、仓库内、codex 目录三处。清理是独立任务，需先核对分支是否已合并、worktree 是否 dirty，再逐个处理，不批量删除。
 - 创建 worktree 不自动安装依赖。共享 `node_modules` junction/symlink 只可作为明确的只读输入；禁止对共享目标执行 `npm ci`/`npm install` 或任何构建、发布写入。安装或构建前核对根/Agent依赖、dist、Rust target、runtime staging及其他输出的真实路径，写入目标须是本任务独占实体目录；不满足时先准备受控实体目录，不修共享owner。旧依赖事故见 [验证](../changes/2026-10-15-dependency-repair/verification.md)。
 - 同一仓库登记多个 worktree 合法。`git worktree list` 是发现当前实例的唯一准确来源。
-- Git 命令在本次实际登记的 checkout/worktree 根执行，并先核对 root/branch；主仓根是 `D:/kk-studio/KK-Studio-2.0`。`D:/kk-studio` 只是容器，不能作为 Git 根，也不能为方便而从任务树切回主仓写入。
+- Git 命令在本次实际登记的 checkout/worktree 根执行，并先核对 root/branch；主仓根是 `D:/KK Design`。`D:/kk-studio` 只是容器，不能作为 Git 根，也不能为方便而从任务树切回主仓写入。
 
 ## 自动合并
 

@@ -8,6 +8,10 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## KK Design Pen 同步
+
+先读[现行映射](../changes/2026-11-21-pen-ui-delivery/ui-map.yaml)和[执行记录](../changes/2026-11-21-pen-ui-delivery/ui-tasks.json)，再核对候选 Git 与 Pen 实际状态。
+
 ## 桌面模型出站候选
 
 TASK-KKD-DESKTOP-PROXY-20261121 从[验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)恢复。

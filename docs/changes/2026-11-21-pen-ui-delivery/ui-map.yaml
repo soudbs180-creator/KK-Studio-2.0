@@ -1,0 +1,65 @@
+version: 1
+pen:
+  documentId: b1c8c2e7-1733-4af4-843e-5c7962ed3f49
+  readbackSha256: e3a25e962612f6909be16ce402d0866424d1d66a65b3fb8308635215d94f315a
+mappings:
+  - id: settings.content-disclosure
+    route: / → 设置 → 通用 / 网络 / 模型接入
+    nodes:
+      - d7z7Ci
+      - gSHZ5
+      - ToSeM
+    files:
+      - src/components/settings/settings.css
+      - public/design/pen/disclosure-chevron.svg
+    locator: details.settings-disclosure > summary; details.model-access-manual >
+      summary
+inputs:
+  src/components/settings/settings.css: b3826cd50a698aa21c66fc1049b10908c6e61b74
+  public/design/pen/disclosure-chevron.svg: 279c00e17f98a0368e076328fe2bbd4a9e3f4ff1
+  src/styles/tokens.css: adb43817b00412044118a073662afe4730de7550
+  src/components/settings/GeneralAdvancedPreferences.tsx: f0887127e8d0f3d4c29e2d61a5d97b53db114fca
+  src/components/settings/ConnectionSettings.tsx: a82505cc40b92c07f0690bbbfdf1611ccecc1b42
+  src/components/settings/AgentConnectionSettings.tsx: b253bc9ef6348d22a4f20994e363183b5e7ff3ba
+evidence:
+  desktop:
+    status: pending
+    locator: 现行启动器候选 WebView2
+  web:
+    status: verified
+    locator: verification.md#web
+inventory:
+  - id: settings.workspace
+    nodes:
+      - hgib1
+      - BnwUr
+    status: 未验收
+    local:
+      - src/App.tsx
+      - src/components/settings/SettingsPanel.tsx
+    note: 从 main App 的 modal 进入，Pen 为工作台内容区并排会话；属于独立宿主迁移。
+  - id: assets.workspace
+    nodes:
+      - GuAqj
+      - CUSuY
+    status: 未验收
+    local:
+      - src/App.tsx
+      - src/components/assets/AssetPanel.tsx
+    note: 状态所有权与全页/停靠需一起复核；不能把旧候选当当前主线。
+  - id: search.workspace
+    nodes:
+      - av3nU
+    status: 未验收
+    local:
+      - src/App.tsx
+      - src/components/CatalogPanel.tsx
+    note: 主线经 modal，Pen 目标是内容页，需验证键盘、状态延续和焦点。
+  - id: chat.history
+    nodes:
+      - LYmMd
+      - nEBYJ
+    status: 冲突
+    local:
+      - src/components/ConversationHeader.tsx
+    note: Pen 目标是查看全部会话，主线显示当前条数；待确认业务语义。
