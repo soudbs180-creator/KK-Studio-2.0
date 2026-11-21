@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-KK Design Pen 同步与描边折叠处于隔离候选。当前证据见[验证](../changes/2026-11-21-pen-ui-delivery/verification.md)。主线与安装版本按各自现行收据标记。
+KK Design Pen 同步与描边折叠已完成隔离候选的实机、Web 与独立复审。Desktop 候选 2.1.44，Web 候选 2.1.43，远端交付待验收。当前证据见[验证](../changes/2026-11-21-pen-ui-delivery/verification.md)。主线与安装版本按各自现行收据标记。
 
 桌面模型出站候选 2.1.43 在 TASK-KKD-DESKTOP-PROXY-20261121 独立工作树实现。范围与运行证据见[桌面模型代理验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)。
 

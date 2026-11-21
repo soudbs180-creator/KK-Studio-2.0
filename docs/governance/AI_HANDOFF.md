@@ -10,7 +10,7 @@
 
 ## KK Design Pen 同步
 
-先读[现行映射](../changes/2026-11-21-pen-ui-delivery/ui-map.yaml)和[执行记录](../changes/2026-11-21-pen-ui-delivery/ui-tasks.json)，再核对候选 Git 与 Pen 实际状态。
+先读[现行映射](../changes/2026-11-21-pen-ui-delivery/ui-map.yaml)和[执行记录](../changes/2026-11-21-pen-ui-delivery/ui-tasks.json)，再核对候选 Git 与 Pen 实际状态。折叠箭头与本地交付门禁已验收。工作台宿主、会话语义、独立 Mobile 与托管工作流沿执行记录继续。
 
 ## 桌面模型出站候选
 

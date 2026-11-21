@@ -58,7 +58,7 @@
     {
       "id": "PEN-03",
       "target": "当前 UI 交付门禁",
-      "status": "待验收",
+      "status": "已完成",
       "basis": "现有 delivery 只校验结构",
       "scope": [
         "已有 delivery CI"
@@ -68,11 +68,13 @@
       ],
       "evidence": [
         "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-pending.log",
-        "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-exact.log"
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-exact.log",
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/independent-recheck.md",
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-unit-final.log"
       ],
-      "next": "当前候选运行精确 CLI 与独立复审，远端 CI 留待分支交付。",
+      "next": "本地门禁与独立复审已通过。远端工作流验证见 PEN-08。",
       "allowed": "现有 Git delivery 检查脚本、CI 与精确候选",
-      "checkpoint": "本地任务分支与初始拒绝收据",
+      "checkpoint": "5d64ae2a94827bbca0762fc3caff9bedb736df3d",
       "dependencies": [
         "PEN-01",
         "PEN-02"
@@ -178,6 +180,30 @@
       "checkpoint": "e4383a1e 与当前 Pen 回读",
       "remainingScope": "本轮承接 Desktop 及 Web 设置控件，Mobile 场景独立映射和设备验收尚未开展。",
       "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
+    },
+    {
+      "id": "PEN-08",
+      "target": "候选远端交付",
+      "status": "待验收",
+      "basis": "本地精确交付和独立复审通过，需在实际远端 PR 工作流复验",
+      "dependencies": [
+        "PEN-01",
+        "PEN-02",
+        "PEN-03"
+      ],
+      "allowed": "正式候选的 CI 检查和代码审查",
+      "expectedImpact": "交付状态更新",
+      "protected": [
+        "主线、已安装应用和现有用户数据"
+      ],
+      "acceptance": "已审候选对应的远端 CI、实际保护规则和版本收据",
+      "evidence": [
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-exact.log",
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/independent-recheck.md"
+      ],
+      "checkpoint": "5d64ae2a94827bbca0762fc3caff9bedb736df3d",
+      "blocker": null,
+      "next": "在授权的分支交付环节验证托管门禁。"
     }
   ]
 }
