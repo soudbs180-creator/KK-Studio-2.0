@@ -1,6 +1,6 @@
 [package]
 name = "kk-studio"
-version = "2.1.42"
+version = "2.1.43"
 description = "kk Studio - AI 创作工作台"
 authors = ["kk Studio"]
 license = "MIT"
@@ -18,7 +18,8 @@ tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["float_roundtrip"] }
 tokio = { version = "1", features = ["full"] }
-reqwest = { version = "0.12", features = ["json", "stream", "multipart"] }
+reqwest = { version = "0.12", features = ["json", "stream", "multipart", "socks"] }
+hyper-util = { version = "0.1", features = ["client-proxy-system"] }
 futures-util = "0.3"
 dirs = "5"
 dunce = "1.0.5"
@@ -33,6 +34,8 @@ axum = { version = "=0.8.9", default-features = false, features = ["http1", "jso
 
 [target.'cfg(target_os = "windows")'.dependencies]
 keyring = { version = "3.6.3", default-features = false, features = ["windows-native"] }
+windows = { version = "0.61", features = ["Foundation", "Networking_Connectivity"] }
+windows-future = "0.2.1"
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_Security", "Win32_System_JobObjects", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging"] }
 
 [features]

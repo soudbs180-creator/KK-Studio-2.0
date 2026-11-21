@@ -388,6 +388,7 @@ fn provider_models_release(
 
 #[tauri::command(rename_all = "camelCase")]
 async fn provider_models_fetch(
+    app: State<'_, AppState>,
     request_id: String,
     window: tauri::Window,
     state: State<'_, provider_model_requests::ModelRequests>,
@@ -419,6 +420,7 @@ async fn provider_models_fetch(
                 None
             };
             task_host::discover_models(
+                &app.task_host.network,
                 &base_url,
                 protocol.as_deref(),
                 auth_mode.as_deref(),
@@ -427,6 +429,28 @@ async fn provider_models_fetch(
             .await
         })
         .await
+}
+
+#[tauri::command]
+fn provider_network_preferences(state: State<AppState>) -> Result<task_host::Preferences, String> {
+    state.task_host.network.preferences().map_err(str::to_owned)
+}
+
+#[tauri::command]
+fn save_provider_network_preferences(
+    state: State<AppState>,
+    preferences: task_host::Preferences,
+) -> Result<task_host::Preferences, String> {
+    state
+        .task_host
+        .network
+        .save(preferences)
+        .map_err(str::to_owned)
+}
+
+#[tauri::command]
+fn provider_network_routes(state: State<AppState>) -> Result<task_host::Routes, String> {
+    state.task_host.network.routes().map_err(str::to_owned)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -1856,6 +1880,9 @@ fn main() {
             provider_models_cancel,
             provider_models_release,
             provider_models_fetch,
+            provider_network_preferences,
+            save_provider_network_preferences,
+            provider_network_routes,
             cli_runtime::cli_inspect,
             cli_runtime::cli_begin,
             cli_runtime::cli_operation_state,

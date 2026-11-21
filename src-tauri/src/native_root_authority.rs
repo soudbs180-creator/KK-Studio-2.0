@@ -111,6 +111,7 @@ impl NativeRootAuthority {
             Arc::clone(&assets),
             locks.access(),
             Arc::clone(&snapshots),
+            paths.config.with_file_name("provider-network.json"),
         )?);
         Ok(Some(Arc::new(Self {
             root: paths.root.clone(),

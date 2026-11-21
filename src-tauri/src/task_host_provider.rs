@@ -183,6 +183,7 @@ fn model_page(value: &Value, protocol: Protocol) -> Result<(Vec<String>, Option<
 
 /// GET-only discovery. Caller owns vault lookup; the helper never returns a key/body.
 pub(crate) async fn discover_models(
+    network: &super::network::ProviderNetwork,
     base_url: &str,
     protocol: Option<&str>,
     auth_mode: Option<&str>,
@@ -192,7 +193,10 @@ pub(crate) async fn discover_models(
     if auth == AuthMode::ApiKey && secret.is_none_or(|key| key.trim().is_empty()) {
         return Err("credential: 供应商凭据不可用".into());
     }
-    let client = pinned_download_client(&url).await.map_err(str::to_owned)?;
+    let client = network
+        .client(&url, super::network::Operation::Discovery)
+        .await
+        .map_err(str::to_owned)?;
     tokio::time::timeout(
         PROVIDER_REQUEST_TIMEOUT,
         discover_with_client(&client, url, protocol, auth, secret),
@@ -277,6 +281,12 @@ async fn discover_with_client(
 mod tests {
     use super::*;
 
+    fn test_network() -> super::super::network::ProviderNetwork {
+        super::super::network::ProviderNetwork::new(
+            std::env::temp_dir().join("kk-unused-loopback-network-test.json"),
+        )
+    }
+
     async fn serve_pages(pages: Vec<String>) -> (String, tokio::task::JoinHandle<Vec<String>>) {
         use tokio::io::{AsyncReadExt, AsyncWriteExt};
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -308,7 +318,7 @@ mod tests {
     async fn local_discovery_is_get_only_and_sends_no_key() {
         let (base, server) =
             serve_pages(vec![json!({"data":[{"id":"fixture-local"}]}).to_string()]).await;
-        let models = discover_models(&base, Some("ollama"), Some("none"), None)
+        let models = discover_models(&test_network(), &base, Some("ollama"), Some("none"), None)
             .await
             .unwrap();
         assert_eq!(models, vec!["fixture-local"]);
@@ -324,6 +334,7 @@ mod tests {
                 .to_string();
         let (base, server) = serve_pages(vec![page.clone(), page]).await;
         let error = discover_models(
+            &test_network(),
             &base,
             Some("anthropic"),
             Some("api-key"),
