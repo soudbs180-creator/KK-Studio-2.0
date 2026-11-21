@@ -356,7 +356,8 @@ test("applyCodexProviderConfig dry-run 返回合并结果且不写盘", () => {
   assert.equal(noModel.configToml.includes("model_provider ="), false);
 });
 
-test("显式指定 active 连接才切换 Codex 默认模型", () => {
+test("显式指定 active 连接才切换 Codex 默认模型", (t) => {
+  const { dir: configDir, config } = guardedFixture(t);
   const connections = [
     {
       id: "deepseek",
@@ -367,6 +368,7 @@ test("显式指定 active 连接才切换 Codex 默认模型", () => {
   ];
   const result = applyCodexProviderConfig(connections, {
     dryRun: true,
+    configDir,
     activeConnectionId: "deepseek",
   });
   assert.match(
@@ -374,9 +376,11 @@ test("显式指定 active 连接才切换 Codex 默认模型", () => {
     new RegExp(`model_provider = "${providerKey("deepseek")}"`),
   );
   assert.match(result.configToml, /model = "deepseek-v4"/);
+  assert.equal(fs.readFileSync(config, "utf8"), 'model = "original"\n');
   assert.throws(() =>
     applyCodexProviderConfig(connections, {
       dryRun: true,
+      configDir,
       activeConnectionId: "missing",
     }),
   );

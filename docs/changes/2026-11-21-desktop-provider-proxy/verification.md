@@ -16,3 +16,7 @@
 - 最终 EXE 的既有 TaskHost 生命周期 11 项通过，含图文生成、任务取消、恢复与归档。收据在 test-results/desktop/taskhost-lifecycle/1795236556709-736421aa-ee39-436e-91a6-ac6284c8ed1b/receipt.json。
 - 全量 verify 在 Agent 的一项 Codex TOML 表头测试停止。Node 1975 通过、20 跳过，Agent 203 通过、2 跳过、1 失败。该测试读取本机实际配置，同一失败在未改动的主线单独复现。
 - 企业 PAC/WPAD 和 macOS 未在本轮设备上实测。供应商付费生成、独立审核、主线与正式发布仍待验。
+
+## Codex 配置测试隔离复验
+
+全量门禁中的 active connection 用例以 dry-run 合并已有配置。旧用例未提供 configDir，误读日常 Codex TOML。复测原命令仍失败。改用同文件的临时配置 fixture，保留成功和无效连接断言，并核对原文件内容未改变。定向套件 34 项通过。日常安装包是独立 KK Design 2.1.69，升级需要按它的来源验证，不能使用此主线的 KK Studio 2.1.43 包覆盖。
