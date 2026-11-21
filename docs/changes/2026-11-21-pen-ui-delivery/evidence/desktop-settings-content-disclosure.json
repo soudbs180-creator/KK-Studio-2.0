@@ -1,0 +1,23 @@
+{
+  "mappingId": "settings.content-disclosure",
+  "platform": "desktop",
+  "versionBindingSha256": "173d1c03c710ed6c651f7251f5000e856440d4172a1d759076f19f643994a0e8",
+  "rawEvidenceSha256": "90610e96737e2527576dd9344cc5d44e1ce24d274899c768e660f264068c93bc",
+  "rawEvidenceFile": "native-expanded/native-disclosure.json",
+  "entry": "kk-studio.exe",
+  "entrySha256": "8efe286ab35cf028ef80077f9ac347a166fde634ee909d9c09febb0026196538",
+  "url": "http://tauri.localhost/",
+  "launch": "start-kk-studio.bat --background --data-dir <isolated>; release re-opened in private desktop",
+  "passed": 7,
+  "failed": 0,
+  "verifiedLabels": [
+    "高级偏好",
+    "系统与未接入偏好",
+    "独立转发代理",
+    "高级连接选项",
+    "ComfyUI 工作流",
+    "H3 视频模型候选",
+    "偏好备份"
+  ],
+  "desktopVersion": "2.1.44"
+}

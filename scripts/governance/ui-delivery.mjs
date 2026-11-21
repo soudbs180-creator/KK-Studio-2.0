@@ -23,6 +23,7 @@ const receipt = z.object({
     z.object({
       id: z.string().regex(/^[a-z][a-z0-9.-]*$/),
       route: z.string().trim().min(1),
+      locator: z.string().trim().min(1),
       nodes: z.array(z.string().regex(/^[A-Za-z0-9]{4,12}$/)).min(1),
       files: z.array(pathKey).min(1),
       dependencies: z.array(pathKey).min(1),
@@ -37,12 +38,30 @@ const receipt = z.object({
   ),
 });
 
+const runtimeReceipt = z.object({
+  mappingId: z.string(),
+  platform: z.enum(["desktop", "web", "mobile"]),
+  versionBindingSha256: sha256,
+  rawEvidenceSha256: sha256,
+  entrySha256: sha256,
+  launch: z.string().trim().min(1),
+  url: z.string().trim().min(1),
+  passed: z.int().min(1),
+  failed: z.literal(0),
+});
+
 function platformTargets(file) {
-  if (/^mobile\/(?:src\/.*\.(?:[jt]sx?|css|json)|assets\/.+)$/.test(file))
+  if (
+    /^mobile\/(?:src\/(?:app|screens|ui)\/.*\.(?:[jt]sx?|css|json)|assets\/.+)$/.test(
+      file,
+    )
+  )
     return ["mobile"];
   if (
     /^(?:src\/.*\.(?:[jt]sx|css)|public\/design\/.+|index\.html)$/.test(file) ||
-    /^src\/(?:components|app|styles)\/.*\.(?:[jt]s|json)$/.test(file)
+    /^src\/(?:components|app|styles|features\/commands)\/.*\.(?:[jt]s|json)$/.test(
+      file,
+    )
   )
     return ["desktop", "web"];
   return [];
@@ -74,6 +93,8 @@ export function uiEvidenceFingerprint(pen, mapping, inputs) {
         pen.documentId,
         pen.readbackSha256,
         mapping.id,
+        mapping.route,
+        mapping.locator,
         mapping.nodes,
         versions,
       ]),
@@ -82,15 +103,25 @@ export function uiEvidenceFingerprint(pen, mapping, inputs) {
     .digest("hex");
 }
 
-function verifiedEvidence(mapping, platform, sections, fingerprint) {
+function verifiedEvidence(mapping, platform, proof, fingerprint) {
   const evidence = mapping.evidence[platform];
+  if (evidence?.status !== "verified" || !evidence.sha256) return false;
   const section = platform + "-" + mapping.id.replaceAll(".", "-");
-  const lines = sections.get(section)?.split("\n") ?? [];
+  const relative = "evidence/" + section + ".json";
+  const lines = proof.sections.get(section)?.split("\n") ?? [];
+  const artifact = proof.readArtifact(relative);
+  if (!artifact || !lines.includes("证据文件 " + relative)) return false;
+  if (
+    createHash("sha256").update(artifact, "utf8").digest("hex") !==
+    evidence.sha256
+  )
+    return false;
+  const parsed = runtimeReceipt.safeParse(JSON.parse(artifact));
   return (
-    evidence?.status === "verified" &&
-    evidence.sha256 !== undefined &&
-    lines.includes("证据 SHA-256 " + evidence.sha256) &&
-    lines.includes("版本绑定 SHA-256 " + fingerprint)
+    parsed.success &&
+    parsed.data.mappingId === mapping.id &&
+    parsed.data.platform === platform &&
+    parsed.data.versionBindingSha256 === fingerprint
   );
 }
 
@@ -110,7 +141,7 @@ function verificationSections(path, read, changed) {
   return sections;
 }
 
-function checkMappings(map, required, covered, sections) {
+function checkMappings(map, required, covered, proof) {
   const ids = new Set();
   const issues = [];
   for (const mapping of map.mappings) {
@@ -131,7 +162,7 @@ function checkMappings(map, required, covered, sections) {
       const unverified = platformTargets(path).filter(
         (platform) =>
           !dependencies.includes(sharedInputs[platform]) ||
-          !verifiedEvidence(mapping, platform, sections, fingerprint),
+          !verifiedEvidence(mapping, platform, proof, fingerprint),
       );
       if (unverified.length)
         issues.push(
@@ -164,7 +195,14 @@ export function checkUiDelivery(changed, read, blob, baseExists = () => false) {
         );
         continue;
       }
-      const sections = verificationSections(file, read, changed);
+      const packagePath = file.slice(0, file.lastIndexOf("/") + 1);
+      const proof = {
+        sections: verificationSections(file, read, changed),
+        readArtifact: (relative) => {
+          const filename = packagePath + relative;
+          return changed.includes(filename) ? read(filename) : "";
+        },
+      };
       const map = receipt.safeParse(parse(read(file)));
       if (!map.success) {
         issues.push(
@@ -176,7 +214,7 @@ export function checkUiDelivery(changed, read, blob, baseExists = () => false) {
       }
       const problems = [
         ...checkInputs(map.data.inputs, required, blob),
-        ...checkMappings(map.data, required, covered, sections),
+        ...checkMappings(map.data, required, covered, proof),
       ];
       issues.push(...problems.map((problem) => file + ": " + problem));
     } catch (error) {

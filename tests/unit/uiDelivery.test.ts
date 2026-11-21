@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import { stringify } from "yaml";
 import {
@@ -8,77 +9,107 @@ import {
 
 const path = "src/components/settings/settings.css";
 const dependency = "src/styles/tokens.css";
-const mapping = "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml";
-const verification = mapping.replace("ui-map.yaml", "verification.md");
+const change = "docs/changes/2026-11-21-pen-ui-delivery/";
+const mapping = change + "ui-map.yaml";
+const verification = change + "verification.md";
 const uiBlob = "a".repeat(40);
 const tokenBlob = "b".repeat(40);
 const hash = "c".repeat(64);
-const evidence = { status: "verified", sha256: hash };
-const mappingRow = {
+const row = {
   id: "settings.disclosure",
   route: "/settings",
+  locator: "details > summary",
   nodes: ["gSHZ5"],
   files: [path],
   dependencies: [dependency],
-  evidence: { desktop: evidence, web: evidence },
 };
-const map = {
-  version: 1,
-  pen: {
-    documentId: "b1c8c2e7-1733-4af4-843e-5c7962ed3f49",
-    readbackSha256: hash,
-  },
-  mappings: [mappingRow],
-  inputs: { [path]: uiBlob, [dependency]: tokenBlob },
+const pen = {
+  documentId: "b1c8c2e7-1733-4af4-843e-5c7962ed3f49",
+  readbackSha256: hash,
 };
-const fingerprint = uiEvidenceFingerprint(map.pen, mappingRow, map.inputs);
-const runtime = ["desktop", "web"]
-  .map(
-    (platform) =>
-      "## " +
-      platform +
-      "-settings-disclosure\n\n证据 SHA-256 " +
-      hash +
-      "\n版本绑定 SHA-256 " +
-      fingerprint +
-      "\n",
-  )
-  .join("\n");
-const blobs = new Map([
-  [path, uiBlob],
-  [dependency, tokenBlob],
-]);
+
+function fixture(
+  component = row,
+  inputs: Record<string, string> = { [path]: uiBlob, [dependency]: tokenBlob },
+  platforms = ["desktop", "web"],
+) {
+  const artifacts = new Map<string, string>();
+  const evidence: Record<string, { status: string; sha256: string }> = {};
+  const sections = [];
+  for (const platform of platforms) {
+    const section = platform + "-settings-disclosure";
+    const relative = "evidence/" + section + ".json";
+    const proof = JSON.stringify({
+      mappingId: component.id,
+      platform,
+      versionBindingSha256: uiEvidenceFingerprint(pen, component, inputs),
+      rawEvidenceSha256: hash,
+      entrySha256: hash,
+      launch: "npm run test:ui",
+      url: "http://127.0.0.1:1423/",
+      passed: 2,
+      failed: 0,
+    });
+    artifacts.set(change + relative, proof);
+    evidence[platform] = {
+      status: "verified",
+      sha256: createHash("sha256").update(proof).digest("hex"),
+    };
+    sections.push("## " + section + "\n\n证据文件 " + relative + "\n");
+  }
+  return {
+    map: { version: 1, pen, inputs, mappings: [{ ...component, evidence }] },
+    artifacts,
+    report: sections.join("\n"),
+  };
+}
+
+const current = fixture();
+const readBlob = (name: string): string | undefined =>
+  ({ [path]: uiBlob, [dependency]: tokenBlob })[name];
 const check = (
-  record = map,
-  readBlob = (name: string) => blobs.get(name),
-  report = runtime,
+  record = current.map,
+  blob = readBlob,
+  report = current.report,
   baseExists = () => false,
+  artifacts = current.artifacts,
+  changedUi = path,
 ) =>
   checkUiDelivery(
-    [path, mapping, verification],
-    (name) => (name === mapping ? stringify(record) : report),
-    readBlob,
+    [changedUi, mapping, verification, ...artifacts.keys()],
+    (name) =>
+      name === mapping
+        ? stringify(record)
+        : name === verification
+          ? report
+          : (artifacts.get(name) ?? ""),
+    blob,
     baseExists,
   );
 
-test("current Pen mapping, scoped runtime evidence and dependencies pass", () => {
+test("current Pen mapping, checked-in platform proof and dependencies pass", () => {
   assert.deepEqual(check(), []);
-  assert.deepEqual(
-    checkUiDelivery(
-      ["src/domain/settings.ts"],
-      () => "",
-      () => undefined,
-    ),
-    [],
-  );
+  for (const input of [
+    "src/domain/settings.ts",
+    "mobile/src/storage/schemaPrimitives.ts",
+  ])
+    assert.deepEqual(
+      checkUiDelivery(
+        [input],
+        () => "",
+        () => undefined,
+      ),
+      [],
+    );
 });
 
-test("visible changes need a new package and valid live node keys", () => {
+test("visible changes need a new package and live node keys", () => {
   for (const input of [
     path,
     "src/components/settings/SettingsSectionData.ts",
+    "src/features/commands/slashCommandRegistry.ts",
     "mobile/src/ui/colorTokens.generated.json",
-  ])
+  ]) {
     assert.match(
       checkUiDelivery(
         [input],
@@ -87,87 +118,88 @@ test("visible changes need a new package and valid live node keys", () => {
       ).join(),
       /lacks a current Pen mapping/,
     );
-  const noNode = { ...map, mappings: [{ ...mappingRow, nodes: [] }] };
+  }
+  const noNode = {
+    ...current.map,
+    mappings: [{ ...current.map.mappings[0], nodes: [] }],
+  };
   assert.match(check(noNode).join(), /invalid UI receipt at mappings/);
   assert.match(
-    check(map, undefined, runtime, () => true).join(),
+    check(undefined, undefined, undefined, () => true).join(),
     /new change package/,
   );
 });
 
-test("platform proof belongs to the specific mapping and checked-in verification", () => {
-  const pending = {
-    ...map,
-    mappings: [
-      {
-        ...mappingRow,
-        evidence: {
-          web: evidence,
-          desktop: { status: "pending", sha256: hash },
-        },
-      },
-    ],
-  };
-  assert.match(check(pending).join(), /missing.*desktop/);
-  assert.match(check(map, undefined, "").join(), /missing.*desktop.*web/);
+test("mapping-specific receipts must exist and match their digest", () => {
+  assert.match(check(undefined, undefined, "").join(), /missing.*desktop.*web/);
+  assert.match(
+    check(undefined, undefined, undefined, undefined, new Map()).join(),
+    /missing.*desktop.*web/,
+  );
+  const artifacts = new Map(current.artifacts);
+  const desktop = change + "evidence/desktop-settings-disclosure.json";
+  artifacts.set(desktop, artifacts.get(desktop) + " ");
+  assert.match(
+    check(undefined, undefined, undefined, undefined, artifacts).join(),
+    /missing.*desktop/,
+  );
+
   const another = {
-    ...map,
-    mappings: [{ ...mappingRow, id: "other.disclosure" }],
+    ...current.map,
+    mappings: [{ ...current.map.mappings[0], id: "other.disclosure" }],
   };
   assert.match(check(another).join(), /missing.*desktop.*web/);
 });
 
-test("existing evidence is invalid when changed source or shared inputs drift", () => {
+test("changing route, locator, Pen or dependency invalidates the old receipt", () => {
+  for (const changed of [{ route: "/another" }, { locator: "[id=other]" }]) {
+    const remapped = {
+      ...current.map,
+      mappings: [{ ...current.map.mappings[0], ...changed }],
+    };
+    assert.match(check(remapped).join(), /missing.*desktop.*web/);
+  }
+  const penChanged = {
+    ...current.map,
+    pen: { ...pen, readbackSha256: "d".repeat(64) },
+  };
+  assert.match(check(penChanged).join(), /missing.*desktop.*web/);
+  const refreshed = {
+    ...current.map,
+    inputs: { ...current.map.inputs, [dependency]: uiBlob },
+  };
+  assert.match(check(refreshed, () => uiBlob).join(), /missing.*desktop.*web/);
+  const omitted = { ...current.map, inputs: { [path]: uiBlob } };
+  assert.match(check(omitted).join(), /invalid or duplicate UI mapping/);
+});
+
+test("recorded inputs must match actual Git blobs", () => {
   for (const stale of [path, dependency]) {
-    const issues = check(map, (name) =>
-      name === stale ? "d".repeat(40) : blobs.get(name),
+    const issues = check(current.map, (name) =>
+      name === stale ? "d".repeat(40) : readBlob(name),
     );
     assert.ok(
       issues.some((issue) => issue.includes("stale or invalid input " + stale)),
     );
   }
-  const refreshedMap = {
-    ...map,
-    inputs: { ...map.inputs, [dependency]: uiBlob },
-  };
-  assert.match(
-    check(refreshedMap, () => uiBlob).join(),
-    /missing.*desktop.*web/,
-  );
-  const omitted = { ...map, inputs: { [path]: uiBlob } };
-  assert.match(check(omitted).join(), /invalid or duplicate UI mapping/);
 });
 
 test("Expo group routes and intentional removals remain representable", () => {
   const removed = "mobile/src/app/(workspace)/retired.tsx";
   const theme = "mobile/src/ui/theme.tsx";
-  const mapped = {
-    ...map,
-    mappings: [
-      {
-        ...mappingRow,
-        files: [removed],
-        dependencies: [theme],
-        evidence: { mobile: evidence },
-      },
-    ],
-    inputs: { [removed]: "deleted", [theme]: tokenBlob },
-  };
+  const mobile = fixture(
+    { ...row, files: [removed], dependencies: [theme] },
+    { [removed]: "deleted", [theme]: tokenBlob },
+    ["mobile"],
+  );
   assert.deepEqual(
-    checkUiDelivery(
-      [removed, mapping, verification],
-      (name) =>
-        name === mapping
-          ? stringify(mapped)
-          : "## mobile-settings-disclosure\n\n证据 SHA-256 " +
-            hash +
-            "\n版本绑定 SHA-256 " +
-            uiEvidenceFingerprint(
-              mapped.pen,
-              mapped.mappings[0],
-              mapped.inputs,
-            ),
+    check(
+      mobile.map,
       (name) => (name === theme ? tokenBlob : undefined),
+      mobile.report,
+      undefined,
+      mobile.artifacts,
+      removed,
     ),
     [],
   );

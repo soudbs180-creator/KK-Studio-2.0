@@ -45,10 +45,10 @@ mappings:
     evidence:
       desktop:
         status: verified
-        sha256: 90610e96737e2527576dd9344cc5d44e1ce24d274899c768e660f264068c93bc
+        sha256: 90f2d0593a669915fdce36e16b8befe02003b8793e77637d16ffb63ce7726675
       web:
         status: verified
-        sha256: 11bba44101a54536fb68549be24213afe2943c25c8fb84c4fc64d73c0f7c119d
+        sha256: dfab2217d6ab364e5de8511a312d521368ece8957c7b4deb1fd9987cbbca6110
 inputs:
   src/components/settings/settings.css: b3826cd50a698aa21c66fc1049b10908c6e61b74
   public/design/pen/disclosure-chevron.svg: 279c00e17f98a0368e076328fe2bbd4a9e3f4ff1
