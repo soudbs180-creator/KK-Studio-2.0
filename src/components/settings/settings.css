@@ -2004,6 +2004,9 @@
 }
 
 @media (pointer: coarse) {
+  .settings-panel .settings-provider-network {
+    --ui-input-height: 44px;
+  }
   .settings-panel .settings-provider-network :is(input, select, button) {
     min-height: 44px;
   }

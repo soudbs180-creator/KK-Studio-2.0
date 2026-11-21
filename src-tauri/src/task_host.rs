@@ -576,18 +576,17 @@ impl TaskHost {
         } else {
             format!("{}/images/edits", request.base_url.trim_end_matches('/'))
         };
-        let mut builder = provider_client
+        let builder = provider_client
             .post(&endpoint)
             .bearer_auth(&secret)
             .header("Idempotency-Key", &request.idempotency_key);
         let count = request.output_indices.len() as u32;
-        let send = if attachments.is_empty() {
+        let builder = if attachments.is_empty() {
             let mut payload = json!({"model": request.model, "prompt": request.prompt, "n": count, "response_format": "b64_json"});
             if let Some(size) = request.size.as_ref().filter(|value| !value.is_empty()) {
                 payload["size"] = json!(size);
             }
-            builder = builder.json(&payload);
-            builder.send()
+            builder.json(&payload)
         } else {
             let mut form = reqwest::multipart::Form::new()
                 .text("model", request.model.clone())
@@ -638,14 +637,17 @@ impl TaskHost {
                         .map_err(|_| RunError::failed("invalid_request", "编辑蒙版格式无效"))?,
                 );
             }
-            builder.multipart(form).send()
+            builder.multipart(form)
         };
+        let http_request = builder
+            .build()
+            .map_err(|_| RunError::failed("invalid_request", "图像请求格式或认证无效"))?;
         let response = tokio::select! {
             biased;
             _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像生成，供应商最终状态需核对", vec![])),
             result = async {
                 self.network.record(Operation::Image, route);
-                send.await
+                provider_client.execute(http_request).await
             } => result.map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?,
         };
         let status = response.status();
@@ -1061,7 +1063,7 @@ async fn validated_provider_client(
     let (addresses, proxy_dns) = match lookup_host.parse::<IpAddr>() {
         Ok(address) => (vec![SocketAddr::new(address, port)], false),
         Err(_) => (
-            tokio::net::lookup_host((lookup_host, port))
+            tokio::net::lookup_host((host, port))
                 .await
                 .map_err(|_| "供应商地址解析失败")?
                 .collect(),
@@ -1085,7 +1087,7 @@ async fn validated_provider_client(
         .redirect(reqwest::redirect::Policy::none())
         .no_proxy();
     if !proxy_resolves_host {
-        client = client.resolve(lookup_host, target);
+        client = client.resolve(host, target);
     }
     if let Some(proxy) = proxy {
         client = client.proxy(proxy.transport);
