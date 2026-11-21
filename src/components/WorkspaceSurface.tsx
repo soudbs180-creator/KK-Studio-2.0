@@ -62,6 +62,7 @@ export default function WorkspaceSurface({
             element.isConnected &&
             element.getClientRects().length > 0 &&
             !element.matches(":disabled") &&
+            !element.closest("[inert]") &&
             getComputedStyle(element).visibility !== "hidden";
           const target =
             origin && canRestore(origin)
