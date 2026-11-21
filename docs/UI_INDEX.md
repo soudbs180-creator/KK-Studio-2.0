@@ -8,11 +8,11 @@
 - `505:14180`：页面类型模板配置。
 
 它们位于 Figma 文件 `0nU0A7pq6eyjwfwm1TtWkO`。旧版页面草稿、历史 A1–A9
-类型、旧字号表和旧 CSS 只作为归档证据，不能覆盖这四页。
+类型、旧字号表和旧 CSS 只作为归档证据，按下方冲突裁决使用。
 
 ## 当前 Pen 与本地交付
 
-KK Design 当前认可的 Pen 页面和组件是可见布局、图标和状态的来源。新增或改动可见 UI 时，在本次变更包的 ui-map.yaml 登记现行 Pen 节点、路由、改动文件、共享依赖的 Git blob 和各适用平台证据。现有 delivery 检查会验证映射与源码指纹。评审在 Pen MCP 回读实际节点，并对照当前构建。同步进度和受阻项记入同包 ui-tasks.json。旧 Figma 素材和截图的历史说明按原时点保留。
+KK Design 当前认可的 Pen 页面和组件是可见布局、图标和状态的来源。新增或改动可见 UI 时，在本次变更包的 ui-map.yaml 登记现行 Pen 节点、路由、改动文件、共享依赖的 Git blob 和各适用平台证据。新建交付包中的 ui-map.yaml 按映射登记现行节点、源码和公共依赖的 Git blob。适用平台在同包 verification.md 使用平台和映射 ID 组成的独立小节，记录证据 SHA-256 和版本绑定 SHA-256。版本绑定由 uiEvidenceFingerprint 按 Pen 回读与映射的 Git blob 生成。现有 delivery 检查会拒绝旧交付包、过期的代码指纹与缺失的平台证据。评审通过 Pen MCP 验证节点，同时核对实际构建及证据文件。同步进度和受阻项记入同包 ui-tasks.json。旧 Figma 素材和截图的历史说明按原时点保留。
 
 ## 1. 当前唯一承载文件
 

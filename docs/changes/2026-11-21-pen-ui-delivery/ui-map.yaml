@@ -2,9 +2,14 @@ version: 1
 pen:
   documentId: b1c8c2e7-1733-4af4-843e-5c7962ed3f49
   readbackSha256: e3a25e962612f6909be16ce402d0866424d1d66a65b3fb8308635215d94f315a
+  uri: file:///C:/Users/Administrator/.pencil/documents/b1c8c2e7-1733-4af4-843e-5c7962ed3f49/untitled.pen
+  policyNodes:
+    - QnbwN
+    - CzGXd
+    - d7z7Ci
 mappings:
   - id: settings.content-disclosure
-    route: / → 设置 → 通用 / 网络 / 模型接入
+    route: / → 设置 → 通用 / 网络 / 模型接入 / 数据管理
     nodes:
       - d7z7Ci
       - gSHZ5
@@ -12,8 +17,38 @@ mappings:
     files:
       - src/components/settings/settings.css
       - public/design/pen/disclosure-chevron.svg
-    locator: details.settings-disclosure > summary; details.model-access-manual >
-      summary
+    locator: details.settings-disclosure > summary; details.model-access-manual > summary
+    kind: common-component
+    designSemantics: 设置详情的展开状态指示
+    variants:
+      - state: collapsed
+        node: ToSeM
+        expected: 16px 描边向右，aria 原生收起态
+      - state: expanded
+        node: gSHZ5
+        expected: 16px 描边向下，aria 原生展开态
+    tokenBinding:
+      role: --kk-text-secondary
+      source: src/styles/tokens.css
+      direction: 现有 CSS 语义色 → 实际样式；Pen 描边轮廓 → SVG mask
+    dependencies:
+      - src/styles/tokens.css
+      - src/components/settings/GeneralAdvancedPreferences.tsx
+      - src/components/settings/ConnectionSettings.tsx
+      - src/components/settings/AgentConnectionSettings.tsx
+      - config/platform-versions.json
+      - src/App.tsx
+      - src/components/settings/GeneralSettings.tsx
+      - src/components/settings/LocalVideoPackages.tsx
+      - src/components/settings/LocalWorkflowSettings.tsx
+      - src/components/settings/PreferencesBackup.tsx
+    evidence:
+      desktop:
+        status: verified
+        sha256: 90610e96737e2527576dd9344cc5d44e1ce24d274899c768e660f264068c93bc
+      web:
+        status: verified
+        sha256: 11bba44101a54536fb68549be24213afe2943c25c8fb84c4fc64d73c0f7c119d
 inputs:
   src/components/settings/settings.css: b3826cd50a698aa21c66fc1049b10908c6e61b74
   public/design/pen/disclosure-chevron.svg: 279c00e17f98a0368e076328fe2bbd4a9e3f4ff1
@@ -21,13 +56,12 @@ inputs:
   src/components/settings/GeneralAdvancedPreferences.tsx: f0887127e8d0f3d4c29e2d61a5d97b53db114fca
   src/components/settings/ConnectionSettings.tsx: a82505cc40b92c07f0690bbbfdf1611ccecc1b42
   src/components/settings/AgentConnectionSettings.tsx: b253bc9ef6348d22a4f20994e363183b5e7ff3ba
-evidence:
-  desktop:
-    status: pending
-    locator: 现行启动器候选 WebView2
-  web:
-    status: verified
-    locator: verification.md#web
+  config/platform-versions.json: e711aeac4d18345a19624bd78a274ce1eff18d6b
+  src/App.tsx: c22b3fbae43e4cb02c786cade8da425203754ab4
+  src/components/settings/GeneralSettings.tsx: d977a046d7b34a8ef05f2301dfbf2d71a85ab641
+  src/components/settings/LocalVideoPackages.tsx: cfc2b8159e36610a83e5758ef152c4af2c3e5f11
+  src/components/settings/LocalWorkflowSettings.tsx: 40d6e645bf56c597e87a27fdb2abb96aae65e50f
+  src/components/settings/PreferencesBackup.tsx: 99d2ef0a6beb4ee4780a2006a2e719cff432d03e
 inventory:
   - id: settings.workspace
     nodes:
@@ -63,3 +97,95 @@ inventory:
     local:
       - src/components/ConversationHeader.tsx
     note: Pen 目标是查看全部会话，主线显示当前条数；待确认业务语义。
+instances:
+  - id: settings.disclosure.general-advanced
+    component: settings.content-disclosure
+    label: 高级偏好
+    route: / → 设置 → 通用
+    local: src/components/settings/GeneralAdvancedPreferences.tsx
+    locator: "summary: 高级偏好"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.system-preferences
+    component: settings.content-disclosure
+    label: 系统与未接入偏好
+    route: / → 设置 → 通用
+    local: src/components/settings/GeneralSettings.tsx
+    locator: "summary: 系统与未接入偏好"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.proxy
+    component: settings.content-disclosure
+    label: 独立转发代理
+    route: / → 设置 → 网络
+    local: src/components/settings/ConnectionSettings.tsx
+    locator: "summary: 独立转发代理"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.agent-connection
+    component: settings.content-disclosure
+    label: 高级连接选项
+    route: / → 设置 → 模型接入 → Codex 主 Agent
+    local: src/components/settings/AgentConnectionSettings.tsx
+    locator: "summary: 高级连接选项"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.comfy-workflows
+    component: settings.content-disclosure
+    label: ComfyUI 工作流
+    route: / → 设置 → 模型接入 → 本地
+    local: src/components/settings/LocalWorkflowSettings.tsx
+    locator: "summary: ComfyUI 工作流"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.h3-packages
+    component: settings.content-disclosure
+    label: H3 视频模型候选
+    route: / → 设置 → 模型接入 → 本地
+    local: src/components/settings/LocalVideoPackages.tsx
+    locator: "summary: H3 视频模型候选"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop 实际硬件状态
+      - Web 生产页的 IPC 夹具状态
+  - id: settings.disclosure.preferences-backup
+    component: settings.content-disclosure
+    label: 偏好备份
+    route: / → 设置 → 数据管理
+    local: src/components/settings/PreferencesBackup.tsx
+    locator: "summary: 偏好备份"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web

@@ -21,8 +21,11 @@ for (const viewport of [
     const nav = settings.getByRole("navigation", { name: "设置分类" });
     for (const [section, label] of [
       ["通用", "高级偏好"],
+      ["通用", "系统与未接入偏好"],
       ["网络", "独立转发代理"],
       ["模型接入", "高级连接选项"],
+      ["模型接入", "ComfyUI 工作流"],
+      ["数据管理", "偏好备份"],
     ]) {
       const back = settings.getByRole("button", {
         name: "返回设置分类",
@@ -33,9 +36,19 @@ for (const viewport of [
         await back.click();
       }
       await nav.getByRole("button", { name: section, exact: true }).click();
-      if (section === "模型接入") {
-        const codex = settings.getByRole("button", { name: /Codex.*主 Agent/ });
-        if (await codex.isVisible()) await codex.click();
+      if (label === "高级连接选项") {
+        await settings.getByRole("button", { name: /Codex.*主 Agent/ }).click();
+      }
+      if (label === "ComfyUI 工作流") {
+        if (viewport.width <= 767) {
+          const accessBack = settings.getByRole("button", {
+            name: "返回接入方式",
+          });
+          if (await accessBack.isVisible()) await accessBack.click();
+        }
+        await settings
+          .getByRole("button", { name: "本地", exact: true })
+          .click();
       }
       const summary = settings.locator("summary").filter({ hasText: label });
       await expect(summary).toBeVisible();
@@ -62,7 +75,7 @@ for (const viewport of [
       await expect(summary).toBeFocused();
       expect((await shape()).transform).toBe("none");
       await summary.screenshot({
-        path: info.outputPath(section + "-open.png"),
+        path: info.outputPath(label + "-open.png"),
       });
       await page.keyboard.press("Space");
       await expect(detail).not.toHaveAttribute("open", "");

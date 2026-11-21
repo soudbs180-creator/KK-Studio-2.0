@@ -18,7 +18,7 @@ reviewer 从当前 `intent/spec/plan`、适用规则、base/head SHA 和真实 d
 | 行为与回归     | 主路径和相邻流程；输入边界；错误、取消、离线、超时、stale async、焦点/Escape/IME；幂等、重试与 unknown 受理边界 |
 | 架构与平台     | 职责/导入边界；共享契约与 Desktop/Web/Mobile 能力差异；兼容、schema、升级、恢复与必要 ADR                       |
 | 安全与数据     | 密钥、授权、输入校验、文件路径、日志、原件保护；失败不能变空数据或假成功；新增依赖、权限和外部传输有依据        |
-| UI 与可用性    | 适用的最新 Figma 同状态、tokens/共享组件、实际 route/import 链、动态长文案、窄屏、键盘与可访问性                |
+| UI 与可用性    | 现行 Pen 与真实界面同状态、tokens/共享组件、实际 route/import 链、动态长文案、窄屏、键盘与可访问性                |
 | 验证与交付     | 当前 SHA 的命令/结果；Web 与 Tauri 实际产物新鲜度；PR/CI/远端门禁；发布、备份与回滚证据                         |
 
 不要重复报告格式器或 CI 已明确指出且仍等待修复的同一条问题。生成文件只检查来源和最终影响；安全或运行行为不能因“生成文件”而免审。
@@ -42,7 +42,7 @@ reviewer 从当前 `intent/spec/plan`、适用规则、base/head SHA 和真实 d
 
 按 [DEVELOPMENT.md](DEVELOPMENT.md) 和任务计划读取实际检查结果。命令/日志要有退出码、来源 SHA、环境、时间和路径；reviewer 应抽查关键失败路径，必要时重跑与风险直接相关的测试。没有运行工具时明确“仅静态 review”，不声称动态验证。
 
-UI 证据包含同状态 DOM/截图、Figma 节点、视口、URL/模式、入口和构建身份；Web development、production preview 和 Tauri release 分别取证。测试的 HTTP fixture 只证明 fixture 范围；真实 Provider/ComfyUI、账号/账单、GPU、原生重启、生产部署须各自有真实验收。缺这些证据只阻断依赖它们的结论，不能把整个项目其它本地工作冻结。
+UI 证据包含同状态 DOM/截图、现行 Pen 节点、视口、URL/模式、入口和构建身份；Web development、production preview 和 Tauri release 分别取证。测试的 HTTP fixture 只证明 fixture 范围；真实 Provider/ComfyUI、账号/账单、GPU、原生重启、生产部署须各自有真实验收。缺这些证据只阻断依赖它们的结论，不能把整个项目其它本地工作冻结。
 
 修 bug 应先复现失败再修复。review 检查是否删除、跳过、放宽断言或滥用重试使测试变绿；测试确有错误时记录独立依据并增加有效覆盖，不能盲目禁止合理测试维护。历史证据不覆盖、不伪造；更正追加勘误并链接替代结果。
 

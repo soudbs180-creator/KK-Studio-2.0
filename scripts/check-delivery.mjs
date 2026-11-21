@@ -84,6 +84,7 @@ try {
         headExists(file)
           ? git(["rev-parse", "--verify", head + ":" + file]).trim()
           : undefined,
+      baseExists,
     ),
   );
   issues.forEach((issue) => console.error(issue));

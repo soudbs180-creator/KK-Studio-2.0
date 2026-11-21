@@ -1,6 +1,6 @@
 # Windows 启动与分享
 
-唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`，登记的任务 worktree 用于隔离开发与候选验收。Windows 在实际使用的已验证 checkout 运行一次 `npm run client:shortcut`，即可生成 `KK Studio Launcher.exe` 和桌面“启动 KK Studio”图标；直接双击图标启动，后台不显示命令窗口。启动器自带当前 `src-tauri/icons/icon.ico`，快捷方式也使用该 EXE 内嵌图标，避免旧目录被移除后丢失 Logo。只创建 checkout 内入口时运行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows/install-shortcut.ps1`。
+唯一工程仓库是 `D:/KK Design`，登记的任务 worktree 用于隔离开发与候选验收。Windows 在实际使用的已验证 checkout 运行一次 `npm run client:shortcut`，即可生成 `KK Studio Launcher.exe` 和桌面“启动 KK Studio”图标；直接双击图标启动，后台不显示命令窗口。启动器自带当前 `src-tauri/icons/icon.ico`，快捷方式也使用该 EXE 内嵌图标，避免旧目录被移除后丢失 Logo。只创建 checkout 内入口时运行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows/install-shortcut.ps1`。
 
 GUI 启动器继续调用根目录 `start-kk-studio.bat --background` 和唯一新鲜度实现 `scripts/windows/desktop-release.mjs`：缺失或过期时构建，成功后才启动，已有最新 release 时不会重新编译。超过短暂等待时显示原生进度，取消只回收本次启动的进程树；失败显示提示，详细输出保存在 `%LOCALAPPDATA%/KK Studio/logs/startup-*.log`。同 checkout 的重复点击不会并发构建。命令行诊断仍可直接运行 `start-kk-studio.bat`，失败会保留 pause。
 

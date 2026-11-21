@@ -19,12 +19,18 @@
       "evidence": [
         "D:/kk-studio/output/kk-design-pen-sync-20261121/pen-after/QnbwN.png"
       ],
-      "next": "设计依赖变化后重新回读"
+      "next": "设计依赖变化后重新回读",
+      "allowed": "Pen 两节点的编辑范围和边界回读",
+      "checkpoint": "Pen MCP 保存后文档",
+      "dependencies": [],
+      "acceptance": "Pen 前后 PNG 和实际节点文字",
+      "expectedImpact": "规范及交付证据检查",
+      "blocker": null
     },
     {
       "id": "PEN-02",
       "target": "设置内容折叠",
-      "status": "待验收",
+      "status": "已完成",
       "basis": "Pen gSHZ5/ToSeM；主线原生三角",
       "scope": [
         "settings-disclosure",
@@ -36,9 +42,18 @@
         "其他类别图标"
       ],
       "evidence": [
-        "D:/kk-studio/output/kk-design-pen-sync-20261121/candidate-browser-retry.log"
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/native-expanded/native-disclosure.json",
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/expanded-browser-results.json"
       ],
-      "next": "完成 Native 运行与主题回归"
+      "next": "变更源图标、设置样式或消费者后重新验收",
+      "allowed": "settings.css、Pen 原样 Glyph 和七个共享消费者",
+      "checkpoint": "本地实现提交 d81b218c 与版本收据",
+      "dependencies": [
+        "PEN-01"
+      ],
+      "acceptance": "Desktop 与 Web 各入口的收起、展开、焦点和键盘，定位和共享依赖一致",
+      "expectedImpact": "共享选择器覆盖通用、网络、模型接入、数据管理的七处内容折叠",
+      "blocker": null
     },
     {
       "id": "PEN-03",
@@ -51,14 +66,26 @@
       "protected": [
         "其他门禁和纯领域逻辑"
       ],
-      "evidence": [],
-      "next": "核对精确提交的 CLI、独立评审与远端运行"
+      "evidence": [
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-pending.log",
+        "D:/kk-studio/output/kk-design-pen-sync-20261121/delivery-exact.log"
+      ],
+      "next": "当前候选运行精确 CLI 与独立复审，远端 CI 留待分支交付。",
+      "allowed": "现有 Git delivery 检查脚本、CI 与精确候选",
+      "checkpoint": "本地任务分支与初始拒绝收据",
+      "dependencies": [
+        "PEN-01",
+        "PEN-02"
+      ],
+      "acceptance": "缺失、跨映射、历史、漂移的证据均被拦截，当前候选通过",
+      "expectedImpact": "规范及交付证据检查",
+      "blocker": null
     },
     {
       "id": "PEN-04",
-      "target": "设置、资源、搜索、会话和新增功能差距",
-      "status": "执行中",
-      "basis": "现行 Pen 各业务主节点与主线运行宿主不一致",
+      "target": "设置工作台宿主",
+      "status": "待执行",
+      "basis": "Pen hgib1/BnwUr 与 App modal 宿主差异",
       "scope": [
         "已核验、有共同功能语义的控件"
       ],
@@ -66,8 +93,91 @@
         "未裁决交互行为",
         "非本批平台与布局"
       ],
-      "evidence": [],
-      "next": "逐项登记当前主线节点和已知业务差异"
+      "evidence": [
+        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+      ],
+      "next": "以现行设置路由为基础建立工作台插槽，逐项验证深链接和焦点。",
+      "blocker": null,
+      "dependencies": [],
+      "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
+      "expectedImpact": "单批次页面或入口",
+      "checkpoint": "e4383a1e 与当前 Pen 回读",
+      "remainingScope": "需要在同一工作台宿主下验证设置深链接、菜单返回、桌面和窄屏焦点。按独立迁移批次承接。",
+      "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
+    },
+    {
+      "id": "PEN-05",
+      "target": "资源和搜索工作台宿主",
+      "status": "待执行",
+      "basis": "Pen GuAqj/CUSuY/av3nU 与 App modal 宿主差异",
+      "scope": [
+        "已核验、有共同功能语义的控件"
+      ],
+      "protected": [
+        "未裁决交互行为",
+        "非本批平台与布局"
+      ],
+      "evidence": [
+        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+      ],
+      "next": "按资源、搜索分开核对状态所有权并迁移。",
+      "blocker": null,
+      "dependencies": [
+        "PEN-04"
+      ],
+      "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
+      "expectedImpact": "单批次页面或入口",
+      "checkpoint": "e4383a1e 与当前 Pen 回读",
+      "remainingScope": "停靠和页面宿主的迁移需要先验证资产选择、滚动、搜索结果、键盘和草稿状态延续。按独立迁移批次承接。",
+      "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
+    },
+    {
+      "id": "PEN-06",
+      "target": "会话历史入口",
+      "status": "受阻",
+      "basis": "Pen LYmMd/nEBYJ 表示全部会话，当前 ConversationHeader 展示计数",
+      "scope": [
+        "已核验、有共同功能语义的控件"
+      ],
+      "protected": [
+        "未裁决交互行为",
+        "非本批平台与布局"
+      ],
+      "evidence": [
+        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+      ],
+      "next": "裁决现有统计入口与持久化会话列表是否共存，再做状态和行为验收。",
+      "blocker": "业务动作与保存语义冲突，现有设计与功能代码不足以确定迁移目标。",
+      "dependencies": [],
+      "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
+      "expectedImpact": "单批次页面或入口",
+      "checkpoint": "e4383a1e 与当前 Pen 回读",
+      "remainingScope": "业务动作与保存语义冲突，现有设计与功能代码不足以确定迁移目标。",
+      "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
+    },
+    {
+      "id": "PEN-07",
+      "target": "独立 Mobile",
+      "status": "待执行",
+      "basis": "设置变更使用根 src，Expo Mobile 使用独立 mobile/src",
+      "scope": [
+        "已核验、有共同功能语义的控件"
+      ],
+      "protected": [
+        "未裁决交互行为",
+        "非本批平台与布局"
+      ],
+      "evidence": [
+        "docs/changes/2026-11-21-pen-ui-delivery/ui-map.yaml"
+      ],
+      "next": "核对独立 Mobile 的可达导航、主题令牌与对应 Pen 布局。",
+      "blocker": null,
+      "dependencies": [],
+      "acceptance": "核对当前 Pen、实际路径、业务状态及保护区域，提供对应平台同态证据",
+      "expectedImpact": "单批次页面或入口",
+      "checkpoint": "e4383a1e 与当前 Pen 回读",
+      "remainingScope": "本轮承接 Desktop 及 Web 设置控件，Mobile 场景独立映射和设备验收尚未开展。",
+      "allowed": "相应宿主或业务入口及其共享依赖，范围按该批 spec 细化"
     }
   ]
 }

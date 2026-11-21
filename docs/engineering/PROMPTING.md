@@ -7,7 +7,7 @@
 | 原意                 | 保留原始目标和用户用语，指出术语映射         |
 | Outcome              | 哪个用户在什么场景下获得什么结果             |
 | Scope / non-goals    | 本次范围、平台、明确不做的内容               |
-| Context              | 当前源码、规范、Figma/契约和任务依赖         |
+| Context              | 当前源码、规范、现行 Pen/契约和任务依赖         |
 | Acceptance           | Given/When/Then 或可观察成功条件             |
 | Failure modes        | 失败、取消、离线、并发、恢复和兼容           |
 | Risk / assumptions   | 可自行决定的假设与真正待确认项               |
@@ -15,6 +15,6 @@
 
 例如用户说“关掉再打开不能丢，出错也别清空”，应转换成“项目快照持久化与恢复；read failure freezes writes；stable project/node IDs；atomic write / revision CAS；损坏主备保留原件；重启与故障注入验证”。不得擅自解释成云同步、自动迁移所有历史数据或增加付费后端。
 
-用户说“界面不对”时先定位实际 route/import/loaded bundle 和最新 Figma 状态；没有证据不能随意改 CSS。用户说“合并、保留最新”时按 BRANCH-POLICY 核对所有已完成工作、开放 PR 和未合并候选，不将未完成分支强行混进发布，不重写 Git 历史。
+用户说“界面不对”时先定位实际 route/import/loaded bundle 和现行 Pen 状态；没有证据不能随意改 CSS。用户说“合并、保留最新”时按 BRANCH-POLICY 核对所有已完成工作、开放 PR 和未合并候选，不将未完成分支强行混进发布，不重写 Git 历史。
 
 普通已授权任务不需要每阶段询问；技术方案和回归由 AI 承担。关键产品歧义使用简短中文问题，并继续无依赖工作。新模型必须能解释同一任务的范围和失败边界再写代码。最终回复只给简洁中文结果、验证和限制。

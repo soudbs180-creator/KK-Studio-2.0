@@ -1,6 +1,6 @@
 # KK Studio
 
-KK Studio 是以无限画布为中心的多模态 Agent 创作工作台。本机唯一工程仓库为 `D:/kk-studio/KK-Studio-2.0`；任务在登记的隔离 worktree 开发。平台版本以[版本源](config/platform-versions.json)为准，当前能力、候选与未完成项见[项目状态](docs/governance/PROJECT_STATE.md)和[任务账本](docs/governance/task-ledger.json)。
+KK Studio 是以无限画布为中心的多模态 Agent 创作工作台。本机唯一工程仓库为 `D:/KK Design`；任务在登记的隔离 worktree 开发。平台版本以[版本源](config/platform-versions.json)为准，当前能力、候选与未完成项见[项目状态](docs/governance/PROJECT_STATE.md)和[任务账本](docs/governance/task-ledger.json)。
 
 2026-10-17本地审计A–D完成：Desktop/Web2.1.36最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`，完整verify、源码独审、官方重建、隔离Native及两个日常快捷方式正常关闭/重开通过。默认旧聊天资料仍受READ_ONLY保护，9项目原始快照和身份保持；完整迁移/protocol7、真实服务和用户验收继续由原任务承接。149项任务中85DONE、64开放；原148任务不批量结案。主仓main8c/63dirty/index及远端main d95/2.1.34保持，未合入main或发布；见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)。Mobile2.1.1仍为规划。
 
@@ -92,7 +92,7 @@ Windows 如果终端没有 npm PATH，可直接运行 `verify-kk-studio.cmd`，�
 ### 示例一：Web 工作台日常开发
 
 ```powershell
-cd D:\kk-studio\KK-Studio-2.0
+cd "D:\KK Design"
 npm run dev
 ```
 
@@ -251,6 +251,6 @@ Web 的项目、任务、创作消息与素材使用 IndexedDB 本地持久化�
 
 ## 设计和交付依据
 
-颜色、字阶和基础组件以 [Design System 1.3](docs/DESIGN-SYSTEM.md) 为现行规范；页面布局和图标资产依据 [kk Figma 主画板](https://www.figma.com/design/0nU0A7pq6eyjwfwm1TtWkO/kk?node-id=404-28667)。Workspace 基线为 `404:28667`，收纳为 `410:67357`，Landing 为 `410:59708`；历史 `1:2` 不覆盖当前 Frame。仓库是代码、测试和交付文档的权威。各能力的实现与验收范围见治理账本；未接后端或未验收的能力必须标记 `Prototype / NOT VERIFIED`，不能把本地演示或构建通过描述成真实后端生成、账号服务或云端保存。
+设计规则入口为 [DESIGN.md](DESIGN.md)，现行 Pen、运行时令牌和组件的分工见 [UI 规范索引](docs/UI_INDEX.md)。已确认的 Pen 页面提供可见布局与图标。仓库记录可运行行为、测试和交付文档。各能力的实现与验收范围见治理账本；未接后端或未验收的能力必须标记 `Prototype / NOT VERIFIED`，不能把本地演示或构建通过描述成真实后端生成、账号服务或云端保存。
 
 工程文档从需求到验证按 AI-native SDLC 组织，入口见 [docs/README.md](docs/README.md)。每个 PR 的交付包包含 intent、spec、plan、verification 和 review；历史截图与旧账本保存在 `docs/archive/`，不作为当前实现的事实来源。
