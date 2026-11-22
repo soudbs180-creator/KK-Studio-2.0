@@ -4,8 +4,10 @@ import {
   planPackageReplacement,
   type LocalStorePreset,
 } from "../../domain/localModelStore";
-import { localModelInstallation } from "../../features/models/localModelInstallation";
-import { runLocalModelInstallFlow } from "../../features/models/localModelInstallFlow";
+import {
+  localModelInstallation,
+  runLocalModelInstallFlow,
+} from "../../features/models";
 import type {
   LocalInstallStatus,
   LocalInstallationSummary,

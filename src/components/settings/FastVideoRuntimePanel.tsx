@@ -4,7 +4,7 @@ import {
   describeFastVideoRuntime,
   readFastVideoRuntimeSettings,
   writeFastVideoRuntimeSettings,
-} from "../../features/models/fastVideoRuntimeSettings";
+} from "../../features/models";
 
 export default function FastVideoRuntimePanel({
   report,
