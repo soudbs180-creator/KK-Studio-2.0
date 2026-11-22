@@ -77,3 +77,5 @@
 ## 2026-11-22 收敛复核
 
 上面的实测记录保留原范围。对照当前 Pen 和精确候选复核后，工作台设置的 Desktop 和 Web 回到待验。浮框尺寸、隐藏画布的键盘和缩放、会话切换时的设置草稿，以及 Desktop 保存挂起均需补证。共享 UI 依赖与模型展示输入的门禁回归测试共 7 项通过。详见 [Review](review.md)。
+
+在私有 Windows 桌面使用同 SHA-256 的 Desktop 2.1.45 EXE 和独立数据目录启动。实际入口为 `http://tauri.localhost/` → 项目库 → 新建项目 → 画布 → 打开设置。1440×1000 下，具名设置面板宽 872.67、高 943.67。当前 Pen 并列场景 `dutBI/gsYD1` 为 704×674。DOM 边界和截图见 `D:/kk-studio/output/kk-design-consolidation-20261122/desktop-pen-m2aUSV`。
