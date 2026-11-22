@@ -194,7 +194,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-001, FEAT-002, FEAT-008, FEAT-009, FEAT-014, FEAT-015, FEAT-022, FEAT-023, FEAT-031, FEAT-032
 - Owner role: implementer
 - Acceptance: scope-map标明已计入/补缺口/迁旧缝/演示以后且REAL勿重做; V1算进不算进与UI过关标准冻结；旁路nextAction搁置; 用户walkthrough主路径与UI必选项通过并钉版本身份; iteration-rules在钉基线后生效；未终验不得宣称整包完成
-- Branch: `main`
+- Branch: `feat/TASK-MODEL-GW-20261122-gateway-store`
 - Worktree: `D:/KK Design`
 - Modules: docs/changes/2026-11-21-whole-product-v1, docs/governance/task-ledger.json, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/PROGRESS.md
 - Verification: NOT_VERIFIED — P0-6演示诚实15浏览器PASS；P0-1已纠正为日常安装包 C:/Users/Administrator/AppData/Local/Programs/KK Design/kk-studio.exe SHA256 FE5A79B8607D4DB35115A3EB78D68D6F365297D55480ADB7D6B65A40586EF201；旧.tmp候选与Local/release EXE已quarantine。用户walkthrough与真实文本/图片链仍NOT_VERIFIED。

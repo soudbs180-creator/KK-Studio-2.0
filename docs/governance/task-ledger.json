@@ -67,7 +67,7 @@
     ],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "main",
+    "branch": "feat/TASK-MODEL-GW-20261122-gateway-store",
     "worktree": "D:/KK Design",
     "affectedModules": [
       "docs/changes/2026-11-21-whole-product-v1",
