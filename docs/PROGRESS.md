@@ -1,8 +1,31 @@
 # 当前进度
 
+## 2026-11-22 统一模型网关与本地模型商店（PARTIAL）
+
+- 任务：`TASK-MODEL-GW-20261122` / FEAT-040 / [ADR-027](architecture/adr/ADR-027-model-gateway-and-local-store.md)
+- 交付：本地商店预设与替换删旧、硬件 fitTier、供应商池路由与 `providerKeyPool`（含 localStorage 持久化）、FastVideo adapter/probe/设置面板；**设置商店已接 ADR-023 Tauri 命令**；`runLocalModelInstallFlow` 冒烟
+- 明确不做：嵌入 Codex++（AGPL）；安装包内大权重；Web 同等本地引擎
+- 验证：相关 unit PASS；Native 大文件实机下载与 FastVideo GPU 出片仍 NOT VERIFIED
+- 记录：[changes/2026-11-22-model-gateway-store/](changes/2026-11-22-model-gateway-store/intent.md)
+
+## 2026-11-22 保证最新：日常包晋升 KK Design 2.1.88
+
+- **日常最新 Desktop**：`%LocalAppData%\Programs\KK Design\kk-studio.exe` · ProductName **KK Design** · FileVersion **2.1.88** · SHA256 `49B68581…B40A30` · mtime 2026-11-22 21:44+08。桌面/开始菜单快捷方式已更新；烟测窗口标题「KK Design」。
+- **晋升来源**：FULL-PRODUCT 工作树已验收候选；旧 2.1.81 备份在 `.tmp/quarantine-old-desktop-20261122-214658/pre-promote-2.1.81-*`。
+- **工程仓**：`D:/KK Design`；过渡仓已移入 `D:/KK-Studio-transition-quarantine-20261122/`。
+- 整包终验仍 NOT_VERIFIED（真实文本/图片走查待用户）。
+
+## 2026-11-22 Desktop 入口纠正：废除旧候选包
+
+用户反馈误开旧 UI。已将 `.tmp/whole-v1-desktop` 候选、`%LocalAppData%\KK Studio`（11-07）、`KK-Studio-2.0` release（11-15）EXE 移入 `D:/KK Design/.tmp/quarantine-old-desktop-20261122-214658/`；walkthrough / HANDOFF / verification / blockers 改为**只认**日常安装包 `C:\Users\Administrator\AppData\Local\Programs\KK Design\kk-studio.exe`（SHA256 `FE5A79B8…EF201`，mtime 2026-11-22）。Agent 禁止再启动旧包。整包终验仍 NOT_VERIFIED。
+
+## 2026-11-21 Desktop 整包 V1 需求落地（文档/治理；产品终验未做）
+
+新增 TASK-WHOLE-V1-20261121：整盘跑通 + UI 过关 + 可持续迭代。已交付能力地图、范围冻结、走查单、迭代规矩；61 条旁路任务账本搁置。续作：P0-6 演示诚实标注已合入并 15 浏览器 PASS；P0-1 曾用本树 `.tmp` 候选烟测（**2026-11-22 已作废作终验入口**）；fixture 文本/图片 23/23；浏览器 P0-7 已收赘字/密度/行距并矮屏抽查，`capability-model-access` 9/9；`Failed to fetch` 已中文化。产品整包仍 NOT_VERIFIED，待用户用日常「KK Design」安装包 walkthrough（真实文本/图片 + 重开）。见 [changes/2026-11-21-whole-product-v1/](changes/2026-11-21-whole-product-v1/intent.md)。
+
 ## 2026-11-21 桌面模型请求线路
 
-桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。
+桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。V1 收口期该任务旁路搁置。
 
 ## 2026-10-19 统一2.1.42：公开下载资产名修复（IN_PROGRESS / NOT_VERIFIED）
 

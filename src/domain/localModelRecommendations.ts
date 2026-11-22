@@ -4,6 +4,7 @@ import {
   localVideoModelPackages,
   planLocalModelDownloads,
 } from "./localModelPackages.ts";
+import { fitTierFromRecommendation } from "./localModelStore.ts";
 
 const bytes = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 const label = z
@@ -215,17 +216,32 @@ export function recommendLocalModels(
       evidence: "estimate",
       runtimeAcceptance: "unverified",
       toolAcceptance: "unverified",
+      fitTier: fitTierFromRecommendation({
+        status,
+        requiredFreeVramBytes,
+        freeVramBytes: resources.freeVramBytes,
+      }),
     };
   });
   const preferred = profiles.find((item) => item.status === "alternative");
   return {
     preferredId: preferred?.model.id ?? null,
-    profiles: profiles.map((profile) => ({
-      ...profile,
-      status: profile === preferred ? ("recommended" as const) : profile.status,
-    })),
+    profiles: profiles.map((profile) => {
+      const status =
+        profile === preferred ? ("recommended" as const) : profile.status;
+      return {
+        ...profile,
+        status,
+        fitTier: fitTierFromRecommendation({
+          status,
+          requiredFreeVramBytes: profile.requiredFreeVramBytes,
+          freeVramBytes: resources.freeVramBytes,
+        }),
+      };
+    }),
     manualSelectionAllowed: true,
     installationValidationRequired: true,
+    autoDownloadOnFirstLaunch: false as const,
     videoPackages: recommendVideoPackages(report, resources),
     agentFramework: {
       name: "Qwen-Agent",
@@ -254,6 +270,26 @@ export function recommendLocalModels(
         license: null,
         runtimeAcceptance: "unverified",
         reason: "verify-existing-local-workflow-first",
+      },
+      {
+        id: "inkling-2-mini-iq4-nl",
+        modality: "vision-language",
+        weightBytes: 17_600_000_000,
+        sourceUrl: "https://huggingface.co/ggml-org/Inkling-2-Mini-GGUF",
+        revision: null,
+        license: "Apache-2.0",
+        runtimeAcceptance: "unverified",
+        reason: "community-gguf-sha-pin-required-before-install",
+      },
+      {
+        id: "fastvideo-runtime",
+        modality: "video",
+        weightBytes: null,
+        sourceUrl: "https://github.com/hao-ai-lab/FastVideo",
+        revision: null,
+        license: "Apache-2.0",
+        runtimeAcceptance: "unverified",
+        reason: "optional-external-runtime-adapter",
       },
     ],
   };

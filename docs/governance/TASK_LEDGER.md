@@ -6,22 +6,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | REVIEW | 进行中 | P0 | none | root | 固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁 |
-| TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复、数据兼容和三端正式发布 | IN_PROGRESS | 进行中 | P1 | none | root-release | 一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
-| TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
+| TASK-MODEL-GW-20261122 | 统一模型网关与本地模型商店 | PARTIAL | 进行中 | P2 | TASK-AI-GATEWAY-001 | root | 接通 ADR-023 Native 下载 UI；FastVideo 实机双门；多 Key 持久化接到凭据库 |
+| TASK-WHOLE-V1-20261121 | Desktop整包V1跑通、UI过关与基线迭代规矩 | IN_PROGRESS | 进行中 | P0 | T5, BACKEND-TEXT-NODE, BACKEND-CONVERSATION | root | 只用桌面KK Design安装包按walkthrough完成主路径与UI终验；禁止启动.tmp/quarantine旧EXE；通过后钉基线 |
+| TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | REVIEW | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁 |
+| TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复、数据兼容和三端正式发布 | IN_PROGRESS | 进行中 | P3 | none | root-release | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
+| TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P3 | TASK-MOBILE-12AI-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
-| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
-| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
+| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
+| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | 已完成 | P1 | TASK-IMAGE-EDIT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | 已完成 | P3 | TASK-MODEL-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-IMAGE-EDIT-001-unified-mask 已通过 PR#41 8c921a52 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
-| TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | 未完成 | P1 | TASK-IMAGE-EDIT-001 | root | 冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。 |
+| TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | 未完成 | P1 | TASK-IMAGE-EDIT-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。 |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 fix/TASK-UI-013-single-row-titlebar 已通过 PR#40 1d6f640a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | 已完成 | P3 | none | root | 保留当前证据；正式安装器、签名发布、托管 CI 与用户验收按各自门禁继续回读 |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-MODEL-001-capabilities 已通过 PR#36 1af0357b 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
@@ -35,21 +37,21 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T3b | 完整项目包导出导入与恢复 | DONE | 已完成 | P3 | T3a | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T4 | 统一实际图片生成入口及健康语义 | DONE | 已完成 | P3 | T3b, TASK-PROV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
-| T6 | Desktop ComfyUI最小链实现 | PARTIAL | 进行中 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| T6 | Desktop ComfyUI最小链实现 | PARTIAL | 进行中 | P2 | T5 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | 未完成 | P2 | T4 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。 |
+| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。 |
 | T7 | Desktop可用版本及安装恢复验收 | PARTIAL | 进行中 | P2 | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root | 补充负责人、优先级、分支和下一步验收证据 |
-| T8 | 成熟Core职责和平台能力边界 | TODO | 未完成 | P2 | T7 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| T9 | Web本地版及浏览器容量/离线能力 | TODO | 未完成 | P2 | T8 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| T10-PREP | VPS发布、备份回滚与部署配置准备 | PARTIAL | 未完成 | P2 | T9 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| T10 | VPS staging和生产实机验收 | BLOCKED | 未完成 | P2 | T10-PREP | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| T11 | 旧Web/Vercel切换与退役 | BLOCKED | 未完成 | P2 | T10 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| T12 | Mobile 独立形态与手机适配 | TODO | 未完成 | P2 | T11 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| UI-001 | UI tokens和共享组件契约 | PARTIAL | 进行中 | P2 | TASK-GOV-001, TASK-DS-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| T8 | 成熟Core职责和平台能力边界 | TODO | 未完成 | P2 | T7 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| T9 | Web本地版及浏览器容量/离线能力 | TODO | 未完成 | P2 | T8 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| T10-PREP | VPS发布、备份回滚与部署配置准备 | PARTIAL | 进行中 | P2 | T9 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| T10 | VPS staging和生产实机验收 | BLOCKED | 未完成 | P2 | T10-PREP | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：复核阻塞条件，解除后重新验证并保留原失败证据 |
+| T11 | 旧Web/Vercel切换与退役 | BLOCKED | 未完成 | P2 | T10 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：复核阻塞条件，解除后重新验证并保留原失败证据 |
+| T12 | Mobile 独立形态与手机适配 | TODO | 未完成 | P2 | T11 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| UI-001 | UI tokens和共享组件契约 | PARTIAL | 进行中 | P2 | TASK-GOV-001, TASK-DS-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
 | UI-002 | 窄屏composer和动态文案溢出 | DONE | 已完成 | P3 | UI-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | 未完成 | P2 | UI-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | 未完成 | P2 | UI-002, UI-003, TASK-DS-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| PERF-001 | 原生素材缩略图/分页及内存IO | PARTIAL | 进行中 | P2 | T3a | root | 补充负责人、优先级、分支和下一步验收证据 |
+| UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | 进行中 | P2 | UI-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | 进行中 | P2 | UI-002, UI-003, TASK-DS-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| PERF-001 | 原生素材缩略图/分页及内存IO | PARTIAL | 进行中 | P2 | T3a | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
 | EXT-GIT | 远端PR与main保护规则 | DONE | 已完成 | P3 | TASK-GOV-001, T0 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | 已完成 | P3 | TASK-GOV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | 已完成 | P3 | T0, TASK-GOV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -62,27 +64,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | DONE | 已完成 | P3 | T3a | finish_asset_performance | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | DONE | 已完成 | P3 | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | DONE | 已完成 | P3 | TASK-GOV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | 未完成 | P2 | TASK-GOV-001, T6 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | 未完成 | P2 | TASK-GOV-002 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | PARTIAL | 未完成 | P2 | TASK-CAP-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | 进行中 | P2 | TASK-GOV-001, T6 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | 进行中 | P2 | TASK-GOV-002 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | PARTIAL | 进行中 | P2 | TASK-CAP-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-MCP-REGISTRY-001 | MCP 多标签页配置写入不丢失 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-MCP-REGISTRY-002 | 旧版超限 MCP 配置无损恢复 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | 已完成 | P3 | TASK-KK2-MAIN-SYNC | root | 保留当前证据，合并后按原验收范围回读主线 |
-| BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | 进行中 | P2 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步 |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | 进行中 | P2 | T5 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | TODO | 未完成 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| BACKEND-MCP-AUTO | MCP 工具自动调用编排 | TODO | 未完成 | P2 | TASK-CAP-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| BACKEND-PLATFORM | 平台账号/积分/云同步/记忆/代理后端 | TODO | 未完成 | P2 | T10-PREP, T10 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| BACKEND-ASTRA-001 | Astra 研究助手实现 | TODO | 未完成 | P2 | TASK-ASTRA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | TODO | 未完成 | P2 | T5 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| BACKEND-MCP-AUTO | MCP 工具自动调用编排 | TODO | 未完成 | P2 | TASK-CAP-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| BACKEND-PLATFORM | 平台账号/积分/云同步/记忆/代理后端 | TODO | 未完成 | P2 | T10-PREP, T10 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| BACKEND-ASTRA-001 | Astra 研究助手实现 | TODO | 未完成 | P2 | TASK-ASTRA-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
 | UI-SKILL-POPOVER-001 | 窄屏首页弹层遮挡修复与 Skill 空态断言更新 | DONE | 已完成 | P3 | TASK-CAP-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-RULES-003 | 修复功能状态与运行证据门禁 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | BACKEND-CONVERSATION | 对话面板文本多轮能力与实际状态收敛 | PARTIAL | 进行中 | P2 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | 进行中 | P2 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-DS-002 | Design System逐页迁移与桌面验收 | DONE | 已完成 | P3 | TASK-DS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-005 | 新增功能 UI 入口与能力展示对齐 | DONE | 已完成 | P3 | TASK-DS-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-006 | 折叠与弹层交互、画布重叠和缩放背景修复 | DONE | 已完成 | P3 | TASK-UI-005 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-AGENT-001 | 默认 Codex 主 Agent 与 KK 生成任务接入 | PARTIAL | 未完成 | P2 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-AGENT-002 | 桌面本地 Agent 托管与其他登录软件适配 | PARTIAL | 未完成 | P2 | TASK-AGENT-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-AGENT-001 | 默认 Codex 主 Agent 与 KK 生成任务接入 | PARTIAL | 进行中 | P2 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-AGENT-002 | 桌面本地 Agent 托管与其他登录软件适配 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | 已完成 | P3 | TASK-UI-006, TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | 已完成 | P3 | TASK-UI-007, TASK-AGENT-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | 已完成 | P3 | TASK-AGENT-001, TASK-AGENT-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -92,15 +94,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | DONE | 已完成 | P1 | TASK-RULES-004 | root | 保留dc53317b exact review收据与8个未验证日志边界；如后续获得原始日志，再以新证据包单独勘误。 |
 | TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-ORCH-001-agent-orchestration-closure 已通过 PR#14 f6264385 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | DONE | 已完成 | P3 | TASK-ORCH-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-ORCH-002-stage-workbench 已通过 PR#35 5dd6e6dd 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
-| TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | 未完成 | P2 | TASK-ORCH-001, BACKEND-MEDIA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | 进行中 | P2 | TASK-ORCH-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。 |
-| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
+| TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | 未完成 | P2 | TASK-ORCH-001, BACKEND-MEDIA-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | 进行中 | P2 | TASK-ORCH-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据 |
+| TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。 |
+| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-PROV-002-provider-connectivity 已通过 PR#16 a89792ad 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | 已完成 | P3 | TASK-COMPARE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | 未完成 | P2 | TASK-VERSION-001, BACKEND-PLATFORM | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | 进行中 | P2 | TASK-VERSION-001, BACKEND-PLATFORM | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | 已完成 | P3 | TASK-VERSION-001, T10-PREP | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | DONE | 已完成 | P3 | T10-PREP, T10, T11 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-CANVAS-001 | 画布会话分栏与固定侧栏交互修复 | DONE | 已完成 | P3 | TASK-UI-007 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -109,13 +111,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROJECT-001 | 项目落地与分支收敛 | DONE | 已完成 | P3 | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | DONE | 已完成 | P3 | TASK-UI-008, TASK-AGENT-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | 继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。 |
-| TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL | 未完成 | P2 | TASK-PROV-002 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | PARTIAL | 未完成 | P2 | TASK-PROV-002, TASK-PROV-003 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | 进行中 | P2 | TASK-AGENT-003 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | 进行中 | P2 | TASK-AGENT-004 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | 未完成 | P2 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | 未完成 | P2 | TASK-MEMORY-001 | MainAgent | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。 |
+| TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL | 进行中 | P2 | TASK-PROV-002 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | PARTIAL | 进行中 | P2 | TASK-PROV-002, TASK-PROV-003 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | 进行中 | P2 | TASK-AGENT-003 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | 进行中 | P2 | TASK-AGENT-004 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | 进行中 | P2 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | 进行中 | P2 | TASK-MEMORY-001 | MainAgent | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-AGENT-008 | Codex 原生生图事件传输与短提示词审计 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-AGENT-008-image-transport 已通过 PR#33 21d121d2 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
@@ -127,24 +129,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-007 | Selected model is at capacity 错误分类与可用模型切换 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P1 | TASK-GOV-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 进行中 | P1 | TASK-GOV-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | DONE | 已完成 | P1 | none | root | 保留exact-SHA与独立review收据；Hosted delivery、Windows安装、第二环境、发布和用户验收继续由TASK-AGENT-010及发布门禁承担。 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | DONE | 已完成 | P1 | none | root | 保留当前证据；合并或发布前按本任务原验收范围回读主线，不重新引入 pnpm 锁文件。 |
-| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
-| TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 未完成 | P1 | TASK-LAUNCH-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
-| TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
-| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | PARTIAL | 未完成 | P1 | TASK-GOV-003 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 进行中 | P3 | TASK-LAUNCH-001 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
+| TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P3 | TASK-GOV-003 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
+| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | PARTIAL | 进行中 | P3 | TASK-GOV-003 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-CCSWITCH-LEARN-20261014 | 澄清供应商编辑状态并验证跨存储中断恢复 | DONE | 已完成 | P1 | TASK-AGENT-RECOVERY-20261013 | root | 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。 |
-| TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | 单独复证production并修正宽图主体几何/端口锚点 |
+| TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：单独复证production并修正宽图主体几何/端口锚点 |
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
@@ -152,23 +154,61 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | DONE | 已完成 | P1 | TASK-223-ACTIONS-20261014 | root | 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。 |
 | TASK-UI-DETAILS-20261015 | 统一输入框、设置密度和卡片空态UI | DONE | 已完成 | P1 | TASK-SETTINGS-LATEST-20261015 | root | 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。 |
 | TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | DONE | 已完成 | P1 | TASK-UI-DETAILS-20261015 | root | 本任务原范围关闭；新首页默认Codex、来源和输入/弹层修复由TASK-CODEX-HOME-20261015继续。 |
-| TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | PARTIAL | 未完成 | P1 | TASK-UI-FULL-20261015, TASK-EXPLORER-GDI-20261015 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 未完成 | P1 | TASK-CODEX-HOME-20261015 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 未完成 | P1 | TASK-GOV-006 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | PARTIAL | 进行中 | P3 | TASK-UI-FULL-20261015, TASK-EXPLORER-GDI-20261015 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 进行中 | P3 | TASK-CODEX-HOME-20261015 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P3 | TASK-GOV-006 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | DONE | 已完成 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 测试安全GDI范围已闭环，保留原分支与证据；产品/日常客户端真实验收仍按各任务继续。 |
-| TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
-| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
-| TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
-| TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
-| TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+| TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
+| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P3 | TASK-CODEX-HOME-20261015 | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
+| TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
+| TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 进行中 | P3 | none | issue68-specialist | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
+| TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P3 | none | root | V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+
+## TASK-MODEL-GW-20261122 — 统一模型网关与本地模型商店
+
+- Goal: 落地本地模型商店（零强制下载、硬件 fitTier、替换删旧）、供应商池路由原语，并将 FastVideo 作为可选 Desktop 视频适配器；Codex++ 仅作 AGPL 外参考
+- Scope: ADR-027、intent/spec/plan、localModelStore、设置商店 UI、providerPoolRouting、Scheduler.resolveCandidates、FastVideo adapter 与单测。不含嵌入 Codex++、不含安装包内权重、不含 FastVideo 实机终验、不含音频 REAL。
+- Display status: 进行中
+- Priority: P2 — 用户确认网关/本地商店落地路线；解冻 Gateway 旁路中与商店相关的契约层
+- Requirement refs: ledger:TASK-MODEL-GW-20261122
+- Feature IDs: FEAT-040, FEAT-038
+- Owner role: repository-maintainer
+- Acceptance: 首次安装设置可见推荐且无自动下载; 16GB 档 fitTier 指向可跑量化档; 更新替换默认删旧并需确认; model/provider/group 路由与多 Key 原语单测通过; FastVideo 未配置失败原因明确；mock runner 可完成文生视频状态机
+- Branch: `feat/TASK-MODEL-GW-20261122-gateway-store`
+- Worktree: `D:/KK Design`
+- Modules: docs/architecture/adr/ADR-027-model-gateway-and-local-store.md, docs/changes/2026-11-22-model-gateway-store/, src/domain/localModelStore.ts, src/features/ai-gateway/providerPoolRouting.ts, src/integrations/generation/fastVideoAdapter.ts, src/components/settings/LocalModelStorePanel.tsx
+- Verification: PARTIAL — 领域与适配器单测 PASS；Native 大文件下载与 FastVideo 实机 GPU 出片 NOT VERIFIED
+- Evidence: [docs/changes/2026-11-22-model-gateway-store/verification.md](../../docs/changes/2026-11-22-model-gateway-store/verification.md), [tests/unit/localModelStore.test.ts](../../tests/unit/localModelStore.test.ts), [tests/unit/providerPoolRouting.test.ts](../../tests/unit/providerPoolRouting.test.ts), [tests/unit/fastVideoAdapter.test.ts](../../tests/unit/fastVideoAdapter.test.ts)
+- Next action: 接通 ADR-023 Native 下载 UI；FastVideo 实机双门；多 Key 持久化接到凭据库
+- Last verified: 2026-11-22
+- Updated: 2026-11-22
+
+## TASK-WHOLE-V1-20261121 — Desktop整包V1跑通、UI过关与基线迭代规矩
+
+- Goal: 冻结Desktop整包V1完成定义，盘点能力，搁置旁路，消除挡整盘项并完成用户终验钉基线，之后按保基线-收新能力-抬基线迭代
+- Scope: docs/changes/2026-11-21-whole-product-v1, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/PROGRESS.md, docs/governance/task-ledger.json；产品挡项仅限plan P0队列
+- Display status: 进行中
+- Priority: P0 — 模块迭代缺少整包终验；整盘跑通是后续所有增量的前置
+- Requirement refs: user:整盘跑通UI过关可持续迭代, docs/governance/PROJECT_GOALS.md, docs/features/BACKEND-ROADMAP.md
+- Feature IDs: FEAT-001, FEAT-002, FEAT-008, FEAT-009, FEAT-014, FEAT-015, FEAT-022, FEAT-023, FEAT-031, FEAT-032
+- Owner role: implementer
+- Acceptance: scope-map标明已计入/补缺口/迁旧缝/演示以后且REAL勿重做; V1算进不算进与UI过关标准冻结；旁路nextAction搁置; 用户walkthrough主路径与UI必选项通过并钉版本身份; iteration-rules在钉基线后生效；未终验不得宣称整包完成
+- Branch: `feat/TASK-MODEL-GW-20261122-gateway-store`
+- Worktree: `D:/KK Design`
+- Modules: docs/changes/2026-11-21-whole-product-v1, docs/governance/task-ledger.json, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/PROGRESS.md
+- Verification: NOT_VERIFIED — P0-6演示诚实15浏览器PASS；P0-1已纠正为日常安装包 C:/Users/Administrator/AppData/Local/Programs/KK Design/kk-studio.exe SHA256 FE5A79B8607D4DB35115A3EB78D68D6F365297D55480ADB7D6B65A40586EF201；旧.tmp候选与Local/release EXE已quarantine。用户walkthrough与真实文本/图片链仍NOT_VERIFIED。
+- Evidence: [docs/changes/2026-11-21-whole-product-v1/scope-map.md](../../docs/changes/2026-11-21-whole-product-v1/scope-map.md), [docs/changes/2026-11-21-whole-product-v1/intent.md](../../docs/changes/2026-11-21-whole-product-v1/intent.md), [docs/changes/2026-11-21-whole-product-v1/spec.md](../../docs/changes/2026-11-21-whole-product-v1/spec.md), [docs/changes/2026-11-21-whole-product-v1/plan.md](../../docs/changes/2026-11-21-whole-product-v1/plan.md), [docs/changes/2026-11-21-whole-product-v1/walkthrough.md](../../docs/changes/2026-11-21-whole-product-v1/walkthrough.md), [docs/changes/2026-11-21-whole-product-v1/iteration-rules.md](../../docs/changes/2026-11-21-whole-product-v1/iteration-rules.md), [docs/changes/2026-11-21-whole-product-v1/verification.md](../../docs/changes/2026-11-21-whole-product-v1/verification.md), [docs/changes/2026-11-21-whole-product-v1/blockers-queue.md](../../docs/changes/2026-11-21-whole-product-v1/blockers-queue.md)
+- Next action: 只用桌面KK Design安装包按walkthrough完成主路径与UI终验；禁止启动.tmp/quarantine旧EXE；通过后钉基线
+- Last verified: 2026-11-22
+- Updated: 2026-11-22
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
 - Goal: 合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础
 - Scope: 既有架构/布局检查器规则和回归、开发依赖、真实origin基线、治理入口、五件套与台账
 - Display status: 进行中
-- Priority: P0 — 工具栏定位与当前用户v3数据兼容阻断统一发布
+- Priority: P3 — 工具栏定位与当前用户v3数据兼容阻断统一发布；V1收口期降为旁路注意力（原优先级保留字段=P0）
 - Requirement refs: user:主线合流, AGENTS.md, docs/engineering/BRANCH-POLICY.md
 - Feature IDs: none
 - Owner role: implementer
@@ -178,16 +218,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: config, scripts/governance, scripts/check-governance.mjs, tests/unit/architectureRules.test.ts, tests/unit/repoLayoutRules.test.ts, package.json, package-lock.json, docs/governance, docs/changes/2026-10-30-origin-baseline-bootstrap
 - Verification: PARTIAL — 本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。
 - Evidence: [docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md](../../docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md)
-- Next action: 固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁
 - Last verified: 2026-10-30
-- Updated: 2026-10-30
+- Updated: 2026-11-21
 
 ## TASK-CANVAS-RELEASE-20261018 — 统一工具栏修复、数据兼容和三端正式发布
 
 - Goal: 正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置
 - Scope: Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同、插件迟到注册后的恢复节点与菜单同步重绘、provider测试完成边界及fixture连接诊断、Agent打包单测自有sandbox的有界清理重试、安装验收先于新建项目验证首页Agent启停以避免自动prepare竞态、GitHub公开Release资产空格转点后的实际下载路径对齐、侧栏物理点击回归显式等待现有enabled存储写入许可的test-only维护
 - Display status: 进行中
-- Priority: P1 — 工具栏定位与当前用户v3数据兼容阻断统一发布
+- Priority: P3 — 工具栏定位与当前用户v3数据兼容阻断统一发布；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: docs/changes/2026-10-18-unified-toolbar-release/intent.md, docs/changes/2026-10-18-chat-draft-paint-sync/intent.md, docs/changes/2026-10-19-installer-clean-build/intent.md, docs/changes/2026-10-19-installer-lifecycle-order/intent.md, docs/changes/2026-10-19-release-asset-name/intent.md
 - Feature IDs: FEAT-009, FEAT-028
 - Owner role: implementer
@@ -197,16 +237,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/canvas, src/runtime, src/domain, src/features/creation, src-tauri, mobile, tests, config/platform-versions.json, docs/changes/2026-10-18-unified-toolbar-release, docs/governance, docs/features, docs/PROGRESS.md, src/components/ConversationPanel.tsx, docs/changes/2026-10-18-chat-draft-paint-sync, scripts/windows/installer-receipt.mjs, .gitattributes, .github/workflows/windows-release.yml, docs/changes/2026-10-19-installer-clean-build, src/features/plugins/nodeRegistry.ts, src/components/nodes/PluginNode.tsx, src/components/canvas/AddNodeMenu.tsx, tests/unit/agentPackage.test.ts, tests/desktop/installer.mjs, docs/changes/2026-10-19-installer-lifecycle-order, src/runtime/appInfo.ts, tests/browser/platform-version.spec.ts, tests/desktop/platform-version.mjs, docs/changes/2026-10-19-release-asset-name, tests/browser/sidebar-rail-interaction.spec.ts
 - Verification: NOT_VERIFIED — TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。
 - Evidence: [docs/changes/2026-10-18-unified-toolbar-release/intent.md](../../docs/changes/2026-10-18-unified-toolbar-release/intent.md), [docs/changes/2026-10-18-unified-toolbar-release/verification.md](../../docs/changes/2026-10-18-unified-toolbar-release/verification.md), [docs/changes/2026-10-18-chat-draft-paint-sync/verification.md](../../docs/changes/2026-10-18-chat-draft-paint-sync/verification.md), [docs/changes/2026-10-19-installer-clean-build/verification.md](../../docs/changes/2026-10-19-installer-clean-build/verification.md), [docs/changes/2026-10-19-installer-lifecycle-order/verification.md](../../docs/changes/2026-10-19-installer-lifecycle-order/verification.md), [docs/changes/2026-10-19-release-asset-name/intent.md](../../docs/changes/2026-10-19-release-asset-name/intent.md), [docs/changes/2026-10-19-release-asset-name/verification.md](../../docs/changes/2026-10-19-release-asset-name/verification.md)
-- Next action: 一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。
 - Last verified: 2026-10-19
-- Updated: 2026-10-19
+- Updated: 2026-11-21
 
 ## TASK-MOBILE-COMPOSER-001 — 手机结果优先、完整创作输入与圆形发送
 
 - Goal: 菜单任务/历史先显示结果，详情分层；手机与桌面同功能语义、六入口可用与圆形发送，补12ai参考编辑/本次尺寸，保护旧资料及单回滚。
 - Scope: 独立Mobile结果页/输入/语音/上传/创作库与明确12ai图片协议、Desktop共享发送源码和无额度验证；尺寸仅运行时并捕获已有task.imageSize，不改draft/schema/storage/backup，不替换日常原生安装器。
 - Display status: 进行中
-- Priority: P1 — 用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。
+- Priority: P3 — 用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: docs/changes/2026-10-18-mobile-composer/intent.md, docs/changes/2026-10-18-mobile-composer/spec.md
 - Feature IDs: FEAT-028
 - Owner role: implementation-integrator
@@ -216,9 +256,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: mobile/src/screens, mobile/src/ui, mobile/src/application/application.ts, mobile/src/application/types.ts, mobile/src/application/workflow.ts, mobile/src/services/providerClient.ts, mobile/src/services/providerTypes.ts, mobile/src/services/twelveAiProtocol.ts, mobile/tests, tests/mobile-web, src/components/UiIcon.tsx, src/components/AgentActionButton.tsx, src/components/StartComposer.tsx, src/styles/composer.css, tests/browser/composer-round-send.spec.ts, config/platform-versions.json, docs/changes/2026-10-18-mobile-composer, docs/governance, docs/features/feat-028-mobile.md, docs/PROGRESS.md, docs/changes/2026-10-18-mobile-composer-production-receipt
 - Verification: NOT_VERIFIED — 产品PR72正常squash b457/treebbcab与正式独审791e同树；全63文件独审/57定向测试PASS。main quality39124025635完整attempt2五项、guards39124025636双平台、新health39127523980实际health.ok=true均PASS；原attempt1 managed-web15秒spawnSync超时、旧health暂停403、零jobs异常UNKNOWN保留，准确根因未证。正式Release416447150/v2.1.40/Web部署39128852497成功，公开build-info/CI手机cbc0入口同源。Hosted main Mobile40/40首试/retry0；本地433/完整verify/窄屏40/40与旧v39完整snapshot/backup合成兼容及预算沿原包。线上实际320/390六控件44/48圆形同排、模型名打开picker，上传/参数/扩展面板可开；任务结果优先、详情结果→提示词→更多，旧文本刷新/图片830495B SHA64a6af6e与unknown0/1不变。只读库存current40/唯一previous39、前39manifest/archive与配置/auth/PID观察保持，独立18项PASS。40普通停留927.716秒后刷新图片可见/再次UI导出逐字节一致，完整捕获范围Provider0/POST0且临时调试已清理、实体Android接受待补；0新增真实生成，不改schema/storage/DB/权限，不写canonical。当前docs HEAD另需Delivery/独审/Hosted/正常PR；FEAT028 PARTIAL/T12开放。
 - Evidence: [docs/changes/2026-10-18-mobile-composer/intent.md](../../docs/changes/2026-10-18-mobile-composer/intent.md), [docs/changes/2026-10-18-mobile-composer/spec.md](../../docs/changes/2026-10-18-mobile-composer/spec.md), [docs/changes/2026-10-18-mobile-composer/plan.md](../../docs/changes/2026-10-18-mobile-composer/plan.md), [docs/changes/2026-10-18-mobile-composer/verification.md](../../docs/changes/2026-10-18-mobile-composer/verification.md), [docs/changes/2026-10-18-mobile-composer/review.md](../../docs/changes/2026-10-18-mobile-composer/review.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/intent.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/intent.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/spec.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/spec.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/plan.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/plan.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/verification.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/verification.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/review.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/review.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/release.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/release.md)
-- Next action: 完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。
 - Last verified: 2026-10-18
-- Updated: 2026-10-18
+- Updated: 2026-11-21
 
 ## TASK-MOBILE-12AI-001 — 12ai手机端图片自动归档与文本视频协议接入
 
@@ -282,7 +322,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 实施用户批准的统一方案，保留本地数据与身份，按 Desktop→Web 验收真实功能链和交互。
 - Scope: 详见 docs/changes/2026-10-15-kk-unified/spec.md；涵盖项目仓库、模型和 Agent、媒体、统一界面、账号与手动加密备份。
 - Display status: 进行中
-- Priority: P1 — 用户明确批准的统一产品修复与重构。
+- Priority: P3 — 用户明确批准的统一产品修复与重构。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: docs/changes/2026-10-15-kk-unified/spec.md, docs/changes/2026-10-15-unified-provider-access/intent.md
 - Feature IDs: FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-008, FEAT-009, FEAT-014, FEAT-015, FEAT-017, FEAT-018, FEAT-019, FEAT-022, FEAT-023, FEAT-026, FEAT-030, FEAT-031, FEAT-032, FEAT-037
 - Owner role: implementation-integrator
@@ -292,16 +332,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
 - Verification: PARTIAL — 候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native单实例/重开/清理通过，前台focus唯一失败，整轮PARTIAL；原完整verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，exit1和未执行尾段保留。8e17九文件修复及精确独审PASS，相关87/87首试、0retry/flaky/skip；原Figma坐标/0.1容差未改、五锚点误差0，静态/build和Node1508/14skip通过。完整verify/新Native未重跑，ADR022/023契约已接受并独审，正常多聊天和独立安装适配实施中。完整真实Provider/共仓库/账号/云恢复/Hosted未验。
 - Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。
 - Last verified: 2026-10-16
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
 - Goal: Git Bash/MSYS 下的 pre-push guard 能处理空格和超过 260 字符的策略路径，同时保留所有拒绝保护。
 - Scope: 仅 hook 路径转换、Windows 长路径真实回归夹具和相关交付证据；不改远端保护、不合并 main、不修改共享主工作树。
-- Display status: 未完成
-- Priority: P1 — Windows 推送门禁的路径与长路径回归，影响主线保护。
+- Display status: 进行中
+- Priority: P3 — Windows 推送门禁的路径与长路径回归，影响主线保护。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-FIX-PUSH-GUARD-SPACES-001
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -311,9 +351,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: .githooks/pre-push, scripts/install-git-guards.mjs, scripts/governance/push-policy.mjs, tests/unit/gitPushGuardPaths.test.ts, tests/unit/gitPushPolicy.test.ts, docs/changes/2026-10-10-push-guard-spaces
 - Verification: NOT_VERIFIED — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-10-push-guard-spaces/verification.md](../../docs/changes/2026-10-10-push-guard-spaces/verification.md), [docs/changes/2026-10-10-push-guard-spaces/review.md](../../docs/changes/2026-10-10-push-guard-spaces/review.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-10-12-p1-audit-closeout/evidence/push-guard-pr53-readback.json](../../docs/changes/2026-10-12-p1-audit-closeout/evidence/push-guard-pr53-readback.json)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-12
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -339,7 +379,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 区分启动错误/终止/运行时与争用原因，不能凭null或选绿声称恢复
 - Scope: PR43 fa36推送37851173715失败原因仍UNKNOWN；原件保留，依新diagnostic继续
 - Display status: 未完成
-- Priority: P1 — 当前治理或验证阻断项
+- Priority: P1 — 当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-WINDOWS-ENTRY-RECOVERY-003
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -349,9 +389,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: tests/unit/desktopRelease.test.ts, start-kk-studio.bat, docs
 - Verification: NOT_VERIFIED — 实际失败根因UNKNOWN；独立本机未复现，P2跟进不能代填关闭。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-11-21
 
 ## TASK-IMAGE-RETRY-004 — 修复主线区域重试验收读取旧成功任务
 
@@ -453,7 +493,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 验证真实模型局部重绘质量、映射偏移和物理手机手势/键盘，补齐本地fixture之外的证据
 - Scope: FEAT-035真实Provider质量与移动验收；不将fixture当作真实效果
 - Display status: 未完成
-- Priority: P1 — 当前治理或验证阻断项
+- Priority: P1 — 当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-IMAGE-EDIT-VERIFY-002
 - Feature IDs: FEAT-035
 - Owner role: repository-maintainer
@@ -463,9 +503,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/image-edit, src/features/creation, tests, docs/features/feat-035-image-mask-editing.md
 - Verification: NOT_VERIFIED — 本轮复核确认：比例异常已自动拒绝，但仍未使用真实付费连接、物理手机或用户视觉验收，任意语义几何位移仍需人工确认。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-11-21
 
 ## TASK-UI-013 — 桌面标题栏与菜单合并为单排
 
@@ -729,9 +769,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/integrations/generation/localComfyUiAdapter.ts, src-tauri, src/features/comfyui
 - Verification: PARTIAL — 只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Updated: 2026-11-21
 
 ## EXT-PROVIDER — 真实 Provider/GPU 生成验收
 
@@ -768,9 +808,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: ComfyUI live acceptance
 - Verification: PARTIAL — 用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。 固定ModelScope190e955f HiFi来源/加速节点/官方2K协议只读核对：FL2VA64.73GB，两模式93.13GB；16G指运行目标。现有Hub不能推断兼容；HiFi→付费2K接受性/价格/性能未知。未安装权重或节点。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md)
-- Next action: 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。
 - Last verified: 2026-10-15
-- Updated: 2026-10-15
+- Updated: 2026-11-21
 
 ## T7 — Desktop可用版本及安装恢复验收
 
@@ -806,9 +846,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/App.tsx, src/domain, src/runtime, src/features
 - Verification: NOT_VERIFIED — NOT VERIFIED
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Updated: 2026-11-21
 
 ## T9 — Web本地版及浏览器容量/离线能力
 
@@ -825,15 +865,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/Sidebar.tsx, src/components/LibraryPage.tsx, src/runtime, src/features/creation
 - Verification: NOT_VERIFIED — NOT VERIFIED
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Updated: 2026-11-21
 
 ## T10-PREP — VPS发布、备份回滚与部署配置准备
 
 - Goal: VPS发布、备份回滚与部署配置准备
 - Scope: deploy、tests/deploy、quality Linux job、搬迁与恢复文档
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:T10-PREP
 - Feature IDs: none
@@ -844,9 +884,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: deploy, tests/deploy, .github/workflows/quality.yml, docs/architecture/adr
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-28-vps-migration/intent.md](../../docs/changes/2026-09-28-vps-migration/intent.md), [docs/changes/2026-09-28-vps-migration/spec.md](../../docs/changes/2026-09-28-vps-migration/spec.md), [docs/changes/2026-09-28-vps-migration/plan.md](../../docs/changes/2026-09-28-vps-migration/plan.md), [docs/changes/2026-09-28-vps-migration/verification.md](../../docs/changes/2026-09-28-vps-migration/verification.md), [docs/changes/2026-09-28-vps-migration/review.md](../../docs/changes/2026-09-28-vps-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-28
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## T10 — VPS staging和生产实机验收
 
@@ -864,9 +904,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — NOT VERIFIED
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md)
 - External condition: 缺少本轮生产写入授权、正式/staging域名和DNS权限；先完成可审阅部署产物
-- Next action: 复核阻塞条件，解除后重新验证并保留原失败证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：复核阻塞条件，解除后重新验证并保留原失败证据
 - Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Updated: 2026-11-21
 
 ## T11 — 旧Web/Vercel切换与退役
 
@@ -884,9 +924,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — NOT VERIFIED
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
 - External condition: 需外部旧部署权限、切换授权与回滚窗口
-- Next action: 复核阻塞条件，解除后重新验证并保留原失败证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：复核阻塞条件，解除后重新验证并保留原失败证据
 - Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Updated: 2026-11-21
 
 ## T12 — Mobile 独立形态与手机适配
 
@@ -903,9 +943,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: Mobile, Shared Core
 - Verification: NOT_VERIFIED — 当前只有响应式 Web；用户已确定功能顺序和登录/本地数据目标，独立 runtime 与真机验收未实现。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-28
-- Updated: 2026-09-28
+- Updated: 2026-11-21
 
 ## UI-001 — UI tokens和共享组件契约
 
@@ -922,9 +962,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/styles, src/components/ui, scripts/check-ui-standards.mjs
 - Verification: PARTIAL — Design System 1.1共享控件已建立；目录/Skill字段/筛选、图标按钮、设置局部覆盖继续迁移并取得双端证据。其余历史专项页面与来源例外继续按实际组件验收，保留PARTIAL。
 - Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-22
-- Updated: 2026-09-22
+- Updated: 2026-11-21
 
 ## UI-002 — 窄屏composer和动态文案溢出
 
@@ -949,7 +989,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 示例任务/账号与真实服务边界
 - Scope: src/components/canvas/TaskPanel.tsx, src/components/AccountPopup.tsx, src/components/settings
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:UI-003
 - Feature IDs: FEAT-016, FEAT-025
@@ -968,7 +1008,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 逐页对齐、IA和最终视觉运行态
 - Scope: Landing, Workspace, Assets, Settings, Tasks, Account
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:UI-004
 - Feature IDs: FEAT-001, FEAT-022, FEAT-023, FEAT-036
@@ -998,9 +1038,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/creation/assetRepository.ts, src/features/creation/useAssetArchive.ts, src-tauri
 - Verification: PARTIAL — 本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。
 - Evidence: [docs/architecture/DATA-STORAGE.md](../../docs/architecture/DATA-STORAGE.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-21
-- Updated: 2026-09-21
+- Updated: 2026-11-21
 
 ## EXT-GIT — 远端PR与main保护规则
 
@@ -1234,7 +1274,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 复刻可安全落地的本地 Skill、MCP 工具发现与 ComfyUI 工作流交互，并保持未接入外部服务的边界可见
 - Scope: src/features/skills, src/features/mcp, src/features/comfyui, Settings, Catalog, Composer, browser/unit tests
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-CAP-001
 - Feature IDs: FEAT-005, FEAT-010, FEAT-011, FEAT-012, FEAT-013
@@ -1245,15 +1285,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/skills, src/features/mcp, src/features/comfyui, src/components/settings, src/components/LibraryPage.tsx, src/App.tsx, tests/unit, tests/browser
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-21-local-capabilities/intent.md](../../docs/changes/2026-09-21-local-capabilities/intent.md), [docs/changes/2026-09-21-local-capabilities/spec.md](../../docs/changes/2026-09-21-local-capabilities/spec.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-21
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-MINIMAX-001 — MiniMax Design 交互审计与本地技能/MCP复刻
 
 - Goal: 依据真实 MiniMax Design 操作证据，补齐 KK Studio 的技能库、连接器目录和 MCP 发现交互
 - Scope: MiniMax Design skills/connectors/MCP/ComfyUI interaction audit; KK Studio skill registry, composer integration, connector prototype, MCP lifecycle
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-MINIMAX-001
 - Feature IDs: FEAT-006, FEAT-012, FEAT-013
@@ -1264,15 +1304,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/SkillsPage.tsx, src/components/SkillEditor.tsx, src/components/ConnectorCatalog.tsx, src/components/settings/McpSettings.tsx, src/features/skills/skillRegistry.ts, src/features/mcp/mcpClient.ts, tests/unit, docs/changes/2026-09-21-minimax-deep-audit
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/evidence/minimax-deep-audit-2026-09-21/runtime.json](../../docs/evidence/minimax-deep-audit-2026-09-21/runtime.json), [docs/changes/2026-09-24-mcp-registry-limit/verification.md](../../docs/changes/2026-09-24-mcp-registry-limit/verification.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-24
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-MCP-PROTO-001 — MCP 2026 协议协商与旧版兼容
 
 - Goal: 让手动 MCP 客户端在安全边界内兼容 2026-07-28 modern 与 2025-11-25 legacy 服务器，并用真实端点验收
 - Scope: src/features/mcp/mcpClient.ts, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts, Desktop/Web 连接验收
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-MCP-PROTO-001
 - Feature IDs: FEAT-012
@@ -1283,9 +1323,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md), [docs/changes/2026-10-03-task-audit/verification.md](../../docs/changes/2026-10-03-task-audit/verification.md), [docs/changes/2026-10-03-task-audit/review.md](../../docs/changes/2026-10-03-task-audit/review.md), [src/features/mcp/mcpClient.ts](../../src/features/mcp/mcpClient.ts), [src/components/settings/McpProtocolNotice.tsx](../../src/components/settings/McpProtocolNotice.tsx), [tests/unit/mcpClient.test.ts](../../tests/unit/mcpClient.test.ts), [tests/browser/mcp-settings.spec.ts](../../tests/browser/mcp-settings.spec.ts)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-03
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-MCP-REGISTRY-001 — MCP 多标签页配置写入不丢失
 
@@ -1359,9 +1399,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/domain/imageParameters.ts, src/features/creation/imageGeneration.ts, src/features/creation/nativeTaskHost.ts, src/features/creation/model.ts, src/features/creation/imageTaskCommand.ts, src/App.tsx, src/components/nodes/CreationParameters.tsx, src-tauri/src/task_host.rs, tests/unit/imageParameters.test.ts
 - Verification: PARTIAL — 代码透传与旧212/200/65测试记录保留；新增浏览器证据覆盖图片原始尺寸写入快照、刷新后回载和比例保持；仍缺 Desktop 参数实机 HTTP及同状态证据，不能 DONE/REAL；供应商尺寸枚举和像素限制需按模型适配。
 - Evidence: [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [tests/unit/imageParameters.test.ts](../../tests/unit/imageParameters.test.ts), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/media-dimensions.spec.ts](../../tests/browser/media-dimensions.spec.ts)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步
 - Last verified: 2026-10-11
-- Updated: 2026-10-11
+- Updated: 2026-11-21
 
 ## BACKEND-TEXT-NODE — 文本节点接入统一任务宿主
 
@@ -1397,9 +1437,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/nodes, src/features/creation, src/integrations/generation, src-tauri/src/task_host.rs
 - Verification: NOT_VERIFIED — NOT VERIFIED：代码链路可先于凭据建设；真实出片/出音频验收需要供应商 Key 与额度（EXT-PROVIDER）。
 - Evidence: [docs/features/feat-006-video-generation.md](../../docs/features/feat-006-video-generation.md), [docs/features/feat-007-audio-generation.md](../../docs/features/feat-007-audio-generation.md), [docs/features/feat-025-demo-media.md](../../docs/features/feat-025-demo-media.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-21
-- Updated: 2026-09-21
+- Updated: 2026-11-21
 
 ## BACKEND-MCP-AUTO — MCP 工具自动调用编排
 
@@ -1416,9 +1456,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/mcp, src/components/settings/McpSettings.tsx, src/features/skills
 - Verification: NOT_VERIFIED — NOT VERIFIED：手动客户端真实可用，自动调用仍为 Prototype。
 - Evidence: [docs/features/feat-012-mcp.md](../../docs/features/feat-012-mcp.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-21
-- Updated: 2026-09-21
+- Updated: 2026-11-21
 
 ## BACKEND-PLATFORM — 平台账号/积分/云同步/记忆/代理后端
 
@@ -1435,9 +1475,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/generation-server, src/components/AccountPopup.tsx, src/components/settings/ConnectionSettings.tsx, deploy
 - Verification: NOT_VERIFIED — NOT VERIFIED：Desktop 必须保留免登录入口并可选登录，Web/Mobile 目标需登录；账号不默认云存个人数据。身份服务与 VPS/域名等外部部署条件未完成，Gateway 额度逻辑仅在单测覆盖。
 - Evidence: [docs/features/feat-017-account.md](../../docs/features/feat-017-account.md), [docs/features/feat-018-credits.md](../../docs/features/feat-018-credits.md), [docs/features/feat-019-cloud-sync.md](../../docs/features/feat-019-cloud-sync.md), [docs/features/feat-020-memory.md](../../docs/features/feat-020-memory.md), [docs/features/feat-021-proxy.md](../../docs/features/feat-021-proxy.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-21
-- Updated: 2026-09-21
+- Updated: 2026-11-21
 
 ## BACKEND-ASTRA-001 — Astra 研究助手实现
 
@@ -1454,9 +1494,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: 待 spec 定义
 - Verification: NOT_VERIFIED — NOT VERIFIED：仅有计划与 Git 同步，零实现。
 - Evidence: [docs/features/feat-027-astra.md](../../docs/features/feat-027-astra.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-21
-- Updated: 2026-09-21
+- Updated: 2026-11-21
 
 ## UI-SKILL-POPOVER-001 — 窄屏首页弹层遮挡修复与 Skill 空态断言更新
 
@@ -1530,9 +1570,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/styles, src/domain/settings.ts, src/components/settings, docs/DESIGN-SYSTEM.md, docs/UI_SPEC.md, tests
 - Verification: PARTIAL — Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。
 - Evidence: [docs/changes/2026-09-22-design-system/spec.md](../../docs/changes/2026-09-22-design-system/spec.md), [docs/changes/2026-09-22-design-system/audit.md](../../docs/changes/2026-09-22-design-system/audit.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system/review.md](../../docs/changes/2026-09-22-design-system/review.md), [docs/changes/2026-09-22-design-system/remaining.md](../../docs/changes/2026-09-22-design-system/remaining.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步
 - Last verified: 2026-09-22
-- Updated: 2026-09-22
+- Updated: 2026-11-21
 
 ## TASK-DS-002 — Design System逐页迁移与桌面验收
 
@@ -1595,7 +1635,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 第一阶段：已登录 Codex 驱动 KK 对话、画布与现有 OpenAI 兼容生成；统一账号模型入口与真实额度，保留外部/桌面验收边界
 - Scope: src/features/agent, src/features/models, KK 共享模型菜单与设置, App, vendor canvas-agent 最小适配, tests
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-AGENT-001, docs/changes/2026-10-15-unified-provider-access/intent.md
 - Feature IDs: FEAT-002, FEAT-003, FEAT-009, FEAT-012, FEAT-022
@@ -1614,7 +1654,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 把本轮已验证的 Codex 能力接入 Tauri 一键生命周期，再分别验证 Google/豆包/WorkBuddy 的官方或可用登录适配器
 - Scope: src-tauri, src/features/agent, browser adapters, provider integrations
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-AGENT-002
 - Feature IDs: FEAT-009
@@ -1625,9 +1665,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src-tauri, src/features/agent, src/features/models, src/integrations
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-22-codex-default-agent/remaining.md](../../docs/changes/2026-09-22-codex-default-agent/remaining.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-agent-desktop/remaining.md](../../docs/changes/2026-09-22-agent-desktop/remaining.md), [docs/changes/2026-09-22-agent-desktop/review.md](../../docs/changes/2026-09-22-agent-desktop/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-22
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-UI-007 — 手机平板电脑三档尺寸与图标对齐
 
@@ -1815,9 +1855,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/agent/orchestrator.ts, src/features/creation/imageTaskCommand.ts, src/features/agent/agentHost.ts
 - Verification: NOT_VERIFIED — 未开工。
 - Evidence: NOT VERIFIED
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-09-23
-- Updated: 2026-09-23
+- Updated: 2026-11-21
 
 ## TASK-CANVAS-001 — 画布交付契约与当轮产物收集
 
@@ -1834,9 +1874,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/agent/agentCanvas.ts, src/features/agent/agentHost.ts, tests/unit/agentCanvas.test.ts
 - Verification: PARTIAL — 契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-08
-- Updated: 2026-10-08
+- Updated: 2026-11-21
 
 ## TASK-TASKSTATE-001 — 统一任务态契约定稿
 
@@ -1853,16 +1893,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts, src/features/creation/nativeTaskHost.ts, src/App.tsx, tests/unit/nativeTaskHost.test.ts, tests/browser/task-intent.spec.ts
 - Verification: PARTIAL — 9态、可重试边界和未知成本语义保持通过；新增成本回执的有限金额、来源/币种/身份绑定、重复/冲突保护、快照读回和 native package 回归通过。独立 dirty 预检未发现P0-P2缺陷，结论为PASS WITH FOLLOW-UPS；真实 Provider、每平台运行和用户验收仍未验证，保持PARTIAL。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json)
-- Next action: 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。
 - Last verified: 2026-10-11
-- Updated: 2026-10-11
+- Updated: 2026-11-21
 
 ## TASK-TASKSTATE-002 — 供应商成本报价回执接入
 
 - Goal: 把可验证的供应商报价或账单回执接入统一任务态，避免成本长期停留在未知状态
 - Scope: src/features/creation/taskState.ts, src/features/creation/model.ts, provider adapters, tests, docs/changes/2026-10-03-incomplete-tasks
 - Display status: 进行中
-- Priority: P1 — 当前治理或验证阻断项
+- Priority: P1 — 当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-TASKSTATE-002
 - Feature IDs: FEAT-031
 - Owner role: repository-maintainer
@@ -1872,9 +1912,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, src/features/creation/provider adapters, tests/unit
 - Verification: PARTIAL — 有界报价回执 schema、任务/幂等身份校验、重复与冲突保护和快照恢复通过；但当前生产 Provider→task 归档路径没有消费 applyTaskCostReceipt，只有 helper/schema 与 fixture 测试。真实 Provider 报价回执和提交后 exact-SHA 正式审查仍未取得，保持 PARTIAL。
 - Evidence: [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-11-21
 
 ## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
 
@@ -1956,7 +1996,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 让网页登录后的个人项目和素材由用户设备本机服务保存，并安全导入既有 IndexedDB 数据
 - Scope: 本机服务、Web 存储适配器、安装/连接、既有项目与素材导入、备份恢复
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-LOCAL-SERVICE-001
 - Feature IDs: FEAT-037
@@ -1967,9 +2007,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md, src/components/settings, tests/browser, tests/local-service
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-29-local-companion/intent.md](../../docs/changes/2026-09-29-local-companion/intent.md), [docs/changes/2026-09-29-local-companion/spec.md](../../docs/changes/2026-09-29-local-companion/spec.md), [docs/changes/2026-09-29-local-companion/plan.md](../../docs/changes/2026-09-29-local-companion/plan.md), [docs/changes/2026-09-29-local-companion/verification.md](../../docs/changes/2026-09-29-local-companion/verification.md), [docs/changes/2026-09-29-local-companion/review.md](../../docs/changes/2026-09-29-local-companion/review.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-15
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-CLOSEOUT-2026-09-28 — 合并后版本与 VPS 状态收口
 
@@ -2138,15 +2178,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
 - Verification: PARTIAL — 历史PR31保留。本轮13efa3fe→00e00e40扩展同一v2快照：持久分组、手动名称保护、完整软删除/恢复，项目库与侧栏共用菜单。组删除解除归属，恢复为空组；菜单不误打开、未知任务禁止删除、冲突保护及迟到保存不夺取新导航。独立SPEC/QUALITY Approved；7442c4fb production1423三组Edge27/27首试PASS；Native存储/包169PASS。旧23/3及后续竞态RED保留。fresh新Native UI、完整总交付仍待，因此PARTIAL。
 - Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md), [docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md](../../docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md)
-- Next action: 继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。
 - Last verified: 2026-10-15
-- Updated: 2026-10-15
+- Updated: 2026-11-21
 
 ## TASK-PROV-003 — Codex Provider 配置注入与 model catalog 落盘（agent 侧接线）
 
 - Goal: 把 TASK-PROV-002 渲染产物落进 Codex 真实配置：config.toml 保守合并（只管理 kk_* 表与显式顶层键）、model-catalogs/<id>.json 落盘与相对指针、providers CLI（apply/check）；密钥只写 env_key
 - Scope: vendor/canvas-agent/src/agent/codex-provider-config.ts、provider-cli.ts、index.ts 分派、vendor/canvas-agent/package.json 测试清单、docs/changes/2026-09-24-provider-wiring
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-PROV-003
 - Feature IDs: FEAT-032
@@ -2157,15 +2197,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/src/index.ts, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-24-provider-wiring/intent.md](../../docs/changes/2026-09-24-provider-wiring/intent.md), [docs/changes/2026-09-24-provider-wiring/spec.md](../../docs/changes/2026-09-24-provider-wiring/spec.md), [docs/changes/2026-09-24-provider-wiring/plan.md](../../docs/changes/2026-09-24-provider-wiring/plan.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-provider-wiring/remaining.md](../../docs/changes/2026-09-24-provider-wiring/remaining.md), [docs/changes/2026-09-24-provider-wiring/review.md](../../docs/changes/2026-09-24-provider-wiring/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-30
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-PROV-004 — Claude Code settings.json 落盘（agent 侧接线）
 
 - Goal: 把 Provider 渲染产物落进 Claude Code 配置：settings.json 保守合并（只写 env.ANTHROPIC_BASE_URL 与顶层 model，用户设置逐字段保留、幂等）、providers apply-claude CLI；密钥不落盘（认证走宿主 env 注入或交互登录）
 - Scope: vendor/canvas-agent/src/agent/claude-provider-config.ts、provider-cli.ts apply-claude、package.json 测试清单、docs/changes/2026-09-24-claude-landing
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-PROV-004
 - Feature IDs: FEAT-032
@@ -2176,9 +2216,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-24-claude-landing/intent.md](../../docs/changes/2026-09-24-claude-landing/intent.md), [docs/changes/2026-09-24-claude-landing/spec.md](../../docs/changes/2026-09-24-claude-landing/spec.md), [docs/changes/2026-09-24-claude-landing/plan.md](../../docs/changes/2026-09-24-claude-landing/plan.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-claude-landing/remaining.md](../../docs/changes/2026-09-24-claude-landing/remaining.md), [docs/changes/2026-09-24-claude-landing/review.md](../../docs/changes/2026-09-24-claude-landing/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-30
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-AGENT-004 — Google Interactions 对话和生图
 
@@ -2195,9 +2235,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/agent, src/components, src/domain, src/App.tsx
 - Verification: PARTIAL — 13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。
 - Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步
 - Last verified: 2026-09-30
-- Updated: 2026-09-30
+- Updated: 2026-11-21
 
 ## TASK-AGENT-005 — Gemini CLI 账号登录通道（免 API Key 对话）
 
@@ -2214,15 +2254,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/agent, src/components, src/domain, scripts
 - Verification: PARTIAL — Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.
 - Evidence: [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步
 - Last verified: 2026-09-23
-- Updated: 2026-09-23
+- Updated: 2026-11-21
 
 ## TASK-MEMORY-001 — 本地长期记忆服务接入对话
 
 - Goal: 把本地长期记忆接入 KK Studio 的 Codex 对话：用户原话规则采集、手动 Codex 提炼、本地存储、对话前注入和设置页管理；完整文件不参加云同步
 - Scope: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings, src-tauri storage_paths/main, docs/features feat-020, docs/changes/2026-09-24-local-memory
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-MEMORY-001
 - Feature IDs: FEAT-020
@@ -2233,15 +2273,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings/ConnectionSettings.tsx, src-tauri/src/storage_paths.rs, src-tauri/src/main.rs, docs/features/feat-020-memory.md
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/plan.md](../../docs/changes/2026-09-24-local-memory/plan.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-local-memory/review.md](../../docs/changes/2026-09-24-local-memory/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-30
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-MEMORY-002 — 跨产品共享本地记忆（本机共享）
 
 - Goal: 跨产品共享本地记忆：Codex/豆包/WorkBuddy 读写同一份 ~/.kk-memory/memory.json（本机默认共享），Web 授权目录降级 IndexedDB，旧文件一次性种子迁移；记忆仍不上云，换账号手动清空
 - Scope: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri main.rs/storage_paths.rs, docs/MEMORY-CONTRACT.md, AGENTS.md, docs/architecture/DATA-STORAGE.md, docs/features feat-020, docs/changes/2026-09-24-local-memory
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-MEMORY-002
 - Feature IDs: FEAT-020
@@ -2252,9 +2292,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri/src/main.rs, src-tauri/src/storage_paths.rs, AGENTS.md, docs/MEMORY-CONTRACT.md, docs/architecture/DATA-STORAGE.md
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-09-30
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-AGENT-007 — Codex 通过本机 CodeBuddy CLI 受限委派短文本
 
@@ -2469,8 +2509,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
 - Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
-- Display status: 未完成
-- Priority: P1 — 当前治理或验证阻断项
+- Display status: 进行中
+- Priority: P1 — 当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-VERIFY-CONCURRENCY-002
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2480,9 +2520,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: tests/browser, playwright.config.ts
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-09
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-VERIFY-ORIGIN-003 — 浏览器验收端口与服务来源契约一致性
 
@@ -2527,7 +2567,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 为豆包为首的多平台接入落地凭证存储、通道抽象契约与错误映射，使 kk 客户端具备可插拔的多厂商接入底座
 - Scope: 通道适配器契约、11 类失败分类、分档降级调度、凭证端口注入、/v1/chat/completions 端点。不含真实 DPAPI 实现、不含 sub2api 对接、不含 UI 解锁。
 - Display status: 进行中
-- Priority: P1 — 调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。
+- Priority: P3 — 调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-AI-GATEWAY-001
 - Feature IDs: FEAT-038
 - Owner role: repository-maintainer
@@ -2537,9 +2577,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md, src/domain/modelProvider.ts, src/features/creation/model.ts, src/components/settings/ProviderProfileFields.tsx, tests/unit/modelProvider.test.ts, docs/changes/2026-10-10-doubao-official-channel/, src/features/agent/agentImages.ts, src/features/agent/agentHost.ts, src/features/models/modelMenuEntries.ts, src/features/models/modelPresentation.ts, tests/unit/modelMenuEntries.test.ts, tests/unit/modelPresentation.test.ts
 - Verification: PARTIAL — gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。
 - Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-11-21
 
 ## TASK-PROV-BYOK-001 — 用户自有 API 产品化接入
 
@@ -2583,8 +2623,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 让产品版本源、依赖锁、构建身份和跨环境工件可验证，避免本地最新而其他环境启动旧包
 - Scope: 版本镜像审计、嵌套 lock/Tauri 依赖检查、活动源码硬编码提示、启动器 receipt 规则和分支发布流程
-- Display status: 未完成
-- Priority: P1 — 跨环境启动旧版本会让已合入功能对其他使用者不可见
+- Display status: 进行中
+- Priority: P3 — 跨环境启动旧版本会让已合入功能对其他使用者不可见；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-AGENT-010
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2594,16 +2634,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: scripts/check-version-consistency.mjs, package.json, .github/workflows/quality.yml, docs/engineering, docs/changes/2026-10-10-version-coherence
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-10-version-coherence/intent.md](../../docs/changes/2026-10-10-version-coherence/intent.md), [docs/changes/2026-10-10-version-coherence/spec.md](../../docs/changes/2026-10-10-version-coherence/spec.md), [docs/changes/2026-10-10-version-coherence/verification.md](../../docs/changes/2026-10-10-version-coherence/verification.md), [docs/changes/2026-10-10-version-coherence/review.md](../../docs/changes/2026-10-10-version-coherence/review.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-12
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-GOV-003 — 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2）
 
 - Goal: 收敛 UI 入口覆盖、ADR 编号与索引唯一性，新增文档索引/命令/交付完整度三个门禁
 - Scope: B1+B2 的索引/编号/命令/交付门禁已完成；本轮授权 R（文档生命周期与时间冲突规则）、B3-1（TASK_STATUS 当前快照）和 B3-2（AI_HANDOFF 恢复入口瘦身）；B3-3、B4、B5 不在本轮。
 - Display status: 进行中
-- Priority: P1 — 治理收敛，门禁已接入 lint
+- Priority: P3 — 治理收敛，门禁已接入 lint；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-GOV-003
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2613,16 +2653,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/UI_INDEX.md, docs/README.md, docs/architecture/adr, docs/engineering/CODING-STANDARDS.md, docs/governance/UNIFIED-PROJECT-RULES.md, scripts/check-doc-index.mjs, scripts/check-doc-commands.mjs, scripts/check-delivery-completeness.mjs, scripts/governance/doc-index.mjs, scripts/governance/doc-commands.mjs, scripts/governance/delivery-completeness.mjs, tests/unit/docIndex.test.ts, tests/unit/docCommands.test.ts, tests/unit/deliveryCompleteness.test.ts, package.json, docs/governance/TASK_STATUS.md, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/governance/AUTHORITY_MAP.md, docs/governance/AUTHORITY_MAP.json, scripts/check-snapshot-header.mjs
 - Verification: PARTIAL — B1+B2 已于 2026-10-11 通过既有索引/命令/交付门禁；2026-10-12 已完成 R+B3-1+B3-2 的文档生命周期门禁、任务快照刷新和 AI_HANDOFF 恢复入口瘦身，最终门禁与独立复核绑定本轮 exact head。B3-3、B4、B5 未执行。
 - Evidence: [docs/changes/2026-10-11-rules-restructure/verification.md](../../docs/changes/2026-10-11-rules-restructure/verification.md), [docs/changes/2026-10-11-rules-restructure/review.md](../../docs/changes/2026-10-11-rules-restructure/review.md), [docs/changes/2026-10-12-governance-currentness/verification.md](../../docs/changes/2026-10-12-governance-currentness/verification.md), [docs/changes/2026-10-12-governance-currentness/review.md](../../docs/changes/2026-10-12-governance-currentness/review.md)
-- Next action: 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-11-21
 
 ## TASK-GOV-004 — 未合并分支全量核验、分类与收敛合并
 
 - Goal: 100 个未合并分支逐项核验并按完成状态分类；同功能多分支收敛为单一分支后合并主线
 - Scope: 本轮完成 P0 止血、P1 全量分类表、B1 登记；P2 家族收敛与 B2-B5 合并在后续批次；worktree/分支清理与远端推送不在范围
 - Display status: 进行中
-- Priority: P1 — 治理收敛前置：分支不收敛则所有合并冲突面持续扩大
+- Priority: P3 — 治理收敛前置：分支不收敛则所有合并冲突面持续扩大；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-GOV-004
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2632,16 +2672,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: scripts/governance/branch-audit.mjs, docs/changes/2026-10-12-branch-consolidation
 - Verification: PASS — P0/P1/B1 已完成：main 8915b6ae；分类表 100 行（已完成 27/完成一半 68/未完成 4/无法判定 1）；10 个 PR 集成分支的 11 个任务已加禁合并注释；门禁全绿（npm test 8 失败为已记录环境性既有失败）。P2-P3 家族收敛与 B2-B5 合并待执行。
 - Evidence: [docs/changes/2026-10-12-branch-consolidation/verification.md](../../docs/changes/2026-10-12-branch-consolidation/verification.md), [docs/changes/2026-10-12-branch-consolidation/review.md](../../docs/changes/2026-10-12-branch-consolidation/review.md)
-- Next action: P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-11-21
 
 ## TASK-REVIEW-REMEDIATION-001 — 修复审查发现的治理生命周期与交付边界问题
 
 - Goal: 让 current 治理入口、supersededBy 关系和 dated change package 规则 fail closed 且可追溯。
 - Scope: 治理生命周期脚本、模板、交付包勘误和账本记录；相关运行时修复以独立提交交付，不改远端设置或其他 worktree。
-- Display status: 未完成
-- Priority: P1 — 治理门禁 fail-open 会让错误 current 入口进入合并候选。
+- Display status: 进行中
+- Priority: P3 — 治理门禁 fail-open 会让错误 current 入口进入合并候选。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-REVIEW-REMEDIATION-001
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2651,16 +2691,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: scripts/governance/doc-index.mjs, scripts/check-snapshot-header.mjs, tests/unit/docIndex.test.ts, docs/templates, docs/changes/2026-10-13-review-remediation, docs/governance/task-ledger.json
 - Verification: PARTIAL — 2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-UI-CLASSIFY-20261013 — 模型接入与扩展分类修复并验证三客户端
 
 - Goal: 将确认的 UI 清单落到 canonical 并取得实际客户端证据
 - Scope: 模型菜单、模型接入、扩展分类、协作角色职责模板和三客户端验证
-- Display status: 未完成
-- Priority: P1 — 多次修改未落到客户端的分类与交互回归
+- Display status: 进行中
+- Priority: P3 — 多次修改未落到客户端的分类与交互回归；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-UI-CLASSIFY-20261013
 - Feature IDs: FEAT-011, FEAT-030
 - Owner role: repository-maintainer
@@ -2670,16 +2710,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/settings, src/components/SkillsPage.tsx, src/components/ModelPickerMenu.tsx, src/features/partners, tests/browser
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-13-capability-ui/verification.md](../../docs/changes/2026-10-13-capability-ui/verification.md), [docs/changes/2026-10-13-capability-ui/review.md](../../docs/changes/2026-10-13-capability-ui/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-AGENT-RECOVERY-20261013 — 桌面 Agent 自动恢复、会话归属与凭据保存
 
 - Goal: 打开APP可安全恢复本机Agent和已保存API，统一连接操作并修复归属自锁
 - Scope: Agent启动恢复、项目会话非敏感归属、设置连接按钮、Windows凭据与API metadata提交/重读、对应回归与运行证据
-- Display status: 未完成
-- Priority: P1 — 修复正常重开/会话恢复自锁与凭据保存误报，保护用户配置和已有会话。
+- Display status: 进行中
+- Priority: P3 — 修复正常重开/会话恢复自锁与凭据保存误报，保护用户配置和已有会话。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-AGENT-RECOVERY-20261013
 - Feature IDs: FEAT-009, FEAT-022
 - Owner role: repository-maintainer
@@ -2689,16 +2729,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/agent, src/features/creation, src/components/settings, src/App.tsx, tests
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-13-agent-recovery/intent.md](../../docs/changes/2026-10-13-agent-recovery/intent.md), [docs/changes/2026-10-13-agent-recovery/spec.md](../../docs/changes/2026-10-13-agent-recovery/spec.md), [docs/changes/2026-10-13-agent-recovery/plan.md](../../docs/changes/2026-10-13-agent-recovery/plan.md), [docs/changes/2026-10-13-agent-recovery/verification.md](../../docs/changes/2026-10-13-agent-recovery/verification.md), [docs/changes/2026-10-13-agent-recovery/review.md](../../docs/changes/2026-10-13-agent-recovery/review.md), [docs/changes/2026-10-13-agent-recovery/evidence/canonical-agent-native.json](../../docs/changes/2026-10-13-agent-recovery/evidence/canonical-agent-native.json), [docs/changes/2026-10-13-agent-recovery/evidence/canonical-provider-native.json](../../docs/changes/2026-10-13-agent-recovery/evidence/canonical-provider-native.json), [docs/changes/2026-10-13-agent-recovery/evidence/independent-source-review.json](../../docs/changes/2026-10-13-agent-recovery/evidence/independent-source-review.json), [docs/changes/2026-10-13-agent-recovery/evidence/independent-delivery-review.json](../../docs/changes/2026-10-13-agent-recovery/evidence/independent-delivery-review.json), [docs/changes/2026-10-13-agent-recovery/evidence/daily-app-open.json](../../docs/changes/2026-10-13-agent-recovery/evidence/daily-app-open.json), [docs/changes/2026-10-13-agent-recovery/evidence/delivery-document-checks.json](../../docs/changes/2026-10-13-agent-recovery/evidence/delivery-document-checks.json)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-UI-CONSOLIDATE-20261014 — 冻结最新本机版本并统一 UI、模型预设与轻量化规则
 
 - Goal: 可恢复地汇总所有分支和工作树，先提交当前版本，再按统一规范完成设置和无限画布优化
 - Scope: 版本恢复、UI 语义与组件、设置二三栏、服务商和 CLI、喜欢标签搜索、资源存储用量、文档目录与体积治理
-- Display status: 未完成
-- Priority: P1 — 解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。
+- Display status: 进行中
+- Priority: P3 — 解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-UI-CONSOLIDATE-20261014
 - Feature IDs: FEAT-002, FEAT-022, FEAT-032, FEAT-023, FEAT-028, FEAT-039
 - Owner role: repository-maintainer
@@ -2708,16 +2748,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md), [docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md](../../docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md), [docs/features/feat-039-canvas-collections.md](../../docs/features/feat-039-canvas-collections.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-14
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-GOV-005 — PR #55 历史快照合法集成与门禁修复
 
 - Goal: 保留 PR #55 的逐项追溯，在不伪造交付证据的前提下修复 Windows desktopRelease 误判并为历史快照提供有限、显式的交付门禁例外。
 - Scope: 仅限 PR #55 的 delivery/verify 根因、历史包标记和独立审查；不合并 main、不处理 PR #56、不集成 Hermes、不删除分支或工作树。
-- Display status: 未完成
-- Priority: P1 — 一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。
+- Display status: 进行中
+- Priority: P3 — 一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-GOV-005
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2727,16 +2767,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: scripts/governance/delivery.mjs, scripts/check-delivery.mjs, scripts/windows/desktop-release.mjs, tests/unit/deliveryPolicy.test.ts, scripts/governance/branch-audit.mjs, src/styles/ui-governance.css, src/styles/workspace.css, src/styles/canvas-hud.css, tests/browser/settings-scroll.spec.ts, tests/browser/ui-motion.spec.ts, tests/browser/unified-image-command.spec.ts, docs/changes/2026-10-12-pr55-historical-integration
 - Verification: NOT_VERIFIED — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-12-pr55-historical-integration/verification.md](../../docs/changes/2026-10-12-pr55-historical-integration/verification.md), [docs/changes/2026-10-12-pr55-historical-integration/review.md](../../docs/changes/2026-10-12-pr55-historical-integration/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-ENG-001 — 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定
 
 - Goal: 把 hermes-agent（MIT）的 ratchet 与 footgun 扫描语义移植到本仓库 TypeScript 栈：新代码必须达标、存量只许变小、初始 advisory 不阻断 CI；同时把 workflow action 从可变 tag 固定到 commit SHA。
 - Scope: scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality,auto-merge,main-guard,windows-release}.yml SHA 固定、docs/engineering/{DEVELOPMENT,CODING-STANDARDS}.md 门禁章节与映射、tests/unit/{diffScope,codeHealthCliModes,codeHealthPatternAllowance}.test.ts 回归、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。
-- Display status: 未完成
-- Priority: P1 — 工程治理增量门禁；不改变产品运行时行为。
+- Display status: 进行中
+- Priority: P3 — 工程治理增量门禁；不改变产品运行时行为。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-ENG-001
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2746,9 +2786,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: scripts/check-code-health.mjs, scripts/check-windows-footguns.mjs, scripts/governance/code-health.config.mjs, scripts/governance/code-health-measure.mjs, scripts/governance/code-health-compare.mjs, scripts/governance/diff-scope.mjs, scripts/governance/footgun-rules.mjs, package.json, .github/workflows/git-guards.yml, .github/workflows/quality.yml, .github/workflows/auto-merge.yml, .github/workflows/main-guard.yml, .github/workflows/windows-release.yml, docs/engineering/DEVELOPMENT.md, docs/engineering/CODING-STANDARDS.md, tests/unit/diffScope.test.ts, tests/unit/codeHealthCliModes.test.ts, tests/unit/codeHealthPatternAllowance.test.ts, docs/changes/2026-10-12-TASK-ENG-001-code-health
 - Verification: NOT_VERIFIED — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md](../../docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md), [docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md](../../docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-CCSWITCH-LEARN-20261014 — 澄清供应商编辑状态并验证跨存储中断恢复
 
@@ -2773,8 +2813,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 节点位置与连线实时同步、原数据保留并可重载恢复
 - Scope: 现有画布 hooks、图合并与相关回归；不改存储身份和 Agent 协议
-- Display status: 未完成
-- Priority: P1 — 未记录
+- Display status: 进行中
+- Priority: P3 — ；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: user:agent-canvas-sync-20261014
 - Feature IDs: FEAT-001, FEAT-009, FEAT-012
 - Owner role: repository-maintainer
@@ -2784,16 +2824,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/Canvas.tsx, src/components/canvas, src/domain/projectCanvas.ts, tests/browser/agent.spec.ts, tests/unit/projectCanvas.test.ts
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-14-agent-canvas-sync/review.md](../../docs/changes/2026-10-14-agent-canvas-sync/review.md), [docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-14
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-CANVAS-WIDE-PORT-20261014 — 宽图结果编辑器遮挡下游按钮
 
 - Goal: 宽图低缩放时下游按钮仍可点击
 - Scope: 既有结果主体尺寸、下游锚点和编辑器层级
 - Display status: 未完成
-- Priority: P2 — 未记录
+- Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: derived:full-browser-port-hit-test
 - Feature IDs: FEAT-001
 - Owner role: repository-maintainer
@@ -2803,9 +2843,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/domain/canvasGraph.ts, src/components/canvas/NodeActions.tsx, src/styles/workspace.css, tests/browser/unified-image-command.spec.ts
 - Verification: FAIL — 本次同步修复前/后development23.33%同样被composer遮挡；production全量1失败，修复尚未执行。
 - Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md)
-- Next action: 单独复证production并修正宽图主体几何/端口锚点
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：单独复证production并修正宽图主体几何/端口锚点
 - Last verified: 2026-10-14
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-AGENT-UX-20261014 — Agent 执行过程与生成保存状态提示
 
@@ -2944,8 +2984,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 首页新建默认Codex/ChatGPT图片能力，首页/聊天/画布沿明确来源执行，修复同排、输入横线与菜单锚点；真实验收后经PR集成并重建本机。
 - Scope: 共享首页/聊天/画布选择与输入弹层；旧API与无selection项目保留legacy路由、局部隐私和草稿；复用当前Agent/Provider链，不新增依赖或替换API配置。历史Desktop/Web候选2.1.33；本轮HOME恢复候选2.1.34，Mobile2.1.1规划不变。
-- Display status: 未完成
-- Priority: P1 — 用户明确要求首页直接使用Codex/ChatGPT且修复影响实际提交与交互的来源/布局问题。
+- Display status: 进行中
+- Priority: P3 — 用户明确要求首页直接使用Codex/ChatGPT且修复影响实际提交与交互的来源/布局问题。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-CODEX-HOME-20261015, docs/changes/2026-10-15-codex-home/intent.md
 - Feature IDs: FEAT-001, FEAT-002, FEAT-009
 - Owner role: implementer
@@ -2955,16 +2995,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/App.tsx, src/components/StartPage.tsx, src/components/StartComposer.tsx, src/components/StartModelPicker.tsx, src/components/ModelPickerMenu.tsx, src/components/AgentComposer.tsx, src/domain/modelSelection.ts, src/features/creation/model.ts, src/features/agent, src/styles, tests/unit, tests/browser, docs/changes/2026-10-15-codex-home, docs/changes/2026-10-15-home-recovery-integration, src/features/agent/homeAgentRecovery.ts, scripts/agent/desktop-entry.mjs, tests/unit/desktopAgentRuntime.test.ts
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-15-codex-home/intent.md](../../docs/changes/2026-10-15-codex-home/intent.md), [docs/changes/2026-10-15-codex-home/spec.md](../../docs/changes/2026-10-15-codex-home/spec.md), [docs/changes/2026-10-15-codex-home/plan.md](../../docs/changes/2026-10-15-codex-home/plan.md), [docs/changes/2026-10-15-codex-home/verification.md](../../docs/changes/2026-10-15-codex-home/verification.md), [docs/changes/2026-10-15-codex-home/review.md](../../docs/changes/2026-10-15-codex-home/review.md), [docs/changes/2026-10-15-codex-card-reference/verification.md](../../docs/changes/2026-10-15-codex-card-reference/verification.md), [docs/changes/2026-10-15-home-recovery-integration/intent.md](../../docs/changes/2026-10-15-home-recovery-integration/intent.md), [docs/changes/2026-10-15-home-recovery-integration/spec.md](../../docs/changes/2026-10-15-home-recovery-integration/spec.md), [docs/changes/2026-10-15-home-recovery-integration/plan.md](../../docs/changes/2026-10-15-home-recovery-integration/plan.md), [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md), [docs/changes/2026-10-15-home-recovery-integration/review.md](../../docs/changes/2026-10-15-home-recovery-integration/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-15
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-CODEX-REF-20261015 — Codex 卡片连线参考图直达内置生图
 
 - Goal: 用户连接产品参考图后，可从 Codex 图片卡片直接调用账号内置生图，结果归档并连回正确来源，完成实际桌面验证。
 - Scope: 仅复用 canvasImageAttachments 与 Agent 附件/内置生图链，补 signal、发送前项目和来源图校验、来源 metadata 与定向回归；Desktop/Web2.1.33、Mobile2.1.1。root受保护整合到活动HOME候选，保留其他作者更新；不增加API fallback或新生图子系统，不扩写前置首页候选和其他Provider验收。
-- Display status: 未完成
-- Priority: P1 — 用户明确要求产品参考图连线后可直接使用 Codex 内置生图，并实际桌面验证。
+- Display status: 进行中
+- Priority: P3 — 用户明确要求产品参考图连线后可直接使用 Codex 内置生图，并实际桌面验证。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-CODEX-REF-20261015, docs/changes/2026-10-15-codex-card-reference/intent.md
 - Feature IDs: FEAT-002
 - Owner role: implementer
@@ -2974,16 +3014,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/App.tsx, src/features/agent/agentConnection.ts, src/features/agent/agentAttachments.ts, src/features/creation/imageTaskCommand.ts, tests/unit/agentConnection.test.ts, tests/unit/imageTaskCommand.test.ts, tests/browser, docs/changes/2026-10-15-codex-card-reference
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-15-codex-card-reference/intent.md](../../docs/changes/2026-10-15-codex-card-reference/intent.md), [docs/changes/2026-10-15-codex-card-reference/spec.md](../../docs/changes/2026-10-15-codex-card-reference/spec.md), [docs/changes/2026-10-15-codex-card-reference/plan.md](../../docs/changes/2026-10-15-codex-card-reference/plan.md), [docs/changes/2026-10-15-codex-card-reference/verification.md](../../docs/changes/2026-10-15-codex-card-reference/verification.md), [docs/changes/2026-10-15-codex-card-reference/review.md](../../docs/changes/2026-10-15-codex-card-reference/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-15
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-GOV-006 — 统一会话安全交接、全量需求映射与单主控承接
 
 - Goal: 保护全部现场并暂停旧会话，在原账本统一全部批准范围与可追溯交付链，再按依赖恢复安全开发。
 - Scope: 本项目安全交接及治理；不发布/改历史/删除/覆盖用户数据，不将本次暂停授权扩为破坏性权限。
-- Display status: 未完成
-- Priority: P1 — 统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。
+- Display status: 进行中
+- Priority: P3 — 统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-GOV-004, ledger:TASK-PROV-007, ledger:TASK-AGENT-001, ledger:TASK-TASKSTATE-001, ledger:TASK-ORCH-003, docs/changes/2026-10-15-unified-handoff/source-instructions.md
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2993,16 +3033,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/governance, docs/changes/2026-10-15-unified-handoff, docs/changes/2026-10-15-unified-execution
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-15-unified-handoff/takeover-context.md](../../docs/changes/2026-10-15-unified-handoff/takeover-context.md), [docs/changes/2026-10-15-unified-handoff/delivery-matrix.md](../../docs/changes/2026-10-15-unified-handoff/delivery-matrix.md), [docs/changes/2026-10-15-unified-handoff/session-inventory.md](../../docs/changes/2026-10-15-unified-handoff/session-inventory.md), [docs/changes/2026-10-15-unified-handoff/verification.md](../../docs/changes/2026-10-15-unified-handoff/verification.md), [docs/changes/2026-10-15-unified-execution/verification.md](../../docs/changes/2026-10-15-unified-execution/verification.md), [docs/changes/2026-10-15-unified-execution/history-readback.md](../../docs/changes/2026-10-15-unified-execution/history-readback.md), [docs/changes/2026-10-15-unified-execution/incident.md](../../docs/changes/2026-10-15-unified-execution/incident.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-15
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-VERIFY-EVIDENCE-20261015 — 隔离测试输出并保护历史回执
 
 - Goal: 完整验证不能默认清理旧回执、截图和失败证据，新增结果独立可校验。
 - Scope: 仅测试输出目录/执行前保护与合成fixture；不删除或迁移其他历史证据/用户数据。
-- Display status: 未完成
-- Priority: P1 — 本轮Playwright默认outputDir清理造成旧开发态原件不可校验；后续测试必须先阻断重复损失。
+- Display status: 进行中
+- Priority: P3 — 本轮Playwright默认outputDir清理造成旧开发态原件不可校验；后续测试必须先阻断重复损失。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-GOV-006, docs/changes/2026-10-15-unified-execution/incident.md
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -3012,9 +3052,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: playwright.config.ts, tests/development/plugins.mjs, scripts/testing, tests/unit, docs/changes/2026-10-15-unified-execution/incident.md, tests/desktop/plugin-recovery.mjs, docs/changes/2026-10-15-test-evidence-isolation, tests/browser, tests/desktop/test-evidence-preservation.mjs, package.json
 - Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-15-unified-execution/incident.md](../../docs/changes/2026-10-15-unified-execution/incident.md), [docs/changes/2026-10-15-test-evidence-isolation/intent.md](../../docs/changes/2026-10-15-test-evidence-isolation/intent.md), [docs/changes/2026-10-15-test-evidence-isolation/spec.md](../../docs/changes/2026-10-15-test-evidence-isolation/spec.md), [docs/changes/2026-10-15-test-evidence-isolation/plan.md](../../docs/changes/2026-10-15-test-evidence-isolation/plan.md), [docs/changes/2026-10-15-test-evidence-isolation/verification.md](../../docs/changes/2026-10-15-test-evidence-isolation/verification.md), [docs/changes/2026-10-15-test-evidence-isolation/review.md](../../docs/changes/2026-10-15-test-evidence-isolation/review.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-15
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-EXPLORER-GDI-20261015 — 阻断 headless Edge 测试遗留 Shell 标签代理
 
@@ -3050,16 +3090,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/creation/useCreationStorage.ts, src/components/StartComposer.tsx, tests/browser
 - Verification: PARTIAL — 46e30fb0实现加载期显式字段patch、同队列读取/写入及末端sequence校验；5ddda4fb新增真实生产加载期草稿回归。原6PASS/8RED及后续竞态RED保留，LOAD-01同素材多引用删除反例由80f6按引用ID修复，新增仍按素材去重。27hook/81邻域PASS；独立actual-hook三反例3/3及精确复审Approved。production1423四组23/23首试、0flaky，run d0858bb6-fe82-4aac-9864-a8f64951271b；Native/UI和最终总交付另验。
 - Evidence: [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。
 - Last verified: 2026-10-15
-- Updated: 2026-10-17
+- Updated: 2026-11-21
 
 ## TASK-VERIFY-DEPS-20261015 — 恢复共享依赖清理事故并核验执行边界
 
 - Goal: 按主仓原锁恢复生成依赖，核对package/lock/index不变并如实记录未知影响。
 - Scope: HOME原生准备期间的依赖事故恢复与独立证据；无产品或用户数据改动。
 - Display status: 进行中
-- Priority: P1 — root未在前置guard失败后停止，bare npm ci清空共享依赖，影响其他工作树可运行性。
+- Priority: P3 — root未在前置guard失败后停止，bare npm ci清空共享依赖，影响其他工作树可运行性。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-CODEX-HOME-20261015
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -3069,16 +3109,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/changes/2026-10-15-dependency-repair, node_modules (ignored generated dependencies), scripts/windows/desktop-release.mjs, tests/unit/desktopDependencySafety.test.ts, tests/unit/desktopRelease.test.ts
 - Verification: PARTIAL — 统一入口防复发314ac750→11e991bf→5705fc73：自定义准备回调/官方installer前校验根及package/scope祖先链接、lock结构和越界路径；无构建缓存启动保持。原RED、DEP-01和DEP-02失败均保留，最终44PASS/1既有skip、共享junction只读callback0，精确5705fc73独立SPEC/QUALITY Approved。56cb1381承接的“回调缺口未修”属过时断言，现已纠正；不重复开发。原事故字节及短时影响仍UNKNOWN，目录差异不得自动归因事故；整体PARTIAL。
 - Evidence: [docs/changes/2026-10-15-dependency-repair/intent.md](../../docs/changes/2026-10-15-dependency-repair/intent.md), [docs/changes/2026-10-15-dependency-repair/spec.md](../../docs/changes/2026-10-15-dependency-repair/spec.md), [docs/changes/2026-10-15-dependency-repair/plan.md](../../docs/changes/2026-10-15-dependency-repair/plan.md), [docs/changes/2026-10-15-dependency-repair/verification.md](../../docs/changes/2026-10-15-dependency-repair/verification.md), [docs/changes/2026-10-15-dependency-repair/review.md](../../docs/changes/2026-10-15-dependency-repair/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。
 - Last verified: 2026-10-15
-- Updated: 2026-10-15
+- Updated: 2026-11-21
 
 ## TASK-DESIGN-MD-20261015 — 统一DESIGN设计系统与产品UI收敛
 
 - Goal: 承接用户指定DESIGN候选，形成完整设计系统并将规则用于全局产品页面与状态。
 - Scope: 根DESIGN、token同步校验、共享组件预览和产品UI规则；具体页面验收沿统一任务。
 - Display status: 进行中
-- Priority: P1 — 用户最新强调全局UI一致性与完整设计系统。
+- Priority: P3 — 用户最新强调全局UI一致性与完整设计系统。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: docs/changes/2026-10-15-kk-unified/spec.md
 - Feature IDs: FEAT-022, FEAT-023
 - Owner role: implementation-integrator
@@ -3088,16 +3128,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: DESIGN.md, scripts/design-md, design/preview, src/styles, src/components, docs/UI_INDEX.md
 - Verification: PARTIAL — 来源sync-pr45-main-20261010/codex/TASK-DESIGN-MD-20261015@cbda65e4，17tracked/22new保留并冻结。e5e4b345仅承接26文件，以当前runtime tokens生成，不修改产品CSS。46单测/8预览首试及定向静态通过，保留官方25项orphan警告，初审DS-01发现真实多行selector换行漂移，0770df7c修复后41单测/真实git-LF及精确独审PASS。Mobbin/getdesign只读参考，未执行不固定npx或覆盖配色。全局产品页面/Native/完整交付未验。
 - Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。
 - Last verified: 2026-10-15
-- Updated: 2026-10-15
+- Updated: 2026-11-21
 
 ## TASK-ISSUE-68 — 修复原生设置保存后的测试同步缺口
 
 - Goal: Issue68的Native lifecycle在异步保存后确认成功和设置弹窗消失，正常进入模型菜单。
 - Scope: 仅Native生命周期与既有延迟设置测试及交付记录；不改产品关闭契约、版本或部署。
-- Display status: 未完成
-- Priority: P1 — main quality Native生命周期失败，阻断主线质量验收。
+- Display status: 进行中
+- Priority: P3 — main quality Native生命周期失败，阻断主线质量验收。；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68
 - Feature IDs: none
 - Owner role: implementation-integrator
@@ -3107,16 +3147,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: tests/desktop/taskhost-lifecycle.mjs, tests/browser/settings-navigation.spec.ts
 - Verification: PARTIAL — 最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。实现C1 f7420989独立精确SHA审查PASS/P0P1=0，delivery12files0violations；最终文档head/Hosted/PR另记。
 - Evidence: [docs/changes/2026-10-18-issue-68-settings-save/intent.md](../../docs/changes/2026-10-18-issue-68-settings-save/intent.md), [docs/changes/2026-10-18-issue-68-settings-save/spec.md](../../docs/changes/2026-10-18-issue-68-settings-save/spec.md), [docs/changes/2026-10-18-issue-68-settings-save/plan.md](../../docs/changes/2026-10-18-issue-68-settings-save/plan.md), [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-settings-save/review.md](../../docs/changes/2026-10-18-issue-68-settings-save/review.md)
-- Next action: 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。
 - Last verified: 2026-10-18
-- Updated: 2026-10-18
+- Updated: 2026-11-21
 
 ## TASK-KKD-DESKTOP-PROXY-20261121 — 桌面模型代理与线路显示
 
 - Goal: 桌面模型检测、文本和生图统一出站规则并显示使用线路
 - Scope: 仅桌面模型 API 请求和网络设置
 - Display status: 进行中
-- Priority: P1 — 未记录
+- Priority: P3 — ；V1收口期降为旁路注意力（原优先级保留字段=P1）
 - Requirement refs: ledger:TASK-KKD-DESKTOP-PROXY-20261121
 - Feature IDs: FEAT-021
 - Owner role: repository-maintainer
@@ -3126,6 +3166,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src-tauri/src/task_host.rs, src-tauri/src/main.rs, src/components/settings/ConnectionSettings.tsx, src-tauri/src/task_host_network.rs, src-tauri/src/task_host_provider.rs, src/components/settings/ProviderNetworkSettings.tsx
 - Verification: PARTIAL — Desktop 2.1.43 隔离 WebView2 验证系统代理、强制直连和手动代理。三项请求线路、回环生成、重启配置与真实系统代理探测通过。Rust 230 PASS/1 ignore，设置 Web 11 PASS；完整 verify 阻于主线同样失败的 Codex 配置测试。付费生成和独审未验。
 - Evidence: [docs/changes/2026-11-21-desktop-provider-proxy/intent.md](../../docs/changes/2026-11-21-desktop-provider-proxy/intent.md), [docs/changes/2026-11-21-desktop-provider-proxy/verification.md](../../docs/changes/2026-11-21-desktop-provider-proxy/verification.md)
-- Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
+- Next action: V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
 - Last verified: 2026-11-21
 - Updated: 2026-11-21

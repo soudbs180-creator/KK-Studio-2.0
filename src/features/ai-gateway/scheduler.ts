@@ -26,6 +26,11 @@ import type {
 } from "./channels/registry.ts";
 import type { NormalizedError } from "./errors.ts";
 import { noChannelAvailable } from "./errors.ts";
+import {
+  orderGroupMembers,
+  parseModelRouteRef,
+  type RouteGroup,
+} from "./providerPoolRouting.ts";
 
 export interface DispatchRequest {
   readonly model: string;
@@ -54,6 +59,8 @@ export interface SchedulerOptions {
   /** Consecutive failures before an account is quarantined outright. */
   readonly quarantineThreshold?: number;
   readonly maxCooldownMs?: number;
+  /** Optional named route groups (`group/<id>` selectors). */
+  readonly routeGroups?: ReadonlyMap<string, RouteGroup>;
 }
 
 interface ChannelHealth {
@@ -172,12 +179,54 @@ export class Scheduler {
   readonly #registry: ChannelRegistry;
   readonly #health: ChannelHealthTracker;
   readonly #random: () => number;
+  readonly #now: () => number;
+  readonly #routeGroups: ReadonlyMap<string, RouteGroup>;
   readonly #sticky = new Map<string, string>();
+  readonly #groupCursor = new Map<string, number>();
 
   constructor(registry: ChannelRegistry, options: SchedulerOptions = {}) {
     this.#registry = registry;
     this.#health = new ChannelHealthTracker(options);
     this.#random = options.random ?? Math.random;
+    this.#now = options.now ?? Date.now;
+    this.#routeGroups = options.routeGroups ?? new Map();
+  }
+
+  /**
+   * Resolves Codex++-style selectors into concrete channel candidates.
+   * `provider/model` keeps only that channel; `group/*` expands via strategy.
+   */
+  resolveCandidates(model: string, operation: string): ChannelIndexEntry[] {
+    const route = parseModelRouteRef(model);
+    if (route.kind === "bare") {
+      return this.#registry.candidates(route.model, operation);
+    }
+    if (route.kind === "provider") {
+      return this.#registry
+        .candidates(route.model, operation)
+        .filter((entry) => entry.channelId === route.providerId);
+    }
+    const group = this.#routeGroups.get(route.groupId);
+    if (!group) return [];
+    const cursor = this.#groupCursor.get(route.groupId) ?? 0;
+    const ordered = orderGroupMembers(group, {
+      nowMs: this.#now(),
+      roundRobinCursor: cursor,
+      random: this.#random,
+    });
+    this.#groupCursor.set(route.groupId, cursor + 1);
+    const resolved: ChannelIndexEntry[] = [];
+    for (const member of ordered) {
+      const matches = this.#registry
+        .candidates(member.model, operation)
+        .filter((entry) => entry.channelId === member.channelId);
+      for (const entry of matches) {
+        if (!resolved.some((item) => item.channelId === entry.channelId)) {
+          resolved.push(entry);
+        }
+      }
+    }
+    return resolved;
   }
 
   health(): ChannelHealthTracker {
@@ -199,7 +248,7 @@ export class Scheduler {
     generation: number,
   ): ChannelIndexEntry[] {
     const tiers = this.#registry.tiers(
-      this.#registry.candidates(model, operation),
+      this.resolveCandidates(model, operation),
     );
     if (!tiers.length) return [];
     // The last tier is reused once exhausted: a single-account setup must still
@@ -209,10 +258,7 @@ export class Scheduler {
   }
 
   async dispatch(request: DispatchRequest): Promise<DispatchOutcome> {
-    const candidates = this.#registry.candidates(
-      request.model,
-      request.operation,
-    );
+    const candidates = this.resolveCandidates(request.model, request.operation);
     const pinnedId = request.sessionId
       ? this.#sticky.get(request.sessionId)
       : undefined;

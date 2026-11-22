@@ -1,4 +1,4 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
+﻿// Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 #[cfg(windows)]
@@ -8,6 +8,7 @@ mod asset_storage;
 mod cli_runtime;
 mod creation_storage;
 mod local_hardware;
+mod local_models;
 mod native_activation;
 mod native_repository_lock;
 mod native_root_authority;
@@ -1748,9 +1749,9 @@ fn task_host_cancel(
 // ========== 主函数 ==========
 
 fn main() {
-    let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
+    let paths = storage_paths::AppPaths::initialize().expect("KK Design 无法初始化用户数据目录");
     let authority = match native_root_authority::NativeRootAuthority::elect(&paths)
-        .expect("KK Studio 无法取得仓库所有权")
+        .expect("KK Design 无法取得仓库所有权")
     {
         Some(authority) => authority,
         None => {
@@ -1775,7 +1776,7 @@ fn main() {
     let activation = tauri::async_runtime::block_on(native_activation::ActivationServer::start(
         Arc::clone(&authority),
     ))
-    .expect("KK Studio 无法启动窗口激活服务");
+    .expect("KK Design 无法启动窗口激活服务");
     let focus = Arc::clone(&activation.focus);
 
     let config = if config_path.exists() {
@@ -1854,6 +1855,9 @@ fn main() {
                 .join("agent"),
         ))
         .manage(provider_model_requests::ModelRequests::default())
+        .manage(Arc::new(local_models::LocalModelManager::new(
+            paths.root.join("models"),
+        )))
         .manage(AppState {
             providers: Arc::new(provider_config::ProviderConfigRepository::new(
                 config_path.with_file_name("connections.json"),
@@ -1870,6 +1874,18 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             detect_local_hardware,
+            local_models::commands::local_model_choose_directory,
+            local_models::commands::local_model_prepare_install,
+            local_models::commands::local_model_install,
+            local_models::commands::local_model_cancel,
+            local_models::commands::local_model_status,
+            local_models::commands::local_model_current,
+            local_models::commands::local_model_list_installed,
+            local_models::commands::local_model_inspect,
+            local_models::commands::local_model_associate,
+            local_models::commands::local_model_runtime_status,
+            local_models::commands::local_model_start,
+            local_models::commands::local_model_stop,
             memory_storage_info,
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
@@ -1926,7 +1942,7 @@ fn main() {
             task_host_cancel,
         ])
         .build(tauri::generate_context!())
-        .expect("error while building kk Studio application")
+        .expect("error while building KK Design application")
         .run(|app, event| {
             if matches!(event, tauri::RunEvent::Exit) {
                 app.state::<agent_runtime::AgentRuntime>().shutdown();

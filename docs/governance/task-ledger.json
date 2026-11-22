@@ -1,5 +1,125 @@
 [
   {
+    "id": "TASK-MODEL-GW-20261122",
+    "title": "统一模型网关与本地模型商店",
+    "goal": "落地本地模型商店（零强制下载、硬件 fitTier、替换删旧）、供应商池路由原语，并将 FastVideo 作为可选 Desktop 视频适配器；Codex++ 仅作 AGPL 外参考",
+    "scope": "ADR-027、intent/spec/plan、localModelStore、设置商店 UI、providerPoolRouting、Scheduler.resolveCandidates、FastVideo adapter 与单测。不含嵌入 Codex++、不含安装包内权重、不含 FastVideo 实机终验、不含音频 REAL。",
+    "acceptance": [
+      "首次安装设置可见推荐且无自动下载",
+      "16GB 档 fitTier 指向可跑量化档",
+      "更新替换默认删旧并需确认",
+      "model/provider/group 路由与多 Key 原语单测通过",
+      "FastVideo 未配置失败原因明确；mock runner 可完成文生视频状态机"
+    ],
+    "dependencies": [
+      "TASK-AI-GATEWAY-001"
+    ],
+    "owner": "root",
+    "branch": "feat/TASK-MODEL-GW-20261122-gateway-store",
+    "worktree": "D:/KK Design",
+    "affectedModules": [
+      "docs/architecture/adr/ADR-027-model-gateway-and-local-store.md",
+      "docs/changes/2026-11-22-model-gateway-store/",
+      "src/domain/localModelStore.ts",
+      "src/features/ai-gateway/providerPoolRouting.ts",
+      "src/integrations/generation/fastVideoAdapter.ts",
+      "src/components/settings/LocalModelStorePanel.tsx"
+    ],
+    "status": "PARTIAL",
+    "priority": "P2",
+    "evidence": [
+      "docs/changes/2026-11-22-model-gateway-store/verification.md",
+      "tests/unit/localModelStore.test.ts",
+      "tests/unit/providerPoolRouting.test.ts",
+      "tests/unit/fastVideoAdapter.test.ts"
+    ],
+    "verification": "领域与适配器单测 PASS；Native 大文件下载与 FastVideo 实机 GPU 出片 NOT VERIFIED",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-11-22",
+    "requirementRefs": [
+      "ledger:TASK-MODEL-GW-20261122"
+    ],
+    "featureIds": [
+      "FEAT-040",
+      "FEAT-038"
+    ],
+    "priorityRationale": "用户确认网关/本地商店落地路线；解冻 Gateway 旁路中与商店相关的契约层",
+    "displayStatus": "进行中",
+    "nextAction": "接通 ADR-023 Native 下载 UI；FastVideo 实机双门；多 Key 持久化接到凭据库",
+    "lastVerified": "2026-11-22",
+    "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-WHOLE-V1-20261121",
+    "title": "Desktop整包V1跑通、UI过关与基线迭代规矩",
+    "goal": "冻结Desktop整包V1完成定义，盘点能力，搁置旁路，消除挡整盘项并完成用户终验钉基线，之后按保基线-收新能力-抬基线迭代",
+    "scope": "docs/changes/2026-11-21-whole-product-v1, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/PROGRESS.md, docs/governance/task-ledger.json；产品挡项仅限plan P0队列",
+    "acceptance": [
+      "scope-map标明已计入/补缺口/迁旧缝/演示以后且REAL勿重做",
+      "V1算进不算进与UI过关标准冻结；旁路nextAction搁置",
+      "用户walkthrough主路径与UI必选项通过并钉版本身份",
+      "iteration-rules在钉基线后生效；未终验不得宣称整包完成"
+    ],
+    "dependencies": [
+      "T5",
+      "BACKEND-TEXT-NODE",
+      "BACKEND-CONVERSATION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementer",
+    "branch": "feat/TASK-MODEL-GW-20261122-gateway-store",
+    "worktree": "D:/KK Design",
+    "affectedModules": [
+      "docs/changes/2026-11-21-whole-product-v1",
+      "docs/governance/task-ledger.json",
+      "docs/governance/PROJECT_STATE.md",
+      "docs/governance/AI_HANDOFF.md",
+      "docs/PROGRESS.md"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P0",
+    "priorityRationale": "模块迭代缺少整包终验；整盘跑通是后续所有增量的前置",
+    "evidence": [
+      "docs/changes/2026-11-21-whole-product-v1/scope-map.md",
+      "docs/changes/2026-11-21-whole-product-v1/intent.md",
+      "docs/changes/2026-11-21-whole-product-v1/spec.md",
+      "docs/changes/2026-11-21-whole-product-v1/plan.md",
+      "docs/changes/2026-11-21-whole-product-v1/walkthrough.md",
+      "docs/changes/2026-11-21-whole-product-v1/iteration-rules.md",
+      "docs/changes/2026-11-21-whole-product-v1/verification.md",
+      "docs/changes/2026-11-21-whole-product-v1/blockers-queue.md"
+    ],
+    "verification": "P0-6演示诚实15浏览器PASS；P0-1已纠正为日常安装包 C:/Users/Administrator/AppData/Local/Programs/KK Design/kk-studio.exe SHA256 FE5A79B8607D4DB35115A3EB78D68D6F365297D55480ADB7D6B65A40586EF201；旧.tmp候选与Local/release EXE已quarantine。用户walkthrough与真实文本/图片链仍NOT_VERIFIED。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-11-22",
+    "lastVerified": "2026-11-22",
+    "nextAction": "只用桌面KK Design安装包按walkthrough完成主路径与UI终验；禁止启动.tmp/quarantine旧EXE；通过后钉基线",
+    "requirementRefs": [
+      "user:整盘跑通UI过关可持续迭代",
+      "docs/governance/PROJECT_GOALS.md",
+      "docs/features/BACKEND-ROADMAP.md"
+    ],
+    "featureIds": [
+      "FEAT-001",
+      "FEAT-002",
+      "FEAT-008",
+      "FEAT-009",
+      "FEAT-014",
+      "FEAT-015",
+      "FEAT-022",
+      "FEAT-023",
+      "FEAT-031",
+      "FEAT-032"
+    ],
+    "specRefs": [
+      "docs/changes/2026-11-21-whole-product-v1/spec.md",
+      "docs/changes/2026-11-21-whole-product-v1/scope-map.md"
+    ],
+    "currentPackage": "docs/changes/2026-11-21-whole-product-v1",
+    "blocker": ""
+  },
+  {
     "id": "TASK-MOD-GATE-BOOTSTRAP",
     "title": "主线原生首建架构与目录基线",
     "goal": "合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础",
@@ -27,16 +147,16 @@
     ],
     "status": "REVIEW",
     "displayStatus": "进行中",
-    "priority": "P0",
-    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
+    "priority": "P3",
+    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布；V1收口期降为旁路注意力（原优先级保留字段=P0）",
     "evidence": [
       "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md"
     ],
     "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-30",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-30",
-    "nextAction": "固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
     "requirementRefs": [
       "user:主线合流",
       "AGENTS.md",
@@ -105,8 +225,8 @@
     ],
     "status": "IN_PROGRESS",
     "displayStatus": "进行中",
-    "priority": "P1",
-    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
+    "priority": "P3",
+    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "evidence": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-unified-toolbar-release/verification.md",
@@ -118,9 +238,9 @@
     ],
     "verification": "TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-19",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-19",
-    "nextAction": "一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。",
     "requirementRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md",
@@ -187,8 +307,8 @@
     ],
     "status": "IN_PROGRESS",
     "displayStatus": "进行中",
-    "priority": "P1",
-    "priorityRationale": "用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。",
+    "priority": "P3",
+    "priorityRationale": "用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "evidence": [
       "docs/changes/2026-10-18-mobile-composer/intent.md",
       "docs/changes/2026-10-18-mobile-composer/spec.md",
@@ -204,9 +324,9 @@
     ],
     "verification": "产品PR72正常squash b457/treebbcab与正式独审791e同树；全63文件独审/57定向测试PASS。main quality39124025635完整attempt2五项、guards39124025636双平台、新health39127523980实际health.ok=true均PASS；原attempt1 managed-web15秒spawnSync超时、旧health暂停403、零jobs异常UNKNOWN保留，准确根因未证。正式Release416447150/v2.1.40/Web部署39128852497成功，公开build-info/CI手机cbc0入口同源。Hosted main Mobile40/40首试/retry0；本地433/完整verify/窄屏40/40与旧v39完整snapshot/backup合成兼容及预算沿原包。线上实际320/390六控件44/48圆形同排、模型名打开picker，上传/参数/扩展面板可开；任务结果优先、详情结果→提示词→更多，旧文本刷新/图片830495B SHA64a6af6e与unknown0/1不变。只读库存current40/唯一previous39、前39manifest/archive与配置/auth/PID观察保持，独立18项PASS。40普通停留927.716秒后刷新图片可见/再次UI导出逐字节一致，完整捕获范围Provider0/POST0且临时调试已清理、实体Android接受待补；0新增真实生成，不改schema/storage/DB/权限，不写canonical。当前docs HEAD另需Delivery/独审/Hosted/正常PR；FEAT028 PARTIAL/T12开放。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-18",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-18",
-    "nextAction": "完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。",
     "requirementRefs": [
       "docs/changes/2026-10-18-mobile-composer/intent.md",
       "docs/changes/2026-10-18-mobile-composer/spec.md"
@@ -476,7 +596,7 @@
       "docs/changes/2026-10-15-kk-unified"
     ],
     "status": "IN_PROGRESS",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-15-kk-unified/intent.md",
       "docs/changes/2026-10-15-kk-unified/spec.md",
@@ -486,9 +606,9 @@
     ],
     "verification": "候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native单实例/重开/清理通过，前台focus唯一失败，整轮PARTIAL；原完整verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，exit1和未执行尾段保留。8e17九文件修复及精确独审PASS，相关87/87首试、0retry/flaky/skip；原Figma坐标/0.1容差未改、五锚点误差0，静态/build和Node1508/14skip通过。完整verify/新Native未重跑，ADR022/023契约已接受并独审，正常多聊天和独立安装适配实施中。完整真实Provider/共仓库/账号/云恢复/Hosted未验。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "displayStatus": "进行中",
-    "nextAction": "原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。",
     "lastVerified": "2026-10-16",
     "ownerRole": "implementation-integrator",
     "requirementRefs": [
@@ -516,7 +636,7 @@
       "FEAT-032",
       "FEAT-037"
     ],
-    "priorityRationale": "用户明确批准的统一产品修复与重构。",
+    "priorityRationale": "用户明确批准的统一产品修复与重构。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "sourceUpdates": [
       {
         "recordedAt": "2026-10-17",
@@ -553,7 +673,7 @@
       "docs/changes/2026-10-10-push-guard-spaces"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-10-push-guard-spaces/verification.md",
       "docs/changes/2026-10-10-push-guard-spaces/review.md",
@@ -562,16 +682,16 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "updated": "2026-11-21",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-FIX-PUSH-GUARD-SPACES-001"
     ],
     "featureIds": [],
-    "priorityRationale": "Windows 推送门禁的路径与长路径回归，影响主线保护。",
+    "priorityRationale": "Windows 推送门禁的路径与长路径回归，影响主线保护。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "verificationHistory": [
       {
         "recordedAt": "2026-10-17",
@@ -635,7 +755,7 @@
     ],
     "owner": "root",
     "priority": "P1",
-    "updated": "2026-10-12",
+    "updated": "2026-11-21",
     "affectedModules": [
       "tests/unit/desktopRelease.test.ts",
       "start-kk-studio.bat",
@@ -664,9 +784,9 @@
       "ledger:TASK-WINDOWS-ENTRY-RECOVERY-003"
     ],
     "featureIds": [],
-    "priorityRationale": "当前治理或验证阻断项",
+    "priorityRationale": "当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "displayStatus": "未完成",
-    "nextAction": "将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -936,7 +1056,7 @@
     ],
     "verification": "本轮复核确认：比例异常已自动拒绝，但仍未使用真实付费连接、物理手机或用户视觉验收，任意语义几何位移仍需人工确认。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-12",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-IMAGE-EDIT-VERIFY-002"
     ],
@@ -944,9 +1064,9 @@
       "FEAT-035"
     ],
     "priority": "P1",
-    "priorityRationale": "当前治理或验证阻断项",
+    "priorityRationale": "当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "displayStatus": "未完成",
-    "nextAction": "冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -1569,7 +1689,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
     ],
     "verification": "只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。",
-    "updated": "2026-09-17",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:T6"
@@ -1581,7 +1701,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-17",
     "ownerRole": "repository-maintainer"
   },
@@ -1651,7 +1771,7 @@
       "docs/changes/2026-10-15-kk-unified/verification.md"
     ],
     "verification": "用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。 固定ModelScope190e955f HiFi来源/加速节点/官方2K协议只读核对：FL2VA64.73GB，两模式93.13GB；16G指运行目标。现有Hub不能推断兼容；HiFi→付费2K接受性/价格/性能未知。未安装权重或节点。",
-    "updated": "2026-10-15",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:EXT-COMFY"
@@ -1662,7 +1782,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。",
     "lastVerified": "2026-10-15",
     "ownerRole": "repository-maintainer"
   },
@@ -1740,7 +1860,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
     ],
     "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
+    "updated": "2026-11-21",
     "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
       "ledger:T8"
@@ -1751,7 +1871,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-17",
     "ownerRole": "repository-maintainer"
   },
@@ -1783,7 +1903,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
     ],
     "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
+    "updated": "2026-11-21",
     "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
       "ledger:T9"
@@ -1795,7 +1915,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-17",
     "ownerRole": "repository-maintainer"
   },
@@ -1832,7 +1952,7 @@
       "deploy/MIGRATION.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:T10-PREP"
@@ -1840,8 +1960,8 @@
     "featureIds": [],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-28",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -1887,7 +2007,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
     ],
     "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
+    "updated": "2026-11-21",
     "blocker": "缺少本轮生产写入授权、正式/staging域名和DNS权限；先完成可审阅部署产物",
     "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
@@ -1902,7 +2022,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "复核阻塞条件，解除后重新验证并保留原失败证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：复核阻塞条件，解除后重新验证并保留原失败证据",
     "lastVerified": "2026-09-17",
     "ownerRole": "repository-maintainer"
   },
@@ -1932,7 +2052,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
     ],
     "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
+    "updated": "2026-11-21",
     "blocker": "需外部旧部署权限、切换授权与回滚窗口",
     "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
@@ -1942,7 +2062,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "复核阻塞条件，解除后重新验证并保留原失败证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：复核阻塞条件，解除后重新验证并保留原失败证据",
     "lastVerified": "2026-09-17",
     "ownerRole": "repository-maintainer"
   },
@@ -1972,7 +2092,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
     ],
     "verification": "当前只有响应式 Web；用户已确定功能顺序和登录/本地数据目标，独立 runtime 与真机验收未实现。",
-    "updated": "2026-09-28",
+    "updated": "2026-11-21",
     "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
       "ledger:T12"
@@ -1983,7 +2103,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-28",
     "ownerRole": "repository-maintainer"
   },
@@ -2016,7 +2136,7 @@
       "docs/changes/2026-09-22-design-system-pages/verification.md"
     ],
     "verification": "Design System 1.1共享控件已建立；目录/Skill字段/筛选、图标按钮、设置局部覆盖继续迁移并取得双端证据。其余历史专项页面与来源例外继续按实际组件验收，保留PARTIAL。",
-    "updated": "2026-09-22",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:UI-001"
@@ -2025,7 +2145,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-22",
     "ownerRole": "repository-maintainer"
   },
@@ -2109,7 +2229,7 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
+    "displayStatus": "进行中",
     "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-20",
     "ownerRole": "repository-maintainer",
@@ -2177,7 +2297,7 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
+    "displayStatus": "进行中",
     "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-22",
     "ownerRole": "repository-maintainer",
@@ -2227,7 +2347,7 @@
       "docs/changes/2026-09-20-main-close-002/verification.md"
     ],
     "verification": "本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。",
-    "updated": "2026-09-21",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:PERF-001"
@@ -2238,7 +2358,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-21",
     "ownerRole": "repository-maintainer"
   },
@@ -2820,7 +2940,7 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-CAP-001"
     ],
@@ -2833,8 +2953,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-21",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -2890,7 +3010,7 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-MINIMAX-001"
     ],
@@ -2901,8 +3021,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-24",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -2958,7 +3078,7 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-MCP-PROTO-001"
     ],
@@ -2967,8 +3087,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-03",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -3162,7 +3282,7 @@
     ],
     "verification": "代码透传与旧212/200/65测试记录保留；新增浏览器证据覆盖图片原始尺寸写入快照、刷新后回载和比例保持；仍缺 Desktop 参数实机 HTTP及同状态证据，不能 DONE/REAL；供应商尺寸枚举和像素限制需按模型适配。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-11",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:BACKEND-IMAGE-PARAMS"
     ],
@@ -3172,7 +3292,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步",
     "lastVerified": "2026-10-11",
     "ownerRole": "repository-maintainer"
   },
@@ -3253,7 +3373,7 @@
     ],
     "verification": "NOT VERIFIED：代码链路可先于凭据建设；真实出片/出音频验收需要供应商 Key 与额度（EXT-PROVIDER）。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:BACKEND-MEDIA-001"
     ],
@@ -3266,7 +3386,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-21",
     "ownerRole": "repository-maintainer"
   },
@@ -3297,7 +3417,7 @@
     ],
     "verification": "NOT VERIFIED：手动客户端真实可用，自动调用仍为 Prototype。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:BACKEND-MCP-AUTO"
     ],
@@ -3307,7 +3427,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-21",
     "ownerRole": "repository-maintainer"
   },
@@ -3345,7 +3465,7 @@
     ],
     "verification": "NOT VERIFIED：Desktop 必须保留免登录入口并可选登录，Web/Mobile 目标需登录；账号不默认云存个人数据。身份服务与 VPS/域名等外部部署条件未完成，Gateway 额度逻辑仅在单测覆盖。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:BACKEND-PLATFORM"
     ],
@@ -3360,7 +3480,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-21",
     "ownerRole": "repository-maintainer"
   },
@@ -3389,7 +3509,7 @@
     ],
     "verification": "NOT VERIFIED：仅有计划与 Git 同步，零实现。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:BACKEND-ASTRA-001"
     ],
@@ -3399,7 +3519,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-21",
     "ownerRole": "repository-maintainer"
   },
@@ -3551,7 +3671,7 @@
       "docs/changes/2026-09-22-design-system-pages/verification.md"
     ],
     "verification": "Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。",
-    "updated": "2026-09-22",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-DS-001"
@@ -3562,7 +3682,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步",
     "lastVerified": "2026-09-22",
     "ownerRole": "repository-maintainer"
   },
@@ -3781,7 +3901,7 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
+    "displayStatus": "进行中",
     "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer",
@@ -3835,7 +3955,7 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-AGENT-002"
     ],
@@ -3844,8 +3964,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-22",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -4365,7 +4485,7 @@
     "status": "TODO",
     "evidence": [],
     "verification": "未开工。",
-    "updated": "2026-09-23",
+    "updated": "2026-11-21",
     "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
       "ledger:TASK-ORCH-003"
@@ -4376,7 +4496,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-09-23",
     "ownerRole": "repository-maintainer"
   },
@@ -4407,7 +4527,7 @@
       "docs/changes/2026-10-03-incomplete-tasks/verification.md"
     ],
     "verification": "契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。",
-    "updated": "2026-10-08",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-CANVAS-001"
@@ -4418,7 +4538,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-10-08",
     "ownerRole": "repository-maintainer"
   },
@@ -4460,7 +4580,7 @@
       "docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json"
     ],
     "verification": "9态、可重试边界和未知成本语义保持通过；新增成本回执的有限金额、来源/币种/身份绑定、重复/冲突保护、快照读回和 native package 回归通过。独立 dirty 预检未发现P0-P2缺陷，结论为PASS WITH FOLLOW-UPS；真实 Provider、每平台运行和用户验收仍未验证，保持PARTIAL。",
-    "updated": "2026-10-11",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-TASKSTATE-001"
@@ -4472,7 +4592,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。",
     "lastVerified": "2026-10-11",
     "ownerRole": "repository-maintainer"
   },
@@ -4510,7 +4630,7 @@
       "docs/changes/2026-10-12-p1-audit-closeout/verification.md"
     ],
     "verification": "有界报价回执 schema、任务/幂等身份校验、重复与冲突保护和快照恢复通过；但当前生产 Provider→task 归档路径没有消费 applyTaskCostReceipt，只有 helper/schema 与 fixture 测试。真实 Provider 报价回执和提交后 exact-SHA 正式审查仍未取得，保持 PARTIAL。",
-    "updated": "2026-10-12",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-TASKSTATE-002"
@@ -4519,9 +4639,9 @@
       "FEAT-031"
     ],
     "priority": "P1",
-    "priorityRationale": "当前治理或验证阻断项",
+    "priorityRationale": "当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "displayStatus": "进行中",
-    "nextAction": "在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -4761,7 +4881,7 @@
       "docs/changes/2026-10-15-kk-unified/review.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-LOCAL-SERVICE-001"
@@ -4771,8 +4891,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-15",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -5263,7 +5383,7 @@
     ],
     "verification": "历史PR31保留。本轮13efa3fe→00e00e40扩展同一v2快照：持久分组、手动名称保护、完整软删除/恢复，项目库与侧栏共用菜单。组删除解除归属，恢复为空组；菜单不误打开、未知任务禁止删除、冲突保护及迟到保存不夺取新导航。独立SPEC/QUALITY Approved；7442c4fb production1423三组Edge27/27首试PASS；Native存储/包169PASS。旧23/3及后续竞态RED保留。fresh新Native UI、完整总交付仍待，因此PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-PROJECT-SIDEBAR-001"
     ],
@@ -5274,7 +5394,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。",
     "lastVerified": "2026-10-15",
     "ownerRole": "repository-maintainer"
   },
@@ -5316,7 +5436,7 @@
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-PROV-003"
@@ -5326,8 +5446,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -5385,7 +5505,7 @@
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-PROV-004"
@@ -5395,8 +5515,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -5446,7 +5566,7 @@
     ],
     "verification": "13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-30",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-AGENT-004"
     ],
@@ -5457,7 +5577,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer"
   },
@@ -5490,7 +5610,7 @@
     ],
     "verification": "Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-23",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-AGENT-005"
     ],
@@ -5500,7 +5620,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：按验收条件完成实现、验证、独立审查和文档同步",
     "lastVerified": "2026-09-23",
     "ownerRole": "repository-maintainer"
   },
@@ -5538,7 +5658,7 @@
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-MEMORY-001"
@@ -5548,8 +5668,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -5603,7 +5723,7 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "dependencies": [
       "TASK-MEMORY-001"
     ],
@@ -5618,8 +5738,8 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -6211,14 +6331,14 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-VERIFY-CONCURRENCY-002"
     ],
     "featureIds": [],
-    "priorityRationale": "当前治理或验证阻断项",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "priorityRationale": "当前治理或验证阻断项；V1收口期降为旁路注意力（原优先级保留字段=P1）",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-09",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -6404,7 +6524,7 @@
       "tests/unit/modelPresentation.test.ts"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/features/feat-038-ai-model-gateway.md",
       "docs/changes/2026-10-10-kk-model-capability/verification.md",
@@ -6418,16 +6538,16 @@
     ],
     "verification": "gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-12",
+    "updated": "2026-11-21",
     "requirementRefs": [
       "ledger:TASK-AI-GATEWAY-001"
     ],
     "featureIds": [
       "FEAT-038"
     ],
-    "priorityRationale": "调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。",
+    "priorityRationale": "调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "displayStatus": "进行中",
-    "nextAction": "先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -6555,12 +6675,12 @@
       "ledger:TASK-AGENT-010"
     ],
     "featureIds": [],
-    "priority": "P1",
-    "priorityRationale": "跨环境启动旧版本会让已合入功能对其他使用者不可见",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "priority": "P3",
+    "priorityRationale": "跨环境启动旧版本会让已合入功能对其他使用者不可见；V1收口期降为旁路注意力（原优先级保留字段=P1）",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-12",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
       {
@@ -6582,8 +6702,8 @@
   {
     "dependencies": [],
     "owner": "root",
-    "priority": "P1",
-    "updated": "2026-10-12",
+    "priority": "P3",
+    "updated": "2026-11-21",
     "affectedModules": [
       "docs/UI_INDEX.md",
       "docs/README.md",
@@ -6635,9 +6755,9 @@
       "ledger:TASK-GOV-003"
     ],
     "featureIds": [],
-    "priorityRationale": "治理收敛，门禁已接入 lint",
+    "priorityRationale": "治理收敛，门禁已接入 lint；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "displayStatus": "进行中",
-    "nextAction": "待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -6646,8 +6766,8 @@
       "TASK-GOV-003"
     ],
     "owner": "root",
-    "priority": "P1",
-    "updated": "2026-10-12",
+    "priority": "P3",
+    "updated": "2026-11-21",
     "affectedModules": [
       "scripts/governance/branch-audit.mjs",
       "docs/changes/2026-10-12-branch-consolidation"
@@ -6675,9 +6795,9 @@
       "ledger:TASK-GOV-004"
     ],
     "featureIds": [],
-    "priorityRationale": "治理收敛前置：分支不收敛则所有合并冲突面持续扩大",
+    "priorityRationale": "治理收敛前置：分支不收敛则所有合并冲突面持续扩大；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "displayStatus": "进行中",
-    "nextAction": "P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -6698,7 +6818,7 @@
     "branch": "unallocated",
     "worktree": "unallocated",
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "affectedModules": [
       "scripts/governance/doc-index.mjs",
       "scripts/check-snapshot-header.mjs",
@@ -6713,16 +6833,16 @@
     ],
     "verification": "2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "updated": "2026-11-21",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-REVIEW-REMEDIATION-001"
     ],
     "featureIds": [],
-    "priorityRationale": "治理门禁 fail-open 会让错误 current 入口进入合并候选。",
+    "priorityRationale": "治理门禁 fail-open 会让错误 current 入口进入合并候选。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "verificationHistory": [
       {
         "recordedAt": "2026-10-17",
@@ -6762,16 +6882,16 @@
       "tests/browser"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-13-capability-ui/verification.md",
       "docs/changes/2026-10-13-capability-ui/review.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "updated": "2026-11-21",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-UI-CLASSIFY-20261013"
@@ -6780,7 +6900,7 @@
       "FEAT-011",
       "FEAT-030"
     ],
-    "priorityRationale": "多次修改未落到客户端的分类与交互回归",
+    "priorityRationale": "多次修改未落到客户端的分类与交互回归；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "lastVerified": "2026-10-13",
     "verificationHistory": [
       {
@@ -6840,7 +6960,7 @@
       "docs/changes/2026-10-13-agent-recovery/evidence/delivery-document-checks.json"
     ],
     "notes": "用户批准自主执行；仅本任务修复集成到canonical dirty checkout，原index/data/keys保留。真实凭据验收使用唯一synthetic ID；fixed Google/收费Provider与强杀崩溃原子性不在本任务PASS声明内。",
-    "priority": "P1",
+    "priority": "P3",
     "risk": "high",
     "reviewRequired": true,
     "platforms": [
@@ -6857,11 +6977,11 @@
       "FEAT-009",
       "FEAT-022"
     ],
-    "priorityRationale": "修复正常重开/会话恢复自锁与凭据保存误报，保护用户配置和已有会话。",
-    "updated": "2026-10-17",
+    "priorityRationale": "修复正常重开/会话恢复自锁与凭据保存误报，保护用户配置和已有会话。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
+    "updated": "2026-11-21",
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "verificationResult": "PARTIAL",
     "verificationHistory": [
       {
@@ -6908,7 +7028,7 @@
       "scripts"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "risk": "high",
     "reviewRequired": true,
     "platforms": [
@@ -6939,11 +7059,11 @@
     "notes": "已保存2.1.17冻结、2.1.18中间候选与最新2.1.20源f2b0466的恢复输入；当前Desktop/Web2.1.21产品7a463742完成本地UI验证。107树/39一致dirty快照，原index未变；CLI桥4270生产白名单保留用户Node/npm环境。",
     "openQuestions": "产品歧义均已确认；未接协议、Native Mobile、真实CLI/Provider、日常用户资料、安装器/Hosted及用户视觉仍分别开放。",
     "lastVerified": "2026-10-14",
-    "updated": "2026-10-17",
-    "priorityRationale": "解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。",
+    "updated": "2026-11-21",
+    "priorityRationale": "解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "verificationResult": "PARTIAL",
     "verificationHistory": [
       {
@@ -6991,23 +7111,23 @@
       "docs/changes/2026-10-12-pr55-historical-integration"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-12-pr55-historical-integration/verification.md",
       "docs/changes/2026-10-12-pr55-historical-integration/review.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "updated": "2026-11-21",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-GOV-005"
     ],
     "featureIds": [],
-    "priorityRationale": "一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。",
+    "priorityRationale": "一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "verificationHistory": [
       {
         "recordedAt": "2026-10-17",
@@ -7064,24 +7184,24 @@
       "docs/changes/2026-10-12-TASK-ENG-001-code-health"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md",
       "docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md"
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "notes": "PR #56 https://github.com/soudbs180-creator/KK-Studio-2.0/pull/56（未合并）。当前主线承接覆盖全部 workflow action SHA 固定，并在同分支补齐 CODING-STANDARDS.md 两项门禁映射；旧 base 不含相关文件的说明保留为历史。9c849aa 的 Hosted CI 已通过，但最终独立复审发现五项验收阻断；修复在 D:/kk-studio/post-pr55-main-20261013 隔离副本继续，旧 worktree 保留。后续：① advisory→blocking 翻转时机由维护者在存量 burn-down 后决定，翻转前需用真实历史 diff 校准相似度阈值 0.6；② Hermes 功能层另行评估，不在本任务实现。用户已授权合并，但新 HEAD 必须重新通过独立复审与 Hosted CI。",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-ENG-001"
     ],
     "featureIds": [],
-    "priorityRationale": "工程治理增量门禁；不改变产品运行时行为。",
+    "priorityRationale": "工程治理增量门禁；不改变产品运行时行为。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "verificationHistory": [
       {
         "recordedAt": "2026-10-17",
@@ -7178,7 +7298,7 @@
       "tests/unit/projectCanvas.test.ts"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-14-agent-canvas-sync/verification.md",
       "docs/changes/2026-10-14-agent-canvas-sync/review.md",
@@ -7188,7 +7308,7 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "featureIds": [
       "FEAT-001",
       "FEAT-009",
@@ -7197,8 +7317,8 @@
     "requirementRefs": [
       "user:agent-canvas-sync-20261014"
     ],
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-14",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -7216,7 +7336,8 @@
         "source": "docs/changes/2026-10-17-audit-repair/verification.md",
         "reason": "登记的历史worktree目录已不存在"
       }
-    ]
+    ],
+    "priorityRationale": "；V1收口期降为旁路注意力（原优先级保留字段=P1）"
   },
   {
     "id": "TASK-CANVAS-WIDE-PORT-20261014",
@@ -7245,7 +7366,7 @@
     ],
     "verification": "本次同步修复前/后development23.33%同样被composer遮挡；production全量1失败，修复尚未执行。",
     "verificationResult": "FAIL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-14",
     "featureIds": [
       "FEAT-001"
@@ -7254,7 +7375,7 @@
       "derived:full-browser-port-hit-test"
     ],
     "displayStatus": "未完成",
-    "nextAction": "单独复证production并修正宽图主体几何/端口锚点",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：单独复证production并修正宽图主体几何/端口锚点",
     "ownerRole": "repository-maintainer",
     "sourceUpdates": [
       {
@@ -7264,7 +7385,8 @@
         "worktree": "unassigned",
         "source": "docs/changes/2026-10-17-audit-repair/verification.md"
       }
-    ]
+    ],
+    "priorityRationale": "开放任务默认待治理排序"
   },
   {
     "id": "TASK-AGENT-UX-20261014",
@@ -7767,7 +7889,7 @@
       "tests/unit/desktopAgentRuntime.test.ts"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-15-codex-home/intent.md",
       "docs/changes/2026-10-15-codex-home/spec.md",
@@ -7783,9 +7905,9 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "updated": "2026-11-21",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "ownerRole": "implementer",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015",
@@ -7796,7 +7918,7 @@
       "FEAT-002",
       "FEAT-009"
     ],
-    "priorityRationale": "用户明确要求首页直接使用Codex/ChatGPT且修复影响实际提交与交互的来源/布局问题。",
+    "priorityRationale": "用户明确要求首页直接使用Codex/ChatGPT且修复影响实际提交与交互的来源/布局问题。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "lastVerified": "2026-10-15",
     "baseSha": "492abad48b0695f6117265fba6d29e8ea2a4b9bc",
     "verificationHistory": [
@@ -7863,7 +7985,7 @@
       "docs/changes/2026-10-15-codex-card-reference"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-10-15-codex-card-reference/intent.md",
       "docs/changes/2026-10-15-codex-card-reference/spec.md",
@@ -7873,9 +7995,9 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "updated": "2026-11-21",
+    "displayStatus": "进行中",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "ownerRole": "implementer",
     "requirementRefs": [
       "ledger:TASK-CODEX-REF-20261015",
@@ -7884,7 +8006,7 @@
     "featureIds": [
       "FEAT-002"
     ],
-    "priorityRationale": "用户明确要求产品参考图连线后可直接使用 Codex 内置生图，并实际桌面验证。",
+    "priorityRationale": "用户明确要求产品参考图连线后可直接使用 Codex 内置生图，并实际桌面验证。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "lastVerified": "2026-10-15",
     "baseSha": "cbda65e4389fc807769a8faf7654892415992589",
     "verificationHistory": [
@@ -7914,9 +8036,9 @@
     "branch": "unallocated",
     "worktree": "unallocated",
     "status": "PARTIAL",
-    "displayStatus": "未完成",
-    "priority": "P1",
-    "priorityRationale": "统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。",
+    "displayStatus": "进行中",
+    "priority": "P3",
+    "priorityRationale": "统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "acceptance": [
       "支持工具盘点全部项目会话/分支/worktree/完整SHA/dirty与运行命令，分开FACT/INFERENCE/UNKNOWN/CONFLICT，列表50条不冒充全量。",
       "每个已识别活动项目仅一次安全暂停请求并回读终态；保留不可中断写入、所有成果/用户资料，不kill或关闭用户客户端。",
@@ -7941,9 +8063,9 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-15",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "requirementRefs": [
       "ledger:TASK-GOV-004",
       "ledger:TASK-PROV-007",
@@ -9633,9 +9755,9 @@
     "branch": "unallocated",
     "worktree": "unallocated",
     "status": "PARTIAL",
-    "displayStatus": "未完成",
-    "priority": "P1",
-    "priorityRationale": "本轮Playwright默认outputDir清理造成旧开发态原件不可校验；后续测试必须先阻断重复损失。",
+    "displayStatus": "进行中",
+    "priority": "P3",
+    "priorityRationale": "本轮Playwright默认outputDir清理造成旧开发态原件不可校验；后续测试必须先阻断重复损失。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "acceptance": [
       "合成旧receipt/截图与Playwright共享目录的RED可复现，修复后原hash保持。",
       "每轮输出独立且包含source SHA；运行失败、取消和报告写入失败仍保留旧证据。",
@@ -9666,9 +9788,9 @@
     ],
     "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-15",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "requirementRefs": [
       "ledger:TASK-GOV-006",
       "docs/changes/2026-10-15-unified-execution/incident.md"
@@ -9779,9 +9901,9 @@
     ],
     "verification": "46e30fb0实现加载期显式字段patch、同队列读取/写入及末端sequence校验；5ddda4fb新增真实生产加载期草稿回归。原6PASS/8RED及后续竞态RED保留，LOAD-01同素材多引用删除反例由80f6按引用ID修复，新增仍按素材去重。27hook/81邻域PASS；独立actual-hook三反例3/3及精确复审Approved。production1423四组23/23首试、0flaky，run d0858bb6-fe82-4aac-9864-a8f64951271b；Native/UI和最终总交付另验。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-15",
-    "nextAction": "保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015"
     ],
@@ -9811,8 +9933,8 @@
     "baseSha": "492abad48b0695f6117265fba6d29e8ea2a4b9bc",
     "status": "PARTIAL",
     "displayStatus": "进行中",
-    "priority": "P1",
-    "priorityRationale": "root未在前置guard失败后停止，bare npm ci清空共享依赖，影响其他工作树可运行性。",
+    "priority": "P3",
+    "priorityRationale": "root未在前置guard失败后停止，bare npm ci清空共享依赖，影响其他工作树可运行性。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "acceptance": [
       "两树锁定依赖版本对齐，主仓package/lock/index hash保持",
       "独立审查直接证据，保留原依赖字节及用户短时影响UNKNOWN",
@@ -9839,9 +9961,9 @@
     ],
     "verification": "统一入口防复发314ac750→11e991bf→5705fc73：自定义准备回调/官方installer前校验根及package/scope祖先链接、lock结构和越界路径；无构建缓存启动保持。原RED、DEP-01和DEP-02失败均保留，最终44PASS/1既有skip、共享junction只读callback0，精确5705fc73独立SPEC/QUALITY Approved。56cb1381承接的“回调缺口未修”属过时断言，现已纠正；不重复开发。原事故字节及短时影响仍UNKNOWN，目录差异不得自动归因事故；整体PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-15",
-    "nextAction": "保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015"
     ],
@@ -9872,8 +9994,8 @@
     ],
     "status": "PARTIAL",
     "displayStatus": "进行中",
-    "priority": "P1",
-    "priorityRationale": "用户最新强调全局UI一致性与完整设计系统。",
+    "priority": "P3",
+    "priorityRationale": "用户最新强调全局UI一致性与完整设计系统。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "evidence": [
       "docs/changes/2026-10-15-kk-unified/intent.md",
       "docs/changes/2026-10-15-kk-unified/spec.md",
@@ -9883,9 +10005,9 @@
     ],
     "verification": "来源sync-pr45-main-20261010/codex/TASK-DESIGN-MD-20261015@cbda65e4，17tracked/22new保留并冻结。e5e4b345仅承接26文件，以当前runtime tokens生成，不修改产品CSS。46单测/8预览首试及定向静态通过，保留官方25项orphan警告，初审DS-01发现真实多行selector换行漂移，0770df7c修复后41单测/真实git-LF及精确独审PASS。Mobbin/getdesign只读参考，未执行不固定npx或覆盖配色。全局产品页面/Native/完整交付未验。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-15",
-    "nextAction": "关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。",
     "requirementRefs": [
       "docs/changes/2026-10-15-kk-unified/spec.md"
     ],
@@ -9915,9 +10037,9 @@
       "tests/browser/settings-navigation.spec.ts"
     ],
     "status": "REVIEW",
-    "displayStatus": "未完成",
-    "priority": "P1",
-    "priorityRationale": "main quality Native生命周期失败，阻断主线质量验收。",
+    "displayStatus": "进行中",
+    "priority": "P3",
+    "priorityRationale": "main quality Native生命周期失败，阻断主线质量验收。；V1收口期降为旁路注意力（原优先级保留字段=P1）",
     "evidence": [
       "docs/changes/2026-10-18-issue-68-settings-save/intent.md",
       "docs/changes/2026-10-18-issue-68-settings-save/spec.md",
@@ -9927,9 +10049,9 @@
     ],
     "verification": "最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。实现C1 f7420989独立精确SHA审查PASS/P0P1=0，delivery12files0violations；最终文档head/Hosted/PR另记。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-18",
+    "updated": "2026-11-21",
     "lastVerified": "2026-10-18",
-    "nextAction": "纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。",
     "requirementRefs": [
       "https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68"
     ],
@@ -9958,7 +10080,7 @@
       "src/components/settings/ProviderNetworkSettings.tsx"
     ],
     "status": "PARTIAL",
-    "priority": "P1",
+    "priority": "P3",
     "evidence": [
       "docs/changes/2026-11-21-desktop-provider-proxy/intent.md",
       "docs/changes/2026-11-21-desktop-provider-proxy/verification.md"
@@ -9973,8 +10095,9 @@
       "FEAT-021"
     ],
     "lastVerified": "2026-11-21",
-    "nextAction": "处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
+    "nextAction": "V1整包收口期搁置（TASK-WHOLE-V1-20261121）；解冻条件：用户终验钉基线或明确解冻本任务。原下一步：处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
     "displayStatus": "进行中",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "priorityRationale": "；V1收口期降为旁路注意力（原优先级保留字段=P1）"
   }
 ]

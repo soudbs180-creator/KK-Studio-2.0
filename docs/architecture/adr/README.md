@@ -76,3 +76,5 @@
 | [ADR-022](ADR-022-project-chats-and-v3-migration.md) | 普通多聊天与不可降级快照迁移 | ACCEPTED；实现与验收未完成 |
 | [ADR-023](ADR-023-local-model-installation-and-owned-runtime.md) | 可信本地包安装与自有引擎 | ACCEPTED；实现与验收未完成 |
 | [ADR-025](ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 | ACCEPTED；实现与发布验收进行中 |
+| [ADR-026](ADR-026-desktop-provider-network.md) | 桌面模型 API 出站线路 | ACCEPTED；V1 收口期旁路 |
+| [ADR-027](ADR-027-model-gateway-and-local-store.md) | 统一模型网关执行核与本地商店 | ACCEPTED；实现 PARTIAL，大文件/实机视频未终验 |

@@ -2,8 +2,8 @@
 
 - 状态：PROTOTYPE
 - 领域：backend
-- 最近更新：2026-10-10
-- 关联任务：TASK-AI-GATEWAY-001
+- 最近更新：2026-11-22
+- 关联任务：TASK-AI-GATEWAY-001、TASK-MODEL-GW-20261122
 
 ## 用户可见入口
 
@@ -67,6 +67,7 @@
 - 未接 sub2api-client（传 `session_id` header；注意 Nginx 需 `underscores_in_headers on;`）
 - `stream: true` 目前是单次 buffered SSE，不是供应商 token 级增量流；后续可在 `ChannelAdapter` 增加可选 stream 方法
 - 异步通道走 `/v1/jobs`，chat 端点遇 `submitted` 返回 409
+- 2026-11-22：供应商池路由原语与 `Scheduler.resolveCandidates`（`provider/model`、`group/*`）见 FEAT-040 / ADR-027；仍不嵌入 Codex++（AGPL）
 
 ## 已知陷阱（重建时踩过）
 

@@ -2,15 +2,51 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-11-21
+- updatedAt: 2026-11-22
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 桌面模型出站候选
+## 唯一源码仓与产品名（强制）
 
-TASK-KKD-DESKTOP-PROXY-20261121 从[验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)恢复。
+- **产品名**：KK Design
+- **唯一工程仓库**：`D:/KK Design`（跟踪 `origin/main`）
+- **禁止**：把 `D:/kk-studio/KK-Studio-2.0`（或任何过渡 quarantine 副本）当作最新仓、日常 checkout 或启动源码根
+- 过渡仓若已隔离：`D:/KK-Studio-transition-quarantine-20261122/`（只读恢复，禁止开发）
+
+## 「最新」定义（强制，防再开旧版）
+
+| 用途 | 权威 | 当前钉死值 |
+| --- | --- | --- |
+| 日常 Desktop 产品 | 已安装包 | `%LocalAppData%\Programs\KK Design\kk-studio.exe` · ProductName **KK Design** · FileVersion **2.1.88** · mtime **2026-11-22 21:44:12+08** · SHA256 `49B68581F5ABB835EE7CDC60C82285AE5CD552DE83F691AB474E559138B40A30` |
+| 工程源码 | `D:/KK Design` `main` | 与 `origin/main` 对齐；源码声明 Desktop 约 2.1.43，**低于**日常 2.1.88 |
+| 过渡仓 | 退役 | `D:/KK-Studio-transition-quarantine-20261122/` 只读，禁止启动 |
+
+**硬规则**：走查、验收、帮用户点 UI，一律只用上述日常安装包。不得用 `.tmp` 候选、过渡仓、旧 2.1.81 备份、或其他 worktree `target/release` 冒充「最新」。
+
+**晋升记录（2026-11-22）**：用户要求保证最新后，已将 FULL-PRODUCT 工作树验收过的 **2.1.88** 写入日常安装目录；旧 2.1.81 EXE 备份在 `D:/KK Design/.tmp/quarantine-old-desktop-20261122-214658/pre-promote-2.1.81-*`。
+
+## Desktop 唯一日常入口（强制）
+
+- **只许**：桌面「KK Design」→ `C:\Users\Administrator\AppData\Local\Programs\KK Design\kk-studio.exe`（**2.1.88**；SHA256 `49B68581F5ABB835EE7CDC60C82285AE5CD552DE83F691AB474E559138B40A30`）
+- **禁止启动**：`.tmp/whole-v1-desktop/`、`%LocalAppData%\KK Studio\kk-studio.exe`、sandbox/`target/release` 历史副本、任何 quarantine 内旧 EXE（含已备份的 2.1.81）、过渡仓产物
+- 旧误用包已隔离：`D:/KK Design/.tmp/quarantine-old-desktop-20261122-214658/`；Agent **不得**再打开旧 UI / 旧候选包
+
+## 当前恢复入口：Desktop 整包 V1（2026-11-21；入口已于 2026-11-22 纠正）
+
+先读 [intent](../changes/2026-11-21-whole-product-v1/intent.md)、[scope-map](../changes/2026-11-21-whole-product-v1/scope-map.md)、[spec](../changes/2026-11-21-whole-product-v1/spec.md)、[plan](../changes/2026-11-21-whole-product-v1/plan.md)、[walkthrough](../changes/2026-11-21-whole-product-v1/walkthrough.md)、[verification](../changes/2026-11-21-whole-product-v1/verification.md)、[blockers-queue](../changes/2026-11-21-whole-product-v1/blockers-queue.md)。账本任务 TASK-WHOLE-V1-20261121。收口期不新开 Mobile/发布/规则旁路。P0-1/P0-6 已落地；浏览器 P0-7 UI 抽查（去赘字/压密度/行距/矮屏）已过；fixture 文本/图片已 PASS。**下一步唯一完成门禁**：用户用**上述唯一日常安装包**按 walkthrough 做真实文本/图片 + 重开，通过后钉基线并启用 [iteration-rules](../changes/2026-11-21-whole-product-v1/iteration-rules.md)。未走查不得宣称整包完成。`.tmp` 候选包已作废，不得再作终验入口。
+
+## 模型网关 / 本地商店（2026-11-22，PARTIAL）
+
+- 任务：`TASK-MODEL-GW-20261122` · FEAT-040 · [ADR-027](../architecture/adr/ADR-027-model-gateway-and-local-store.md)
+- 变更包：[2026-11-22-model-gateway-store](../changes/2026-11-22-model-gateway-store/intent.md)
+- 已有：商店预设/fitTier/替换策略、路由原语、FastVideo mock 适配；**无** AGPL Codex++ 嵌入
+- 未验：Native 大文件安装、FastVideo 实机出片
+
+## 桌面模型出站候选（V1 搁置旁路）
+
+TASK-KKD-DESKTOP-PROXY-20261121 从[验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)恢复；当前 nextAction 为 V1 搁置，除非用户解冻。
 
 ## 当前恢复入口：统一42公开下载资产名修复（2026-10-19）
 
