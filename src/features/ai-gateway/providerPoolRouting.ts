@@ -120,17 +120,21 @@ export function orderGroupMembers(
         }
         const pick = pool.splice(Math.min(index, pool.length - 1), 1)[0]!;
         ordered.push(pick);
-        cursor = random() * Math.max(
-          pool.reduce((sum, item) => sum + Math.max(item.weight, 0) + 10, 0),
-          1,
-        );
+        cursor =
+          random() *
+          Math.max(
+            pool.reduce((sum, item) => sum + Math.max(item.weight, 0) + 10, 0),
+            1,
+          );
       }
       return ordered;
     }
     case "round-robin": {
       const start =
         ((options.roundRobinCursor ?? 0) % members.length) + members.length;
-      return members.map((_, index) => members[(start + index) % members.length]!);
+      return members.map(
+        (_, index) => members[(start + index) % members.length]!,
+      );
     }
     case "sequential":
     default:

@@ -61,9 +61,7 @@ export function probeFastVideo(input: {
     platform,
     pythonModule: "declared",
     gpuHint,
-    disableReason: available
-      ? ""
-      : "当前显存估计不足以运行推荐 FastVideo 权重",
+    disableReason: available ? "" : "当前显存估计不足以运行推荐 FastVideo 权重",
     modelSuggestion: "FastVideo/FastWan2.1-T2V-1.3B-Diffusers",
   });
 }

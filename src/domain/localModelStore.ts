@@ -62,19 +62,17 @@ const catalogById = new Map(
 
 /** Curated store surface: official pins + community/runtime placeholders. */
 export const localStorePresets: readonly LocalStorePreset[] = [
-  ...localChatModelPackages.map(
-    (entry): LocalStorePreset => ({
-      packageId: entry.id,
-      name: entry.name,
-      modality: "vision-language",
-      sourceKind: "official",
-      installable: true,
-      catalogRevision: entry.revision,
-      sourceUrl: entry.sourceUrl,
-      notes: "精选 GGUF；首次安装不自动下载。",
-      declaredBytes: entry.mainBytes + entry.visionBytes,
-    }),
-  ),
+  ...localChatModelPackages.map((entry): LocalStorePreset => ({
+    packageId: entry.id,
+    name: entry.name,
+    modality: "vision-language",
+    sourceKind: "official",
+    installable: true,
+    catalogRevision: entry.revision,
+    sourceUrl: entry.sourceUrl,
+    notes: "精选 GGUF；首次安装不自动下载。",
+    declaredBytes: entry.mainBytes + entry.visionBytes,
+  })),
   {
     packageId: "inkling-2-mini-iq4-nl",
     name: "Inkling 2 Mini IQ4_NL（社区参考）",
@@ -87,19 +85,17 @@ export const localStorePresets: readonly LocalStorePreset[] = [
       "适合约 16GB 显存档的图文理解候选；mmproj 与完整 SHA 未 pin 前不可一键安装。",
     declaredBytes: 17_600_000_000,
   },
-  ...localVideoModelPackages.map(
-    (entry): LocalStorePreset => ({
-      packageId: entry.id,
-      name: entry.name,
-      modality: "video",
-      sourceKind: "community",
-      installable: true,
-      catalogRevision: entry.revision,
-      sourceUrl: entry.sourceUrl,
-      notes: "社区视频权重；许可与运行时验收未完成。",
-      declaredBytes: entry.artifacts.reduce((sum, file) => sum + file.bytes, 0),
-    }),
-  ),
+  ...localVideoModelPackages.map((entry): LocalStorePreset => ({
+    packageId: entry.id,
+    name: entry.name,
+    modality: "video",
+    sourceKind: "community",
+    installable: true,
+    catalogRevision: entry.revision,
+    sourceUrl: entry.sourceUrl,
+    notes: "社区视频权重；许可与运行时验收未完成。",
+    declaredBytes: entry.artifacts.reduce((sum, file) => sum + file.bytes, 0),
+  })),
   {
     packageId: "fastvideo-runtime",
     name: "FastVideo 本地视频运行时",

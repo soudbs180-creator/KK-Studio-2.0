@@ -12,4 +12,4 @@ export {
   writeFastVideoRuntimeSettings,
 } from "./fastVideoRuntimeSettings";
 export type { FastVideoRuntimeSettings } from "./fastVideoRuntimeSettings";
-export { createFastVideoAdapterFromSettings } from "./fastVideoAdapterFactory";
+export { createGenerationAdapterWithRuntimeSettings } from "./fastVideoAdapterFactory";

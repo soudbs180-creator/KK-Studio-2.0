@@ -174,9 +174,7 @@ export function createFastVideoAdapter(
 }
 
 export function fastVideoDisableReason(runnerConfigured: boolean): string {
-  return runnerConfigured
-    ? ""
-    : "需要 Desktop 已安装并配置 FastVideo 运行时";
+  return runnerConfigured ? "" : "需要 Desktop 已安装并配置 FastVideo 运行时";
 }
 
 export function isFastVideoConnection(connection: ProviderConnection): boolean {

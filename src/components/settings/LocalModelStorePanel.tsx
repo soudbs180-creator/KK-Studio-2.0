@@ -80,7 +80,9 @@ export default function LocalModelStorePanel() {
       setMessage(preset.notes);
       return;
     }
-    const existing = installed.find((item) => item.packageId === preset.packageId);
+    const existing = installed.find(
+      (item) => item.packageId === preset.packageId,
+    );
     if (existing) {
       const plan = planPackageReplacement({
         packageId: existing.packageId,
@@ -226,9 +228,7 @@ export default function LocalModelStorePanel() {
                 className="settings-action secondary"
                 disabled={busy || !preset.installable}
                 title={
-                  preset.installable
-                    ? "选择目录后下载并校验"
-                    : preset.notes
+                  preset.installable ? "选择目录后下载并校验" : preset.notes
                 }
                 onClick={() => void installPreset(preset)}
               >

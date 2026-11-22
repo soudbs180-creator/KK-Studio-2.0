@@ -196,10 +196,7 @@ export class Scheduler {
    * Resolves Codex++-style selectors into concrete channel candidates.
    * `provider/model` keeps only that channel; `group/*` expands via strategy.
    */
-  resolveCandidates(
-    model: string,
-    operation: string,
-  ): ChannelIndexEntry[] {
+  resolveCandidates(model: string, operation: string): ChannelIndexEntry[] {
     const route = parseModelRouteRef(model);
     if (route.kind === "bare") {
       return this.#registry.candidates(route.model, operation);
@@ -250,7 +247,9 @@ export class Scheduler {
     operation: string,
     generation: number,
   ): ChannelIndexEntry[] {
-    const tiers = this.#registry.tiers(this.resolveCandidates(model, operation));
+    const tiers = this.#registry.tiers(
+      this.resolveCandidates(model, operation),
+    );
     if (!tiers.length) return [];
     // The last tier is reused once exhausted: a single-account setup must still
     // be able to retry its own account rather than fail with no attempt at all.
@@ -259,10 +258,7 @@ export class Scheduler {
   }
 
   async dispatch(request: DispatchRequest): Promise<DispatchOutcome> {
-    const candidates = this.resolveCandidates(
-      request.model,
-      request.operation,
-    );
+    const candidates = this.resolveCandidates(request.model, request.operation);
     const pinnedId = request.sessionId
       ? this.#sticky.get(request.sessionId)
       : undefined;

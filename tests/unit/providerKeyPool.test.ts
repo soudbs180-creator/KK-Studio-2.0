@@ -28,7 +28,8 @@ test("key pool sticks to one credential per session until failure", () => {
   assert.equal(failover?.key.credentialRef, "ref-b");
   pool = recordPoolSuccess(failover!.pool, failover!.key.keyId);
   assert.equal(
-    pool.keys.find((key) => key.keyId === failover!.key.keyId)?.consecutiveFailures,
+    pool.keys.find((key) => key.keyId === failover!.key.keyId)
+      ?.consecutiveFailures,
     0,
   );
 });

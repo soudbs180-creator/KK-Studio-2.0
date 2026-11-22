@@ -37,9 +37,7 @@ export function createGenerationAdapter(
       ...(options?.fastVideoModelId
         ? { modelId: options.fastVideoModelId }
         : {}),
-      ...(options?.fastVideoRunner
-        ? { runner: options.fastVideoRunner }
-        : {}),
+      ...(options?.fastVideoRunner ? { runner: options.fastVideoRunner } : {}),
     });
   }
   if (connection.kind === "local_comfyui")

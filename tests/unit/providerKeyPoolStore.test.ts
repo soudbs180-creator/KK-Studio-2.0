@@ -25,7 +25,10 @@ test("key pools persist credential refs only and round-trip by connection", () =
     credentialRefs: ["ref-one", "ref-two"],
   });
   assert.equal(upsertProviderKeyPool(pool, storage), true);
-  assert.deepEqual(readProviderKeyPool("conn-relay-1", storage)?.keys.length, 2);
+  assert.deepEqual(
+    readProviderKeyPool("conn-relay-1", storage)?.keys.length,
+    2,
+  );
   assert.equal(removeProviderKeyPool("conn-relay-1", storage), true);
   assert.equal(readProviderKeyPool("conn-relay-1", storage), null);
   assert.doesNotMatch(JSON.stringify(storage.dump()), /sk-|api_key/i);
