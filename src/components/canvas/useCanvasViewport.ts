@@ -1,4 +1,10 @@
-import { useCallback, useLayoutEffect, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { surfaceScale } from "./canvasSurface";
 
 interface CanvasViewport {
@@ -13,8 +19,11 @@ interface CanvasViewportResult {
 
 export function useCanvasViewport(
   containerRef: RefObject<HTMLDivElement>,
+  suspended = false,
 ): CanvasViewportResult {
+  const lastVisible = useRef<CanvasViewport>({ width: 1000, height: 700 });
   const measure = useCallback((): CanvasViewport => {
+    if (suspended) return lastVisible.current;
     const canvas = containerRef.current;
     const bounds = canvas?.getBoundingClientRect();
     const chatElement =
@@ -41,11 +50,8 @@ export function useCanvasViewport(
       width: Math.max(160, Math.min(canvasWidth, availableWidth)),
       height: bounds ? bounds.height / scale : (canvas?.clientHeight ?? 700),
     };
-  }, [containerRef]);
-  const [viewport, setViewport] = useState<CanvasViewport>({
-    width: 1000,
-    height: 700,
-  });
+  }, [containerRef, suspended]);
+  const [viewport, setViewport] = useState(lastVisible.current);
   useLayoutEffect(() => {
     const canvas = containerRef.current;
     if (!canvas) return;
@@ -53,6 +59,7 @@ export function useCanvasViewport(
       const next = measure();
       // A hidden workspace has no usable area; retain its last visible viewport.
       if (next.width <= 0 || next.height <= 0) return;
+      lastVisible.current = next;
       setViewport((current) =>
         current.width === next.width && current.height === next.height
           ? current
@@ -65,6 +72,6 @@ export function useCanvasViewport(
     if (chat) observer.observe(chat);
     update();
     return () => observer.disconnect();
-  }, [containerRef, measure]);
+  }, [containerRef, measure, suspended]);
   return { viewport, measure };
 }

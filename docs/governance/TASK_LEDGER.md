@@ -162,6 +162,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+| TASK-KKD-PEN-SYNC-20261121 | KK Design Pen 同步与展开控件 | REVIEW | 进行中 | P1 | none | Codex | 保持 PR #86 草稿，按同包 review.md 修正工作台设置并重跑现行 Pen、Desktop 和 Web 同状态验收。 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3129,3 +3130,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
 - Last verified: 2026-11-21
 - Updated: 2026-11-21
+
+## TASK-KKD-PEN-SYNC-20261121 — KK Design Pen 同步与展开控件
+
+- Goal: 让相同候选的可见设计、运行证据与 UI 工程版本对应并修复设置实心标记
+- Scope: 现行 Pen 节点、设置折叠、delivery 检查、证据与后续批次
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: ledger:TASK-KKD-PEN-SYNC-20261121
+- Feature IDs: none
+- Owner role: task-owner:Codex
+- Acceptance: 现行 Pen 与代码有可复核对应; 缺少映射、过期证据与共享依赖漂移被拦截; 设置折叠的鼠标、键盘与焦点保留
+- Branch: `fix/TASK-KKD-PEN-SYNC-20261121`
+- Worktree: `D:/kk-studio/.worktrees/KKD-FIRST-WAVE-BASELINE-LF-8f9c1a2`
+- Modules: src/components/settings/settings.css, scripts/check-delivery.mjs, docs/UI_INDEX.md
+- Verification: NOT_VERIFIED — 设置工作台与会话折叠保留 Desktop 2.1.45、Web 2.1.44 实测记录。当前 Pen 尺寸、隐藏画布交互、设置草稿和 Desktop 连接忙碌已列为 PR #86 合入前复验项。门禁补漏回归 7 项通过。
+- Evidence: [docs/changes/2026-11-21-pen-ui-delivery/intent.md](../../docs/changes/2026-11-21-pen-ui-delivery/intent.md), [docs/changes/2026-11-21-pen-ui-delivery/spec.md](../../docs/changes/2026-11-21-pen-ui-delivery/spec.md), [docs/changes/2026-11-21-pen-ui-delivery/plan.md](../../docs/changes/2026-11-21-pen-ui-delivery/plan.md), [docs/changes/2026-11-21-pen-ui-delivery/verification.md](../../docs/changes/2026-11-21-pen-ui-delivery/verification.md), [docs/changes/2026-11-21-pen-ui-delivery/review.md](../../docs/changes/2026-11-21-pen-ui-delivery/review.md)
+- Next action: 保持 PR #86 草稿，按同包 review.md 修正工作台设置并重跑现行 Pen、Desktop 和 Web 同状态验收。
+- Last verified: 2026-11-21
+- Updated: 2026-11-22

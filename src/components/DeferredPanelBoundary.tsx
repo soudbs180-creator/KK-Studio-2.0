@@ -1,5 +1,12 @@
 import { focusDialogControl } from "./dialogFocus";
-import { Component, Suspense, useEffect, useRef, type ReactNode } from "react";
+import {
+  Component,
+  Suspense,
+  useEffect,
+  useRef,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import UiIcon from "./UiIcon";
 
 function restoreDialogFocus(dialog: Element | null | undefined) {
@@ -10,14 +17,19 @@ function restoreDialogFocus(dialog: Element | null | undefined) {
 function PanelLoadState({
   failed = false,
   onClose,
+  focusScope,
 }: {
   failed?: boolean;
   onClose?: () => void;
+  focusScope?: RefObject<HTMLElement>;
 }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (failed) restoreDialogFocus(ref.current?.closest("dialog[open]"));
-  }, [failed]);
+    if (failed)
+      restoreDialogFocus(
+        focusScope?.current ?? ref.current?.closest("dialog[open]"),
+      );
+  }, [failed, focusScope]);
   return (
     <section ref={ref} className="info-panel" aria-label="页面加载">
       <header>
@@ -47,22 +59,28 @@ function PanelLoadState({
 function ReadyPanel({
   children,
   restoreFocus,
+  focusScope,
 }: {
   children: ReactNode;
   restoreFocus: boolean;
+  focusScope?: RefObject<HTMLElement>;
 }) {
   useEffect(() => {
     // A suspended panel removes its focused loading button when it resolves.
     // Restore the dialog's initial focus only when focus was left on the body.
     if (!restoreFocus) return;
     const dialog = Array.from(document.querySelectorAll("dialog[open]")).at(-1);
-    restoreDialogFocus(dialog);
-  }, [restoreFocus]);
+    restoreDialogFocus(focusScope?.current ?? dialog);
+  }, [restoreFocus, focusScope]);
   return children;
 }
 
 export default class DeferredPanelBoundary extends Component<
-  { children: ReactNode; onClose?: () => void },
+  {
+    children: ReactNode;
+    onClose?: () => void;
+    focusScope?: RefObject<HTMLElement>;
+  },
   { failed: boolean }
 > {
   state = { failed: false };
@@ -73,10 +91,29 @@ export default class DeferredPanelBoundary extends Component<
 
   render() {
     const { children, onClose } = this.props;
-    if (this.state.failed) return <PanelLoadState failed onClose={onClose} />;
+    if (this.state.failed)
+      return (
+        <PanelLoadState
+          failed
+          onClose={onClose}
+          focusScope={this.props.focusScope}
+        />
+      );
     return (
-      <Suspense fallback={<PanelLoadState onClose={onClose} />}>
-        <ReadyPanel restoreFocus={Boolean(onClose)}>{children}</ReadyPanel>
+      <Suspense
+        fallback={
+          <PanelLoadState
+            onClose={onClose}
+            focusScope={this.props.focusScope}
+          />
+        }
+      >
+        <ReadyPanel
+          restoreFocus={Boolean(onClose)}
+          focusScope={this.props.focusScope}
+        >
+          {children}
+        </ReadyPanel>
       </Suspense>
     );
   }

@@ -40,6 +40,7 @@ import {
 interface CanvasControlsOptions {
   rightGesture: ReturnType<typeof useCanvasContextMenu>["rightGesture"];
   initialCanvas?: ProjectCanvas;
+  suspendViewport?: boolean;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
 }
@@ -58,6 +59,7 @@ export function useCanvasControls({
   items,
   onItemsChange,
   initialCanvas,
+  suspendViewport = false,
 }: CanvasControlsOptions) {
   const canvasPreferences = useCanvasPreferences();
   const [transform, setTransform] = useState<ViewTransform>(
@@ -75,7 +77,10 @@ export function useCanvasControls({
     projectCanvasFingerprint(initialCanvas) === publishedCanvas.current;
   const [selectedNode, setSelectedNode] = useState<CanvasNodeId | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { viewport, measure: usableViewport } = useCanvasViewport(containerRef);
+  const { viewport, measure: usableViewport } = useCanvasViewport(
+    containerRef,
+    suspendViewport,
+  );
   const [composerExtraHeight, setComposerExtraHeight] = useState(0);
   const revealSelection = useRef<CanvasNodeId | null>(null);
   const revealBaselineHeight = useRef(0);

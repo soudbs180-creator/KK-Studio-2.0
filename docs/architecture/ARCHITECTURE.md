@@ -1,6 +1,6 @@
 # 工作台架构
 
-KK Studio 是一个 Figma-first 的 React/Vite 工作台，桌面发布由 Tauri 承载。浏览器开发模式用于快速验证 UI；桌面数据和凭据只有在 IPC 接线后才成为真实数据源。
+KK Studio 是一个 React/Vite 工作台，桌面发布由 Tauri 承载。浏览器开发模式用于快速验证 UI；桌面数据和凭据只有在 IPC 接线后才成为真实数据源。
 
 > **本文件是「应该怎样做」的规范。** 当前代码「实际是怎样的」由源码实证分析承载：
 > `D:\kk-studio\docs\architecture-ref\KK-Studio-系统架构设计文档.md`（含运行时拓扑、数据流、Tauri 命令清单、存储契约与安全边界）。
@@ -26,7 +26,7 @@ Desktop 与 Web 共用 `src/` 的领域、功能、Provider、任务、组件和
 
 Web 的静态应用和账号、会话、积分、会员、用量控制面目标部署在 VPS；项目/素材是否云端保存或同步不由部署位置推断，继续遵循 `DATA-STORAGE.md` 的本地优先与独立云端验收边界。Desktop 当前以用户自带 AI 账号登录或本机 API Key 的本地直接使用为先；产品化的用户自有 API 接入保持高优先级 TODO，暂不实现。
 
-Figma 文件是界面和动效的设计权威，代码是可运行行为的权威，测试和浏览器截图是交付证据。Figma 资源放在 `public/design/figma`，固定演示素材放在 `public/fixtures/demo`，插件源放在 `design/figma-plugin`。
+现行设计来源见 [UI 规范索引](../UI_INDEX.md)。代码记录可运行行为，测试和实际运行截图作为交付证据。Figma 资源放在 `public/design/figma`，固定演示素材放在 `public/fixtures/demo`，插件源放在 `design/figma-plugin`。
 
 模型适配器只描述 provider、模型 ID、能力和请求转换；模型权重属于外部 ComfyUI 根目录。API 凭据由系统凭据库管理。用户资料、记忆、项目、会话、资产和缓存按数据分级隔离，具体路径见 `DATA-STORAGE.md` 与 `config/storage-layout.json`。
 

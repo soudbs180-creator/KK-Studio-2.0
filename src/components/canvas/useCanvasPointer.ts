@@ -51,7 +51,7 @@ export function isInteractiveTarget(target: EventTarget | null): boolean {
     target instanceof Element &&
     Boolean(
       target.closest(
-        "button,input,textarea,select,a,video,audio,dialog,[contenteditable='true'],[data-no-node-drag]",
+        "button,summary,input,textarea,select,a,video,audio,dialog,[contenteditable='true'],[data-no-node-drag]",
       ),
     )
   );
@@ -122,7 +122,8 @@ export function useCanvasPointer({
         event.ctrlKey ||
         event.metaKey ||
         event.altKey ||
-        !containerRef.current?.getClientRects().length
+        !containerRef.current?.getClientRects().length ||
+        containerRef.current.hasAttribute("inert")
       )
         return;
       if (

@@ -1519,8 +1519,9 @@ x-kk-studio:
 This is the global design overview and portable token index for KK Studio.
 [UI_INDEX](docs/UI_INDEX.md) routes each topic to its canonical specification;
 this overview does not duplicate those rules or create a second runtime source.
-Current user requirements and confirmed feedback take precedence over registered
-tokens and shared components, then historical Figma baselines still applicable.
+The current accepted Pen nodes specify visible KK Design layouts, icon shapes, and states.
+Registered tokens and shared components implement those decisions. Historical Figma
+baselines remain available for traceability.
 The [approved unified specification](docs/changes/2026-10-15-kk-unified/spec.md)
 remains authoritative for settings, model selection, data, tasks, and platform scope.
 

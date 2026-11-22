@@ -1,0 +1,26 @@
+{
+  "mappingId": "settings.content-disclosure",
+  "platform": "desktop",
+  "versionBindingSha256": "0fd27c0cf28e2edcb5a252deafdf57c5975586fd38d21cef18f7fa3ce617c0fa",
+  "rawEvidenceSha256": "6729137f4e587ad8b973d405c9b1ec51c1e2dd319cd05c33dba1818120298c65",
+  "sourceCheckpoint": "9063ed14451c7978f9e812da7173728a9cbee950",
+  "entry": "kk-studio.exe",
+  "entrySha256": "e55ce8e2db5e72594f1d3a73fa828fc481ca49f6c0c57aa14bf3d9ca8db9305c",
+  "desktopBuildInputSha256": "ac3b9344e110b059f2a6bcadbc47071df10f54bcf1f8dbb606edc4b9cc245bbe",
+  "rawEvidenceFile": "native-runtime.json",
+  "url": "http://tauri.localhost/",
+  "launch": "Start candidate with start-kk-studio.bat and isolated private Windows desktop",
+  "version": "2.1.45",
+  "passed": 8,
+  "checks": [
+    "高级会话操作",
+    "高级偏好",
+    "系统与未接入偏好",
+    "独立转发代理",
+    "高级连接选项",
+    "ComfyUI 工作流",
+    "H3 视频模型候选",
+    "偏好备份"
+  ],
+  "failed": 0
+}

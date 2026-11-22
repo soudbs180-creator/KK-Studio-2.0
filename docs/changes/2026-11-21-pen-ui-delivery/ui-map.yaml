@@ -1,0 +1,271 @@
+version: 1
+pen:
+  documentId: b1c8c2e7-1733-4af4-843e-5c7962ed3f49
+  readbackSha256: 5bf7ffca1984b508e88f0d8ca1aeab30bc02f5dbdc2ba2cdd714c37dc72606cc
+  uri: file:///C:/Users/Administrator/.pencil/documents/b1c8c2e7-1733-4af4-843e-5c7962ed3f49/KK%20Design.pen
+  policyNodes:
+    - QnbwN
+    - CzGXd
+    - d7z7Ci
+mappings:
+  - id: settings.content-disclosure
+    route: / → 设置 → 通用 / 网络 / 模型接入 / 数据管理
+    nodes:
+      - d7z7Ci
+      - gSHZ5
+      - ToSeM
+      - rD3yd
+    files:
+      - src/components/settings/settings.css
+      - src/styles/ui-governance.css
+      - public/design/pen/disclosure-chevron.svg
+    locator: details.settings-disclosure > summary; details.model-access-manual > summary
+    kind: common-component
+    designSemantics: 设置详情的展开状态指示
+    variants:
+      - state: collapsed
+        node: ToSeM
+        expected: 16px 描边向右，aria 原生收起态
+      - state: expanded
+        node: gSHZ5
+        expected: 16px 描边向下，aria 原生展开态
+    tokenBinding:
+      role: --kk-text-secondary
+      source: src/styles/tokens.css
+      direction: 现有 CSS 语义色 → 实际样式；Pen 描边轮廓 → SVG mask
+    dependencies:
+      - src/styles/tokens.css
+      - src/components/settings/GeneralAdvancedPreferences.tsx
+      - src/components/settings/ConnectionSettings.tsx
+      - src/components/settings/AgentConnectionSettings.tsx
+      - config/platform-versions.json
+      - src/App.tsx
+      - src/components/settings/GeneralSettings.tsx
+      - src/components/settings/LocalVideoPackages.tsx
+      - src/components/settings/LocalWorkflowSettings.tsx
+      - src/components/settings/PreferencesBackup.tsx
+      - src/components/AgentConversationMessages.tsx
+      - src/components/canvas/useCanvasPointer.ts
+      - src/main.tsx
+    evidence:
+      desktop:
+        status: verified
+        sha256: 1a5f175074228a23c759743f83943f00bf6826116e91731aba7d585812862260
+      web:
+        status: verified
+        sha256: 295d25c38e248ca82840e046dea57ec38be181a03b1a4d6d399ea4c9de17d1c2
+  - id: settings.workspace
+    kind: functional-instance
+    route: / → 项目库 → 打开或新建项目 → 画布 → 打开设置 / 对话前往模型设置 / Ctrl+,
+    locator: .workspace-content[data-content-view=settings] > .workspace-surface[data-pen-node=hgib1]
+    nodes:
+      - hgib1
+      - BnwUr
+      - WHXX3
+      - C5yCOp
+    files:
+      - src/App.tsx
+      - src/components/WorkspaceSurface.tsx
+      - src/components/useAppPanelNavigation.ts
+      - src/components/TopBar.tsx
+      - src/components/settings/SettingsPanel.tsx
+      - src/components/DeferredPanelBoundary.tsx
+      - src/components/CanvasCollectionsPanels.tsx
+      - src/components/FloatingCollectionPanel.tsx
+      - src/components/canvas/useCanvasPointer.ts
+      - src/styles/workspace.css
+      - src/styles/collection-panels.css
+      - src/components/Canvas.tsx
+      - src/components/canvas/CanvasProps.ts
+      - src/components/canvas/useCanvasControls.ts
+      - src/components/canvas/useCanvasViewport.ts
+    dependencies:
+      - src/styles/tokens.css
+      - src/styles/conversation-panel.css
+      - config/platform-versions.json
+      - src/components/useSidebarLayout.ts
+      - src/components/useHiddenControlFocus.ts
+      - src/components/settings/SettingsSectionData.ts
+      - src/components/settings/settings.css
+      - src/components/settings/SettingsNavigationContext.ts
+      - src/components/settings/ModelProviderSettings.tsx
+    states:
+      - wide-adjacent-chat
+      - compact-settings-only
+      - transactions-pending
+      - restore-origin-focus
+    remaining: 保留历史收据。当前 Pen 尺寸、画布 Escape 和自动缩放、会话切换草稿及 Desktop 连接忙碌场景待复验。
+    evidence:
+      desktop:
+        status: pending
+        sha256: 1a3e3a4740614f946d9623a6c44aeb0de47059e2bc0aed9aa22c61faf3f457a3
+      web:
+        status: pending
+        sha256: ef451e73252e226a7895c767b14a9fd34ff5f504af54ac58e790094d3684aa93
+inputs:
+  src/components/settings/settings.css: 7cb2a6ef49e06ad7b000908a0e9215c398cc4d0b
+  public/design/pen/disclosure-chevron.svg: 279c00e17f98a0368e076328fe2bbd4a9e3f4ff1
+  src/styles/tokens.css: adb43817b00412044118a073662afe4730de7550
+  src/components/settings/GeneralAdvancedPreferences.tsx: f0887127e8d0f3d4c29e2d61a5d97b53db114fca
+  src/components/settings/ConnectionSettings.tsx: a82505cc40b92c07f0690bbbfdf1611ccecc1b42
+  src/components/settings/AgentConnectionSettings.tsx: b253bc9ef6348d22a4f20994e363183b5e7ff3ba
+  config/platform-versions.json: 39df7c795cd726c46786483be6786b668a0c0e6e
+  src/App.tsx: 93821e2315ad4ef8daafac43692c853659ff1976
+  src/components/settings/GeneralSettings.tsx: d977a046d7b34a8ef05f2301dfbf2d71a85ab641
+  src/components/settings/LocalVideoPackages.tsx: cfc2b8159e36610a83e5758ef152c4af2c3e5f11
+  src/components/settings/LocalWorkflowSettings.tsx: 40d6e645bf56c597e87a27fdb2abb96aae65e50f
+  src/components/settings/PreferencesBackup.tsx: 99d2ef0a6beb4ee4780a2006a2e719cff432d03e
+  src/styles/ui-governance.css: c83f22ff9e0c63296ce4537c1d3f05a34e2c7299
+  src/components/AgentConversationMessages.tsx: 1cfcbc9935ef9f7cccb5c09351602da36ff210d9
+  src/components/canvas/useCanvasPointer.ts: d9f43947483951ceda1edbcd88356c3a134601cc
+  src/main.tsx: e1b6e73966bf78f70aae7181caa5fcf7637e3572
+  src/components/WorkspaceSurface.tsx: 54b89fc73fc3e572d211656e08328c43fa7a829f
+  src/components/useAppPanelNavigation.ts: 8ca33baaca2a1d93890e00fb305a54947796028a
+  src/components/TopBar.tsx: 6fb6e9d625920bd488506e6b4eda3ece9678ee47
+  src/components/settings/SettingsPanel.tsx: 2020cac95bc44dd74ad0f2400c2c2c6377ad29a9
+  src/components/DeferredPanelBoundary.tsx: deffb43f603cc31ca3c57b433188299c88713dcd
+  src/components/CanvasCollectionsPanels.tsx: 7c6b8943a1a189ccd220378b98f51c431f7e3daa
+  src/components/FloatingCollectionPanel.tsx: 1ac683746bcf71390c0762cdd7246a59ec414423
+  src/styles/workspace.css: 581dc23b235822cc91b3f67fd816c52e2a610409
+  src/styles/collection-panels.css: 057bab7dec1fc1a4253033ab4864d196a41827f4
+  src/styles/conversation-panel.css: b774a8b731f5b3df90347daf4b401a04458be1cd
+  src/components/Canvas.tsx: 3673cefc4a33210f31ef8ea168ceeb07b7a5e38e
+  src/components/useSidebarLayout.ts: 4ab854c9dde7d3f7fe49f55e1c714cd65e5d3bc1
+  src/components/useHiddenControlFocus.ts: cf3282e3d879d5e944383ed4a70ba369f5b2407a
+  src/components/settings/SettingsSectionData.ts: 3026fda2704589a08d3e4d8efbc3ba9b103cb003
+  src/components/settings/SettingsNavigationContext.ts: 4b5660cfde7d33e7944c022d592850117c3151d4
+  src/components/settings/ModelProviderSettings.tsx: 036cf52bd78d984340bda00ce9db93ee1edc94ba
+  src/components/canvas/CanvasProps.ts: a775333f39c4f616d70844d32c831ee58aa95cd5
+  src/components/canvas/useCanvasControls.ts: 546412faf8863a00d391d0c39e4fc00cce838837
+  src/components/canvas/useCanvasViewport.ts: 066ffe0d16934f10ac4cfb068cbfa2b4ee71ec9d
+inventory:
+  - id: assets.workspace
+    nodes:
+      - GuAqj
+      - CUSuY
+    status: 未验收
+    local:
+      - src/App.tsx
+      - src/components/assets/AssetPanel.tsx
+    note: 状态所有权与全页/停靠需一起复核；不能把旧候选当当前主线。
+  - id: search.workspace
+    nodes:
+      - av3nU
+    status: 未验收
+    local:
+      - src/App.tsx
+      - src/components/CatalogPanel.tsx
+    note: 主线经 modal，Pen 目标是内容页，需验证键盘、状态延续和焦点。
+  - id: chat.history
+    nodes:
+      - LYmMd
+      - nEBYJ
+    status: 冲突
+    local:
+      - src/components/ConversationHeader.tsx
+    note: Pen 目标是查看全部会话，主线显示当前条数；待确认业务语义。
+instances:
+  - id: settings.disclosure.general-advanced
+    component: settings.content-disclosure
+    label: 高级偏好
+    route: / → 设置 → 通用
+    local: src/components/settings/GeneralAdvancedPreferences.tsx
+    locator: "summary: 高级偏好"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.system-preferences
+    component: settings.content-disclosure
+    label: 系统与未接入偏好
+    route: / → 设置 → 通用
+    local: src/components/settings/GeneralSettings.tsx
+    locator: "summary: 系统与未接入偏好"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.proxy
+    component: settings.content-disclosure
+    label: 独立转发代理
+    route: / → 设置 → 网络
+    local: src/components/settings/ConnectionSettings.tsx
+    locator: "summary: 独立转发代理"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.agent-connection
+    component: settings.content-disclosure
+    label: 高级连接选项
+    route: / → 设置 → 模型接入 → Codex 主 Agent
+    local: src/components/settings/AgentConnectionSettings.tsx
+    locator: "summary: 高级连接选项"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.comfy-workflows
+    component: settings.content-disclosure
+    label: ComfyUI 工作流
+    route: / → 设置 → 模型接入 → 本地
+    local: src/components/settings/LocalWorkflowSettings.tsx
+    locator: "summary: ComfyUI 工作流"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: settings.disclosure.h3-packages
+    component: settings.content-disclosure
+    label: H3 视频模型候选
+    route: / → 设置 → 模型接入 → 本地
+    local: src/components/settings/LocalVideoPackages.tsx
+    locator: "summary: H3 视频模型候选"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop 实际硬件状态
+      - Web 生产页的 IPC 夹具状态
+  - id: settings.disclosure.preferences-backup
+    component: settings.content-disclosure
+    label: 偏好备份
+    route: / → 设置 → 数据管理
+    local: src/components/settings/PreferencesBackup.tsx
+    locator: "summary: 偏好备份"
+    states:
+      - collapsed
+      - expanded
+    penPageBinding: 共享 Pen 规范及 Glyph 已核验，页面独立节点未验证
+    verifiedRuntime:
+      - Desktop
+      - Web
+  - id: conversation.advanced-disclosure
+    component: settings.content-disclosure
+    label: 高级会话操作
+    route: / → 项目画布 → Agent 对话
+    local: src/components/AgentConversationMessages.tsx
+    locator: .chat-agent-advanced > summary
+    states:
+      - collapsed
+      - expanded
+    verifiedRuntime:
+      - Desktop
+      - Web
+    penPageBinding: d7z7Ci 的共享折叠规则，rD3yd 记录会话设置状态；业务动作沿用当前代码。

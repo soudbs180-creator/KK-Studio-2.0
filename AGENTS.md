@@ -31,7 +31,7 @@
 
 ## 唯一工程与目标
 
-- 本机唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
+- 本机唯一工程仓库是 `D:/KK Design`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
 - `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
 - 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、开发 node_modules 或编译缓存打入分享包；Agent 生产运行时仅按已审阅 `runtime-manifest.json` 白名单包含其运行依赖。
 - `2.0.0` 是历史融合基线；三端版本以 `config/platform-versions.json` 为源，本轮桌面/Web 源码及 Mobile 规划版本均从 `2.1.1` 开始，正式安装包、Mobile 包和 tag 另行验收。按[版本管理规则](docs/engineering/VERSIONING.md)由任务作者自动选择受影响平台并递增版本，运行 `npm run version:check`；不要让用户逐次指定数字。保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
@@ -67,6 +67,7 @@
 - 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
 - UI/交互与功能链路是每个平台的最高优先级双门。平台最小链路必须先通过“连接健康检查 → 一次文本生成 → 一次图片生成 → 结果/原件回写 → 保存或重载恢复”，并在同一版本提供 UI 状态证据；静态 UI、fixture、mock 或单一平台证据不能替代真实 API 回执。性能优化与 Mobile 体验优化只能在对应平台最小链路通过后进行。
 - 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于设计一致。
+- 现行 Pen 与代码的入口见 [UI 索引](docs/UI_INDEX.md)。各交付包的 ui-map.yaml、ui-tasks.json 和 verification.md 保存节点映射、状态与收据。续跑先核对任务、实际 Pen 和工作树；状态为执行中时先检查已落盘步骤，公共依赖变化后重新验收关联条目。
 
 ## 文档与验证
 

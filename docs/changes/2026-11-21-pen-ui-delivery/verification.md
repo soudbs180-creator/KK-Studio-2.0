@@ -1,0 +1,81 @@
+# Verification · Pen 同步与展开控件
+
+- 基线 `e4383a1e323c895286d9f08fe901a27e341a10da`。第二批当前源码 `9063ed14451c7978f9e812da7173728a9cbee950`。运行产物中的源码输入由同包 ui-map.yaml 和桌面启动器收据绑定。
+- 当前候选 Desktop 2.1.45、Web 2.1.44。独立 Mobile 2.1.42。正式分发未开始。
+- 当前证据目录 `D:/kk-studio/output/kk-design-pen-workspace-20261121`。首批 Desktop 2.1.44 / Web 2.1.43 的历史原件保存在 `D:/kk-studio/output/kk-design-pen-sync-20261121`。
+
+## Pen
+
+现行文档 `b1c8c2e7-1733-4af4-843e-5c7962ed3f49`。通过 Pen MCP 更新并保存 `CzGXd` 与 `d7z7Ci`。保存后回读边界无裁剪。展开图标由 gSHZ5 原样导出，CSS mask 继承语义文字色。收起旋转对应 ToSeM。证据为 pen-before/QnbwN.png、pen-after/QnbwN.png 和 pen-readback.txt。
+
+## 首批 Desktop 折叠证据（Git 历史）
+
+首批收据见 Git 提交 `5d64ae2a` 内的 Desktop 折叠证据。
+
+先用 start-kk-studio.bat --background --data-dir <隔离目录> 重建实际桌面产物，再在私有 Windows 桌面启动同 SHA-256 的 EXE，以独立数据目录和 WebView2 profile 验证七个共享样式消费者。访问 http://tauri.localhost/，通过仅绑定本机的 DevTools 连接检查。每个入口均验证标记隐藏、两方向图标、Enter、Space、焦点和截图。H3 视频模型候选来自本机手动硬件检测步骤。见 desktop-build-receipt.json、native-expanded/native-disclosure.json 和同目录截图。
+
+## 首批 Web 折叠证据（Git 历史）
+
+首批收据见 Git 提交 `5d64ae2a` 内的 Web 折叠证据。
+
+实际 production dist 由 Playwright 启动 Edge，preview 为 http://127.0.0.1:1423/。首页设置按钮 → App modal → SettingsPanel → 通用／网络／模型接入／数据管理。1366×768 深色与 390×640 浅色检查六个入口的 mask、方向、标记、文字宽度、点击、Enter、Space 与焦点。第七个 H3 候选在 Web 的硬件响应夹具中检查实际 DOM 与指针展开，真实硬件路径由 Desktop 收据覆盖。设置相关 27 项通过，无失败、重试或跳过。扩展初跑曾错误等待桌面隐藏的窄屏返回键，修正导航后复验通过。同一生产页实际加载脚本 index-B7uPXtPs.js、SettingsPanel-D3kZ3wrt.js 和样式 index-HfztjAyf.css，HTTP 字节与磁盘 dist 一致。收据记录各资源 SHA-256。见 web-loaded-bundle.json、expanded-browser-results.json、expanded-browser.log 与运行目录截图。
+
+## 代码与门禁
+
+- 全仓单测 1979 通过、20 跳过，见 `candidate-unit.log`。UI 标准与版本一致性通过。
+- 现有 delivery CI 安装锁定依赖并检查当前 Git HEAD 的 UI map。首次精确提交缺少 Desktop 状态，CLI 以两项缺失证据拒绝。定向测试覆盖缺映射、缺节点、缺收据、篡改收据、路由/定位漂移、旧源码、共享依赖漂移与 Mobile 路径。Git 检查确保同包收据可读取和版本一致，实际内容由独立复审核对。
+- 全量 verify 首轮通过，含 841 项生产浏览器检查、8 项设计预览与插件联测。首轮之后变更了交付脚本、测试和文档，UI 产物输入沿用当前映射中所列 Git blob。精确候选、门禁与独立审查记录见 review.md 及证据目录。
+
+## 候选复验
+
+- exact-verify.log 退出 0，根单元测试 1980/20 跳过、Agent 204/2 跳过、生产浏览器 841、设计预览 8、插件联测通过。进程启动后补正了交付脚本与文档，Web、Tauri 和浏览器测试源码跨提交保持相同。
+- 交付补正提交 5d64ae2a94827bbca0762fc3caff9bedb736df3d 通过精确 delivery、lint、版本及 UI 检查，以及 delivery-unit-final.log 的 27 项交付相关单测。DESIGN.md 官方检查保留 25 条非阻断提示。见独立复审记录。
+- 现行 Pen 导出的 gSHZ5 与仓库 mask SVG 的原始字节一致。两端字号和其它图标沿用已注册规则，仅设置折叠应用本批修改。
+
+## 待处理
+
+主线设置、资产与搜索仍走 modal，Pen 场景是工作台内容区。需要分批移植并验证资产选择、滚动、搜索、焦点与草稿状态。对话记录的业务行为在 Pen 与本地有冲突。真正的会话列表功能须经单项裁决。未检查的页面与独立原生 Mobile 留在 ui-tasks.json。
+
+## 工作台设置与会话折叠复验
+
+## desktop-settings-content-disclosure
+
+证据文件 evidence/desktop-settings-content-disclosure.json
+
+## web-settings-content-disclosure
+
+证据文件 evidence/web-settings-content-disclosure.json
+
+## desktop-settings-workspace
+
+证据文件 evidence/desktop-settings-workspace.json
+
+## web-settings-workspace
+
+证据文件 evidence/web-settings-workspace.json
+
+第二批证据 D:/kk-studio/output/kk-design-pen-workspace-20261121。当前候选 Desktop 2.1.45 / Web 2.1.44。Pen 通过 MCP 回读 hgib1、BnwUr 与资源/搜索相邻目标，并导出局部原稿。设计文档本批沿用已保存规则。
+
+- Desktop 实机在私有 Windows 桌面运行已验 EXE。测量宽屏设置、会话相邻且不重叠，1099/390/1366px 无横向溢出，保留草稿、Esc 返回触发器，复验七处设置折叠和高级会话操作。
+- Edge 生产预览 38 项通过。包括窄屏恢复、实际加载的 JS/CSS 字节一致、连接保存挂起期间导航拦截、摘要 Space 键及首页原弹窗回归。连接提交场景使用隔离 IPC 夹具。
+- 运行前保留早期类型、表单裁切与预览端口占用证据。Lint、类型、版本与 UI 规则通过；App 代码健康检查保留三项非阻断告警。
+- 原有会话历史语义、独立 Mobile、远端及生产部署仍待处理。
+
+### 当前源码复验
+
+- 当前运行源码 9063ed14451c7978f9e812da7173728a9cbee950，工作台子任务复验完成。Native 5 项工作台检查和 8 项折叠通过，EXE 与前端构建输入来自当前官方启动器收据。生产 Edge 90 项通过，含原全量运行失败的八项对应场景。核对实际加载 JS/CSS 字节。
+- 第一轮全量验证在 Browser 836 通过、8 失败处停止。确认原生嵌套设置应保留顶层模态，首页扩展语义与原来一致，隐藏画布视口应暂停计算。三项重绘指针冲突由保存上次可用视口恢复。首次失败和定向后的真实结果分开留存。
+- 同尺度 Pen 与 Desktop/Web 局部截图已目视复对。该批接受的是宿主、焦点、保护和折叠，Pen 导航、设置搜索、返回式样、主题选择和撤销默认值仍记录为差异。
+- 宽屏并列保留当前会话。桌面从嵌套对话框和在窄屏开始时保留现有模态版，宿主在当次打开期间不迁移。Web 的事务用例采用隔离夹具。
+
+- 最终生产 Edge 全量 845 项通过，失败、重试、跳过均为 0。报告 web-full-final-results.json，源码 9063ed14451c7978f9e812da7173728a9cbee950，报告 SHA-256 3c2586e1d5385b90a33d5a138ea9cf66900cdf0371817538fe72f92a45c42cad。
+- Pen MCP 再回读 hgib1、BnwUr、d7z7Ci 和 rD3yd，见 pen-final-readback.txt。与本批采用的宿主及折叠规范保持一致。
+- 独立复核核对了 35 个映射 Git blob、4 份收据、Desktop EXE 和浏览器实际加载的 3 份 Web 资源。首批历史收据仍可由对应 Git 提交复现。
+- 当前 lint、typecheck、UI 检查、格式检查和开发插件联测通过。根单测串行复跑 1981 通过、20 跳过、0 失败。并行运行时桌面 Agent 启动曾未在时限内就绪，单文件复跑 3/3 及串行全量均通过，保留原失败。
+- App 有三条仓库设为 advisory 的体积与复杂度告警。独立设计说明页预览的固定 1423 被另一任务占用，当前批次未复跑该页面。实际产品预览与本机 EXE 均已有独立实测证据。
+
+## 2026-11-22 收敛复核
+
+上面的实测记录保留原范围。对照当前 Pen 和精确候选复核后，工作台设置的 Desktop 和 Web 回到待验。浮框尺寸、隐藏画布的键盘和缩放、会话切换时的设置草稿，以及 Desktop 保存挂起均需补证。共享 UI 依赖与模型展示输入的门禁回归测试共 7 项通过。详见 [Review](review.md)。
+
+在私有 Windows 桌面使用同 SHA-256 的 Desktop 2.1.45 EXE 和独立数据目录启动。实际入口为 `http://tauri.localhost/` → 项目库 → 新建项目 → 画布 → 打开设置。1440×1000 下，具名设置面板宽 872.67、高 943.67。当前 Pen 并列场景 `dutBI/gsYD1` 为 704×674。DOM 边界和截图见 `D:/kk-studio/output/kk-design-consolidation-20261122/desktop-pen-m2aUSV`。

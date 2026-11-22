@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-11-21 Pen 同步与展开控件
+
+当前隔离候选已接入 Pen 交付映射与 Git blob 检查。设置的内容折叠沿用现行 Pen 描边。参见[本次验证](changes/2026-11-21-pen-ui-delivery/verification.md)与恢复清单。
+
+2026-11-22 收敛复核补上共享 UI 依赖和可见模型展示输入的检查。工作台设置候选回到待验，继续按当前 KK Design.pen 重测。详见[复核](changes/2026-11-21-pen-ui-delivery/review.md)。
+
 ## 2026-11-21 桌面模型请求线路
 
 桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。
@@ -1261,3 +1267,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 2026-10-30：TASK-MOD-GATE-BOOTSTRAP 复用原P0分支/工作树，从origin/main4610c333建立无产品源码变更的首建基线；P3 f074d4de已推送保留（含真实H3双路径首帧回流及ORG6）。本候选R1=376/R4=14是origin实测，不代表P3回退；主仓21份审计原件/HEAD未改，原P0提交已归档且仍为P3祖先。完整门/独审/Hosted/合流待验。见[前置验证](changes/2026-10-30-origin-baseline-bootstrap/verification.md)。
 
 2026-10-30前置复验：origin无产品变更bootstrap本地完整verify0，根1975pass20skip/Agent204pass2skip/浏览器838pass0flaky/design8/开发四步通过；原metadata与dirty运行边界、474附件外置SHA记录在[验证](changes/2026-10-30-origin-baseline-bootstrap/verification.md)。正式当前SHA独审/Hosted/Delivery/合流仍待验，P3 f074d4de成果保留。
+
+### 2026-11-21 Pen 工作台设置候选
+
+画布内设置与 Agent 对话并列。小屏保留设置表单、分类和会话状态。高级会话操作与设置共享描边箭头，恢复原生 Space 交互。运行和交付详情见 [验证记录](changes/2026-11-21-pen-ui-delivery/verification.md)。

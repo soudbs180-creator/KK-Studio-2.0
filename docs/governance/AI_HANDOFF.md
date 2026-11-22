@@ -2,11 +2,15 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-11-21
+- updatedAt: 2026-11-22
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
+
+## KK Design Pen 同步
+
+先读[现行映射](../changes/2026-11-21-pen-ui-delivery/ui-map.yaml)、[执行记录](../changes/2026-11-21-pen-ui-delivery/ui-tasks.json)和[最新复核](../changes/2026-11-21-pen-ui-delivery/review.md)，再核对草稿 PR #86 与当前 KK Design.pen。优先处理工作台设置的布局、画布保护、草稿及连接保存场景。
 
 ## 桌面模型出站候选
 

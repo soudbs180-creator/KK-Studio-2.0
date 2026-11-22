@@ -213,7 +213,16 @@ test("硬件快照建议与本地草稿在连续缩放中保留，不发起安�
     ),
   ).toBe(true);
   await page.getByRole("radio", { name: /Qwen3.8-27B/ }).check();
-  await page.getByText("H3 视频模型候选", { exact: true }).click();
+  const videoSummary = page
+    .locator("summary")
+    .filter({ hasText: /^H3 视频模型候选$/ });
+  await expect(videoSummary).toHaveCSS("list-style-type", "none");
+  expect(
+    await videoSummary.evaluate(
+      (element) => getComputedStyle(element, "::before").maskImage,
+    ),
+  ).toContain("/design/pen/disclosure-chevron.svg");
+  await videoSummary.click();
   await expect(page.locator(".settings-content")).toContainText("64.73 GB");
   await expect(page.locator(".settings-content")).toContainText(
     "容量符合作者建议 · 待实测",

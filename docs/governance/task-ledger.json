@@ -9976,5 +9976,46 @@
     "nextAction": "处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
     "displayStatus": "进行中",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-KKD-PEN-SYNC-20261121",
+    "title": "KK Design Pen 同步与展开控件",
+    "goal": "让相同候选的可见设计、运行证据与 UI 工程版本对应并修复设置实心标记",
+    "scope": "现行 Pen 节点、设置折叠、delivery 检查、证据与后续批次",
+    "owner": "Codex",
+    "ownerRole": "task-owner:Codex",
+    "branch": "fix/TASK-KKD-PEN-SYNC-20261121",
+    "worktree": "D:/kk-studio/.worktrees/KKD-FIRST-WAVE-BASELINE-LF-8f9c1a2",
+    "baseSha": "e4383a1e323c895286d9f08fe901a27e341a10da",
+    "acceptance": [
+      "现行 Pen 与代码有可复核对应",
+      "缺少映射、过期证据与共享依赖漂移被拦截",
+      "设置折叠的鼠标、键盘与焦点保留"
+    ],
+    "dependencies": [],
+    "affectedModules": [
+      "src/components/settings/settings.css",
+      "scripts/check-delivery.mjs",
+      "docs/UI_INDEX.md"
+    ],
+    "status": "REVIEW",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-11-21-pen-ui-delivery/intent.md",
+      "docs/changes/2026-11-21-pen-ui-delivery/spec.md",
+      "docs/changes/2026-11-21-pen-ui-delivery/plan.md",
+      "docs/changes/2026-11-21-pen-ui-delivery/verification.md",
+      "docs/changes/2026-11-21-pen-ui-delivery/review.md"
+    ],
+    "verification": "设置工作台与会话折叠保留 Desktop 2.1.45、Web 2.1.44 实测记录。当前 Pen 尺寸、隐藏画布交互、设置草稿和 Desktop 连接忙碌已列为 PR #86 合入前复验项。门禁补漏回归 7 项通过。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-11-22",
+    "lastVerified": "2026-11-21",
+    "nextAction": "保持 PR #86 草稿，按同包 review.md 修正工作台设置并重跑现行 Pen、Desktop 和 Web 同状态验收。",
+    "requirementRefs": [
+      "ledger:TASK-KKD-PEN-SYNC-20261121"
+    ],
+    "featureIds": []
   }
 ]

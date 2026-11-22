@@ -10,13 +10,14 @@
 
 当前已承接 `npm run health:check` 与 `npm run footguns:check`，并接入 lint。两者基于主线配置的独立开关运行，当前 advisory；执行输出不能冒充 blocking 已启用。函数/文件规模棘轮、差异范围、静态例外和 Windows 模式规则见 [DEVELOPMENT](DEVELOPMENT.md#代码健康棘轮与-windows-不安全模式扫描)。不为本轮 UI 改动放宽阈值或补白名单。Actions 固定到主线已审 SHA；同步其输入契约。
 
-写代码前先确认要满足哪条门禁。以下命令都在仓库根执行，全部已并入 `npm run lint` 或 `npm run verify`。
+写代码前先确认要满足哪条门禁。以下命令都在仓库根执行，常规本地检查已并入 `npm run lint` 或 `npm run verify`。
 
 | 门禁                   | 命令                                                              | 拦截内容                                                                                                                                            |
 | ---------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ESLint                 | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0`     | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误                                                                                          |
 | 架构边界               | `node scripts/check-governance.mjs`                               | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用                                                                                           |
 | UI 标准                | `node scripts/check-ui-standards.mjs`                             | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon`                                                             |
+| 可见 UI 交付 | npm run delivery:check | 精确提交缺少当次 Pen 映射、适用平台证据或出现公共依赖版本漂移 |
 | DESIGN.md 一致性 | `npm run design:check` / `npm run design:lint` | 当前 tokens.css 的生成漂移、YAML/引用/章节错误及固定版本官方格式校验；已并入 ui:check |
 | 类型                   | `tsc --noEmit`                                                    | 类型错误                                                                                                                                            |
 | 格式                   | `prettier --check`                                                | 格式偏差                                                                                                                                            |

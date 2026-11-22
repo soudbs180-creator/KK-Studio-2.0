@@ -16,6 +16,7 @@ export default function FloatingCollectionPanel({
   id,
   title,
   open,
+  covered,
   activation,
   active,
   onActivate,
@@ -25,6 +26,7 @@ export default function FloatingCollectionPanel({
   id: "likes" | "tags";
   title: string;
   open: boolean;
+  covered: boolean;
   activation: number;
   active: boolean;
   onActivate: () => void;
@@ -71,13 +73,13 @@ export default function FloatingCollectionPanel({
     };
   }
   useLayoutEffect(() => {
-    if (!open) return;
+    if (!open || covered) return;
     const reposition = () =>
       setPosition((current) => clamp(current.left, current.top));
     reposition();
     window.addEventListener("resize", reposition);
     return () => window.removeEventListener("resize", reposition);
-  }, [open]);
+  }, [open, covered]);
   useEffect(() => {
     if (!open) return;
     opener.current =
@@ -104,6 +106,7 @@ export default function FloatingCollectionPanel({
     <section
       ref={panel}
       className={`floating-collection-panel ${active ? "is-active" : ""}`}
+      hidden={covered}
       role="region"
       aria-label={title}
       data-testid={`canvas-${id}-panel`}

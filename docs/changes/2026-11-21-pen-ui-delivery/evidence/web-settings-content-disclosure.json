@@ -1,0 +1,22 @@
+{
+  "mappingId": "settings.content-disclosure",
+  "platform": "web",
+  "versionBindingSha256": "0fd27c0cf28e2edcb5a252deafdf57c5975586fd38d21cef18f7fa3ce617c0fa",
+  "rawEvidenceSha256": "36c3ebb142d40b76ece9f260c7c011e3790fc2145c1815ae95e4c49f725f4a8a",
+  "sourceCheckpoint": "9063ed14451c7978f9e812da7173728a9cbee950",
+  "entry": "/assets/index-BEOTsdLn.js",
+  "entrySha256": "60009ca5c3c84b4132a7bf42cde942b0b58aad5b3763af7b8792fd3b7be52200",
+  "loadedAssetsSha256": {
+    "/assets/SettingsPanel-BqHbVk0D.js": "fbfe5c583af3d617f3ee1387f98966570ed999ae4003e24f917d910213974c56",
+    "/assets/index-BEOTsdLn.js": "60009ca5c3c84b4132a7bf42cde942b0b58aad5b3763af7b8792fd3b7be52200",
+    "/assets/index-L9qVhGN9.css": "2dcee712d864a6e0a06f68513dce31cd9c6646dc5a2e2c1ef2c30b4d562ce3a7"
+  },
+  "assetEvidenceSha256": "cd7774c3baec46a14475aa78820ceb4283e724af961b1bfa3ce7862b741d721f",
+  "rawEvidenceFile": "web-production-final-results.json",
+  "url": "http://127.0.0.1:1423/",
+  "launch": "Playwright Edge production Vite preview at fixed port 1423",
+  "version": "2.1.44",
+  "passed": 90,
+  "runSourceHead": "9063ed14451c7978f9e812da7173728a9cbee950",
+  "failed": 0
+}

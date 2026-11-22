@@ -1,6 +1,6 @@
 # KK Studio 数据与文件存储约定
 
-本文定义 KK Studio 客户端的文件边界。实现以 `D:/kk-studio/KK-Studio-2.0` 为唯一工程来源；`D:/kk-studio` 仅为父容器，用户数据不存放在代码仓库。
+本文定义 KK Studio 客户端的文件边界。实现以 `D:/KK Design` 为唯一工程来源；`D:/kk-studio` 仅为父容器，用户数据不存放在代码仓库。
 
 ## 2026-10-15 已批准目标与当前实现
 
