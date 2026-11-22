@@ -90,7 +90,7 @@
     {
       "id": "PEN-04",
       "target": "设置工作台宿主",
-      "status": "已完成",
+      "status": "待验收",
       "basis": "Pen MCP 已回读 hgib1 / BnwUr：工作台内容区与 Agent 会话并列，设置导航与正文独立滚动，保护分类、草稿、进入焦点及连接写事务。",
       "scope": [
         "已核验、有共同功能语义的控件"
@@ -114,13 +114,13 @@
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/web-full-final-results.json",
         "D:/kk-studio/output/kk-design-pen-workspace-20261121/pen-final-readback.txt"
       ],
-      "next": "推进资源和搜索宿主；保留仍待单独对照的设置导航和控件。",
+      "next": "修正设置宿主尺寸、隐藏画布快捷键与自动缩放、会话开关和连接保存期间的反馈，再按现行 Pen 重跑 Desktop 与 Web。",
       "blocker": null,
       "dependencies": [],
       "acceptance": "宽屏并列、窄屏连续缩放保持同一设置实例；深链接、独立滚动、连接忙碌保护、Esc 和触发器焦点；分别验证桌面与 Web。",
       "expectedImpact": "单批次页面或入口",
       "checkpoint": "9063ed14451c7978f9e812da7173728a9cbee950",
-      "remainingScope": "现行设置导航搜索和 11 类示例独立核对。当前批次完成宿主、保护与并列布局的本地运行证据，等待最终复审。",
+      "remainingScope": "现有运行收据保留。当前工作台尺寸与 Pen 有差异，Desktop 连接忙碌状态缺实测。详见同包 review.md。",
       "allowed": "现有 App 的画布设置宿主、局部样式和交付记录。保留既有非画布设置入口和业务组件。"
     },
     {

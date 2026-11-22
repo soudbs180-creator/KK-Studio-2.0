@@ -10008,11 +10008,11 @@
       "docs/changes/2026-11-21-pen-ui-delivery/verification.md",
       "docs/changes/2026-11-21-pen-ui-delivery/review.md"
     ],
-    "verification": "设置工作台与会话折叠已在 Desktop 2.1.45、Web 2.1.44 定向运行。远端、资源搜索和独立 Mobile 仍待处理。",
+    "verification": "设置工作台与会话折叠保留 Desktop 2.1.45、Web 2.1.44 实测记录。当前 Pen 尺寸、隐藏画布交互、设置草稿和 Desktop 连接忙碌已列为 PR #86 合入前复验项。门禁补漏回归 7 项通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-11-21",
+    "updated": "2026-11-22",
     "lastVerified": "2026-11-21",
-    "nextAction": "按同包 ui-tasks.json 继续资源与搜索状态承接，复验实际托管交付。",
+    "nextAction": "保持 PR #86 草稿，按同包 review.md 修正工作台设置并重跑现行 Pen、Desktop 和 Web 同状态验收。",
     "requirementRefs": [
       "ledger:TASK-KKD-PEN-SYNC-20261121"
     ],

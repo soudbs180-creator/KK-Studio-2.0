@@ -61,6 +61,9 @@ function platformTargets(file) {
     /^(?:src\/.*\.(?:[jt]sx|css)|public\/design\/.+|index\.html)$/.test(file) ||
     /^src\/(?:components|app|styles|features\/commands)\/.*\.(?:[jt]s|json)$/.test(
       file,
+    ) ||
+    /^src\/features\/models\/(?:modelPresentation|modelMenuEntries)\.ts$/.test(
+      file,
     )
   )
     return ["desktop", "web"];
@@ -141,7 +144,7 @@ function verificationSections(path, read, changed) {
   return sections;
 }
 
-function checkMappings(map, required, covered, proof) {
+function checkMappings(map, changed, covered, proof) {
   const ids = new Set();
   const issues = [];
   for (const mapping of map.mappings) {
@@ -158,7 +161,9 @@ function checkMappings(map, required, covered, proof) {
     }
     ids.add(key);
     const fingerprint = uiEvidenceFingerprint(map.pen, mapping, map.inputs);
-    for (const path of files.filter((input) => required.has(input))) {
+    const dependencyChanged = dependencies.some((path) => changed.has(path));
+    for (const path of files) {
+      if (!dependencyChanged && !changed.has(path)) continue;
       const unverified = platformTargets(path).filter(
         (platform) =>
           !dependencies.includes(sharedInputs[platform]) ||
@@ -183,6 +188,7 @@ export function checkUiDelivery(changed, read, blob, baseExists = () => false) {
     changed.filter((file) => platformTargets(file).length),
   );
   if (!required.size) return [];
+  const changedPaths = new Set(changed);
   const covered = new Set();
   const issues = [];
   for (const file of changed.filter((name) =>
@@ -214,7 +220,7 @@ export function checkUiDelivery(changed, read, blob, baseExists = () => false) {
       }
       const problems = [
         ...checkInputs(map.data.inputs, required, blob),
-        ...checkMappings(map.data, required, covered, proof),
+        ...checkMappings(map.data, changedPaths, covered, proof),
       ];
       issues.push(...problems.map((problem) => file + ": " + problem));
     } catch (error) {

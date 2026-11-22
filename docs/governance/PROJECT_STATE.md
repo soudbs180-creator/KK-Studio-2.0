@@ -2,14 +2,14 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-11-21
+- updatedAt: 2026-11-22
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-KK Design Pen 同步与描边折叠已完成隔离候选的实机、Web 与独立复审。工作台设置批候选 Desktop 2.1.45、Web 2.1.44，已复验具体运行路径，远端交付待验收。当前证据见[验证](../changes/2026-11-21-pen-ui-delivery/verification.md)。主线与安装版本按各自现行收据标记。
+KK Design 描边折叠已获得隔离候选实机、Web 与独立复审证据。工作台设置候选 Desktop 2.1.45、Web 2.1.44 经最新精确复核回到待验。[PR #86](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/86) 保持草稿。见[验证](../changes/2026-11-21-pen-ui-delivery/verification.md)及[复核](../changes/2026-11-21-pen-ui-delivery/review.md)。
 
 桌面模型出站候选 2.1.43 在 TASK-KKD-DESKTOP-PROXY-20261121 独立工作树实现。范围与运行证据见[桌面模型代理验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)。
 

@@ -2,7 +2,7 @@ version: 1
 pen:
   documentId: b1c8c2e7-1733-4af4-843e-5c7962ed3f49
   readbackSha256: 5bf7ffca1984b508e88f0d8ca1aeab30bc02f5dbdc2ba2cdd714c37dc72606cc
-  uri: file:///C:/Users/Administrator/.pencil/documents/b1c8c2e7-1733-4af4-843e-5c7962ed3f49/untitled.pen
+  uri: file:///C:/Users/Administrator/.pencil/documents/b1c8c2e7-1733-4af4-843e-5c7962ed3f49/KK%20Design.pen
   policyNodes:
     - QnbwN
     - CzGXd
@@ -94,13 +94,13 @@ mappings:
       - compact-settings-only
       - transactions-pending
       - restore-origin-focus
-    remaining: 宿主和受测交互已验收。Pen 的设置搜索、导航分组、返回样式和通用控件仍要单独对照。
+    remaining: 保留历史收据。当前 Pen 尺寸、画布 Escape 和自动缩放、会话切换草稿及 Desktop 连接忙碌场景待复验。
     evidence:
       desktop:
-        status: verified
+        status: pending
         sha256: 1a3e3a4740614f946d9623a6c44aeb0de47059e2bc0aed9aa22c61faf3f457a3
       web:
-        status: verified
+        status: pending
         sha256: ef451e73252e226a7895c767b14a9fd34ff5f504af54ac58e790094d3684aa93
 inputs:
   src/components/settings/settings.css: 7cb2a6ef49e06ad7b000908a0e9215c398cc4d0b

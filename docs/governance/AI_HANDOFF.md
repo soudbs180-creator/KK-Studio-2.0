@@ -2,7 +2,7 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-11-21
+- updatedAt: 2026-11-22
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
@@ -10,7 +10,7 @@
 
 ## KK Design Pen 同步
 
-先读[现行映射](../changes/2026-11-21-pen-ui-delivery/ui-map.yaml)和[执行记录](../changes/2026-11-21-pen-ui-delivery/ui-tasks.json)，再核对候选 Git 与 Pen 实际状态。折叠箭头、本地交付门禁和设置工作台宿主已取得各自的运行证据。以第二批源码 9063ed14 和同包收据为准。资源及搜索宿主、设置内容差异、会话语义、独立 Mobile 与托管工作流沿执行记录继续。
+先读[现行映射](../changes/2026-11-21-pen-ui-delivery/ui-map.yaml)、[执行记录](../changes/2026-11-21-pen-ui-delivery/ui-tasks.json)和[最新复核](../changes/2026-11-21-pen-ui-delivery/review.md)，再核对草稿 PR #86 与当前 KK Design.pen。优先处理工作台设置的布局、画布保护、草稿及连接保存场景。
 
 ## 桌面模型出站候选
 

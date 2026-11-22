@@ -4,6 +4,8 @@
 
 当前隔离候选已接入 Pen 交付映射与 Git blob 检查。设置的内容折叠沿用现行 Pen 描边。参见[本次验证](changes/2026-11-21-pen-ui-delivery/verification.md)与恢复清单。
 
+2026-11-22 收敛复核补上共享 UI 依赖和可见模型展示输入的检查。工作台设置候选回到待验，继续按当前 KK Design.pen 重测。详见[复核](changes/2026-11-21-pen-ui-delivery/review.md)。
+
 ## 2026-11-21 桌面模型请求线路
 
 桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。

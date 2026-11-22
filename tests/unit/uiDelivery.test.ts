@@ -37,7 +37,7 @@ function fixture(
   const evidence: Record<string, { status: string; sha256: string }> = {};
   const sections = [];
   for (const platform of platforms) {
-    const section = platform + "-settings-disclosure";
+    const section = platform + "-" + component.id.replaceAll(".", "-");
     const relative = "evidence/" + section + ".json";
     const proof = JSON.stringify({
       mappingId: component.id,
@@ -87,6 +87,40 @@ const check = (
     baseExists,
   );
 
+test("changing a shared input requires evidence for each dependent mapping", () => {
+  const shared = fixture({
+    ...row,
+    id: "shared.tokens",
+    files: [dependency],
+  });
+  const map = {
+    ...current.map,
+    mappings: [...shared.map.mappings, ...current.map.mappings],
+  };
+  assert.match(
+    check(
+      map,
+      readBlob,
+      shared.report,
+      undefined,
+      shared.artifacts,
+      dependency,
+    ).join("\n"),
+    /runtime evidence missing for src\/components\/settings\/settings.css/,
+  );
+  assert.deepEqual(
+    check(
+      map,
+      readBlob,
+      shared.report + "\n" + current.report,
+      undefined,
+      new Map([...shared.artifacts, ...current.artifacts]),
+      dependency,
+    ),
+    [],
+  );
+});
+
 test("current Pen mapping, checked-in platform proof and dependencies pass", () => {
   assert.deepEqual(check(), []);
   for (const input of [
@@ -108,6 +142,8 @@ test("visible changes need a new package and live node keys", () => {
     path,
     "src/components/settings/SettingsSectionData.ts",
     "src/features/commands/slashCommandRegistry.ts",
+    "src/features/models/modelPresentation.ts",
+    "src/features/models/modelMenuEntries.ts",
     "mobile/src/ui/colorTokens.generated.json",
   ]) {
     assert.match(
