@@ -1619,12 +1619,13 @@
     "area": "backend",
     "status": "PROTOTYPE",
     "card": "docs/features/feat-038-ai-model-gateway.md",
-    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容模型发现/文本/SSE 端点；P1 BYOK 官方通道（豆包火山方舟预置 + doubao 判定修正）与文本/图片能力元数据闭环已落地，定向 gateway/provenance 回归 69 项全绿，当前回归 911 项（903 通过、0 失败、8 跳过），但未接真实上游与 DPAPI。",
+    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容模型发现/文本/SSE 端点；P1 BYOK 官方通道已落地；2026-11-22 起补充供应商池路由选择器（与 FEAT-040 共用），仍未接真实上游与 DPAPI。",
     "entryPoints": [
       "无 UI 入口；/v1/chat/completions 仅在注入 chat 依赖时挂载，未注入返回 404"
     ],
     "code": [
       "src/features/ai-gateway",
+      "src/features/ai-gateway/providerPoolRouting.ts",
       "src/features/generation-server/http.ts",
       "src/domain/modelProvider.ts",
       "src/features/creation/model.ts",
@@ -1642,10 +1643,11 @@
       "tests/unit/generationServerChatRoute.test.ts",
       "tests/unit/modelProvider.test.ts",
       "tests/unit/modelMenuEntries.test.ts",
-      "tests/unit/agentImages.test.ts"
+      "tests/unit/agentImages.test.ts",
+      "tests/unit/providerPoolRouting.test.ts"
     ],
-    "tasks": ["TASK-AI-GATEWAY-001"],
-    "updated": "2026-10-10"
+    "tasks": ["TASK-AI-GATEWAY-001", "TASK-MODEL-GW-20261122"],
+    "updated": "2026-11-22"
   },
   {
     "id": "FEAT-039",
@@ -1689,5 +1691,51 @@
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"]
+  },
+  {
+    "id": "FEAT-040",
+    "title": "本地模型商店与统一网关路由",
+    "area": "backend",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-040-local-model-store-and-gateway-routing.md",
+    "summary": "本地模型商店预设与设置页 Native 安装接线、硬件 fitTier、替换删旧；供应商池路由与 providerKeyPool；FastVideo 适配器/probe（mock 可通，实机未验）。首次安装零强制下载。",
+    "entryPoints": [
+      "设置 → 电脑配置与本地模型 → 本地模型商店"
+    ],
+    "code": [
+      "src/domain/localModelStore.ts",
+      "src/domain/localModelRecommendations.ts",
+      "src/components/settings/LocalModelStorePanel.tsx",
+      "src/components/settings/LocalHardwareSettings.tsx",
+      "src/features/ai-gateway/providerPoolRouting.ts",
+      "src/features/ai-gateway/providerKeyPool.ts",
+      "src/features/ai-gateway/providerKeyPoolStore.ts",
+      "src/features/ai-gateway/scheduler.ts",
+      "src/features/models/localModelInstallFlow.ts",
+      "src/features/models/fastVideoRuntimeSettings.ts",
+      "src/features/models/fastVideoAdapterFactory.ts",
+      "src/integrations/generation/fastVideoAdapter.ts",
+      "src/integrations/generation/fastVideoProbe.ts",
+      "src/integrations/generation/providerAdapterFactory.ts",
+      "src/components/settings/FastVideoRuntimePanel.tsx",
+      "src-tauri/src/local_models/commands.rs",
+      "docs/architecture/adr/ADR-027-model-gateway-and-local-store.md"
+    ],
+    "tests": [
+      "tests/unit/localModelStore.test.ts",
+      "tests/unit/providerPoolRouting.test.ts",
+      "tests/unit/providerKeyPool.test.ts",
+      "tests/unit/providerKeyPoolStore.test.ts",
+      "tests/unit/fastVideoAdapter.test.ts",
+      "tests/unit/fastVideoProbe.test.ts",
+      "tests/unit/fastVideoRuntimeSettings.test.ts",
+      "tests/unit/localModelInstallFlow.test.ts",
+      "tests/unit/aiGatewayScheduler.test.ts",
+      "tests/unit/localModelRecommendations.test.ts",
+      "tests/unit/localModelInstallation.test.ts"
+    ],
+    "tasks": ["TASK-MODEL-GW-20261122"],
+    "updated": "2026-11-22",
+    "platforms": ["desktop"]
   }
 ]

@@ -1,13 +1,15 @@
 //! Explicit local package installation; no startup downloads or model/tool execution.
 mod archive;
 mod catalog;
+pub mod commands;
 mod download;
 mod installation;
 mod paths;
 mod runtime;
 pub use catalog::Selection;
 pub use installation::LocalModelManager;
-pub use runtime::{RuntimeAuthorization, RuntimeStatus};
+pub use runtime::RuntimeStatus;
+pub use runtime::RuntimeAuthorization;
 
 use serde::{Deserialize, Serialize};
 #[derive(Clone, Serialize)]

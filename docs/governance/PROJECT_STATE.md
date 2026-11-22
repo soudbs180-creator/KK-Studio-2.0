@@ -2,14 +2,22 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-11-21
+- updatedAt: 2026-11-22
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-桌面模型出站候选 2.1.43 在 TASK-KKD-DESKTOP-PROXY-20261121 独立工作树实现。范围与运行证据见[桌面模型代理验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)。
+**唯一工程仓库（2026-11-22 纠正）**：产品名 **KK Design**；canonical checkout 为 `D:/KK Design`（`main` / `origin/main`）。过渡路径 `D:/kk-studio/KK-Studio-2.0` 已退役并隔离至 `D:/KK-Studio-transition-quarantine-20261122/`（若存在），禁止再作日常开发或启动源。下文历史快照中的 `canonicalRepository: D:/kk-studio/KK-Studio-2.0` 仅保留原时点，不覆盖本条。
+
+**日常最新（2026-11-22 已晋升）**：已安装包 **KK Design 2.1.88**（`%LocalAppData%\Programs\KK Design\kk-studio.exe`，SHA256 `49B68581…B40A30`，mtime 2026-11-22 21:44+08）。由用户「保证最新」授权从 FULL-PRODUCT 工作树晋升；旧 2.1.81 已备份 quarantine。工程 `main` 源码声明约 2.1.43，**不得**再冒充日常。详见 [AI_HANDOFF](AI_HANDOFF.md)。
+
+当前整盘收口任务 TASK-WHOLE-V1-20261121（IN_PROGRESS / NOT_VERIFIED）：目标为 Desktop 整包跑通、主路径 UI 过关并钉基线，之后按保基线→收新能力→抬基线迭代。能力地图与算进/不算进见[整包地图](../changes/2026-11-21-whole-product-v1/scope-map.md)；范围与终验见[规格](../changes/2026-11-21-whole-product-v1/spec.md)；用户走查单见[walkthrough](../changes/2026-11-21-whole-product-v1/walkthrough.md)；迭代规矩见[iteration-rules](../changes/2026-11-21-whole-product-v1/iteration-rules.md)。FEAT-001/014 已计入且勿重做；PROTOTYPE（视频/账号/积分等）与 Mobile/Web 整包不进 V1 完成标准。61 条旁路开放任务已在账本 `nextAction` 标明 V1 搁置，解冻条件为用户终验钉基线或明确解冻。整包产品完成仍待用户 Desktop 走查；模块历史 PASS 与浏览器 preview 走查不代填 Desktop 终验。**唯一日常 Desktop 入口**：`C:\Users\Administrator\AppData\Local\Programs\KK Design\kk-studio.exe`（**2.1.88**，SHA256 `49B68581…B40A30`）；旧包已 quarantine。P0 进展见 [blockers-queue](../changes/2026-11-21-whole-product-v1/blockers-queue.md)。
+
+桌面模型出站候选 2.1.43 在 TASK-KKD-DESKTOP-PROXY-20261121 独立工作树实现（V1 收口期搁置旁路）。范围与运行证据见[桌面模型代理验证](../changes/2026-11-21-desktop-provider-proxy/verification.md)。
+
+**模型网关 / 本地商店（2026-11-22）**：`TASK-MODEL-GW-20261122` / FEAT-040 / [ADR-027](../architecture/adr/ADR-027-model-gateway-and-local-store.md) 已落地契约与最小实现（商店预设、fitTier、替换删旧策略、供应商池路由、FastVideo mock 适配）；状态 PARTIAL。Native 大文件安装与 FastVideo 实机出片 NOT VERIFIED。禁止嵌入 Codex++（AGPL）。见[变更包](../changes/2026-11-22-model-gateway-store/verification.md)。
 
 TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。 先读[当前资产名修复](../changes/2026-10-19-release-asset-name/intent.md)与[验证](../changes/2026-10-19-release-asset-name/verification.md)。
 

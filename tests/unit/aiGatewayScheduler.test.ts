@@ -381,3 +381,55 @@ test("extractNormalized always yields a usable classification", () => {
     "RATE_LIMITED",
   );
 });
+
+test("resolveCandidates supports provider-scoped and group selectors", () => {
+  const registry = new ChannelRegistry();
+  registry.registerAdapter(offlineAdapter);
+  const a = registration("alpha");
+  const b = registration("beta", { priority: 50 });
+  registry.replace({
+    registrations: [a, b],
+    states: new Map(),
+  });
+  const scheduler = new Scheduler(registry, {
+    random: () => 0,
+    now: () => FIXED_NOW,
+    routeGroups: new Map([
+      [
+        "coding",
+        {
+          id: "coding",
+          strategy: "sequential",
+          members: [
+            {
+              channelId: "beta",
+              model: "kk-default",
+              weight: 1,
+              remainingQuota: null,
+              avgFirstTokenMs: null,
+            },
+            {
+              channelId: "alpha",
+              model: "kk-default",
+              weight: 1,
+              remainingQuota: null,
+              avgFirstTokenMs: null,
+            },
+          ],
+        },
+      ],
+    ]),
+  });
+  assert.deepEqual(
+    scheduler
+      .resolveCandidates("beta/kk-default", "generate")
+      .map((entry) => entry.channelId),
+    ["beta"],
+  );
+  assert.deepEqual(
+    scheduler
+      .resolveCandidates("group/coding", "generate")
+      .map((entry) => entry.channelId),
+    ["beta", "alpha"],
+  );
+});

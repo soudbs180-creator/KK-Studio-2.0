@@ -6,6 +6,8 @@ import {
 } from "../../domain/localModelRecommendations";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import SettingsExternalLink from "./SettingsExternalLink";
+import FastVideoRuntimePanel from "./FastVideoRuntimePanel";
+import LocalModelStorePanel from "./LocalModelStorePanel";
 import LocalVideoPackages from "./LocalVideoPackages";
 
 const gib = (value: number | null | undefined) =>
@@ -20,6 +22,12 @@ const reasonLabels: Record<string, string> = {
   "stale-report": "检测已过期，请重新检测",
   "runtime-architecture-unverified": "此系统架构尚未验证",
   "unsupported-platform": "需要桌面版的本机检测能力",
+};
+const fitTierLabels: Record<string, string> = {
+  recommended: "适合本机",
+  tight: "可跑但较挤",
+  unsuitable: "不建议",
+  unknown: "待确认",
 };
 
 export default function LocalHardwareSettings() {
@@ -90,8 +98,7 @@ export default function LocalHardwareSettings() {
         </button>
       </div>
       <p className="settings-section-intro">
-        仅在点击后读取本机
-        CPU、内存、显卡与磁盘容量；不保存、不上传，不安装或启动模型。
+        点击后本机读取配置；不上传、不自动下载模型。首次安装软件不会预装大权重。
       </p>
       {error && <p role="alert">{error}</p>}
       {report?.status === "unsupported" && (
@@ -172,6 +179,8 @@ export default function LocalHardwareSettings() {
                           : item.status === "insufficient"
                             ? "当前资源不足"
                             : "待确认"}
+                    {" · "}
+                    {fitTierLabels[item.fitTier] ?? "待确认"}
                   </span>
                 </label>
                 <p>
@@ -209,6 +218,8 @@ export default function LocalHardwareSettings() {
           <LocalVideoPackages packages={recommendations.videoPackages} />
         </>
       )}
+      <FastVideoRuntimePanel report={report} />
+      <LocalModelStorePanel />
     </section>
   );
 }
