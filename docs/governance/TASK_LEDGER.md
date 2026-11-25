@@ -162,6 +162,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+| TASK-KKD-IGNORE-USER-DATA-20261125 | 为本机运行数据和 KK Design 启动器补齐 Git 忽略 | IN_PROGRESS | 进行中 | P2 | none | CodexIgnore | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3129,3 +3130,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
 - Last verified: 2026-11-21
 - Updated: 2026-11-21
+
+## TASK-KKD-IGNORE-USER-DATA-20261125 — 为本机运行数据和 KK Design 启动器补齐 Git 忽略
+
+- Goal: 从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则
+- Scope: 从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexIgnore
+- Acceptance: Git 对两条新增根路径给出预期规则，既有启动器及 .lnk 继续忽略; 运行数据和快捷方式不参与验收写入，候选只含 .gitignore、交付和生成的台账快照
+- Branch: `codex/TASK-KKD-IGNORE-USER-DATA-20261125`
+- Worktree: `D:/KK Design/.worktrees/TASK-KKD-IGNORE-USER-DATA-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-local-data-ignore/verification.md](../../docs/changes/2026-11-25-local-data-ignore/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-25
