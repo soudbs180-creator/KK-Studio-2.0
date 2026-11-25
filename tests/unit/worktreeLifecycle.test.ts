@@ -217,6 +217,28 @@ test("reclamation protects the target index and rejects a plan after HEAD change
   const active = apply(plan, candidate.id);
   assert.deepEqual(active.removed, []);
   assert.equal(active.failed[0]?.reason, "WORKTREE_STATE_CHANGED");
+  const leaseAlias = path.join(repo, ".tmp", "lease-alias");
+  fs.mkdirSync(path.dirname(leaseAlias));
+  fs.symlinkSync(target, leaseAlias, "junction");
+  write(
+    coord,
+    "ledger.json",
+    JSON.stringify([
+      completed,
+      {
+        ...conflictingLease,
+        lock: { ...conflictingLease.lock, worktree: leaseAlias },
+      },
+    ]),
+  );
+  const aliased = buildReclamationManifest(repo).worktrees.find(
+    (item) => item.branch === "fixture-topic",
+  );
+  assert.ok(aliased?.removal.reasons.includes("ACTIVE_TASK"));
+  assert.equal(
+    apply(plan, candidate.id).failed[0]?.reason,
+    "WORKTREE_STATE_CHANGED",
+  );
   write(coord, "ledger.json", JSON.stringify([completed]));
 
   git(

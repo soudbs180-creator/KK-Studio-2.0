@@ -307,16 +307,27 @@ function readTaskLedger(repoRoot, worktrees) {
   return [...records.values()];
 }
 
-function taskStateFor(worktree, records) {
+function worktreeIdentity(value, cache) {
+  if (typeof value !== "string" || !path.isAbsolute(value)) return null;
+  if (!cache.has(value)) {
+    try {
+      cache.set(value, normalizeForComparison(fs.realpathSync.native(value)));
+    } catch (error) {
+      if (error.code !== "ENOENT" && error.code !== "ENOTDIR") throw error;
+      cache.set(value, normalizeForComparison(value));
+    }
+  }
+  return cache.get(value);
+}
+
+function taskStateFor(worktree, records, paths = new Map()) {
   const matchesBranch = (value) =>
     worktree.branch &&
     typeof value === "string" &&
     value.replace(/^refs\/heads\//, "") === worktree.branch;
+  const target = worktreeIdentity(worktree.path, paths);
   const matchesPath = (value) =>
-    worktree.path &&
-    typeof value === "string" &&
-    path.isAbsolute(value) &&
-    normalizeForComparison(value) === normalizeForComparison(worktree.path);
+    target && worktreeIdentity(value, paths) === target;
   const tasks = records.filter(
     (task) =>
       matchesBranch(task.branch) ||
@@ -515,6 +526,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
     process.env.KK_WORKTREE_ROOT || path.join(workspaceRoot, ".worktrees"),
   );
   const tasks = readTaskLedger(primary, worktrees);
+  const taskPaths = new Map();
   const entries = worktrees.map((worktree) => {
     const pathValue = worktree.path ? absolute(worktree.path) : null;
     const resolvedWorktree = pathValue && realPath(pathValue);
@@ -533,7 +545,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
       normalizeForComparison(realPath(pathValue) ?? pathValue) ===
         normalizeForComparison(currentWorktree),
     );
-    const { taskStatuses, active } = taskStateFor(worktree, tasks);
+    const { taskStatuses, active } = taskStateFor(worktree, tasks, taskPaths);
     const reachable = reachableFromMain(repoRoot, worktree.head);
     const generated =
       pathValue && worktree.exists && inWorkspace
