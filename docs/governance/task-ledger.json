@@ -9976,5 +9976,75 @@
     "nextAction": "处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
     "displayStatus": "进行中",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-KKD-FEATURE-ID-20261125",
+    "module": "governance",
+    "kind": "governance",
+    "title": "统一登记功能编号并收敛 FEAT-040 冲突",
+    "goal": "复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路",
+    "scope": "复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路",
+    "owner": "CodexEvolution",
+    "acceptance": [
+      "两个编号和卡片路径唯一，状态等于官方证据",
+      "并行候选在主线变更后不能改绑或重复分配编号"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "IN_PROGRESS",
+    "branch": "codex/TASK-KKD-FEATURE-ID-20261125",
+    "worktree": "D:/KK Design/.worktrees/TASK-KKD-FEATURE-ID-20261125",
+    "updated": "2026-11-25",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-kkd-feature-id/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T13:23:26.285Z",
+        "agent": "CodexEvolution",
+        "action": "CREATE",
+        "note": "created TASK-KKD-FEATURE-ID-20261125"
+      },
+      {
+        "at": "2026-11-25T13:23:26.531Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T13:23:28.984Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "阶段一编号轨。修改范围限现有 feature registry 门禁、两个保留卡、测试、交付包与生成台账。两个预留功能均以本次官方基线状态记录。",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T13:34:31.123Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "39 项登记零违规，10 项定向测试通过，含真实多分支 CLI。绑定候选验收。",
+        "evidence": "docs/changes/2026-11-25-kkd-feature-id/verification.md",
+        "sha": "349e23369e5e371dfa01a336df4ea7489ac374ea"
+      }
+    ],
+    "lock": {
+      "agent": "CodexEvolution",
+      "worktree": "D:/KK Design/.worktrees/TASK-KKD-FEATURE-ID-20261125",
+      "branch": "codex/TASK-KKD-FEATURE-ID-20261125",
+      "since": "2026-11-25T13:23:26.531Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexEvolution",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25"
   }
 ]
