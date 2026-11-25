@@ -162,6 +162,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+| TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125 | 开源接入证据门禁 | IN_PROGRESS | 进行中 | P2 | none | CodexOssAdmission | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3129,3 +3130,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
 - Last verified: 2026-11-21
 - Updated: 2026-11-21
+
+## TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125 — 开源接入证据门禁
+
+- Goal: 基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。
+- Scope: 基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexOssAdmission
+- Acceptance: 精确历史 vendor 基线显式保留；新增或变更接入缺证即拒绝；真实证据边界与 PARTIAL 清晰。定向单测和 governance:check 通过。
+- Branch: `codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125`
+- Worktree: `D:/KK Design/.worktrees/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-kkd-oss-admission/verification.md](../../docs/changes/2026-11-25-kkd-oss-admission/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-25

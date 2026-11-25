@@ -9976,5 +9976,87 @@
     "nextAction": "处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
     "displayStatus": "进行中",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "module": "governance",
+    "kind": "governance",
+    "title": "开源接入证据门禁",
+    "goal": "基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。",
+    "scope": "基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。",
+    "owner": "CodexOssAdmission",
+    "acceptance": [
+      "精确历史 vendor 基线显式保留；新增或变更接入缺证即拒绝；真实证据边界与 PARTIAL 清晰。定向单测和 governance:check 通过。"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "IN_PROGRESS",
+    "branch": "codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "worktree": "D:/KK Design/.worktrees/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "updated": "2026-11-25",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-kkd-oss-admission/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T15:11:25.897Z",
+        "agent": "CodexOssAdmission",
+        "action": "CREATE",
+        "note": "created TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125"
+      },
+      {
+        "at": "2026-11-25T15:11:45.378Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:17:59.177Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "基于官方提交复用历史 OSS 许可门禁。新增证据校验与三项历史固定边界，23 项定向与治理检查通过。已隔离实测历史源码改动及新增文件均拒绝。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/governance-final.log",
+        "sha": "159f749d0053e135615c67ad4e95804994063693"
+      },
+      {
+        "at": "2026-11-25T15:17:59.410Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "已提交干净候选，完成限定门禁验证，释放治理写锁供并行回收任务。交付包、独审、Hosted 与合流仍待。"
+      },
+      {
+        "at": "2026-11-25T15:18:55.300Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:24:36.229Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "OSS source 7f8e4ab1 targeted 25 PASS, isolated legacy mutation checks PASS, governance PASS. Final exact verify and independent Hosted review pending.",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "26bc5392df9bbcad4df6ef64d77ac542bbfd4c02"
+      }
+    ],
+    "lock": {
+      "agent": "CodexOssAdmission",
+      "worktree": "D:/KK Design/.worktrees/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+      "branch": "codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+      "since": "2026-11-25T15:18:55.300Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexOssAdmission",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25"
   }
 ]
