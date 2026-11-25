@@ -105,13 +105,17 @@ function hasSymlinkOrReparse(candidate) {
 }
 
 function isEvidencePath(candidate) {
-  return slash(candidate)
-    .split("/")
-    .some(
-      (segment) =>
-        PROTECTED_EVIDENCE_SEGMENTS.has(segment.toLowerCase()) ||
-        /evidence/i.test(segment),
-    );
+  return (
+    (path.basename(candidate) === ".tmp" &&
+      fs.existsSync(path.join(candidate, "output"))) ||
+    slash(candidate)
+      .split("/")
+      .some(
+        (segment) =>
+          PROTECTED_EVIDENCE_SEGMENTS.has(segment.toLowerCase()) ||
+          /evidence/i.test(segment),
+      )
+  );
 }
 
 export function generatedPathCandidates(worktreeRoot) {
@@ -162,7 +166,6 @@ export function assessGeneratedCandidate({
   path: candidate,
   worktreeRoot,
   tracked = false,
-  ignored = false,
   locked = false,
   submodule = false,
   evidence = false,
@@ -181,8 +184,7 @@ export function assessGeneratedCandidate({
   if (tracked) reasons.push("TRACKED_CONTENT");
   if (submodule) reasons.push("SUBMODULE_CONTENT");
   if (locked) reasons.push("LOCKED");
-  if (ignored && (evidence || isEvidencePath(candidate)))
-    reasons.push("IGNORED_EVIDENCE");
+  if (evidence || isEvidencePath(candidate)) reasons.push("IGNORED_EVIDENCE");
   return { allowed: reasons.length === 0, reasons, path: candidate };
 }
 
@@ -195,6 +197,8 @@ export function assessWorktreeRemoval(state) {
   if (state.dirty !== 0) reasons.push("DIRTY_WORKTREE");
   if (state.locked) reasons.push("LOCKED_WORKTREE");
   if (state.active) reasons.push("ACTIVE_TASK");
+  if (state.generatedPaths?.some((candidate) => candidate.evidence))
+    reasons.push("WORKTREE_CONTAINS_EVIDENCE");
   const statuses = Array.isArray(state.taskStatuses) ? state.taskStatuses : [];
   if (statuses.length === 0 || statuses.some((status) => status !== "DONE"))
     reasons.push("TASK_NOT_DONE");
@@ -247,7 +251,11 @@ export function buildRecoveryInventory(root) {
   };
 }
 
-export function verifyRecoveryBundle(bundlePath, repoRoot = process.cwd()) {
+export function verifyRecoveryBundle(
+  bundlePath,
+  repoRoot = process.cwd(),
+  head,
+) {
   if (
     !bundlePath ||
     !fs.existsSync(bundlePath) ||
@@ -260,22 +268,40 @@ export function verifyRecoveryBundle(bundlePath, repoRoot = process.cwd()) {
       encoding: "utf8",
       stdio: "pipe",
     });
-    return true;
+    return (
+      head === undefined ||
+      git(repoRoot, ["bundle", "list-heads", bundlePath])
+        .split(/\r?\n/)
+        .some((line) => line.split(" ")[0] === head)
+    );
   } catch {
     return false;
   }
 }
 
-function readTaskLedger(repoRoot) {
-  const ledgerPath = path.join(repoRoot, "docs/governance/task-ledger.json");
-  if (!fs.existsSync(ledgerPath)) return [];
-  const parsed = JSON.parse(fs.readFileSync(ledgerPath, "utf8"));
-  return Array.isArray(parsed) ? parsed : (parsed.tasks ?? []);
+function readTaskLedger(repoRoot, worktrees) {
+  const snapshot = path.join(repoRoot, "docs/governance/task-ledger.json");
+  const coordination = worktrees.find(
+    (entry) => entry.branch === "coord/ledger",
+  );
+  const active = coordination && path.join(coordination.path, "ledger.json");
+  if (active && !fs.existsSync(active))
+    throw new Error("The registered coordination ledger is unavailable");
+  const records = new Map();
+  for (const file of [snapshot, active]) {
+    if (!file || !fs.existsSync(file)) continue;
+    const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+    const tasks = Array.isArray(parsed) ? parsed : parsed?.tasks;
+    if (!Array.isArray(tasks))
+      throw new Error("Invalid reclamation task ledger");
+    for (const task of tasks) records.set(task.id, task);
+  }
+  return records.values();
 }
 
-function ledgerStatuses(repoRoot) {
+function ledgerStatuses(repoRoot, worktrees) {
   const statuses = new Map();
-  for (const task of readTaskLedger(repoRoot)) {
+  for (const task of readTaskLedger(repoRoot, worktrees)) {
     if (!task?.branch || !task?.status) continue;
     const branch = String(task.branch).replace(/^refs\/heads\//, "");
     const list = statuses.get(branch) ?? [];
@@ -352,11 +378,40 @@ function hasWorktreeLock(worktreePath) {
   );
 }
 
+function checkoutMatches(worktree, manifest) {
+  try {
+    const head = git(worktree.path, ["rev-parse", "HEAD"]).trim();
+    const branch = git(worktree.path, [
+      "rev-parse",
+      "--abbrev-ref",
+      "HEAD",
+    ]).trim();
+    const taskStatuses =
+      ledgerStatuses(manifest.primaryRepository, manifest.worktrees).get(
+        branch,
+      ) ?? [];
+    return (
+      head === worktree.head &&
+      branch === (worktree.branch ?? "HEAD") &&
+      worktreeStatus(worktree.path) === 0 &&
+      !hasWorktreeLock(worktree.path) &&
+      taskStatuses.every((status) => status === "DONE")
+    );
+  } catch {
+    return false;
+  }
+}
+
 function workspaceRootFor(repoRoot) {
   if (process.env.KK_WORKSPACE_ROOT)
     return absolute(process.env.KK_WORKSPACE_ROOT);
   let current = absolute(repoRoot);
   while (current !== path.dirname(current)) {
+    if (
+      fs.existsSync(path.join(current, ".git")) &&
+      fs.existsSync(path.join(current, ".worktrees"))
+    )
+      return current;
     if (
       fs.existsSync(path.join(current, "KK-Studio-2.0")) &&
       fs.existsSync(path.join(current, ".worktrees"))
@@ -369,47 +424,52 @@ function workspaceRootFor(repoRoot) {
 
 function reachableFromMain(repoRoot, head) {
   if (!head) return false;
-  const mainRef = ["origin/main", "main"].find((ref) => {
-    try {
-      git(repoRoot, ["rev-parse", "--verify", ref]);
-      return true;
-    } catch {
-      return false;
-    }
-  });
-  if (!mainRef) return false;
   try {
-    git(repoRoot, ["merge-base", "--is-ancestor", head, mainRef]);
+    git(repoRoot, [
+      "merge-base",
+      "--is-ancestor",
+      head,
+      "refs/remotes/origin/main",
+    ]);
     return true;
   } catch {
     return false;
   }
 }
 
-function isIgnored(repoRoot, candidate) {
+function isIgnored(worktreeRoot, candidate) {
   try {
-    git(repoRoot, ["check-ignore", "-q", "--", candidate]);
+    const relative = slash(path.relative(worktreeRoot, candidate));
+    git(worktreeRoot, ["check-ignore", "-q", "--", `./${relative}`]);
     return true;
   } catch {
     return false;
   }
 }
 
-function hasTrackedContent(repoRoot, worktreeRoot, candidate) {
+function hasTrackedContent(worktreeRoot, candidate) {
   try {
     const relative = path.relative(worktreeRoot, candidate);
-    return Boolean(git(repoRoot, ["ls-files", "--", relative]).trim());
+    return Boolean(
+      git(worktreeRoot, [
+        "--literal-pathspecs",
+        "ls-files",
+        "--",
+        relative,
+      ]).trim(),
+    );
   } catch {
     return true;
   }
 }
 
-function hasSubmoduleContent(repoRoot, worktreeRoot, candidate) {
+function hasSubmoduleContent(worktreeRoot, candidate) {
   try {
     let current = candidate;
     while (isContainedPath(worktreeRoot, current)) {
       const relative = path.relative(worktreeRoot, current);
-      const stage = git(repoRoot, [
+      const stage = git(worktreeRoot, [
+        "--literal-pathspecs",
         "ls-files",
         "--stage",
         "--",
@@ -427,13 +487,13 @@ function hasSubmoduleContent(repoRoot, worktreeRoot, candidate) {
 
 export function buildReclamationManifest(repoRoot = process.cwd()) {
   const workspaceRoot = workspaceRootFor(repoRoot);
-  const primary = absolute(path.join(workspaceRoot, "KK-Studio-2.0"));
+  const worktrees = parseWorktrees(repoRoot);
+  const primary = absolute(worktrees[0]?.path ?? repoRoot);
   const currentWorktree = realPath(repoRoot) ?? absolute(repoRoot);
   const allowedRoot = absolute(
     process.env.KK_WORKTREE_ROOT || path.join(workspaceRoot, ".worktrees"),
   );
-  const statuses = ledgerStatuses(primary);
-  const worktrees = parseWorktrees(repoRoot);
+  const statuses = ledgerStatuses(primary, worktrees);
   const entries = worktrees.map((worktree) => {
     const pathValue = worktree.path ? absolute(worktree.path) : null;
     const resolvedWorktree = pathValue && realPath(pathValue);
@@ -459,27 +519,14 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
       taskStatuses.length > 0 &&
       taskStatuses.some((status) => status !== "DONE");
     const reachable = reachableFromMain(repoRoot, worktree.head);
-    const removal = assessWorktreeRemoval({
-      ...worktree,
-      inWorkspace,
-      primary: isPrimary,
-      current: isCurrent,
-      active,
-      taskStatuses,
-      reachableFromMain: reachable,
-    });
     const generated =
       pathValue && worktree.exists && inWorkspace
         ? allGeneratedPaths(pathValue)
             .filter((candidate) => fs.existsSync(candidate))
             .map((candidate) => {
-              const ignored = isIgnored(repoRoot, candidate);
-              const tracked = hasTrackedContent(repoRoot, pathValue, candidate);
-              const submodule = hasSubmoduleContent(
-                repoRoot,
-                pathValue,
-                candidate,
-              );
+              const ignored = isIgnored(pathValue, candidate);
+              const tracked = hasTrackedContent(pathValue, candidate);
+              const submodule = hasSubmoduleContent(pathValue, candidate);
               const evidence = isEvidencePath(candidate);
               return {
                 path: slash(candidate),
@@ -491,7 +538,6 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
                   path: candidate,
                   worktreeRoot: pathValue,
                   tracked,
-                  ignored,
                   locked: worktree.locked,
                   submodule,
                   evidence,
@@ -499,6 +545,16 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
               };
             })
         : [];
+    const removal = assessWorktreeRemoval({
+      ...worktree,
+      inWorkspace,
+      primary: isPrimary,
+      current: isCurrent,
+      active,
+      taskStatuses,
+      reachableFromMain: reachable,
+      generatedPaths: generated,
+    });
     return {
       ...worktree,
       path: pathValue ? slash(pathValue) : null,
@@ -527,7 +583,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
           active: entry.active,
         }),
       )
-      .filter((candidate) => candidate.assessment.allowed)
+      .filter((candidate) => candidate.ignored && candidate.assessment.allowed)
       .map((candidate) => ({
         id: hashBuffer(`${candidate.path}:${entry.head}`).slice(0, 16),
         path: candidate.path,
@@ -675,6 +731,24 @@ export function applyReclamationPlan(
   if (!approval.ok) throw new Error(approval.reason);
   const removed = [];
   const failed = [];
+  const live = buildReclamationManifest(repoRoot);
+  const findLiveWorktree = (planned) => {
+    if (!planned) return null;
+    const current = live.worktrees.find(
+      (item) =>
+        normalizeForComparison(item.path) ===
+        normalizeForComparison(planned.path),
+    );
+    return current?.head &&
+      current.head === planned.head &&
+      current.branch === planned.branch
+      ? current
+      : null;
+  };
+  const liveAllowedRoot = normalizeForComparison(live.allowedWorktreeRoot);
+  const sameScope =
+    plan.allowedWorktreeRoot &&
+    normalizeForComparison(plan.allowedWorktreeRoot) === liveAllowedRoot;
   for (const candidate of approval.candidates) {
     const worktreeRoot = candidate.worktreePath ?? path.dirname(candidate.path);
     const plannedWorktree = (plan.worktrees ?? []).find(
@@ -682,33 +756,12 @@ export function applyReclamationPlan(
         normalizeForComparison(item.path) ===
         normalizeForComparison(worktreeRoot),
     );
-    const currentState = plannedWorktree && {
-      ...plannedWorktree,
-      inWorkspace: isContainedPath(plan.allowedWorktreeRoot, worktreeRoot),
-      primary:
-        normalizeForComparison(worktreeRoot) ===
-        normalizeForComparison(plan.primaryRepository),
-      current:
-        normalizeForComparison(realPath(worktreeRoot) ?? worktreeRoot) ===
-        normalizeForComparison(plan.currentWorktree),
-      dirty: worktreeStatus(worktreeRoot),
-      locked: hasWorktreeLock(worktreeRoot),
-      reachableFromMain: reachableFromMain(repoRoot, plannedWorktree.head),
-    };
-    const tracked =
-      candidate.tracked === true ||
-      hasTrackedContent(repoRoot, worktreeRoot, candidate.path);
-    const submodule =
-      candidate.submodule === true ||
-      hasSubmoduleContent(repoRoot, worktreeRoot, candidate.path);
-    const assessment = assessGeneratedCandidate({
-      path: candidate.path,
-      worktreeRoot,
-      tracked,
-      submodule,
-      ignored: candidate.ignored === true,
-      evidence: candidate.evidence === true,
-    });
+    const currentState = findLiveWorktree(plannedWorktree);
+    const observed = currentState?.generatedPaths.find(
+      (entry) =>
+        normalizeForComparison(entry.path) ===
+        normalizeForComparison(candidate.path),
+    );
     const realAllowedRoot =
       plan.allowedWorktreeRoot && realPath(plan.allowedWorktreeRoot);
     const realCandidate = realPath(candidate.path);
@@ -717,29 +770,24 @@ export function applyReclamationPlan(
       realCandidate &&
       isContainedPath(realAllowedRoot, realCandidate),
     );
-    if (
-      !currentState ||
-      !canPruneGeneratedContent(currentState) ||
-      !plan.allowedWorktreeRoot ||
+    let reason;
+    if (!currentState) reason = "WORKTREE_REGISTRATION_CHANGED";
+    else if (!canPruneGeneratedContent(currentState))
+      reason = "WORKTREE_STATE_CHANGED";
+    else if (
+      !sameScope ||
       !isContainedPath(plan.allowedWorktreeRoot, candidate.path) ||
-      !realPathSafe ||
-      !assessment.allowed ||
-      !inventoryMatches(candidate)
-    ) {
-      failed.push({
-        path: candidate.path,
-        reason: !currentState
-          ? "UNKNOWN_WORKTREE"
-          : !canPruneGeneratedContent(currentState)
-            ? "WORKTREE_STATE_CHANGED"
-            : !plan.allowedWorktreeRoot ||
-                !isContainedPath(plan.allowedWorktreeRoot, candidate.path) ||
-                !realPathSafe
-              ? "OUTSIDE_ALLOWED_ROOT"
-              : !assessment.allowed
-                ? assessment.reasons.join(",")
-                : "SOURCE_HASH_CHANGED",
-      });
+      !realPathSafe
+    )
+      reason = "OUTSIDE_ALLOWED_ROOT";
+    else if (observed && !observed.assessment.allowed)
+      reason = observed.assessment.reasons.join(",");
+    else if (!observed?.ignored) reason = "NOT_IGNORED_GENERATED_CONTENT";
+    else if (!inventoryMatches(candidate)) reason = "SOURCE_HASH_CHANGED";
+    else if (!checkoutMatches(currentState, live))
+      reason = "WORKTREE_STATE_CHANGED";
+    if (reason) {
+      failed.push({ path: candidate.path, reason });
       continue;
     }
     try {
@@ -755,26 +803,21 @@ export function applyReclamationPlan(
   const removedWorktrees = [];
   for (const worktree of plan.worktrees ?? []) {
     if (!approvedWorktrees.includes(worktree.path)) continue;
+    const current = findLiveWorktree(worktree);
+    if (!current || !sameScope) {
+      failed.push({
+        path: worktree.path,
+        reason: "WORKTREE_REGISTRATION_CHANGED",
+      });
+      continue;
+    }
     const liveWorktree = {
-      ...worktree,
-      inWorkspace: Boolean(
-        plan.allowedWorktreeRoot &&
-        isContainedPath(plan.allowedWorktreeRoot, worktree.path) &&
-        realPath(worktree.path) &&
-        isContainedPath(plan.allowedWorktreeRoot, realPath(worktree.path)),
+      ...current,
+      bundleVerified: verifyRecoveryBundle(
+        worktree.recoveryBundle,
+        repoRoot,
+        current.head,
       ),
-      primary:
-        normalizeForComparison(worktree.path) ===
-        normalizeForComparison(plan.primaryRepository),
-      current:
-        normalizeForComparison(realPath(worktree.path) ?? worktree.path) ===
-        normalizeForComparison(plan.currentWorktree),
-      dirty: worktreeStatus(worktree.path),
-      locked: hasWorktreeLock(worktree.path),
-      reachableFromMain: reachableFromMain(repoRoot, worktree.head),
-      bundleVerified:
-        worktree.bundleVerified === true ||
-        verifyRecoveryBundle(worktree.recoveryBundle, repoRoot),
     };
     const check = assessWorktreeRemoval(liveWorktree);
     if (
@@ -783,7 +826,8 @@ export function applyReclamationPlan(
       !inventoryMatches({
         path: worktree.path,
         sourceInventory: worktree.sourceInventory,
-      })
+      }) ||
+      !checkoutMatches(current, live)
     ) {
       failed.push({
         path: worktree.path,
@@ -866,6 +910,7 @@ if (invokedDirectly) {
       console.log(
         `Removed ${result.removed.length} generated directories; ${result.failed.length} candidates were retained. Result: ${resultPath}`,
       );
+      if (result.failed.length) process.exitCode = 1;
     }
   } catch (error) {
     console.error(error.message);
