@@ -6694,10 +6694,10 @@
     "dependencies": [
       "TASK-GOV-003"
     ],
-    "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
-    "status": "PARTIAL",
+    "owner": "CodexEvolution",
+    "branch": "codex/TASK-REVIEW-REMEDIATION-001-worktree-safety",
+    "worktree": "D:/KK Design/.worktrees/TASK-REVIEW-REMEDIATION-001",
+    "status": "IN_PROGRESS",
     "priority": "P1",
     "affectedModules": [
       "scripts/governance/doc-index.mjs",
@@ -6709,12 +6709,13 @@
     ],
     "evidence": [
       "docs/changes/2026-10-13-review-remediation/verification.md",
-      "docs/changes/2026-10-13-review-remediation/review.md"
+      "docs/changes/2026-10-13-review-remediation/review.md",
+      "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md"
     ],
     "verification": "2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
+    "updated": "2026-11-25",
+    "displayStatus": "进行中",
     "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
@@ -6738,7 +6739,52 @@
         "source": "docs/changes/2026-10-17-audit-repair/verification.md",
         "reason": "登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配"
       }
-    ]
+    ],
+    "module": "governance",
+    "kind": "governance",
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T13:42:32.293Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T13:42:34.942Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "治理安全子范围只修改回收工具、定向测试、既有生命周期规范和交付包。回收涉及当前实际索引、工作树 SHA 和原证据保护。本轮不清理并行成果。",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T13:47:54.584Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "编号候选独审发现同一卡片的目录别名，先补修。本任务工作树已建，尚无源码改动。"
+      },
+      {
+        "at": "2026-11-25T13:50:40.229Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:40:36.180Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "回收安全候选已提交，10 项生命周期回归和模拟回收通过。目标工作树索引、实时台账、HEAD 和输出证据均复核。",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "813df5219f07d1dc641471e881c750557801d262"
+      }
+    ],
+    "lock": {
+      "agent": "CodexEvolution",
+      "worktree": "D:/KK Design/.worktrees/TASK-REVIEW-REMEDIATION-001",
+      "branch": "codex/TASK-REVIEW-REMEDIATION-001-worktree-safety",
+      "since": "2026-11-25T13:50:40.229Z"
+    },
+    "handoffTo": null
   },
   {
     "id": "TASK-UI-CLASSIFY-20261013",

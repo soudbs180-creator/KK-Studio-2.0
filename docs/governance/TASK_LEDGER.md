@@ -136,7 +136,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 未完成 | P1 | TASK-LAUNCH-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
-| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | PARTIAL | 未完成 | P1 | TASK-GOV-003 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | IN_PROGRESS | 进行中 | P1 | TASK-GOV-003 | CodexEvolution | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -2640,20 +2640,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 让 current 治理入口、supersededBy 关系和 dated change package 规则 fail closed 且可追溯。
 - Scope: 治理生命周期脚本、模板、交付包勘误和账本记录；相关运行时修复以独立提交交付，不改远端设置或其他 worktree。
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P1 — 治理门禁 fail-open 会让错误 current 入口进入合并候选。
 - Requirement refs: ledger:TASK-REVIEW-REMEDIATION-001
 - Feature IDs: none
 - Owner role: repository-maintainer
 - Acceptance: snapshot:check 精确校验 current docId/source/status，并拒绝重复、伪元数据和无效 supersededBy。; 新交付包完整且绑定本次 taskId；旧包保留原始结论并追加勘误。; 治理、文档和版本校验改动与运行时提交可独立审阅。
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-REVIEW-REMEDIATION-001-worktree-safety`
+- Worktree: `D:/KK Design/.worktrees/TASK-REVIEW-REMEDIATION-001`
 - Modules: scripts/governance/doc-index.mjs, scripts/check-snapshot-header.mjs, tests/unit/docIndex.test.ts, docs/templates, docs/changes/2026-10-13-review-remediation, docs/governance/task-ledger.json
 - Verification: PARTIAL — 2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
-- Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md)
+- Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md), [docs/changes/2026-11-25-worktree-reclaim-safety/verification.md](../../docs/changes/2026-11-25-worktree-reclaim-safety/verification.md)
 - Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-10-17
+- Updated: 2026-11-25
 
 ## TASK-UI-CLASSIFY-20261013 — 模型接入与扩展分类修复并验证三客户端
 
