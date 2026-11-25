@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   validateFeatures,
+  validateFeatureReservations,
   renderFeatures,
 } from "../../scripts/features/registry.mjs";
 
@@ -171,4 +174,106 @@ test("board lists every feature and explains the stricter gate", (t) => {
   assert.match(board, /FEAT-001/);
   assert.match(board, /REAL（真实可用）/);
   assert.match(board, /runtimeEvidence/);
+});
+
+test("reservations are unique on the accepted base before implementation", () => {
+  const outpaint = {
+    id: "FEAT-040",
+    card: "docs/features/feat-040-outpaint.md",
+    status: "PLANNED",
+    code: [],
+    tests: [],
+  };
+  const duplicate = {
+    ...outpaint,
+    card: "docs/features/feat-040-model-store.md",
+  };
+  assert.deepEqual(validateFeatureReservations([outpaint], []), []);
+  assert.deepEqual(validateFeatureReservations([duplicate], []), []);
+  assert.match(
+    validateFeatureReservations([duplicate], [outpaint]).join("\n"),
+    /FEAT-040: already assigned to .*feat-040-outpaint/,
+  );
+  assert.match(
+    validateFeatureReservations([], [outpaint]).join("\n"),
+    /retain its registered card/,
+  );
+  const implemented = { ...outpaint, status: "PARTIAL", code: ["src/app.ts"] };
+  assert.match(
+    validateFeatureReservations([implemented], []).join("\n"),
+    /reserve its PLANNED card on main/,
+  );
+  assert.deepEqual(validateFeatureReservations([implemented], [outpaint]), []);
+  assert.match(
+    validateFeatureReservations([{ ...outpaint, id: "FEAT-052" }], []).join(
+      "\n",
+    ),
+    /reservation card must start/,
+  );
+});
+
+test("feature CLI rejects a competing branch after main accepts the same number", (t) => {
+  const { root, card, feature, tasks } = fixture(t, "PLANNED");
+  const registry = path.join(root, "docs/features/features.registry.json");
+  const ledger = path.join(root, "docs/governance/task-ledger.json");
+  fs.unlinkSync(path.join(root, feature.card));
+  fs.mkdirSync(path.dirname(ledger));
+  fs.writeFileSync(ledger, JSON.stringify(tasks));
+  fs.writeFileSync(registry, "[]");
+  const env = {
+    ...process.env,
+    GIT_CONFIG_NOSYSTEM: "1",
+    GIT_CONFIG_GLOBAL: process.platform === "win32" ? "NUL" : os.devNull,
+  };
+  const git = (...args: string[]) =>
+    execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: "pipe",
+      env,
+    });
+  git("init", "-qb", "main");
+  git("config", "user.email", "fixture@example.test");
+  git("config", "user.name", "Feature fixture");
+  git("add", "--", "docs");
+  git("commit", "-qm", "empty feature registry");
+  const sharedBase = git("rev-parse", "HEAD").trim();
+  git("branch", "competing");
+  const cli = fileURLToPath(
+    new URL("../../scripts/check-features.mjs", import.meta.url),
+  );
+  const run = (base: string) =>
+    spawnSync(process.execPath, [cli, "--write"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...env, GOVERNANCE_BASE: base },
+    });
+  const reserve = (slug: string) => {
+    const reserved = {
+      ...feature,
+      id: "FEAT-040",
+      card: `docs/features/feat-040-${slug}.md`,
+      code: [],
+      tests: [],
+      runtimeEvidence: undefined,
+    };
+    fs.writeFileSync(
+      path.join(root, reserved.card),
+      card.replace("FEAT-001", "FEAT-040"),
+    );
+    fs.writeFileSync(registry, JSON.stringify([reserved]));
+  };
+  reserve("outpaint");
+  assert.equal(run(sharedBase).status, 0);
+  git("add", "--", "docs");
+  git("commit", "-qm", "main accepts outpaint");
+  git("switch", "-q", "competing");
+  reserve("model-store");
+  assert.equal(run(sharedBase).status, 0);
+  const rejected = run("main");
+  assert.equal(rejected.status, 1);
+  assert.match(
+    rejected.stderr,
+    /FEAT-040: already assigned to .*feat-040-outpaint/,
+  );
 });
