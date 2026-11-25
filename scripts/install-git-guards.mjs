@@ -47,19 +47,55 @@ export function installGitGuards(
         `An existing core.hooksPath applies to ${worktree}; refusing to override or disable existing hooks.`,
       );
   }
-  const files = [
-    { name: "pre-push", source: path.join(root, ".githooks", "pre-push") },
+  const prepareFiles = (files) =>
+    files.map((file) => ({
+      ...file,
+      target: path.join(hooks, file.name),
+      content: Buffer.from(
+        fs
+          .readFileSync(path.join(root, file.source), "utf8")
+          .replaceAll("\r\n", "\n"),
+      ),
+    }));
+  const pushFiles = prepareFiles([
+    { name: "pre-push", source: ".githooks/pre-push" },
     {
       name: "kk-studio-push-policy.mjs",
-      source: path.join(root, "scripts", "governance", "push-policy.mjs"),
+      source: "scripts/governance/push-policy.mjs",
     },
-  ].map((file) => ({
-    ...file,
-    target: path.join(hooks, file.name),
-    content: Buffer.from(
-      fs.readFileSync(file.source, "utf8").replaceAll("\r\n", "\n"),
-    ),
-  }));
+  ]);
+  const commitFiles = prepareFiles([
+    { name: "pre-commit", source: ".githooks/pre-commit" },
+    {
+      name: "kk-studio-commit-policy.mjs",
+      source: "scripts/governance/commit-policy.mjs",
+    },
+  ]);
+  const commitExisting = commitFiles.filter((file) =>
+    fs.lstatSync(file.target, { throwIfNoEntry: false }),
+  );
+  const addCommitGuard = commitExisting.length === 0;
+  const commitGuardReady =
+    commitExisting.length === commitFiles.length &&
+    commitFiles.every(
+      (file) =>
+        fs.lstatSync(file.target).isFile() &&
+        fs.readFileSync(file.target).equals(file.content),
+    ) &&
+    (process.platform === "win32" ||
+      Boolean(fs.statSync(commitFiles[0].target).mode & 0o111));
+
+  const push = installPushFiles(hooks, pushFiles, upgradeReviewedV1);
+  if (addCommitGuard) installFiles(hooks, commitFiles);
+  return {
+    ...push,
+    installed: push.installed || addCommitGuard,
+    commitGuardReady: addCommitGuard || commitGuardReady,
+    worktrees,
+  };
+}
+
+function installPushFiles(hooks, files, upgradeReviewedV1) {
   const existing = files.filter((file) => fs.existsSync(file.target));
   if (existing.length) {
     // Only this exact reviewed pair may be upgraded. A marker/comment is not
@@ -113,7 +149,7 @@ export function installGitGuards(
           fs.unlinkSync(temporary);
         throw error;
       }
-      return { installed: true, upgraded: true, backup, hooks, worktrees };
+      return { installed: true, upgraded: true, backup, hooks };
     }
     if (
       existing.length !== files.length ||
@@ -131,8 +167,13 @@ export function installGitGuards(
       throw new Error(
         "Existing pre-push is not executable; inspect its permissions before reinstalling.",
       );
-    return { installed: false, hooks, worktrees };
+    return { installed: false, hooks };
   }
+  installFiles(hooks, files);
+  return { installed: true, hooks };
+}
+
+function installFiles(hooks, files) {
   fs.mkdirSync(hooks, { recursive: true });
   const created = [];
   try {
@@ -140,12 +181,12 @@ export function installGitGuards(
     for (const file of [...files].reverse()) {
       fs.writeFileSync(file.target, file.content, { flag: "wx", mode: 0o755 });
       created.push(file.target);
+      fs.chmodSync(file.target, 0o755);
     }
   } catch (error) {
     for (const file of created) fs.unlinkSync(file);
     throw error;
   }
-  return { installed: true, hooks, worktrees };
 }
 
 if (
@@ -168,6 +209,10 @@ if (
     if (result.upgraded)
       console.log(
         `Upgraded reviewed v1; original hook preserved at ${result.backup}`,
+      );
+    if (!result.commitGuardReady)
+      console.warn(
+        "Existing pre-commit or policy preserved. The KK commit checks still run in CI.",
       );
     console.log(
       `Scope: common Git hooks shared by ${result.worktrees.length} registered worktree(s); no local, worktree or global Git config was changed.`,
