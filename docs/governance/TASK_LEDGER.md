@@ -162,6 +162,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+| TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3129,3 +3130,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
 - Last verified: 2026-11-21
 - Updated: 2026-11-21
+
+## TASK-KKD-EVOLUTION-PHASE1-20261125 — KK Design 自进化第一阶段全局审计与治理收口
+
+- Goal: 按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据
+- Scope: 按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexEvolution
+- Acceptance: 逐项核验主线、工作树、测试目录、Pen、开源适配及能力链路; 清理仅限已核验的可回收对象，保留未归并成果; 治理变更在有效模块锁和官方基线下交付，绑定独审及门禁
+- Branch: `codex/TASK-KKD-EVOLUTION-PHASE1-20261125`
+- Worktree: `D:/KK Design/.worktrees/TASK-KKD-EVOLUTION-PHASE1-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-kkd-evolution-phase1/verification.md](../../docs/changes/2026-11-25-kkd-evolution-phase1/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-25
