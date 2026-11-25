@@ -8,3 +8,5 @@ parent: TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125
 - 既有 `canvas-proxy` 对照使用上游参考 `e6d0911e9d509d00150eaab02f9ca05be94ffc46` 与官方 `e4383a1e`，实际运行两侧 CLI。在环回连接验证路由识别、请求转发、预检、上游错误与 SSE 五项。收据 `.tmp/output/2026-11-25-kkd-evolution-phase1/oss-canvas-proxy/proxy-parity.json` 的 SHA-256 为 `23606d4ce49e9b83fcc31374ac9e4fc10f02aa2a665c01a6df5df7ade2f7b7f9`。历史组件整体仍为 PARTIAL，待核对精确来源、整个产品及真实供应商。
 - 原始命令记录存放于忽略目录 `.tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/`。正式提交的本地门禁、独立审查、Hosted 和集成结果由协调台账分项记录。
 - 首轮完整检查在提交 `2cbad21668ae91e5d6cc544c077a1fcfcfdaaa7a` 通过开源门禁，但在文档索引停止。已补齐现有索引与门禁映射，保留首轮记录及最终复跑记录。
+- 精确 `77b4b6dbd8f041d4b56658dce304450d2b233f61` 本地完整验证退出 0。独审另外复现输入缺项、不同输出被自报通过及缺少 UI/来源边界三个缺口，收据在 `review-repro-77b4.log`。
+- 源码修订 `eec1b1a906555c98b99ffc85bda40e91b369bac3` 的定向测试 29 项通过，治理门禁 3 组件 0 违规。新增覆盖全部输入及流程、严格 JSON 比对/数值容差、受控 UI 观察、运行日志与保留地址，清理两个官方基准中不存在的历史文档指针。测试夹具用于验证门禁；真实外部行为的独审与集成收据单独记录。
