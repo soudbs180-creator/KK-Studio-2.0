@@ -73,7 +73,10 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
           HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
-        run: node scripts/check-delivery.mjs --base "$env:BASE_SHA" --head "$env:HEAD_SHA"
+        run: |
+          node scripts/governance/commit-policy.mjs "$env:BASE_SHA" "$env:HEAD_SHA"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/check-delivery.mjs --base "$env:BASE_SHA" --head "$env:HEAD_SHA"
   governance:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
