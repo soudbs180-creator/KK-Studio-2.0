@@ -3,6 +3,7 @@ import test from "node:test";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   ATTRIBUTIONS_FILE,
@@ -16,6 +17,9 @@ import {
 } from "../../scripts/governance/oss-attributions.mjs";
 
 const ROOT = "src/integrations/oss";
+const MIT_LICENSE = fs.readFileSync(
+  new URL("../../vendor/canvas-proxy/LICENSE", import.meta.url),
+);
 
 function makeLedger() {
   return {
@@ -62,6 +66,7 @@ function withRecords(ledger, records, restricted = []) {
 
 function makeTempRepo(records, restricted = []) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-oss-gate-"));
+  execFileSync("git", ["init", "--quiet"], { cwd: root });
   fs.mkdirSync(path.join(root, "config"), { recursive: true });
   fs.mkdirSync(path.join(root, ROOT, "example-lib"), { recursive: true });
   fs.writeFileSync(
@@ -260,7 +265,7 @@ function admitFixture(root, integrationType = "vendored") {
   record.admission = {
     commit: "1234567890abcdef".repeat(2) + "12345678",
     version: "1.0.0",
-    licenseFile: writeFixture(root, `${target}/LICENSE`, "MIT License\n"),
+    licenseFile: writeFixture(root, `${target}/LICENSE`, MIT_LICENSE),
     dependencies: [
       writeFixture(root, `${target}/package.json`, '{"dependencies":{}}'),
     ],
@@ -290,13 +295,19 @@ function admitFixture(root, integrationType = "vendored") {
       },
     ],
   };
-  record.admission.receipt = writeFixture(
-    root,
-    `${evidence}/receipt.json`,
-    JSON.stringify(receipt),
-  );
-  saveRecord(root, record);
+  saveReceipt(root, record, receipt, `${evidence}/receipt.json`);
   return { record, receipt };
+}
+
+function saveReceipt(
+  root,
+  record,
+  receipt,
+  file = record.admission.receipt.path,
+) {
+  receipt.admissionSha256 = admissionFingerprint(record);
+  record.admission.receipt = writeFixture(root, file, JSON.stringify(receipt));
+  saveRecord(root, record);
 }
 
 test("R-OSS: filesystem gate passes for pinned vendored and adapter fixtures", () => {
@@ -327,6 +338,85 @@ test("R-OSS: attribution alone or an unknown legacy flag cannot admit a componen
     assert.match(
       checkOssAttributions(root).issues.join("\n"),
       /vendor\/unknown: missing attribution/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: stale receipts cannot omit another tracked or unignored runtime file", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    const tracked = writeFixture(
+      root,
+      `${ROOT}/example-lib/other.js`,
+      "export {};",
+    );
+    execFileSync("git", ["add", "--", tracked.path], { cwd: root });
+    const untracked = writeFixture(
+      root,
+      `${ROOT}/example-lib/config.json`,
+      "{}",
+    );
+    writeFixture(root, ".gitignore", "node_modules/\n");
+    writeFixture(
+      root,
+      `${ROOT}/example-lib/node_modules/cache.js`,
+      "export {};",
+    );
+    for (const pin of [tracked, untracked]) {
+      assert.match(
+        checkOssAttributions(root).issues.join("\n"),
+        /unpinned component file/,
+      );
+      record.admission.implementation.push(pin);
+      saveReceipt(root, record, receipt);
+    }
+    assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
+    writeFixture(root, tracked.path, "export const updated = true;");
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /SHA-256 mismatch/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: the license file name and text must support the declared SPDX license", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    const original = record.admission.licenseFile.path;
+    record.admission.licenseFile = writeFixture(
+      root,
+      original,
+      "MIT License\nArbitrary text.",
+    );
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /does not support declared SPDX license/,
+    );
+    fs.unlinkSync(path.join(root, original));
+    record.admission.licenseFile = writeFixture(
+      root,
+      `${ROOT}/example-lib/settings.txt`,
+      MIT_LICENSE,
+    );
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /named LICENSE|COPYING|NOTICE/,
+    );
+    fs.unlinkSync(path.join(root, record.admission.licenseFile.path));
+    record.admission.licenseFile = writeFixture(root, original, MIT_LICENSE);
+    record.license = "ISC";
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /does not support declared SPDX license/,
     );
   } finally {
     cleanup(root);

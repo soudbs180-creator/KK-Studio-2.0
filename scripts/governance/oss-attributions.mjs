@@ -36,6 +36,7 @@ const LEGACY_COMPONENTS = new Set([
   "vendor/canvas-proxy",
 ]);
 const ROOT_NOTICE = /^(?:README\.md|LICENSE(?:\.txt)?|NOTICE(?:\.txt)?)$/i;
+const LICENSE_NAME = /^(?:LICENSE|LICENCE|COPYING|NOTICE)(?:[._-][\w.-]+)?$/i;
 const SHA256 = /^[a-f0-9]{64}$/;
 const PIN_PATH =
   /^(?:(?:src\/integrations\/oss|vendor|docs\/changes|tests\/fixtures)\/|package(?:-lock)?\.json$)/;
@@ -291,7 +292,7 @@ const sha256 = (data) => createHash("sha256").update(data).digest("hex");
 const nonempty = (value) =>
   typeof value === "string" && value.trim().length > 0;
 
-function readPin(root, pin) {
+function readPin(root, pin, allowEmpty = false) {
   if (
     typeof pin?.path !== "string" ||
     !PIN_PATH.test(pin.path) ||
@@ -319,9 +320,82 @@ function readPin(root, pin) {
     pin.text === true
       ? Buffer.from(bytes.toString("utf8").replaceAll("\r\n", "\n"))
       : bytes;
-  if (!content.length || sha256(content) !== pin.sha256)
+  if ((!allowEmpty && !content.length) || sha256(content) !== pin.sha256)
     throw new Error("evidence SHA-256 mismatch or empty file");
   return content;
+}
+
+function gitAt(root, ...args) {
+  return execFileSync(
+    "git",
+    ["--no-optional-locks", "--literal-pathspecs", ...args],
+    { cwd: root, stdio: ["ignore", "pipe", "ignore"] },
+  );
+}
+
+function verifyLicense(root, pin, declared) {
+  const content = readPin(root, pin).toString("utf8");
+  if (!LICENSE_NAME.test(path.posix.basename(pin.path)))
+    throw new Error(
+      "license evidence must be a named LICENSE, COPYING or NOTICE file",
+    );
+  if (/GNU (?:AFFERO |LESSER )?GENERAL PUBLIC LICENSE/i.test(content))
+    throw new Error("license evidence contains a non-permissive license");
+  const text = content.replace(/\s+/g, " ").replace(/[“”]/g, '"').toLowerCase();
+  const bsd = [
+    "redistribution and use in source and binary forms",
+    "redistributions of source code must retain",
+    'and contributors "as is"',
+  ];
+  const endorsement =
+    "may be used to endorse or promote products derived from this software";
+  const markers = {
+    mit: [
+      "permission is hereby granted, free of charge",
+      "the above copyright notice and this permission notice shall be included",
+      'the software is provided "as is"',
+    ],
+    "apache-2.0": [
+      "apache license version 2.0",
+      "grant of patent license",
+      "limitation of liability",
+    ],
+    "bsd-2-clause": bsd,
+    "bsd-3-clause": [...bsd, endorsement],
+    isc: [
+      "permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted",
+      "the above copyright notice and this permission notice appear in all copies",
+      'the software is provided "as is"',
+    ],
+  };
+  const spdx = declared.trim().toLowerCase();
+  if (
+    !markers[spdx]?.every((part) => text.includes(part)) ||
+    (spdx === "bsd-2-clause" && text.includes(endorsement))
+  )
+    throw new Error("license text does not support declared SPDX license");
+}
+
+function verifyComponentPins(root, target, admission) {
+  const pinned = new Set([
+    admission.licenseFile.path,
+    ...admission.dependencies.map((entry) => entry.path),
+    ...admission.implementation.map((entry) => entry.path),
+  ]);
+  const files = gitAt(
+    root,
+    "ls-files",
+    "-z",
+    "--cached",
+    "--others",
+    "--exclude-standard",
+    "--",
+    target,
+  )
+    .toString("utf8")
+    .split("\0");
+  const unpinned = files.find((file) => file && !pinned.has(file));
+  if (unpinned) throw new Error(`unpinned component file: ${unpinned}`);
 }
 
 /** Binds run evidence to the exact declared upstream and local input set. */
@@ -361,21 +435,17 @@ function verifyAdmission(root, target, record) {
     !admission.licenseFile?.path?.startsWith(`${target}/`)
   )
     throw new Error("vendored license evidence must be under the component");
-  const license = readPin(root, admission.licenseFile).toString("utf8");
-  if (/GNU (?:AFFERO |LESSER )?GENERAL PUBLIC LICENSE/i.test(license))
-    throw new Error("license evidence contains a non-permissive license");
-  for (const entry of [
-    ...admission.dependencies,
-    ...admission.inputs,
-    ...admission.implementation,
-  ])
+  verifyLicense(root, admission.licenseFile, record.license);
+  for (const entry of [...admission.dependencies, ...admission.inputs])
     readPin(root, entry);
+  for (const entry of admission.implementation) readPin(root, entry, true);
   if (
     !admission.implementation.every((entry) =>
       entry.path.startsWith(`${target}/`),
     )
   )
     throw new Error("implementation evidence must be under the component");
+  verifyComponentPins(root, target, admission);
 
   const rawReceipt = readPin(root, admission.receipt).toString("utf8");
   let receipt;
@@ -419,19 +489,11 @@ function verifyLegacy(root, target) {
     throw new Error(
       "legacy status is restricted to the named baseline components",
     );
-  const git = (...args) =>
-    execFileSync(
-      "git",
-      ["--no-optional-locks", "--literal-pathspecs", ...args],
-      {
-        cwd: root,
-        stdio: ["ignore", "pipe", "ignore"],
-      },
-    );
   let changed;
   try {
     changed =
-      git(
+      gitAt(
+        root,
         "diff",
         "--no-ext-diff",
         "--no-textconv",
@@ -440,7 +502,8 @@ function verifyLegacy(root, target) {
         "--",
         target,
       ).length ||
-      git("ls-files", "--others", "--exclude-standard", "--", target).length;
+      gitAt(root, "ls-files", "--others", "--exclude-standard", "--", target)
+        .length;
   } catch {
     throw new Error("cannot compare the pinned legacy baseline");
   }
