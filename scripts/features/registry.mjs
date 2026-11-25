@@ -142,6 +142,7 @@ export function validateFeatures(
   };
   const ids = new Set();
   const registeredCards = new Set();
+  const registeredCardTargets = new Set();
 
   for (const feature of features) {
     if (!feature || typeof feature !== "object" || Array.isArray(feature)) {
@@ -188,9 +189,13 @@ export function validateFeatures(
     const cardPath = existingPath(feature.card, `${id}: card`, true);
     if (cardPath) {
       const relativeCard = path.normalize(path.relative(repoRoot, cardPath));
-      if (registeredCards.has(relativeCard))
+      const realCard = fs.realpathSync(cardPath);
+      const cardTarget =
+        process.platform === "win32" ? realCard.toLowerCase() : realCard;
+      if (registeredCardTargets.has(cardTarget))
         issues.push(`${id}: another feature already uses its card`);
       registeredCards.add(relativeCard);
+      registeredCardTargets.add(cardTarget);
       const card = fs.readFileSync(cardPath, "utf8");
       if (!card.includes(id))
         issues.push(`${id}: card must reference its own id`);

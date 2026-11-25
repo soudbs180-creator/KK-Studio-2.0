@@ -168,6 +168,25 @@ test("unknown statuses, tasks, duplicate IDs and unregistered cards fail", (t) =
   assert.match(check().join("\n"), /Unregistered feature card/);
 });
 
+test("a junction alias cannot register the same physical card twice", (t) => {
+  const { root, feature, tasks, card } = fixture(t, "PLANNED");
+  const directory = path.join(root, "docs/features");
+  fs.writeFileSync(
+    path.join(root, feature.card),
+    `${card}\nRelated FEAT-052\n`,
+  );
+  fs.symlinkSync(directory, path.join(directory, "feat-052-alias"), "junction");
+  const duplicate = {
+    ...feature,
+    id: "FEAT-052",
+    card: "docs/features/feat-052-alias/feat-test.md",
+  };
+  assert.match(
+    validateFeatures([feature, duplicate], tasks, { root }).join("\n"),
+    /FEAT-052: another feature already uses its card/,
+  );
+});
+
 test("board lists every feature and explains the stricter gate", (t) => {
   const { feature } = fixture(t);
   const board = renderFeatures([feature]);
