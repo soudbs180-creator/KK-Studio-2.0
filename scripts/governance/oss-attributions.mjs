@@ -51,6 +51,7 @@ const CONTROL_STATES = [
 ];
 const BUSINESS_STATES = ["normal", "loading", "error", "disabled", "empty"];
 const WIDTHS = [390, 1099, 1920];
+const RUN_ROLES = ["upstream", "candidate"];
 const PIN_PATH =
   /^(?:(?:src\/integrations\/oss|vendor|docs\/changes|tests\/fixtures)\/|package(?:-lock)?\.json$)/;
 
@@ -584,6 +585,47 @@ function verifyUi(root, ui, evidence, workflows) {
     throw new Error(`missing UI evidence: ${expected.keys().next().value}`);
 }
 
+function verifyRunEvidence(root, receipt) {
+  const { upstream, candidate } = receipt.runs;
+  const logText = (run) =>
+    readPin(root, run.log).toString("utf8").replaceAll("\r\n", "\n");
+  if (
+    logText(upstream) === logText(candidate) ||
+    upstream.log.path.toLowerCase() === candidate.log.path.toLowerCase() ||
+    upstream.log.sha256 === candidate.log.sha256
+  )
+    throw new Error("upstream and candidate require distinct raw run logs");
+
+  const runIds = new Set();
+  for (const role of RUN_ROLES) {
+    const run = receipt.runs[role];
+    const manifest = readJsonPin(root, run.manifest, `${role} run manifest`);
+    if (
+      manifest?.role !== role ||
+      typeof manifest.runId !== "string" ||
+      !ID.test(manifest.runId) ||
+      runIds.has(manifest.runId) ||
+      manifest.admissionSha256 !== receipt.admissionSha256 ||
+      manifest.logSha256 !== run.log.sha256 ||
+      !Array.isArray(manifest.cases)
+    )
+      throw new Error(`run manifest identity differs: ${role}`);
+    runIds.add(manifest.runId);
+    const pending = new Map(receipt.cases.map((entry) => [entry.id, entry]));
+    for (const observed of manifest.cases) {
+      const expected = pending.get(observed?.id);
+      if (
+        !expected ||
+        observed.input !== expected.input ||
+        !isDeepStrictEqual(observed.output, expected[role])
+      )
+        throw new Error(`run output binding differs: ${role}`);
+      pending.delete(observed.id);
+    }
+    if (pending.size) throw new Error(`run manifest omits cases: ${role}`);
+  }
+}
+
 /** Binds run evidence to the exact declared upstream and local input set. */
 export function admissionFingerprint(record) {
   const admission = record.admission;
@@ -640,7 +682,7 @@ function verifyAdmission(root, target, record) {
   const receipt = readJsonPin(root, admission.receipt, "run/parity receipt");
   if (
     receipt?.admissionSha256 !== admissionFingerprint(record) ||
-    !["upstream", "candidate"].every(
+    !RUN_ROLES.every(
       (field) =>
         nonempty(receipt.runs?.[field]?.command) &&
         receipt.runs[field].exitCode === 0,
@@ -649,8 +691,6 @@ function verifyAdmission(root, target, record) {
     receipt.cases.length === 0
   )
     throw new Error("malformed or stale run/parity receipt");
-  for (const field of ["upstream", "candidate"])
-    readPin(root, receipt.runs[field].log);
   for (const test of receipt.cases) {
     const planned = cases.get(test?.id);
     if (!planned) throw new Error("unknown or duplicate receipt case");
@@ -662,6 +702,7 @@ function verifyAdmission(root, target, record) {
   }
   if (cases.size)
     throw new Error(`missing receipt case: ${cases.keys().next().value}`);
+  verifyRunEvidence(root, receipt);
   verifyUi(root, admission.ui, receipt.uiEvidence, flows);
 }
 

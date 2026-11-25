@@ -352,7 +352,38 @@ function saveReceipt(
   receipt,
   file = record.admission.receipt.path,
 ) {
+  refreshRunManifests(root, record, receipt, file);
+  saveReceiptWithExistingManifests(root, record, receipt, file);
+}
+
+function refreshRunManifests(root, record, receipt, file) {
   receipt.admissionSha256 = admissionFingerprint(record);
+  for (const role of ["upstream", "candidate"]) {
+    const run = receipt.runs[role];
+    run.manifest = writeFixture(
+      root,
+      `${file}-${role}-run.json`,
+      JSON.stringify({
+        role,
+        runId: `${role}-fixture-1`,
+        admissionSha256: receipt.admissionSha256,
+        logSha256: run.log.sha256,
+        cases: receipt.cases.map((entry) => ({
+          id: entry.id,
+          input: entry.input,
+          output: entry[role],
+        })),
+      }),
+    );
+  }
+}
+
+function saveReceiptWithExistingManifests(
+  root,
+  record,
+  receipt,
+  file = record.admission.receipt.path,
+) {
   record.admission.receipt = writeFixture(root, file, JSON.stringify(receipt));
   saveRecord(root, record);
 }
@@ -463,6 +494,61 @@ test("R-OSS: receipt artifacts determine exact JSON and bounded numeric results"
     assert.match(
       checkOssAttributions(root).issues.join("\n"),
       /parity outputs differ/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: upstream and candidate require independently pinned raw logs", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    const upstream = receipt.runs.upstream.log;
+    const candidatePath = receipt.runs.candidate.log.path;
+    receipt.runs.candidate.log = upstream;
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /distinct raw run logs/,
+    );
+    receipt.runs.candidate.log = writeFixture(
+      root,
+      candidatePath,
+      fs.readFileSync(path.join(root, upstream.path)),
+    );
+    assert.equal(receipt.runs.candidate.log.sha256, upstream.sha256);
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /distinct raw run logs/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: role manifests bind each output path even when matching outputs share a hash", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    const entry = receipt.cases[0];
+    assert.equal(entry.upstream.sha256, entry.candidate.sha256);
+    assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
+    [entry.upstream, entry.candidate] = [entry.candidate, entry.upstream];
+    saveReceiptWithExistingManifests(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /run output binding differs/,
+    );
+    [entry.upstream, entry.candidate] = [entry.candidate, entry.upstream];
+    const manifest = receipt.runs.upstream.manifest;
+    receipt.runs.upstream.manifest = receipt.runs.candidate.manifest;
+    receipt.runs.candidate.manifest = manifest;
+    saveReceiptWithExistingManifests(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /run manifest identity differs/,
     );
   } finally {
     cleanup(root);
