@@ -30,10 +30,18 @@ export function defaultReclamationOutputDirectory(
   repositoryRoot = process.cwd(),
   now = new Date(),
 ) {
-  const containerRoot =
-    process.env.KK_CONTAINER_ROOT ?? path.resolve(repositoryRoot, "..");
+  const override = process.env.KK_CONTAINER_ROOT;
+  const containerRoot = override ?? workspaceRootFor(repositoryRoot);
+  const insideRepository =
+    !override &&
+    fs.existsSync(path.join(containerRoot, ".git")) &&
+    fs.existsSync(path.join(containerRoot, ".worktrees"));
   const date = now.toISOString().slice(0, 10);
-  return path.join(containerRoot, "output", `${date}-worktree-reclamation`);
+  return path.join(
+    containerRoot,
+    insideRepository ? ".tmp" : "output",
+    `${date}-worktree-reclamation`,
+  );
 }
 
 function slash(value) {
@@ -296,19 +304,30 @@ function readTaskLedger(repoRoot, worktrees) {
       throw new Error("Invalid reclamation task ledger");
     for (const task of tasks) records.set(task.id, task);
   }
-  return records.values();
+  return [...records.values()];
 }
 
-function ledgerStatuses(repoRoot, worktrees) {
-  const statuses = new Map();
-  for (const task of readTaskLedger(repoRoot, worktrees)) {
-    if (!task?.branch || !task?.status) continue;
-    const branch = String(task.branch).replace(/^refs\/heads\//, "");
-    const list = statuses.get(branch) ?? [];
-    list.push(String(task.status));
-    statuses.set(branch, list);
-  }
-  return statuses;
+function taskStateFor(worktree, records) {
+  const matchesBranch = (value) =>
+    worktree.branch &&
+    typeof value === "string" &&
+    value.replace(/^refs\/heads\//, "") === worktree.branch;
+  const matchesPath = (value) =>
+    worktree.path &&
+    typeof value === "string" &&
+    path.isAbsolute(value) &&
+    normalizeForComparison(value) === normalizeForComparison(worktree.path);
+  const tasks = records.filter(
+    (task) =>
+      matchesBranch(task.branch) ||
+      matchesBranch(task.lock?.branch) ||
+      matchesPath(task.worktree) ||
+      matchesPath(task.lock?.worktree),
+  );
+  return {
+    taskStatuses: tasks.map((task) => task.status),
+    active: tasks.some((task) => task.lock || task.status !== "DONE"),
+  };
 }
 
 function git(repoRoot, args, options = {}) {
@@ -378,7 +397,7 @@ function hasWorktreeLock(worktreePath) {
   );
 }
 
-function checkoutMatches(worktree, manifest) {
+function checkoutMatches(worktree, manifest, requireCompletedTask = false) {
   try {
     const head = git(worktree.path, ["rev-parse", "HEAD"]).trim();
     const branch = git(worktree.path, [
@@ -386,16 +405,18 @@ function checkoutMatches(worktree, manifest) {
       "--abbrev-ref",
       "HEAD",
     ]).trim();
-    const taskStatuses =
-      ledgerStatuses(manifest.primaryRepository, manifest.worktrees).get(
-        branch,
-      ) ?? [];
+    const records = readTaskLedger(
+      manifest.primaryRepository,
+      manifest.worktrees,
+    );
+    const { active, taskStatuses } = taskStateFor(worktree, records);
     return (
       head === worktree.head &&
       branch === (worktree.branch ?? "HEAD") &&
       worktreeStatus(worktree.path) === 0 &&
       !hasWorktreeLock(worktree.path) &&
-      taskStatuses.every((status) => status === "DONE")
+      !active &&
+      (!requireCompletedTask || taskStatuses.length > 0)
     );
   } catch {
     return false;
@@ -493,7 +514,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
   const allowedRoot = absolute(
     process.env.KK_WORKTREE_ROOT || path.join(workspaceRoot, ".worktrees"),
   );
-  const statuses = ledgerStatuses(primary, worktrees);
+  const tasks = readTaskLedger(primary, worktrees);
   const entries = worktrees.map((worktree) => {
     const pathValue = worktree.path ? absolute(worktree.path) : null;
     const resolvedWorktree = pathValue && realPath(pathValue);
@@ -512,12 +533,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
       normalizeForComparison(realPath(pathValue) ?? pathValue) ===
         normalizeForComparison(currentWorktree),
     );
-    const taskStatuses = worktree.branch
-      ? (statuses.get(worktree.branch) ?? [])
-      : [];
-    const active =
-      taskStatuses.length > 0 &&
-      taskStatuses.some((status) => status !== "DONE");
+    const { taskStatuses, active } = taskStateFor(worktree, tasks);
     const reachable = reachableFromMain(repoRoot, worktree.head);
     const generated =
       pathValue && worktree.exists && inWorkspace
@@ -652,14 +668,30 @@ export function writeImmutablePlan(
   const targetDirectory =
     outputDirectory ?? defaultReclamationOutputDirectory();
   fs.mkdirSync(targetDirectory, { recursive: true });
-  const candidates = (plan.candidates ?? []).map((candidate) => ({
-    ...candidate,
-    sourceInventory:
+  const heads = new Map(
+    (plan.worktrees ?? []).map((entry) => [
+      normalizeForComparison(entry.path),
+      entry.head,
+    ]),
+  );
+  const candidates = (plan.candidates ?? []).map((candidate) => {
+    const sourceInventory =
       candidate.sourceInventory ??
       (fs.existsSync(candidate.path)
         ? buildRecoveryInventory(candidate.path)
-        : null),
-  }));
+        : null);
+    const head = heads.get(normalizeForComparison(candidate.worktreePath));
+    return {
+      ...candidate,
+      id: approvalId(
+        plan.planId,
+        candidate.path,
+        head,
+        sourceInventory?.digest,
+      ),
+      sourceInventory,
+    };
+  });
   const selectedWorktrees = new Set(approvedWorktrees);
   const worktrees = (plan.worktrees ?? []).map((worktree) =>
     selectedWorktrees.has(worktree.path) && fs.existsSync(worktree.path)
@@ -720,6 +752,16 @@ function inventoryMatches(candidate) {
     buildRecoveryInventory(candidate.path).digest ===
     candidate.sourceInventory.digest
   );
+}
+
+function approvalId(planId, candidatePath, head, inventoryDigest) {
+  const scope = [
+    planId,
+    normalizeForComparison(candidatePath),
+    head,
+    inventoryDigest,
+  ];
+  return hashBuffer(JSON.stringify(scope)).slice(0, 16);
 }
 
 /** Apply only explicitly approved candidates after rechecking containment and source hashes. */
@@ -783,6 +825,16 @@ export function applyReclamationPlan(
     else if (observed && !observed.assessment.allowed)
       reason = observed.assessment.reasons.join(",");
     else if (!observed?.ignored) reason = "NOT_IGNORED_GENERATED_CONTENT";
+    else if (
+      candidate.id !==
+      approvalId(
+        plan.planId,
+        candidate.path,
+        currentState.head,
+        candidate.sourceInventory?.digest,
+      )
+    )
+      reason = "CANDIDATE_IDENTITY_CHANGED";
     else if (!inventoryMatches(candidate)) reason = "SOURCE_HASH_CHANGED";
     else if (!checkoutMatches(currentState, live))
       reason = "WORKTREE_STATE_CHANGED";
@@ -827,7 +879,7 @@ export function applyReclamationPlan(
         path: worktree.path,
         sourceInventory: worktree.sourceInventory,
       }) ||
-      !checkoutMatches(current, live)
+      !checkoutMatches(current, live, true)
     ) {
       failed.push({
         path: worktree.path,
@@ -875,10 +927,7 @@ export function writeApplyResult(result, plan, outputDirectory) {
   return destination;
 }
 
-const invokedDirectly = process.argv[1]
-  ?.replaceAll("\\", "/")
-  .endsWith("/worktree-reclaim.mjs");
-if (invokedDirectly) {
+if (import.meta.main) {
   try {
     const repoRoot = process.cwd();
     const outputDirectory = defaultReclamationOutputDirectory(repoRoot);

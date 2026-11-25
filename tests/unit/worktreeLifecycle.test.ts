@@ -4,6 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   assessGeneratedCandidate,
   applyReclamationPlan,
@@ -140,7 +141,11 @@ test("reclamation protects the target index and rejects a plan after HEAD change
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     fs.writeFileSync(destination, value);
   };
-  write(repo, ".gitignore", ".worktrees/\n.tmp/\ndist/\nnode_modules/\n");
+  write(
+    repo,
+    ".gitignore",
+    ".worktrees/\n.tmp/\ndist/\nnode_modules/\ntest-results/\n",
+  );
   git(repo, "add", ".gitignore");
   git(repo, "commit", "-qm", "workspace rules");
   git(repo, "update-ref", "refs/remotes/origin/main", "HEAD");
@@ -150,6 +155,11 @@ test("reclamation protects the target index and rejects a plan after HEAD change
   git(target, "commit", "-qm", "track generated path as source");
   write(target, ".tmp/output/receipt.json", "{}");
   write(target, "node_modules/disposable.txt", "ignored");
+  write(target, "test-results/another.txt", "independently reviewed");
+  assert.equal(
+    defaultReclamationOutputDirectory(repo, new Date("2026-11-25T00:00:00Z")),
+    path.join(repo, ".tmp", "2026-11-25-worktree-reclamation"),
+  );
   const bundle = path.join(root, "topic.bundle");
   git(repo, "bundle", "create", bundle, "refs/heads/fixture-topic");
   const plannedHead = git(target, "rev-parse", "HEAD");
@@ -169,27 +179,45 @@ test("reclamation protects the target index and rejects a plan after HEAD change
     true,
   );
   assert.ok(entry.removal.reasons.includes("WORKTREE_CONTAINS_EVIDENCE"));
-  const candidate = manifest.candidates.find((item) =>
-    item.path.endsWith("/node_modules"),
-  );
-  assert.ok(candidate);
   const plan = JSON.parse(
     fs.readFileSync(writeImmutablePlan(manifest, root), "utf8"),
   );
-  const coord = path.join(repo, ".worktrees", "coordination");
-  git(repo, "worktree", "add", "-qb", "coord/ledger", coord, "main");
-  const taskState = (status: string) =>
-    JSON.stringify([{ id: "FIXTURE", branch: "fixture-topic", status }]);
-  write(coord, "ledger.json", taskState("IN_PROGRESS"));
+  const candidate = plan.candidates.find((item) =>
+    item.path.endsWith("/node_modules"),
+  );
+  const other = plan.candidates.find((item) =>
+    item.path.endsWith("/test-results"),
+  );
+  assert.ok(candidate && other);
   const apply = (currentPlan: unknown, candidateId: string) =>
     applyReclamationPlan(currentPlan, {
       repoRoot: repo,
       approvedCandidates: [candidateId],
     });
+  const forged = { ...plan, candidates: [{ ...other, id: candidate.id }] };
+  const swapped = apply(forged, candidate.id);
+  assert.deepEqual(swapped.removed, []);
+  assert.equal(swapped.failed[0]?.reason, "CANDIDATE_IDENTITY_CHANGED");
+  assert.ok(fs.existsSync(path.join(target, "test-results/another.txt")));
+
+  const coord = path.join(repo, ".worktrees", "coordination");
+  git(repo, "worktree", "add", "-qb", "coord/ledger", coord, "main");
+  const completed = { id: "FIXTURE", branch: "fixture-topic", status: "DONE" };
+  const conflictingLease = {
+    id: "OTHER",
+    branch: "different-branch",
+    status: "IN_PROGRESS",
+    lock: { branch: "different-branch", worktree: target },
+  };
+  write(coord, "ledger.json", JSON.stringify([completed, conflictingLease]));
+  const locked = buildReclamationManifest(repo).worktrees.find(
+    (item) => item.branch === "fixture-topic",
+  );
+  assert.ok(locked?.removal.reasons.includes("ACTIVE_TASK"));
   const active = apply(plan, candidate.id);
   assert.deepEqual(active.removed, []);
   assert.equal(active.failed[0]?.reason, "WORKTREE_STATE_CHANGED");
-  write(coord, "ledger.json", taskState("DONE"));
+  write(coord, "ledger.json", JSON.stringify([completed]));
 
   git(
     target,
@@ -209,18 +237,34 @@ test("reclamation protects the target index and rejects a plan after HEAD change
   ]);
   assert.ok(fs.existsSync(path.join(target, "node_modules/disposable.txt")));
   const refreshed = buildReclamationManifest(repo);
-  const next = refreshed.candidates.find((item) =>
-    item.path.endsWith("/node_modules"),
-  );
-  assert.ok(next);
   const updated = JSON.parse(
     fs.readFileSync(writeImmutablePlan(refreshed, root), "utf8"),
   );
+  const next = updated.candidates.find((item) =>
+    item.path.endsWith("/node_modules"),
+  );
+  assert.ok(next);
   const accepted = apply(updated, next.id);
   assert.deepEqual(accepted.failed, []);
   assert.deepEqual(accepted.removed, [next.path]);
   assert.ok(fs.existsSync(path.join(target, "dist/tracked.txt")));
   assert.ok(fs.existsSync(path.join(target, ".tmp/output/receipt.json")));
+
+  const tool = fileURLToPath(
+    new URL("../../scripts/governance/worktree-reclaim.mjs", import.meta.url),
+  );
+  const unused = path.join(root, "unexpected-output");
+  execFileSync(
+    process.execPath,
+    [
+      "--input-type=module",
+      "-e",
+      "import { pathToFileURL } from 'node:url'; await import(pathToFileURL(process.argv[1]));",
+      tool,
+    ],
+    { cwd: repo, env: { ...env, KK_CONTAINER_ROOT: unused }, stdio: "pipe" },
+  );
+  assert.equal(fs.existsSync(unused), false);
 });
 
 test("recovery inventory is deterministic and hashes source files", () => {

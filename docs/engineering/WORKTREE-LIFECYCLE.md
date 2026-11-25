@@ -14,21 +14,21 @@ node scripts/governance/worktree-policy.mjs --check-create --branch=codex/TASK-E
 
 The command exits non-zero when either budget is exceeded, the branch is missing, or the requested location is outside the policy root. It reports `REUSE_EXISTING_BRANCH` when the branch already has a worktree.
 
-Reclamation defaults to an audit. It writes a uniquely named immutable plan and pointer under `D:/kk-studio/output/YYYY-MM-DD-worktree-reclamation/` and performs no deletion:
+Reclamation defaults to an audit. For the self-contained checkout, it writes a uniquely named immutable plan and pointer under `D:/KK Design/.tmp/YYYY-MM-DD-worktree-reclamation/`:
 
 ```text
 npm run worktree:reclaim
 ```
 
-`D:/kk-studio/output/YYYY-MM-DD-worktree-reclamation/worktree-reclamation.json` is a stable pointer containing the latest plan ID and summary. The pointed plan file is immutable; a later audit creates another plan instead of replacing it.
+`worktree-reclamation.json` is a stable pointer containing the latest plan ID and summary. A later audit creates a new plan file and updates the pointer.
 
 Generated directories (`.tmp`, `node_modules`, `dist`, test output, Rust targets and agent-runtime output) are candidates only when their real path remains inside the worktree, no symlink or reparse point is present, the target checkout ignores the directory, and its own index contains no tracked file or Git submodule there. The checkout must be clean, unlocked and free of active tasks. The plan protects existing `.tmp/output` evidence and its parent. Whole-checkout removal also requires completion records for all tasks, plus a HEAD reachable from `origin/main` or a verified bundle that advertises that exact HEAD.
 
-An immutable plan contains a deterministic SHA-256 inventory for each explicitly approved candidate. Apply validates the current Git registration, branch and HEAD. It checks the worktree state, live ledger where registered, target index, policy root and source inventory. A retained candidate produces a nonzero exit code and the reason appears in a unique `worktree-reclamation-result-*.json` record.
+An immutable plan binds the approval ID to its plan, target path, HEAD and SHA-256 file inventory. Approve IDs from the generated plan file. Apply rechecks the Git registration, branch and HEAD, as well as locks matching the branch or target path in the current ledger. It also checks the target index and policy root. A retained candidate produces a nonzero exit code and a unique `worktree-reclamation-result-*.json` record.
 
 ```text
 node scripts/governance/worktree-reclaim.mjs --apply \
-  --plan=../output/YYYY-MM-DD-worktree-reclamation/worktree-reclamation-plan-<plan-id>.json \
+  --plan=.tmp/YYYY-MM-DD-worktree-reclamation/worktree-reclamation-plan-<plan-id>.json \
   --approve=<candidate-id>[,<candidate-id>]
 ```
 
