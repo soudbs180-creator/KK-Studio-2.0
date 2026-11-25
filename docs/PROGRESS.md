@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-11-25 本机文件 Git 忽略规则候选
+
+从本地发布历史承接仓库根的用户数据目录与 KK Design 启动器忽略规则。12 个 Git 路径用例与其余规则逐字节核验通过。[验证记录](changes/2026-11-25-local-data-ignore/verification.md)
+
 ## 2026-11-21 桌面模型请求线路
 
 桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。
