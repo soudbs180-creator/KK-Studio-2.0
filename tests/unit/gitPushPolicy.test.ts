@@ -50,7 +50,9 @@ function install(repo: string, env = testEnv, args: string[] = []) {
 function copyGuards(repo: string) {
   for (const relative of [
     ".githooks/pre-push",
+    ".githooks/pre-commit",
     "scripts/install-git-guards.mjs",
+    "scripts/governance/commit-policy.mjs",
     "scripts/governance/push-policy.mjs",
   ]) {
     const target = path.join(repo, relative);

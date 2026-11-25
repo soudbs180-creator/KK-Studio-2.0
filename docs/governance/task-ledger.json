@@ -9976,5 +9976,84 @@
     "nextAction": "处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。",
     "displayStatus": "进行中",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-KKD-EVOLUTION-PHASE1-20261125",
+    "module": "governance",
+    "kind": "research",
+    "title": "KK Design 自进化第一阶段全局审计与治理收口",
+    "goal": "按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据",
+    "scope": "按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据",
+    "owner": "CodexEvolution",
+    "acceptance": [
+      "逐项核验主线、工作树、测试目录、Pen、开源适配及能力链路",
+      "清理仅限已核验的可回收对象，保留未归并成果",
+      "治理变更在有效模块锁和官方基线下交付，绑定独审及门禁"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "IN_PROGRESS",
+    "branch": "codex/TASK-KKD-EVOLUTION-PHASE1-20261125",
+    "worktree": "D:/KK Design/.worktrees/TASK-KKD-EVOLUTION-PHASE1-20261125",
+    "updated": "2026-11-25",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-kkd-evolution-phase1/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T11:42:45.648Z",
+        "agent": "CodexEvolution",
+        "action": "CREATE",
+        "note": "created TASK-KKD-EVOLUTION-PHASE1-20261125"
+      },
+      {
+        "at": "2026-11-25T11:44:11.828Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "官方基线已 fetch；工作树、模块链路、Pen 与测试治理并行审计。治理锁由 One Root 持有，认领被原子拒绝。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T11:58:26.430Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T11:59:50.722Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "认领后在独立官方基线实施暂存内容与 CI 检查。范围限 .githooks、Git guard 安装器和工作流、交付路径判定、回归测试、正式交付包及生成快照。",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T12:18:03.156Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "绑定已提交的阶段一审计及预提交门禁候选验证文件；后续用官方基线跑精确候选。",
+        "evidence": "docs/changes/2026-11-25-kkd-evolution-phase1/verification.md",
+        "sha": "08fcbb282a0606d7710e1625a7bb6d9f1bc792f1"
+      }
+    ],
+    "lock": {
+      "agent": "CodexEvolution",
+      "worktree": "D:/KK Design/.worktrees/TASK-KKD-EVOLUTION-PHASE1-20261125",
+      "branch": "codex/TASK-KKD-EVOLUTION-PHASE1-20261125",
+      "since": "2026-11-25T11:58:26.430Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexEvolution",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25"
   }
 ]

@@ -23,4 +23,4 @@ jobs:
         with:
           node-version: 24
       - name: Exercise real Git hooks and reviewed v1 upgrade
-        run: node --test tests/unit/gitPushPolicy.test.ts tests/unit/gitPushGuardPaths.test.ts
+        run: node --test tests/unit/gitPushPolicy.test.ts tests/unit/gitPushGuardPaths.test.ts tests/unit/gitCommitPolicy.test.ts
