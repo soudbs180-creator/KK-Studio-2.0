@@ -118,7 +118,11 @@ test("candidate validation rejects escape paths, tracked content, symlinks, and 
 test("reclamation protects the target index and rejects a plan after HEAD changes", (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-worktree-apply-"));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
-  const repo = path.join(root, "project");
+  const physicalRoot = path.join(root, "physical");
+  const aliasedRoot = path.join(root, "alias");
+  fs.mkdirSync(physicalRoot);
+  fs.symlinkSync(physicalRoot, aliasedRoot, "junction");
+  const repo = path.join(aliasedRoot, "project");
   const target = path.join(repo, ".worktrees", "topic");
   fs.mkdirSync(repo);
   const env = {
@@ -156,6 +160,13 @@ test("reclamation protects the target index and rejects a plan after HEAD change
   write(target, ".tmp/output/receipt.json", "{}");
   write(target, "node_modules/disposable.txt", "ignored");
   write(target, "test-results/another.txt", "independently reviewed");
+  const outside = path.join(root, "outside");
+  const escape = path.join(repo, ".worktrees", "escape");
+  fs.mkdirSync(outside);
+  fs.symlinkSync(outside, escape, "junction");
+  const external = path.join(escape, "topic");
+  git(repo, "worktree", "add", "-qb", "external-topic", external, "main");
+  write(external, "node_modules/retained.txt", "outside the approved root");
   assert.equal(
     defaultReclamationOutputDirectory(repo, new Date("2026-11-25T00:00:00Z")),
     path.join(repo, ".tmp", "2026-11-25-worktree-reclamation"),
@@ -170,6 +181,12 @@ test("reclamation protects the target index and rejects a plan after HEAD change
     (item) => item.branch === "fixture-topic",
   );
   assert.ok(entry);
+  assert.equal(entry.inWorkspace, true);
+  const escaped = manifest.worktrees.find(
+    (item) => item.branch === "external-topic",
+  );
+  assert.ok(escaped?.removal.reasons.includes("EXTERNAL_WORKTREE"));
+  assert.equal(escaped?.generatedPaths.length, 0);
   assert.equal(
     entry.generatedPaths.find((item) => item.path.endsWith("/dist"))?.tracked,
     true,
@@ -271,6 +288,7 @@ test("reclamation protects the target index and rejects a plan after HEAD change
   assert.deepEqual(accepted.removed, [next.path]);
   assert.ok(fs.existsSync(path.join(target, "dist/tracked.txt")));
   assert.ok(fs.existsSync(path.join(target, ".tmp/output/receipt.json")));
+  assert.ok(fs.existsSync(path.join(external, "node_modules/retained.txt")));
 
   const tool = fileURLToPath(
     new URL("../../scripts/governance/worktree-reclaim.mjs", import.meta.url),

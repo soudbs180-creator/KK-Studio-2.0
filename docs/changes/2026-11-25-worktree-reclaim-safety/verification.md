@@ -8,3 +8,9 @@ parent: TASK-REVIEW-REMEDIATION-001
 - 初次独审复现两处安全缺口。不同分支上的同路径租约缺少检查，计划条目替换路径后仍可沿用旧批准 ID。修订按路径与分支查当前租约，批准 ID 绑定计划、目标、HEAD 与清单摘要。新增回归覆盖两种输入，并验证作为库导入时不产出计划。
 - 复审追加了 Windows 目录联接租约用例。计划和应用均用实际路径匹配租约，保留通过联接占用的同一工作树。
 - 原有整树关单状态所需的主线 CI 和清理收据仍待接入现有协调入口。
+
+## PR #91 托管验证修订
+
+- `ca590af2d411aefce2ffe75dec46c8176bfbfeaf` 的 Windows `verify` 在 Node 单测中停止。原日志的 `worktreeLifecycle.test.ts:173` 预期受跟踪的 `dist` 项为 `true`，实际为 `undefined`。Rust 和浏览器阶段未运行。 [托管作业](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/45644014991/job/139309987158?pr=91)
+- 对同一提交使用本机 Windows 运行相同测试。普通 TEMP 通过，指向同一实际目录的联接 TEMP 复现相同失败。Git 返回工作树的实际路径，允许根仍是别名路径，导致工具误判工作树在允许范围外。托管运行器的 TEMP 实际拼写待核实。
+- 计划生成和应用均校验目标的登记路径与实际路径。隔离 Git 回归覆盖工作区根目录别名、指向根外的联接、调整后的审批以及已有源码和证据保留。10 项定向测试通过。原始失败摘录、复现和最终提交的全量收据位于主仓 `.tmp/output/2026-11-25-kkd-evolution-phase1/worktree-safety/`。

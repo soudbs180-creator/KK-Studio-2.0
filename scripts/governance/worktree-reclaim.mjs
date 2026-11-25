@@ -89,6 +89,19 @@ function realPath(candidate) {
   return rest ? path.join(resolved, rest) : resolved;
 }
 
+function isInsideReclamationRoot(root, candidate) {
+  const actualRoot = realPath(root);
+  const actualCandidate = realPath(candidate);
+  // Git can report the physical spelling even when the approved root uses an alias.
+  return Boolean(
+    actualRoot &&
+    actualCandidate &&
+    (isContainedPath(root, candidate) ||
+      isContainedPath(actualRoot, candidate)) &&
+    isContainedPath(actualRoot, actualCandidate),
+  );
+}
+
 function hasSymlinkOrReparse(candidate) {
   if (!fs.existsSync(candidate)) return false;
   const pending = [candidate];
@@ -529,12 +542,8 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
   const taskPaths = new Map();
   const entries = worktrees.map((worktree) => {
     const pathValue = worktree.path ? absolute(worktree.path) : null;
-    const resolvedWorktree = pathValue && realPath(pathValue);
     const inWorkspace = Boolean(
-      pathValue &&
-      isContainedPath(allowedRoot, pathValue) &&
-      resolvedWorktree &&
-      isContainedPath(allowedRoot, resolvedWorktree),
+      pathValue && isInsideReclamationRoot(allowedRoot, pathValue),
     );
     const isPrimary = Boolean(
       pathValue &&
@@ -816,22 +825,13 @@ export function applyReclamationPlan(
         normalizeForComparison(entry.path) ===
         normalizeForComparison(candidate.path),
     );
-    const realAllowedRoot =
-      plan.allowedWorktreeRoot && realPath(plan.allowedWorktreeRoot);
-    const realCandidate = realPath(candidate.path);
-    const realPathSafe = Boolean(
-      realAllowedRoot &&
-      realCandidate &&
-      isContainedPath(realAllowedRoot, realCandidate),
-    );
     let reason;
     if (!currentState) reason = "WORKTREE_REGISTRATION_CHANGED";
     else if (!canPruneGeneratedContent(currentState))
       reason = "WORKTREE_STATE_CHANGED";
     else if (
       !sameScope ||
-      !isContainedPath(plan.allowedWorktreeRoot, candidate.path) ||
-      !realPathSafe
+      !isInsideReclamationRoot(plan.allowedWorktreeRoot, candidate.path)
     )
       reason = "OUTSIDE_ALLOWED_ROOT";
     else if (observed && !observed.assessment.allowed)
@@ -877,6 +877,10 @@ export function applyReclamationPlan(
     }
     const liveWorktree = {
       ...current,
+      inWorkspace: isInsideReclamationRoot(
+        plan.allowedWorktreeRoot,
+        worktree.path,
+      ),
       bundleVerified: verifyRecoveryBundle(
         worktree.recoveryBundle,
         repoRoot,
