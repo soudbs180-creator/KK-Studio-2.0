@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 
 export const ATTRIBUTIONS_FILE = "config/oss-attributions.json";
 export const DEFAULT_VENDORED_ROOT = "src/integrations/oss";
@@ -38,6 +39,18 @@ const LEGACY_COMPONENTS = new Set([
 const ROOT_NOTICE = /^(?:README\.md|LICENSE(?:\.txt)?|NOTICE(?:\.txt)?)$/i;
 const LICENSE_NAME = /^(?:LICENSE|LICENCE|COPYING|NOTICE)(?:[._-][\w.-]+)?$/i;
 const SHA256 = /^[a-f0-9]{64}$/;
+const GIT_SHA = /^(?!0+$)[a-f0-9]{40}$/;
+const ID = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
+const CONTROL_STATES = [
+  "default",
+  "hover",
+  "active",
+  "selected",
+  "disabled",
+  "focus",
+];
+const BUSINESS_STATES = ["normal", "loading", "error", "disabled", "empty"];
+const WIDTHS = [390, 1099, 1920];
 const PIN_PATH =
   /^(?:(?:src\/integrations\/oss|vendor|docs\/changes|tests\/fixtures)\/|package(?:-lock)?\.json$)/;
 
@@ -398,6 +411,179 @@ function verifyComponentPins(root, target, admission) {
   if (unpinned) throw new Error(`unpinned component file: ${unpinned}`);
 }
 
+function readJsonPin(root, pin, label) {
+  const content = readPin(root, pin);
+  try {
+    return JSON.parse(content.toString("utf8"));
+  } catch {
+    throw new Error(`malformed ${label} JSON`);
+  }
+}
+
+function verifyProvenance(root, record) {
+  const { admission } = record;
+  const host = new URL(record.repoUrl).hostname.replace(/\.$/, "");
+  if (
+    /(^|\.)(?:localhost|example|invalid|test|example\.(?:com|net|org))$/i.test(
+      host,
+    )
+  )
+    throw new Error("reserved upstream host");
+  const checkout = readJsonPin(root, admission.provenance, "upstream checkout");
+  if (
+    checkout?.repoUrl !== record.repoUrl ||
+    checkout.commit !== admission.commit ||
+    checkout.version !== admission.version ||
+    typeof checkout.tree !== "string" ||
+    !GIT_SHA.test(checkout.tree)
+  )
+    throw new Error("upstream checkout identity does not match admission");
+}
+
+function planCases(admission) {
+  const inputs = new Set(admission.inputs.map((pin) => pin.path));
+  const coveredInputs = new Set();
+  const flows = new Set();
+  const cases = new Map();
+  if (
+    inputs.size !== admission.inputs.length ||
+    !Array.isArray(admission.flows) ||
+    !admission.flows.length
+  )
+    throw new Error("admission requires unique inputs and declared workflows");
+  for (const flow of admission.flows) {
+    if (
+      typeof flow?.id !== "string" ||
+      !ID.test(flow.id) ||
+      flows.has(flow.id) ||
+      !Array.isArray(flow.cases) ||
+      !flow.cases.length
+    )
+      throw new Error("invalid or duplicate workflow");
+    flows.add(flow.id);
+    for (const test of flow.cases) {
+      if (
+        typeof test?.id !== "string" ||
+        !ID.test(test.id) ||
+        cases.has(test.id) ||
+        !inputs.has(test.input)
+      )
+        throw new Error("invalid workflow case or unknown input");
+      cases.set(test.id, test);
+      coveredInputs.add(test.input);
+    }
+  }
+  if (coveredInputs.size !== inputs.size)
+    throw new Error("each locked input requires a declared workflow case");
+  return { flows, cases };
+}
+
+function compareArtifacts(root, entry, comparison) {
+  if (
+    !entry.upstream?.path ||
+    entry.upstream.path.toLowerCase() === entry.candidate?.path?.toLowerCase()
+  )
+    throw new Error("parity requires separate upstream and candidate outputs");
+  if (comparison?.kind === "bytes")
+    return readPin(root, entry.upstream, true).equals(
+      readPin(root, entry.candidate, true),
+    );
+  if (comparison?.kind === "json" || comparison?.kind === "numeric-abs") {
+    const upstream = readJsonPin(root, entry.upstream, "upstream output");
+    const candidate = readJsonPin(root, entry.candidate, "candidate output");
+    if (comparison.kind === "json")
+      return (
+        isDeepStrictEqual(upstream, candidate) &&
+        (!Object.hasOwn(comparison, "expected") ||
+          isDeepStrictEqual(upstream, comparison.expected))
+      );
+    const limit = comparison.maxDifference;
+    if (Number.isFinite(limit) && limit >= 0)
+      return (
+        Number.isFinite(upstream) &&
+        Number.isFinite(candidate) &&
+        Math.abs(upstream - candidate) <= limit
+      );
+  }
+  throw new Error("unsupported or invalid parity comparison");
+}
+
+function verifyUi(root, ui, evidence, workflows) {
+  if (ui?.mode === "headless") {
+    if (!nonempty(ui.reason)) throw new Error("headless reason required");
+    if (evidence !== undefined)
+      throw new Error("headless admission cannot declare UI evidence");
+    return;
+  }
+  if (
+    ui?.mode !== "interactive" ||
+    !Array.isArray(ui.controls) ||
+    !ui.controls.length ||
+    !Array.isArray(ui.flows) ||
+    !ui.flows.length ||
+    !Array.isArray(evidence)
+  )
+    throw new Error("explicit UI applicability and UI evidence required");
+  const expected = new Map(
+    BUSINESS_STATES.map((state) => [`business.${state}`, { state }]),
+  );
+  for (const width of WIDTHS)
+    expected.set(`layout.${width}`, { width, overflow: false });
+  for (const flowId of ui.flows) {
+    const id = `interaction.${flowId}`;
+    if (!workflows.has(flowId) || expected.has(id))
+      throw new Error("unknown or duplicate UI workflow");
+    expected.set(id, { flowId, dispatched: true });
+  }
+  const controls = new Set();
+  for (const control of ui.controls) {
+    if (
+      typeof control?.id !== "string" ||
+      !ID.test(control.id) ||
+      controls.has(control.id)
+    )
+      throw new Error("invalid or duplicate UI control");
+    controls.add(control.id);
+    const exceptions = new Set();
+    if (
+      control.notApplicable !== undefined &&
+      !Array.isArray(control.notApplicable)
+    )
+      throw new Error("invalid UI state applicability");
+    for (const entry of control.notApplicable ?? []) {
+      if (
+        !CONTROL_STATES.includes(entry?.state) ||
+        entry.state === "default" ||
+        exceptions.has(entry.state) ||
+        !nonempty(entry.reason)
+      )
+        throw new Error("invalid UI state applicability");
+      exceptions.add(entry.state);
+    }
+    for (const state of CONTROL_STATES)
+      if (!exceptions.has(state))
+        expected.set(`control.${control.id}.${state}`, {
+          controlId: control.id,
+          state,
+        });
+  }
+  for (const probe of evidence) {
+    if (!expected.has(probe?.id))
+      throw new Error("unknown or duplicate UI evidence");
+    const capture = readJsonPin(root, probe.observation, "UI observation");
+    if (
+      capture?.id !== probe.id ||
+      !nonempty(capture.entryPoint) ||
+      !nonempty(capture.action) ||
+      !isDeepStrictEqual(capture.observed, expected.get(probe.id))
+    )
+      throw new Error(`UI observation differs: ${probe.id}`);
+    expected.delete(probe.id);
+  }
+  if (expected.size)
+    throw new Error(`missing UI evidence: ${expected.keys().next().value}`);
+}
+
 /** Binds run evidence to the exact declared upstream and local input set. */
 export function admissionFingerprint(record) {
   const admission = record.admission;
@@ -408,10 +594,13 @@ export function admissionFingerprint(record) {
       record.license,
       admission.commit,
       admission.version,
+      pin(admission.provenance),
       pin(admission.licenseFile),
       admission.dependencies.map(pin),
       admission.inputs.map(pin),
       admission.implementation.map(pin),
+      admission.flows,
+      admission.ui,
     ]),
   );
 }
@@ -421,7 +610,7 @@ function verifyAdmission(root, target, record) {
   if (
     !admission ||
     typeof admission.commit !== "string" ||
-    !/^(?!0+$)[a-f0-9]{40}$/.test(admission.commit) ||
+    !GIT_SHA.test(admission.commit) ||
     !nonempty(admission.version) ||
     !["dependencies", "inputs", "implementation"].every(
       (field) => Array.isArray(admission[field]) && admission[field].length,
@@ -446,14 +635,9 @@ function verifyAdmission(root, target, record) {
   )
     throw new Error("implementation evidence must be under the component");
   verifyComponentPins(root, target, admission);
-
-  const rawReceipt = readPin(root, admission.receipt).toString("utf8");
-  let receipt;
-  try {
-    receipt = JSON.parse(rawReceipt);
-  } catch {
-    throw new Error("malformed run/parity receipt JSON");
-  }
+  verifyProvenance(root, record);
+  const { flows, cases } = planCases(admission);
+  const receipt = readJsonPin(root, admission.receipt, "run/parity receipt");
   if (
     receipt?.admissionSha256 !== admissionFingerprint(record) ||
     !["upstream", "candidate"].every(
@@ -465,23 +649,20 @@ function verifyAdmission(root, target, record) {
     receipt.cases.length === 0
   )
     throw new Error("malformed or stale run/parity receipt");
-  const inputs = new Set(admission.inputs.map((entry) => entry.path));
-  const cases = new Set();
+  for (const field of ["upstream", "candidate"])
+    readPin(root, receipt.runs[field].log);
   for (const test of receipt.cases) {
-    if (
-      !nonempty(test?.id) ||
-      cases.has(test.id) ||
-      !inputs.has(test.input) ||
-      !nonempty(test.criteria) ||
-      test.result !== "PASS" ||
-      !test.upstream?.path ||
-      test.upstream.path === test.candidate?.path
-    )
-      throw new Error("invalid or incomplete parity case");
-    cases.add(test.id);
-    readPin(root, test.upstream);
-    readPin(root, test.candidate);
+    const planned = cases.get(test?.id);
+    if (!planned) throw new Error("unknown or duplicate receipt case");
+    if (test.input !== planned.input)
+      throw new Error("receipt case input does not match the plan");
+    if (!compareArtifacts(root, test, planned.compare))
+      throw new Error(`parity outputs differ: ${test.id}`);
+    cases.delete(test.id);
   }
+  if (cases.size)
+    throw new Error(`missing receipt case: ${cases.keys().next().value}`);
+  verifyUi(root, admission.ui, receipt.uiEvidence, flows);
 }
 
 function verifyLegacy(root, target) {

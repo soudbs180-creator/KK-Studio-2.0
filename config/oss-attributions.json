@@ -37,8 +37,8 @@
       "repoUrl": "https://github.com/deepseek-ai/dsh-superagent-prototype",
       "license": "MIT",
       "integrationType": "inspired",
-      "usedInModules": ["docs/agent-backends.md"],
-      "note": "2026-11-11 核验：references/dsh-superagent-prototype/LICENSE 为 MIT，Copyright (c) 2026 DeepSeek Harness Team；git origin 为 deepseek-ai/dsh-superagent-prototype。仅吸收仓库级 Agent 编排、准入与工单契约思想，未引入任何源码；docs/agent-backends.md 明确本期不嵌入整包。静态研究，runtime_verified=false，不构成功能交付。"
+      "usedInModules": [],
+      "note": "2026-11-11 历史静态研究记录：上游许可证为 MIT，Copyright (c) 2026 DeepSeek Harness Team。仓库级 Agent 编排与工单契约仅作研究参考。当前官方基线无已登记落点，运行待验。"
     },
     {
       "name": "basketikun/infinite-canvas",
@@ -87,11 +87,8 @@
       "repoUrl": "https://github.com/HBAI-Ltd/Toonflow-app",
       "license": "MIT",
       "integrationType": "inspired",
-      "usedInModules": [
-        "docs/changes/2026-10-26-ai-drama-canvas-research/research.md",
-        "docs/engineering/COMPETITIVE-LEARNING-POLICY.md"
-      ],
-      "note": "2026-11-11 核验：references/toonflow-app/LICENSE 为 MIT，Copyright (c) 2026 HBAI-Ltd；git origin 为 HBAI-Ltd/Toonflow-app。仅静态品类研究输入（19.4k★ 为 2026-10-26 检索快照）与插件脚手架 / 分镜流水线等共识模式观察，未引入源码、未取其 UI 或页面结构。runtime_verified=false。"
+      "usedInModules": ["docs/engineering/COMPETITIVE-LEARNING-POLICY.md"],
+      "note": "2026-11-11 历史静态研究记录：上游许可证为 MIT，Copyright (c) 2026 HBAI-Ltd。插件脚手架与分镜流水线仅作研究参考，运行待验。"
     }
   ],
   "restrictedReferences": [

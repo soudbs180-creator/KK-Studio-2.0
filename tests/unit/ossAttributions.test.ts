@@ -230,6 +230,12 @@ test("R-OSS: the shipped ledger retains historical references and named legacy c
     ["vendor/canvas-agent", "vendor/canvas-plugins", "vendor/canvas-proxy"],
   );
   assert.equal(ledger.restrictedReferences.length, 3);
+  for (const record of [...ledger.attributions, ...ledger.restrictedReferences])
+    for (const reference of record.usedInModules)
+      assert.ok(
+        fs.existsSync(reference),
+        `missing shipped attribution reference: ${reference}`,
+      );
   assert.ok(
     ledger.attributions.every((entry) => entry.license === "MIT"),
     "historical attributions retain MIT",
@@ -265,11 +271,28 @@ function admitFixture(root, integrationType = "vendored") {
   record.admission = {
     commit: "1234567890abcdef".repeat(2) + "12345678",
     version: "1.0.0",
+    provenance: undefined,
     licenseFile: writeFixture(root, `${target}/LICENSE`, MIT_LICENSE),
     dependencies: [
       writeFixture(root, `${target}/package.json`, '{"dependencies":{}}'),
     ],
     inputs: [input],
+    flows: [
+      {
+        id: "double",
+        cases: [
+          {
+            id: "double",
+            input: input.path,
+            compare: { kind: "json", expected: 8 },
+          },
+        ],
+      },
+    ],
+    ui: {
+      mode: "headless",
+      reason: "This fixture exports a command-line calculation only.",
+    },
     implementation: [
       writeFixture(
         root,
@@ -278,20 +301,44 @@ function admitFixture(root, integrationType = "vendored") {
       ),
     ],
   };
+  record.admission.provenance = writeFixture(
+    root,
+    `${evidence}/provenance.json`,
+    JSON.stringify({
+      repoUrl: record.repoUrl,
+      commit: record.admission.commit,
+      tree: "b".repeat(40),
+      version: record.admission.version,
+    }),
+  );
   const receipt = {
     admissionSha256: admissionFingerprint(record),
     runs: {
-      upstream: { command: "fixture upstream 4", exitCode: 0 },
-      candidate: { command: "fixture candidate 4", exitCode: 0 },
+      upstream: {
+        command: "fixture upstream 4",
+        exitCode: 0,
+        log: writeFixture(
+          root,
+          `${evidence}/upstream.log`,
+          "upstream case double ran",
+        ),
+      },
+      candidate: {
+        command: "fixture candidate 4",
+        exitCode: 0,
+        log: writeFixture(
+          root,
+          `${evidence}/candidate.log`,
+          "candidate case double ran",
+        ),
+      },
     },
     cases: [
       {
         id: "double",
         input: input.path,
-        criteria: "integer output equals 8",
         upstream: writeFixture(root, `${evidence}/upstream.txt`, "8"),
         candidate: writeFixture(root, `${evidence}/candidate.txt`, "8"),
-        result: "PASS",
       },
     ],
   };
@@ -338,6 +385,215 @@ test("R-OSS: attribution alone or an unknown legacy flag cannot admit a componen
     assert.match(
       checkOssAttributions(root).issues.join("\n"),
       /vendor\/unknown: missing attribution/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: each locked input and declared workflow case requires a matching receipt case", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    const anotherInput = writeFixture(
+      root,
+      "tests/fixtures/oss-zero.json",
+      '{"input":0}',
+    );
+    record.admission.inputs.push(anotherInput);
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /each locked input/,
+    );
+    const other = {
+      id: "zero",
+      input: anotherInput.path,
+      compare: { kind: "bytes" },
+    };
+    record.admission.flows.push({ id: "zero", cases: [other] });
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /missing receipt case: zero/,
+    );
+    receipt.cases.push({
+      id: other.id,
+      input: other.input,
+      upstream: writeFixture(root, "tests/fixtures/zero-upstream.txt", ""),
+      candidate: writeFixture(root, "tests/fixtures/zero-candidate.txt", ""),
+    });
+    saveReceipt(root, record, receipt);
+    assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
+    receipt.cases[1].id = "unknown";
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /unknown or duplicate receipt case/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: receipt artifacts determine exact JSON and bounded numeric results", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    const testCase = receipt.cases[0];
+    testCase.candidate = writeFixture(root, testCase.candidate.path, "9");
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /parity outputs differ/,
+    );
+    testCase.upstream = writeFixture(root, testCase.upstream.path, "9");
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /parity outputs differ/,
+    );
+    const planned = record.admission.flows[0].cases[0];
+    planned.compare = { kind: "numeric-abs", maxDifference: 0.1 };
+    testCase.candidate = writeFixture(root, testCase.candidate.path, "9.05");
+    saveReceipt(root, record, receipt);
+    assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
+    testCase.candidate = writeFixture(root, testCase.candidate.path, "9.2");
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /parity outputs differ/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: explicit UI applicability and upstream checkout/run evidence are required", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    delete record.admission.ui;
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /UI applicability/,
+    );
+    record.admission.ui = { mode: "headless", reason: "" };
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /headless reason/,
+    );
+    const fixed = admitFixture(root);
+    fixed.record.repoUrl = "https://example.invalid/source/repository";
+    saveReceipt(root, fixed.record, fixed.receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /reserved upstream host/,
+    );
+    const fresh = admitFixture(root);
+    fresh.record.admission.provenance = writeFixture(
+      root,
+      fresh.record.admission.provenance.path,
+      "{}",
+    );
+    saveReceipt(root, fresh.record, fresh.receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /upstream checkout identity/,
+    );
+    const complete = admitFixture(root);
+    fs.unlinkSync(path.join(root, complete.receipt.runs.candidate.log.path));
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /evidence file.*unavailable/,
+    );
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: interactive evidence covers UI variants, responsive widths and dispatched actions", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record, receipt } = admitFixture(root);
+    record.admission.ui = {
+      mode: "interactive",
+      controls: [
+        {
+          id: "submit",
+          notApplicable: [
+            {
+              state: "selected",
+              reason: "A momentary command has no selection.",
+            },
+          ],
+        },
+      ],
+      flows: ["double"],
+    };
+    const captures = new Map([
+      ...["normal", "loading", "error", "disabled", "empty"].map((state) => [
+        `business.${state}`,
+        { state },
+      ]),
+      ...["default", "hover", "active", "disabled", "focus"].map((state) => [
+        `control.submit.${state}`,
+        { controlId: "submit", state },
+      ]),
+      ...[390, 1099, 1920].map((width) => [
+        `layout.${width}`,
+        { width, overflow: false },
+      ]),
+      ["interaction.double", { flowId: "double", dispatched: true }],
+    ]);
+    const probe = (id, observed) => ({
+      id,
+      observation: writeFixture(
+        root,
+        `docs/changes/2026-11-25-fixture/evidence/${id}.json`,
+        JSON.stringify({
+          id,
+          entryPoint: "fixture interface",
+          action: "record browser observation",
+          observed,
+        }),
+      ),
+    });
+    const evidence = [...captures].map(([id, observed]) => probe(id, observed));
+    receipt.uiEvidence = evidence;
+    saveReceipt(root, record, receipt);
+    assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
+    for (const id of [
+      "business.empty",
+      "control.submit.focus",
+      "layout.1099",
+      "interaction.double",
+    ]) {
+      receipt.uiEvidence = evidence.filter((capture) => capture.id !== id);
+      saveReceipt(root, record, receipt);
+      assert.ok(
+        checkOssAttributions(root).issues[0].includes(
+          `missing UI evidence: ${id}`,
+        ),
+      );
+    }
+    receipt.uiEvidence = [
+      ...evidence.filter((capture) => capture.id !== "interaction.double"),
+      probe("interaction.double", { flowId: "double", dispatched: false }),
+    ];
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /UI observation differs: interaction.double/,
+    );
+    receipt.uiEvidence = evidence;
+    record.admission.ui.flows.push("unknown");
+    saveReceipt(root, record, receipt);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /unknown or duplicate UI workflow/,
     );
   } finally {
     cleanup(root);
@@ -458,7 +714,7 @@ test("R-OSS: path escapes, mismatched pins, and an empty parity receipt fail the
       /expected a repository file path/,
     );
     const fixed = admitFixture(root);
-    fixed.record.admission.version = "1.0.1";
+    fixed.record.admission.flows[0].cases[0].compare.expected = 9;
     saveRecord(root, fixed.record);
     assert.match(
       checkOssAttributions(root).issues.join("\n"),
