@@ -163,7 +163,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
 | TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
-| TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | IN_PROGRESS | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
+| TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | REVIEW | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
