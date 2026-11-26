@@ -136,7 +136,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 未完成 | P1 | TASK-LAUNCH-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
-| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | IN_PROGRESS | 进行中 | P1 | TASK-GOV-003 | CodexEvolution | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | IN_PROGRESS | 进行中 | P1 | TASK-GOV-003 | CodexReclaimSync | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -162,6 +162,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
+| TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
+| TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | REVIEW | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
+| TASK-KKD-IGNORE-USER-DATA-20261125 | 为本机运行数据和 KK Design 启动器补齐 Git 忽略 | REVIEW | 进行中 | P2 | none | CodexIgnore | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -2647,13 +2650,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Owner role: repository-maintainer
 - Acceptance: snapshot:check 精确校验 current docId/source/status，并拒绝重复、伪元数据和无效 supersededBy。; 新交付包完整且绑定本次 taskId；旧包保留原始结论并追加勘误。; 治理、文档和版本校验改动与运行时提交可独立审阅。
 - Branch: `codex/TASK-REVIEW-REMEDIATION-001-worktree-safety`
-- Worktree: `D:/KK Design/.worktrees/TASK-REVIEW-REMEDIATION-001`
+- Worktree: `D:\KK Design\.worktrees\TASK-REVIEW-REMEDIATION-001`
 - Modules: scripts/governance/doc-index.mjs, scripts/check-snapshot-header.mjs, tests/unit/docIndex.test.ts, docs/templates, docs/changes/2026-10-13-review-remediation, docs/governance/task-ledger.json
 - Verification: PARTIAL — 2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
 - Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md), [docs/changes/2026-11-25-worktree-reclaim-safety/verification.md](../../docs/changes/2026-11-25-worktree-reclaim-safety/verification.md)
 - Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
 - Last verified: 2026-10-13
-- Updated: 2026-11-25
+- Updated: 2026-11-26
 
 ## TASK-UI-CLASSIFY-20261013 — 模型接入与扩展分类修复并验证三客户端
 
@@ -3129,3 +3132,60 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。
 - Last verified: 2026-11-21
 - Updated: 2026-11-21
+
+## TASK-KKD-EVOLUTION-PHASE1-20261125 — KK Design 自进化第一阶段全局审计与治理收口
+
+- Goal: 按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据
+- Scope: 按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexEvolution
+- Acceptance: 逐项核验主线、工作树、测试目录、Pen、开源适配及能力链路; 清理仅限已核验的可回收对象，保留未归并成果; 治理变更在有效模块锁和官方基线下交付，绑定独审及门禁
+- Branch: `codex/TASK-KKD-EVOLUTION-PHASE1-20261125`
+- Worktree: `D:/KK Design/.worktrees/TASK-KKD-EVOLUTION-PHASE1-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-kkd-evolution-phase1/verification.md](../../docs/changes/2026-11-25-kkd-evolution-phase1/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-25
+
+## TASK-KKD-FEATURE-ID-20261125 — 统一登记功能编号并收敛 FEAT-040 冲突
+
+- Goal: 复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路
+- Scope: 复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexEvolution
+- Acceptance: 两个编号和卡片路径唯一，状态等于官方证据; 并行候选在主线变更后不能改绑或重复分配编号
+- Branch: `codex/TASK-KKD-FEATURE-ID-20261125`
+- Worktree: `D:\KK Design\.worktrees\TASK-KKD-FEATURE-ID-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-kkd-feature-id/verification.md](../../docs/changes/2026-11-25-kkd-feature-id/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-25
+
+## TASK-KKD-IGNORE-USER-DATA-20261125 — 为本机运行数据和 KK Design 启动器补齐 Git 忽略
+
+- Goal: 从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则
+- Scope: 从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexIgnore
+- Acceptance: Git 对两条新增根路径给出预期规则，既有启动器及 .lnk 继续忽略; 运行数据和快捷方式不参与验收写入，候选只含 .gitignore、交付和生成的台账快照
+- Branch: `codex/TASK-KKD-IGNORE-USER-DATA-20261125`
+- Worktree: `D:\KK Design\.worktrees\TASK-KKD-IGNORE-USER-DATA-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-local-data-ignore/verification.md](../../docs/changes/2026-11-25-local-data-ignore/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-26

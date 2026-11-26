@@ -1,0 +1,24 @@
+#!/bin/sh
+command -v node >/dev/null 2>&1 || {
+  printf '%s\n' '[KK commit guard] Node is unavailable on PATH.' >&2
+  exit 1
+}
+
+exec node --input-type=module -e '
+import { execFileSync } from "node:child_process";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+try {
+  const common = execFileSync("git", ["rev-parse", "--path-format=absolute", "--git-common-dir"], {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  }).trim();
+  const policy = pathToFileURL(join(common, "hooks", "kk-studio-commit-policy.mjs"));
+  const { runCommitCheck } = await import(policy.href);
+  runCommitCheck([]);
+} catch {
+  console.error("[KK commit guard] Cannot load or run the staged checks.");
+  process.exitCode = 1;
+}
+'

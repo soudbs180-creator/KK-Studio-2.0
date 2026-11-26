@@ -1,4 +1,5 @@
 import path from "node:path";
+import { forbiddenDeliveryPath } from "./commit-policy.mjs";
 
 const REQUIRED_ARTIFACTS = [
   "intent.md",
@@ -7,11 +8,6 @@ const REQUIRED_ARTIFACTS = [
   "verification.md",
   "review.md",
 ];
-const FORBIDDEN_DIRECTORY =
-  /(^|\/)(?:\.git|node_modules|dist|target|test-results|\.tmp|\.worktrees|coverage|\.cache|\.vite|playwright-report|blob-report|artifacts|build)(\/|$)/i;
-const FORBIDDEN_SECRET =
-  /(^|\/)(?:\.env(?:\..*)?|id_rsa(?:\..*)?|credentials(?:\.[^/]*)?|service-account(?:\.[^/]*)?|secrets?(?:\.[^/]*)?|.*\.(?:pem|key|p12|pfx|jks|keystore|secret))$/i;
-const FORBIDDEN_BINARY = /\.(?:exe|msi|dmg|pkg|appimage|deb|rpm)$/i;
 const PACKAGE_NAME = /^\d{4}-\d{2}-\d{2}-[^/]+$/;
 // Finite exception for the PR #55 historical snapshot only. A future package
 // cannot opt out merely by adding a marker file.
@@ -50,20 +46,6 @@ function invalidPath(file) {
     path.isAbsolute(file) ||
     /^[a-z]:/i.test(file) ||
     file.split("/").some((part) => part === "" || part === "." || part === "..")
-  );
-}
-
-function forbiddenPath(file) {
-  if (FORBIDDEN_DIRECTORY.test(file) || FORBIDDEN_BINARY.test(file))
-    return true;
-  // Source modules named `credentials.ts` are policy code, not credential
-  // payloads. Keep blocking serialized/configured secrets everywhere else.
-  const sourceModule =
-    /^(?:src|tests|scripts)\/.*\.(?:[cm]?[jt]sx?|mjs|cjs)$/i.test(file);
-  return (
-    FORBIDDEN_SECRET.test(file) &&
-    !/(^|\/)\.env\.example$/i.test(file) &&
-    !sourceModule
   );
 }
 
@@ -159,7 +141,8 @@ export function checkDeliveryFiles(
     issues.push("Update the authoritative task ledger.");
   for (const file of normalized) {
     if (!exists(file)) continue;
-    if (forbiddenPath(file)) issues.push(`Forbidden delivery path: ${file}`);
+    if (forbiddenDeliveryPath(file))
+      issues.push(`Forbidden delivery path: ${file}`);
     if (
       /(^|\/)(pnpm-lock\.yaml|pnpm-workspace\.yaml|yarn\.lock|bun\.lockb?)$/i.test(
         file,

@@ -1,0 +1,23 @@
+{
+  "round": 1,
+  "cases": [
+    {
+      "id": "git-path-exclusions",
+      "platform": "cli",
+      "entryPoint": "git check-ignore --no-index -q and git check-ignore --no-index -v",
+      "action": "在候选检出用 12 个测试路径查询实际 Git 忽略状态和规则来源，并核对两行之外的基线内容。",
+      "expected": "新增根路径被忽略；既有匹配保持有效；例外和非根同名路径可跟踪。",
+      "observed": "12 个路径断言通过。删除新增两行后 .gitignore 逐字节等同官方基线。",
+      "status": "pass",
+      "requiredEvidence": [
+        "runtime-log"
+      ],
+      "evidence": [
+        {
+          "file": "git-ignore.txt",
+          "type": "runtime-log"
+        }
+      ]
+    }
+  ]
+}

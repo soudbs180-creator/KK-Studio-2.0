@@ -68,7 +68,9 @@ function fixture(t: test.TestContext, segments: string[]) {
   git(repo, "push", "-q", "origin", "main");
   for (const relative of [
     ".githooks/pre-push",
+    ".githooks/pre-commit",
     "scripts/install-git-guards.mjs",
+    "scripts/governance/commit-policy.mjs",
     "scripts/governance/push-policy.mjs",
   ]) {
     const target = path.join(repo, relative);

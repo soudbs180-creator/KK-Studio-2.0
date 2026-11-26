@@ -13,14 +13,14 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **37** 个功能：REAL（真实可用）2、PARTIAL（部分可用）29、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）1。
+当前共 **39** 个功能：REAL（真实可用）2、PARTIAL（部分可用）29、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）3。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
-1. 复制 [`_feature-template.md`](_feature-template.md) 为 `docs/features/feat-<name>.md`，填全入口、代码位置、测试、当前能力与差距。
-2. 在 `features.registry.json` 增加一条记录，状态从 PROTOTYPE/PLANNED 起步，并关联账本任务（新工作先在 task-ledger.json 建任务）。
-3. 运行 `npm run features:write` 重新生成本看板，再运行 `npm run features:check`（已并入 `npm run lint`/`verify`）。
-4. 功能做到 REAL 必须有同态运行证据（Web 与 Desktop 分别验证），并更新卡片、账本与 `docs/PROGRESS.md`；证据不足只能标 PARTIAL/PROTOTYPE。
+1. 在协调台账的功能任务中登记申请，核对当前官方 main 的编号，复制 [`_feature-template.md`](_feature-template.md) 为 `docs/features/feat-<编号>-<名称>.md`。
+2. 在 `features.registry.json` 以 PLANNED 状态登记编号、卡片和开放账本任务。编号在登记 PR 合入官方 main 时生效。提交实现的候选以包含登记的 main 为基准。
+3. 运行 `npm run features:write` 生成本看板，再运行 `npm run features:check`。已登记编号与卡片的绑定持续保留，功能状态与证据随实现更新。
+4. 功能做到 REAL 必须有同态运行证据，Web 与 Desktop 分别验证。更新卡片、账本与 `docs/PROGRESS.md`。
 
 ## 画布
 
@@ -46,6 +46,7 @@
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
 | FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001, TASK-KK-UNIFIED-20261015 |
 | FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002 |
+| FEAT-040 | 扩图 | PLANNED（仅计划） | [卡片](feat-040-outpaint.md) | EXT-COMFY |
 
 ## 智能能力
 
@@ -86,6 +87,7 @@
 | --- | --- | --- | --- | --- |
 | FEAT-024 | Generation Gateway/Worker（持久后端） | PARTIAL（部分可用） | [卡片](feat-024-gateway.md) | T5, T8 |
 | FEAT-038 | 多平台 AI 模型网关 | PROTOTYPE（仅演示/UI） | [卡片](feat-038-ai-model-gateway.md) | TASK-AI-GATEWAY-001 |
+| FEAT-052 | 本地模型商店与统一网关路由 | PLANNED（仅计划） | [卡片](feat-052-local-model-store-and-gateway-routing.md) | TASK-AI-GATEWAY-001 |
 
 ## 未来规划
 
@@ -97,5 +99,6 @@
 ## 门禁
 
 - `npm run features:check` 校验：卡片状态元数据和固定章节、路径在仓库内且类型正确、任务 ID、非 REAL 关联开放任务（排除 DONE/OBSOLETE）、REAL 非空入口/代码/测试与 DONE/PASS 任务、platforms 各平台的 runtimeEvidence 文件、全部卡片登记及看板一致。
+- 门禁从 `GOVERNANCE_BASE` 或 `origin/main` 读取已登记绑定。相同编号改绑、移除既有编号及两个记录共用一卡均会失败。
 - 门禁验证证据的结构与路径；证据内容、来源新鲜度和声明范围仍须独立审查，不能靠创建空文件证明真实能力。
 - 该检查已并入 `npm run lint` 与 `npm run verify`；新增/改动功能却不更新登记册会直接失败。

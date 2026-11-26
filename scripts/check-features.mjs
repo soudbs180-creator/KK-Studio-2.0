@@ -1,5 +1,10 @@
 import fs from "node:fs";
-import { validateFeatures, renderFeatures } from "./features/registry.mjs";
+import { execFileSync } from "node:child_process";
+import {
+  validateFeatures,
+  validateFeatureReservations,
+  renderFeatures,
+} from "./features/registry.mjs";
 
 const issues = [];
 const registryPath = "docs/features/features.registry.json";
@@ -28,6 +33,27 @@ try {
 }
 
 issues.push(...validateFeatures(features, tasks));
+
+if (!issues.length) {
+  const base = process.env.GOVERNANCE_BASE || "origin/main";
+  const git = (...args) =>
+    execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  try {
+    const sha = git(
+      "rev-parse",
+      "--verify",
+      "--end-of-options",
+      `${base}^{commit}`,
+    ).trim();
+    const baseline = JSON.parse(git("show", `${sha}:${registryPath}`));
+    issues.push(...validateFeatureReservations(features, baseline));
+  } catch {
+    issues.push(`Cannot read feature registry from base ${base}.`);
+  }
+}
 
 if (!issues.length) {
   const output = renderFeatures(features);
