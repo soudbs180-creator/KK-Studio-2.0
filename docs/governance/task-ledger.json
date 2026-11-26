@@ -10245,7 +10245,7 @@
     "affectedModules": [
       "governance"
     ],
-    "status": "IN_PROGRESS",
+    "status": "REVIEW",
     "branch": "codex/TASK-KKD-IGNORE-USER-DATA-20261125",
     "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-IGNORE-USER-DATA-20261125",
     "updated": "2026-11-26",
@@ -10347,6 +10347,22 @@
         "agent": "CodexIgnore",
         "action": "CLAIM",
         "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-26T01:30:43.989Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "已普通合入正式基线 e2a33a38，保全 #88 与 #89 快照和进度。合流点提交门禁、交付和两条忽略规则增量通过。阶段送审仅供生成 REVIEW 快照；完整精确验证待完成。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/ignore-user-data/sync-e2a33a38-stage.log",
+        "sha": "6d4dd2cc6c74cf9c7f07f08f642e8330b26ff0b7"
+      },
+      {
+        "at": "2026-11-26T01:30:44.350Z",
+        "agent": "CodexIgnore",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "6d4dd2cc6c74cf9c7f07f08f642e8330b26ff0b7"
       }
     ],
     "lock": {
@@ -10361,6 +10377,6 @@
     "priority": "P2",
     "nextAction": "按验收条件完成实现、验证和文档同步",
     "lastVerified": "2026-11-25",
-    "reviewedBy": "CodexQualityReview"
+    "reviewedBy": null
   }
 ]
