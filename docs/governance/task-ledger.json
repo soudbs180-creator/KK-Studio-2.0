@@ -6697,7 +6697,7 @@
     "owner": "CodexReclaimSync",
     "branch": "codex/TASK-REVIEW-REMEDIATION-001-worktree-safety",
     "worktree": "D:\\KK Design\\.worktrees\\TASK-REVIEW-REMEDIATION-001",
-    "status": "IN_PROGRESS",
+    "status": "REVIEW",
     "priority": "P1",
     "affectedModules": [
       "scripts/governance/doc-index.mjs",
@@ -6943,6 +6943,22 @@
         "agent": "CodexReclaimSync",
         "action": "CLAIM",
         "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-26T02:25:20.705Z",
+        "agent": "CodexReclaimSync",
+        "action": "PROGRESS",
+        "note": "已普通合入正式基线 5085a92c，保留 #88–#90 进度、原任务与回收逻辑。合流点范围及交付通过；阶段送审仅供生成 REVIEW 快照，完整精确验证待完成。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/worktree-safety/sync-5085a92c-stage.log",
+        "sha": "1dfe6b45fbd50a95152c96dac82b4bcafc42f6ac"
+      },
+      {
+        "at": "2026-11-26T02:25:21.042Z",
+        "agent": "CodexReclaimSync",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "1dfe6b45fbd50a95152c96dac82b4bcafc42f6ac"
       }
     ],
     "lock": {
@@ -6952,7 +6968,7 @@
       "since": "2026-11-26T02:24:27.170Z"
     },
     "handoffTo": null,
-    "reviewedBy": "CodexReclaimAliasReviewer"
+    "reviewedBy": null
   },
   {
     "id": "TASK-UI-CLASSIFY-20261013",
