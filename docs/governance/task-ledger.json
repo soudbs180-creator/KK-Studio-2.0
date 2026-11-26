@@ -10608,5 +10608,270 @@
     "nextAction": "按验收条件完成实现、验证和文档同步",
     "lastVerified": "2026-11-25",
     "reviewedBy": null
+  },
+  {
+    "id": "TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "module": "governance",
+    "kind": "governance",
+    "title": "开源接入证据门禁",
+    "goal": "基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。",
+    "scope": "基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。",
+    "owner": "CodexOssSync",
+    "acceptance": [
+      "精确历史 vendor 基线显式保留；新增或变更接入缺证即拒绝；真实证据边界与 PARTIAL 清晰。定向单测和 governance:check 通过。"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "REVIEW",
+    "branch": "codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "updated": "2026-11-26",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-kkd-oss-admission/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T15:11:25.897Z",
+        "agent": "CodexOssAdmission",
+        "action": "CREATE",
+        "note": "created TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125"
+      },
+      {
+        "at": "2026-11-25T15:11:45.378Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:17:59.177Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "基于官方提交复用历史 OSS 许可门禁。新增证据校验与三项历史固定边界，23 项定向与治理检查通过。已隔离实测历史源码改动及新增文件均拒绝。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/governance-final.log",
+        "sha": "159f749d0053e135615c67ad4e95804994063693"
+      },
+      {
+        "at": "2026-11-25T15:17:59.410Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "已提交干净候选，完成限定门禁验证，释放治理写锁供并行回收任务。交付包、独审、Hosted 与合流仍待。"
+      },
+      {
+        "at": "2026-11-25T15:18:55.300Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:24:36.229Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "OSS source 7f8e4ab1 targeted 25 PASS, isolated legacy mutation checks PASS, governance PASS. Final exact verify and independent Hosted review pending.",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "26bc5392df9bbcad4df6ef64d77ac542bbfd4c02"
+      },
+      {
+        "at": "2026-11-25T15:31:23.393Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "Exact local verify PASS (Node 2000, Agent 204, browser 839, design 41+8, plugin DEV PASS). Delivery 15/0, #88 guard and diff PASS. Independent/Hosted pending.",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/full-verify-exact.log",
+        "sha": "77b4b6dbd8f041d4b56658dce304450d2b233f61"
+      },
+      {
+        "at": "2026-11-25T15:31:23.624Z",
+        "agent": "CodexOssAdmission",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "77b4b6dbd8f041d4b56658dce304450d2b233f61"
+      },
+      {
+        "at": "2026-11-25T15:31:44.988Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "已在 77b4b6db 完整验证并送独审，释放治理写锁供 #91 修复。"
+      },
+      {
+        "at": "2026-11-25T15:34:20.726Z",
+        "agent": "CodexOssIndependentReview",
+        "action": "REVIEW_FAIL",
+        "note": "独审未通过。base e4383a1e323c895286d9f08fe901a27e341a10da head 77b4b6dbd8f041d4b56658dce304450d2b233f61。P1：2个锁定输入只覆盖1个，精确对照输出1/2仍PASS且0违规。需补齐覆盖、对照判定和UI适用声明。旧运行能力保留PARTIAL。"
+      },
+      {
+        "at": "2026-11-25T15:44:31.119Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:49:04.010Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "独审修订已提交。29 项定向通过，现有归因/覆盖/UI/来源门禁无违规。最终完整验证与独审复核待。",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "14e51ef97a959d1729d77d0b274d97b71448a1b7"
+      },
+      {
+        "at": "2026-11-25T15:49:04.553Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "已提交干净修订和交付包，在完整本机验证期间释放治理写锁。"
+      },
+      {
+        "at": "2026-11-25T15:55:26.216Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:55:26.449Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "Exact local verify PASS. Node 2004, Agent 204, browser 839, design 41+8, dev plugins PASS. Targeted 29/29, Delivery 15/0, #88 policy and diff checks clean.",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/semantic-fix-full-verify.log",
+        "sha": "14e51ef97a959d1729d77d0b274d97b71448a1b7"
+      },
+      {
+        "at": "2026-11-25T15:55:26.690Z",
+        "agent": "CodexOssAdmission",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "14e51ef97a959d1729d77d0b274d97b71448a1b7"
+      },
+      {
+        "at": "2026-11-25T15:55:26.926Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "精确 14e51ef9 已完成本机全量验证并提交独审。释放治理写锁。"
+      },
+      {
+        "at": "2026-11-25T15:56:48.145Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_FAIL",
+        "note": "Base e4383a1e323c895286d9f08fe901a27e341a10da head 14e51ef97a959d1729d77d0b274d97b71448a1b7. P1: one upstream log satisfies both run pins. Exact fixture review-repro-14e51ef9.log."
+      },
+      {
+        "at": "2026-11-25T16:00:31.094Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T16:02:38.633Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "双侧独立日志及角色清单修订。31 项定向、治理与索引检查通过，完整验证和独审仍待。",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T16:02:38.869Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "bd9c9643 已提交且工作树干净，释放治理锁给 G4；OSS 进入只读完整验证。"
+      },
+      {
+        "at": "2026-11-25T16:07:12.809Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T16:07:13.046Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "Exact local verify PASS. Node 2006, Agent 204, browser 839, design 41+8, dev plugins PASS. Role binding targeted 31/31, Delivery 15/0, #88 policy and diff checks clean.",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/role-binding-full-verify.log",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T16:07:13.328Z",
+        "agent": "CodexOssAdmission",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T16:07:13.557Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "精确 bd9c9643 完整验证通过并送独审，释放治理组件写锁。"
+      },
+      {
+        "at": "2026-11-25T16:07:43.755Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_PASS",
+        "note": "e4383a1e323c895286d9f08fe901a27e341a10da to bd9c9643cf45acc3ce2864787c991a1029cae79b. Log reuse fixed. 31 tests + 10 independent cases. Verify/delivery 0. Hosted and upstream audit pending."
+      },
+      {
+        "at": "2026-11-25T16:11:23.341Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "来源、锁定输入、重算对照、UI 和双侧日志绑定修订已通过精确本机完整验证及独审，快照针对正式 e4383a1e。已回读草稿 #92 精确 head，Hosted 正常运行。历史能力 PARTIAL 保留；尚无主线集成。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/92",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T17:08:37.622Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "排队在 #91 后。bd9c 的旧精确 quality、guards 及安装构建全绿。现官基的三份共享文档已见冲突；最新重生成及独审待前置正式合入。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/92",
+        "sha": "60e1a42f174fd9414c04a05819c0ca36347d67ad"
+      },
+      {
+        "at": "2026-11-26T04:10:07.124Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "#92 原草稿和旧 SHA 未修改。只读预检确认 Progress 与两份生成台账三处冲突，其他 12 路径可原样保留。#91 当前待新精确授权和实际合入，随后从正式官基同步及复验。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/92",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-26T05:56:29.263Z",
+        "agent": "CodexOssSync",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-26T05:57:22.203Z",
+        "agent": "CodexOssSync",
+        "action": "PROGRESS",
+        "note": "已普通合入正式基线 285c7c65，保留 #88–#91 进度和原开源门禁。合流点交付与提交门禁通过。阶段送审只用于生成 REVIEW 快照；精确完整验证待执行。产品运行和供应商证据保持 PARTIAL。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/sync-285c7c65-stage.log",
+        "sha": "0ec5f3eaaa3573f4ab5a8f1c91e1bd0d4adf1be7"
+      },
+      {
+        "at": "2026-11-26T05:57:22.564Z",
+        "agent": "CodexOssSync",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "0ec5f3eaaa3573f4ab5a8f1c91e1bd0d4adf1be7"
+      }
+    ],
+    "lock": {
+      "agent": "CodexOssSync",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+      "branch": "codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+      "since": "2026-11-26T05:56:29.263Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexOssAdmission",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25",
+    "reviewedBy": null
   }
 ]

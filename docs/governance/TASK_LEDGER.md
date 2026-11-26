@@ -165,6 +165,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
 | TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | REVIEW | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
 | TASK-KKD-IGNORE-USER-DATA-20261125 | 为本机运行数据和 KK Design 启动器补齐 Git 忽略 | REVIEW | 进行中 | P2 | none | CodexIgnore | 按验收条件完成实现、验证和文档同步 |
+| TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125 | 开源接入证据门禁 | REVIEW | 进行中 | P2 | none | CodexOssSync | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3186,6 +3187,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: governance
 - Verification: NOT_VERIFIED — NOT_VERIFIED
 - Evidence: [docs/changes/2026-11-25-local-data-ignore/verification.md](../../docs/changes/2026-11-25-local-data-ignore/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-26
+
+## TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125 — 开源接入证据门禁
+
+- Goal: 基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。
+- Scope: 基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexOssAdmission
+- Acceptance: 精确历史 vendor 基线显式保留；新增或变更接入缺证即拒绝；真实证据边界与 PARTIAL 清晰。定向单测和 governance:check 通过。
+- Branch: `codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125`
+- Worktree: `D:\KK Design\.worktrees\TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-kkd-oss-admission/verification.md](../../docs/changes/2026-11-25-kkd-oss-admission/verification.md)
 - Next action: 按验收条件完成实现、验证和文档同步
 - Last verified: 2026-11-25
 - Updated: 2026-11-26

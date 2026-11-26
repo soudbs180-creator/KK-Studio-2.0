@@ -23,6 +23,7 @@
 | [SDLC](engineering/SDLC.md)                                 | AI 自主开发、风险分级、产物链和维护                    |
 | [DEVELOPMENT-WORKFLOW](engineering/DEVELOPMENT-WORKFLOW.md) | 任务领取、需求确认、状态流转、开发笔记、验证和竞品节奏 |
 | [CODING-STANDARDS](engineering/CODING-STANDARDS.md)         | 命名、文件规模边界、模块依赖方向、错误处理、状态管理   |
+| [COMPETITIVE-LEARNING-POLICY](engineering/COMPETITIVE-LEARNING-POLICY.md) | 开源参考归因、许可、证据锁定与接入验收 |
 | [TESTING](engineering/TESTING.md)                           | 测试分层、覆盖要求、Playwright 运行契约、证据保存      |
 | [DEVELOPMENT](engineering/DEVELOPMENT.md)                   | 开发环境、命令与证明范围、UI 三个运行入口              |
 | [BRANCH-POLICY](engineering/BRANCH-POLICY.md)               | 分支命名、PR、squash 合并、回滚、pre-push 防线         |

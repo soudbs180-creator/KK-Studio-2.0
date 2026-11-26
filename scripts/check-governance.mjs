@@ -6,6 +6,7 @@ import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
 import { checkMemoryContractSync } from "./governance/check-policy-sync.mjs";
 import { checkArchitecture } from "./governance/check-architecture.mjs";
 import { checkRepoLayout } from "./governance/check-repo-layout.mjs";
+import { checkOssAttributions } from "./governance/oss-attributions.mjs";
 
 const issues = [];
 const root = process.cwd();
@@ -175,6 +176,16 @@ try {
   );
 } catch (error) {
   issues.push(`Repo layout: ${error.message}`);
+}
+
+try {
+  const oss = checkOssAttributions(root);
+  issues.push(...oss.issues);
+  console.log(
+    `OSS attributions: ${oss.scanned} components, ${oss.issues.length} violations.`,
+  );
+} catch (error) {
+  issues.push(`OSS attributions: ${error.message}`);
 }
 
 // Catch the previous hard-coded output pattern before tests overwrite history.

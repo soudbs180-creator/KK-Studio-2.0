@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "taskId": "TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+  "updatedAt": "2026-11-25",
+  "policy": {
+    "vendoredRoot": "src/integrations/oss",
+    "allowedLicenses": [
+      "MIT",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "ISC"
+    ],
+    "deniedLicenseFamilies": ["AGPL", "GPL", "LGPL"],
+    "deniedLicenses": [
+      "AGPL-3.0",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-2.0",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "LGPL-2.1",
+      "LGPL-2.1-only",
+      "LGPL-3.0",
+      "LGPL-3.0-only"
+    ],
+    "integrationTypes": ["vendored", "adapter", "inspired"],
+    "isolatableIntegrationTypes": ["vendored", "adapter"]
+  },
+  "attributions": [
+    {
+      "name": "DeepSeek Harness (dsh-superagent-prototype)",
+      "author": "DeepSeek Harness Team",
+      "repoUrl": "https://github.com/deepseek-ai/dsh-superagent-prototype",
+      "license": "MIT",
+      "integrationType": "inspired",
+      "usedInModules": [],
+      "note": "2026-11-11 历史静态研究记录：上游许可证为 MIT，Copyright (c) 2026 DeepSeek Harness Team。仓库级 Agent 编排与工单契约仅作研究参考。当前官方基线无已登记落点，运行待验。"
+    },
+    {
+      "name": "basketikun/infinite-canvas",
+      "author": "basketikun",
+      "repoUrl": "https://github.com/basketikun/infinite-canvas",
+      "license": "MIT",
+      "integrationType": "inspired",
+      "usedInModules": [
+        "docs/changes/2026-09-23-agent-attachments/reuse-assessment.md"
+      ],
+      "note": "架构研究引用。三个实际历史 vendor 组件按各自目录登记。"
+    },
+    {
+      "name": "Infinite Canvas Agent",
+      "author": "basketikun",
+      "repoUrl": "https://github.com/basketikun/infinite-canvas",
+      "license": "MIT",
+      "integrationType": "vendored",
+      "usedInModules": ["vendor/canvas-agent"],
+      "legacy": true,
+      "note": "官方 e4383a1e 已跟踪 MIT 副本与许可证。精确上游来源及当前完整对拍待证。"
+    },
+    {
+      "name": "Infinite Canvas Plugins",
+      "author": "basketikun",
+      "repoUrl": "https://github.com/basketikun/infinite-canvas",
+      "license": "MIT",
+      "integrationType": "vendored",
+      "usedInModules": ["vendor/canvas-plugins"],
+      "legacy": true,
+      "note": "官方 e4383a1e 已跟踪 MIT 副本与许可证。精确上游来源及当前完整对拍待证。"
+    },
+    {
+      "name": "Infinite Canvas Proxy",
+      "author": "basketikun",
+      "repoUrl": "https://github.com/basketikun/infinite-canvas",
+      "license": "MIT",
+      "integrationType": "vendored",
+      "usedInModules": ["vendor/canvas-proxy"],
+      "legacy": true,
+      "note": "官方 e4383a1e 已跟踪 MIT 副本。与上游审计参考 e6d0911 相比，五项环回行为对拍通过。全量来源、产品及真实供应商验收待证，PARTIAL。"
+    },
+    {
+      "name": "Toonflow-app",
+      "author": "HBAI-Ltd",
+      "repoUrl": "https://github.com/HBAI-Ltd/Toonflow-app",
+      "license": "MIT",
+      "integrationType": "inspired",
+      "usedInModules": ["docs/engineering/COMPETITIVE-LEARNING-POLICY.md"],
+      "note": "2026-11-11 历史静态研究记录：上游许可证为 MIT，Copyright (c) 2026 HBAI-Ltd。插件脚手架与分镜流水线仅作研究参考，运行待验。"
+    }
+  ],
+  "restrictedReferences": [
+    {
+      "name": "CodexPlusPlus",
+      "author": "BigPizzaV3",
+      "repoUrl": "https://github.com/BigPizzaV3/CodexPlusPlus",
+      "license": "AGPL-3.0",
+      "integrationType": "inspired",
+      "usedInModules": [
+        "docs/changes/2026-09-24-provider-connectivity/spec.md"
+      ],
+      "note": "2026-11-11 核验：references/CodexPlusPlus/LICENSE 为 GNU AFFERO GENERAL PUBLIC LICENSE v3；git origin 为 BigPizzaV3/CodexPlusPlus。严禁复制、翻译或打包源码；只允许吸收冷却重试队列、双粘性 TTL、model-catalog 字段等架构，并用 KK 自身 TypeScript 代码纯净实现。禁止进入 src/integrations/oss/。"
+    },
+    {
+      "name": "infinite-canvas-tigerowo",
+      "author": "tigerowo",
+      "repoUrl": "https://github.com/tigerowo/infinite-canvas",
+      "license": "AGPL-3.0",
+      "integrationType": "inspired",
+      "usedInModules": [],
+      "note": "2026-11-11 核验：references/infinite-canvas-tigerowo/LICENSE 为 GNU AFFERO GENERAL PUBLIC LICENSE v3；git origin 为 tigerowo/infinite-canvas。仅容器层象限 1 静态观察（3D 导演台 iframe 桥接、物理光学参数编译器），主仓暂无落地模块；严禁复制 / 打包源码，只准吸收架构并纯净实现。禁止进入 src/integrations/oss/。"
+    },
+    {
+      "name": "sub2api",
+      "author": "Wei-Shaw",
+      "repoUrl": "https://github.com/Wei-Shaw/sub2api",
+      "license": "LGPL-3.0",
+      "integrationType": "inspired",
+      "usedInModules": ["docs/features/feat-038-ai-model-gateway.md"],
+      "note": "2026-11-11 核验：references/sub2api/LICENSE 为 GNU LESSER GENERAL PUBLIC LICENSE v3；git origin 为 Wei-Shaw/sub2api。本机 D:/sub2api 是外部独立部署服务，KK 只做客户端适配（credential_ref / session_id），严禁把其 Go 源码复制或打包进 KK 交付物；账号池、粘性调度等只作架构观察。禁止进入 src/integrations/oss/。"
+    }
+  ]
+}

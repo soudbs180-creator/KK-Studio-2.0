@@ -16,6 +16,7 @@
 | ---------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ESLint                 | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0`     | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误                                                                                          |
 | 架构边界               | `node scripts/check-governance.mjs`                               | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用                                                                                           |
+| 开源接入                | `npm run governance:check`                                       | 归因、许可、依赖或运行对照缺失，组件文件锁定不完整，历史组件变更后未提交新证据 |
 | UI 标准                | `node scripts/check-ui-standards.mjs`                             | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon`                                                             |
 | DESIGN.md 一致性 | `npm run design:check` / `npm run design:lint` | 当前 tokens.css 的生成漂移、YAML/引用/章节错误及固定版本官方格式校验；已并入 ui:check |
 | 类型                   | `tsc --noEmit`                                                    | 类型错误                                                                                                                                            |
