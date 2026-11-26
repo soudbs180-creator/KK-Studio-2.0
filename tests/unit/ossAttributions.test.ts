@@ -215,6 +215,11 @@ test("R-OSS: directory matching accepts explicit usedInModules paths", () => {
     true,
   );
   assert.equal(matchesOssDir(makeRecord(), "other-lib", ROOT), false);
+  for (const usedInModules of [[], [`${ROOT}/example-lib/research`]])
+    assert.equal(
+      matchesOssDir(makeRecord({ usedInModules }), "example-lib", ROOT),
+      false,
+    );
 });
 
 test("R-OSS: the shipped ledger retains historical references and named legacy components", () => {
@@ -395,6 +400,46 @@ test("R-OSS: filesystem gate passes for pinned vendored and adapter fixtures", (
       admitFixture(root, type);
       assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
     }
+  } finally {
+    cleanup(root);
+  }
+});
+
+test("R-OSS: research names and descendant paths cannot compete with exact sources", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record } = admitFixture(root);
+    const research = makeRecord({
+      name: "Unrelated research name",
+      integrationType: "inspired",
+      usedInModules: [`${ROOT}/example-lib/research`],
+    });
+    const restricted = makeRecord({
+      name: "Example Lib",
+      license: "AGPL-3.0",
+      integrationType: "inspired",
+      usedInModules: [],
+    });
+    const publish = (attributions) =>
+      writeFixture(
+        root,
+        ATTRIBUTIONS_FILE,
+        JSON.stringify(withRecords(makeLedger(), attributions, [restricted])),
+      );
+    publish([record, research]);
+    assert.deepEqual(checkOssAttributions(root), { scanned: 1, issues: [] });
+
+    publish([research]);
+    const unsupported = checkOssAttributions(root).issues.join("\n");
+    assert.match(unsupported, /missing attribution/);
+    assert.match(unsupported, /copying or bundling its source is forbidden/);
+    assert.match(unsupported, /non-permissive license AGPL-3.0/);
+
+    publish([record, research, makeRecord({ name: "Second explicit source" })]);
+    assert.match(
+      checkOssAttributions(root).issues.join("\n"),
+      /ambiguous attribution \(2 matching records\)/,
+    );
   } finally {
     cleanup(root);
   }

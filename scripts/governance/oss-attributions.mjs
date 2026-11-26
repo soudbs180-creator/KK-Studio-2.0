@@ -87,19 +87,21 @@ function slug(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-/** 目录可由 usedInModules 显式指向，或由组件名与目录名归一化后匹配。 */
+/** 组件归因必须在 usedInModules 中声明完整的一级目录。 */
 export function matchesOssDir(record, dir, vendoredRoot) {
-  const prefix = `${vendoredRoot}/${dir}`;
-  const paths = Array.isArray(record.usedInModules) ? record.usedInModules : [];
-  if (
-    paths.some(
-      (item) =>
-        typeof item === "string" &&
-        (item === prefix || item.startsWith(`${prefix}/`)),
-    )
-  )
-    return true;
-  return slug(record.name) === slug(dir);
+  return (
+    Array.isArray(record.usedInModules) &&
+    record.usedInModules.includes(`${vendoredRoot}/${dir}`)
+  );
+}
+
+function componentAttributions(ledger, dir, vendoredRoot) {
+  return ledger.attributions.filter(
+    (record) =>
+      ledger.policy.isolatableIntegrationTypes.includes(
+        record.integrationType,
+      ) && matchesOssDir(record, dir, vendoredRoot),
+  );
 }
 
 /** 台账自身的结构与许可红线校验，不依赖文件系统。 */
@@ -255,14 +257,11 @@ export function evaluateOssAttributions(entries, ledger, options = {}) {
   // 目录级：oss/ 下每个组件目录必须有唯一、宽松许可、非 inspired 的署名。
   for (const dir of entries) {
     const target = `${vendoredRoot}/${dir}`;
-    const matches = records.filter(({ record }) =>
-      matchesOssDir(record, dir, vendoredRoot),
-    );
+    const matches = componentAttributions(ledger, dir, vendoredRoot);
     if (matches.length === 0) {
       issues.push(
         `${target}: missing attribution entry in ${ATTRIBUTIONS_FILE}`,
       );
-      continue;
     }
     if (matches.length > 1) {
       issues.push(
@@ -270,23 +269,33 @@ export function evaluateOssAttributions(entries, ledger, options = {}) {
       );
       continue;
     }
-    const { record, restricted } = matches[0];
-    if (restricted)
-      issues.push(
-        `${target}: ${record.name} is ${record.license}; copying or bundling its source is forbidden, clean-room reimplementation only`,
-      );
-    if (isDeniedLicense(record.license, policy))
-      issues.push(
-        `${target}: non-permissive license ${record.license}; AGPL/GPL/LGPL must stay clean-room inspired`,
-      );
-    else if (!isAllowedLicense(record.license, policy))
-      issues.push(
-        `${target}: license ${record.license} is outside policy.allowedLicenses`,
-      );
-    if (!isolatable.includes(record.integrationType))
-      issues.push(
-        `${target}: ${record.integrationType} records must not place source under ${vendoredRoot}`,
-      );
+    // Research names explain a denial without ever granting directory admission.
+    const diagnostics = matches.length
+      ? [{ record: matches[0], restricted: false }]
+      : records.filter(
+          ({ record, restricted }) =>
+            (restricted || !isolatable.includes(record.integrationType)) &&
+            (matchesOssDir(record, dir, vendoredRoot) ||
+              slug(record.name) === slug(dir)),
+        );
+    for (const { record, restricted } of diagnostics) {
+      if (restricted)
+        issues.push(
+          `${target}: ${record.name} is ${record.license}; copying or bundling its source is forbidden, clean-room reimplementation only`,
+        );
+      if (isDeniedLicense(record.license, policy))
+        issues.push(
+          `${target}: non-permissive license ${record.license}; AGPL/GPL/LGPL must stay clean-room inspired`,
+        );
+      else if (!isAllowedLicense(record.license, policy))
+        issues.push(
+          `${target}: license ${record.license} is outside policy.allowedLicenses`,
+        );
+      if (!isolatable.includes(record.integrationType))
+        issues.push(
+          `${target}: ${record.integrationType} records must not place source under ${vendoredRoot}`,
+        );
+    }
   }
   return issues;
 }
@@ -781,12 +790,7 @@ export function checkOssAttributions(root = process.cwd()) {
     for (const dir of dirs) {
       const target = `${vendoredRoot}/${dir}`;
       targets.add(target);
-      const records = ledger.attributions.filter(
-        (record) =>
-          ledger.policy.isolatableIntegrationTypes.includes(
-            record.integrationType,
-          ) && record.usedInModules.includes(target),
-      );
+      const records = componentAttributions(ledger, dir, vendoredRoot);
       if (records.length !== 1) {
         issues.push(
           `${target}: expected one explicit vendored/adapter attribution`,
