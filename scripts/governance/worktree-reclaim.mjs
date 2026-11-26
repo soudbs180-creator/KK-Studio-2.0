@@ -320,7 +320,6 @@ function readCoordinationTasks(repoRoot, worktrees, allowedRoot) {
   const registered = worktrees.filter(
     (entry) => entry.branch === COORDINATION_BRANCH,
   );
-  if (!registered.length) return [];
   try {
     const [coordination] = registered;
     const config = path.join(repoRoot, "config", "coord.json");
@@ -336,11 +335,21 @@ function readCoordinationTasks(repoRoot, worktrees, allowedRoot) {
     if (typeof relative !== "string" || !relative.trim())
       throw new Error("invalid configured coordination checkout");
     const expected = path.resolve(repoRoot, relative);
+    if (!isInsideReclamationRoot(repoRoot, expected))
+      throw new Error("coordination checkout is outside the repository");
+    if (!registered.length) {
+      if (
+        fs.lstatSync(path.join(expected, "ledger.json"), {
+          throwIfNoEntry: false,
+        })
+      )
+        throw new Error("configured coordination ledger has no registration");
+      return [];
+    }
     if (
       registered.length !== 1 ||
       !coordination?.exists ||
       coordination.prunable ||
-      !isInsideReclamationRoot(repoRoot, expected) ||
       !isInsideReclamationRoot(allowedRoot, expected) ||
       !isInsideReclamationRoot(repoRoot, coordination.path) ||
       !isInsideReclamationRoot(allowedRoot, coordination.path) ||
@@ -451,6 +460,20 @@ function worktreeIdentity(value, cache) {
     }
   }
   return cache.get(value);
+}
+
+function retainsCoordinationRegistration(previous, current, paths = new Map()) {
+  const prior = previous.find(({ branch }) => branch === COORDINATION_BRANCH);
+  if (!prior) return true;
+  const expected = worktreeIdentity(prior.path, paths);
+  return Boolean(
+    expected &&
+    current.some(
+      (entry) =>
+        entry.branch === COORDINATION_BRANCH &&
+        worktreeIdentity(entry.path, paths) === expected,
+    ),
+  );
 }
 
 function taskStateFor(worktree, records, paths = new Map()) {
@@ -570,8 +593,7 @@ function checkoutMatches(worktree, manifest, requireCompletedTask = false) {
     )
       return false;
     if (
-      manifest.worktrees.some(({ branch }) => branch === COORDINATION_BRANCH) &&
-      !registrations.some(({ branch }) => branch === COORDINATION_BRANCH)
+      !retainsCoordinationRegistration(manifest.worktrees, registrations, paths)
     )
       return false;
     const records = readTaskLedger(
@@ -941,6 +963,10 @@ export function applyReclamationPlan(
   const removed = [];
   const failed = [];
   const live = buildReclamationManifest(repoRoot);
+  if (!retainsCoordinationRegistration(plan.worktrees ?? [], live.worktrees))
+    throw new Error(
+      "The approved plan's coordination ledger registration changed",
+    );
   const findLiveWorktree = (planned) => {
     if (!planned) return null;
     const current = live.worktrees.find(

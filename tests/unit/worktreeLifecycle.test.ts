@@ -379,6 +379,23 @@ function reclamationFixture(t: TestContext) {
   };
 }
 
+function approveGeneratedFixture({
+  root,
+  repo,
+}: Pick<ReturnType<typeof reclamationFixture>, "root" | "repo">) {
+  const plan = JSON.parse(
+    fs.readFileSync(
+      writeImmutablePlan(buildReclamationManifest(repo), root),
+      "utf8",
+    ),
+  );
+  const candidate = plan.candidates.find((entry: { path: string }) =>
+    entry.path.endsWith("/node_modules"),
+  );
+  assert.ok(candidate);
+  return { plan, approvedCandidates: [candidate.id] };
+}
+
 test("historical paths protect active leases without proving current branch completion", (t) => {
   const { root, target, snapshot, done, active, topic } = reclamationFixture(t);
   const alias = path.join(root, "historic-alias");
@@ -413,16 +430,7 @@ test("only the safe repository coordination checkout can override the snapshot",
     generated,
   } = reclamationFixture(t);
   snapshot(done);
-  const plan = JSON.parse(
-    fs.readFileSync(
-      writeImmutablePlan(buildReclamationManifest(repo), root),
-      "utf8",
-    ),
-  );
-  const candidate = plan.candidates.find((entry: { path: string }) =>
-    entry.path.endsWith("/node_modules"),
-  );
-  assert.ok(candidate);
+  const { plan, approvedCandidates } = approveGeneratedFixture({ root, repo });
   snapshot(active);
   const external = path.join(root, "external-coord");
   addCoordinator(external, done);
@@ -437,7 +445,7 @@ test("only the safe repository coordination checkout can override the snapshot",
     () =>
       applyReclamationPlan(plan, {
         repoRoot: repo,
-        approvedCandidates: [candidate.id],
+        approvedCandidates,
       }),
     /coordination ledger/i,
   );
@@ -478,18 +486,9 @@ function applyAfterInventoryRead(
   fixture: ReturnType<typeof reclamationFixture>,
   changeRegistration: () => void,
 ) {
-  const { root, repo, target, snapshot, done, generated } = fixture;
+  const { repo, target, snapshot, done, generated } = fixture;
   snapshot(done);
-  const plan = JSON.parse(
-    fs.readFileSync(
-      writeImmutablePlan(buildReclamationManifest(repo), root),
-      "utf8",
-    ),
-  );
-  const candidate = plan.candidates.find((entry: { path: string }) =>
-    entry.path.endsWith("/node_modules"),
-  );
-  assert.ok(candidate);
+  const { plan, approvedCandidates } = approveGeneratedFixture(fixture);
   const receipt = path.join(target, generated);
   const readFile = fs.readFileSync;
   let changed = false;
@@ -506,7 +505,7 @@ function applyAfterInventoryRead(
   });
   const result = applyReclamationPlan(plan, {
     repoRoot: repo,
-    approvedCandidates: [candidate.id],
+    approvedCandidates,
   });
   assert.equal(changed, true);
   assert.deepEqual(result.removed, []);
@@ -539,6 +538,67 @@ test("apply retains a target whose Git registration becomes prunable", (t) => {
     );
     assert.equal(git(target, "rev-parse", "HEAD").toString("utf8"), head);
   });
+});
+
+test("an existing coordination ledger cannot be ignored after its branch switches", (t) => {
+  const fixture = reclamationFixture(t);
+  const {
+    repo,
+    target,
+    coord,
+    git,
+    snapshot,
+    write,
+    addCoordinator,
+    done,
+    active,
+    generated,
+  } = fixture;
+  snapshot(done);
+  addCoordinator(coord, done);
+  const { plan, approvedCandidates } = approveGeneratedFixture(fixture);
+  write(coord, "ledger.json", JSON.stringify([active]));
+  git(coord, "commit", "-qam", "record new fixture lease");
+  git(coord, "switch", "-qc", "coord/maintenance");
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  assert.throws(
+    () => applyReclamationPlan(plan, { repoRoot: repo, approvedCandidates }),
+    /coordination ledger/i,
+  );
+  assert.equal(
+    fs.readFileSync(path.join(target, generated), "utf8"),
+    "fixture bytes",
+  );
+});
+
+test("apply retains an approved target if its original coordinator is no longer registered", (t) => {
+  const fixture = reclamationFixture(t);
+  const {
+    root,
+    repo,
+    target,
+    coord,
+    git,
+    snapshot,
+    addCoordinator,
+    done,
+    generated,
+  } = fixture;
+  snapshot(done);
+  addCoordinator(coord, done);
+  const { plan, approvedCandidates } = approveGeneratedFixture(fixture);
+  git(coord, "switch", "-qc", "coord/maintenance");
+  git(repo, "worktree", "move", coord, path.join(root, "moved-coordinator"));
+  assert.equal(fs.existsSync(coord), false);
+  assert.doesNotThrow(() => buildReclamationManifest(repo));
+  assert.throws(
+    () => applyReclamationPlan(plan, { repoRoot: repo, approvedCandidates }),
+    /coordination ledger/i,
+  );
+  assert.equal(
+    fs.readFileSync(path.join(target, generated), "utf8"),
+    "fixture bytes",
+  );
 });
 
 test("recovery inventory is deterministic and hashes source files", () => {
