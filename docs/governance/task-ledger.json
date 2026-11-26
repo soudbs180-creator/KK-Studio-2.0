@@ -10229,5 +10229,154 @@
     "nextAction": "按验收条件完成实现、验证和文档同步",
     "lastVerified": "2026-11-25",
     "reviewedBy": null
+  },
+  {
+    "id": "TASK-KKD-IGNORE-USER-DATA-20261125",
+    "module": "governance",
+    "kind": "governance",
+    "title": "为本机运行数据和 KK Design 启动器补齐 Git 忽略",
+    "goal": "从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则",
+    "scope": "从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则",
+    "owner": "CodexIgnore",
+    "acceptance": [
+      "Git 对两条新增根路径给出预期规则，既有启动器及 .lnk 继续忽略",
+      "运行数据和快捷方式不参与验收写入，候选只含 .gitignore、交付和生成的台账快照"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "REVIEW",
+    "branch": "codex/TASK-KKD-IGNORE-USER-DATA-20261125",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-IGNORE-USER-DATA-20261125",
+    "updated": "2026-11-26",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-local-data-ignore/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T14:44:32.458Z",
+        "agent": "CodexIgnore",
+        "action": "CREATE",
+        "note": "created TASK-KKD-IGNORE-USER-DATA-20261125"
+      },
+      {
+        "at": "2026-11-25T14:44:32.716Z",
+        "agent": "CodexIgnore",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:47:41.641Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "12 项 Git 路径验证与其余规则逐字节一致检查通过，验收包已提交。",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "0374df03684fc4ba0d118906657ab9947a74c460"
+      },
+      {
+        "at": "2026-11-25T14:48:35.388Z",
+        "agent": "CodexIgnore",
+        "action": "RELEASE",
+        "note": "候选提交已固定，释放治理锁供其他任务提交，继续执行隔离只读验证。"
+      },
+      {
+        "at": "2026-11-25T14:55:35.418Z",
+        "agent": "CodexIgnore",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:55:35.657Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "精确 SHA 全量 verify 通过。主测试 1975、Agent 204、浏览器 839、设计 41+8，通过开发插件验证。交付与治理零违规。",
+        "evidence": ".worktrees/TASK-KKD-IGNORE-USER-DATA-20261125/.tmp/ignore-extraction/verify.log",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T14:55:35.908Z",
+        "agent": "CodexIgnore",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T14:55:36.145Z",
+        "agent": "CodexIgnore",
+        "action": "RELEASE",
+        "note": "已固定精确提交和全量核验，任务保留 REVIEW，释放模块锁供其他任务集成。"
+      },
+      {
+        "at": "2026-11-25T14:57:55.368Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_PASS",
+        "note": "独审通过。base e4383a1e323c895286d9f08fe901a27e341a10da head 3f139eba564913b156d5978eade272f526310580。原补丁blob一致，只添两规则，旧内容逐字节保持。12项路径复验，无用户数据纳入。交付11文件0违规，完整verify退出0。"
+      },
+      {
+        "at": "2026-11-25T15:03:14.274Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "已发布同名任务分支。GitHub 草稿 PR 固定 e4383a1e → 3f139eba。git-guards 45640744195 运行中，quality 45640744559 排队。https://github.com/soudbs180-creator/KK-Studio-2.0/pull/90",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T15:45:45.507Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "Draft #90 精确 Hosted quality 45640744559 与 git-guards 45640744195 全部通过。依赖正式 #88 后刷新官基与台账快照，再正式审批。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/90",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T17:08:36.919Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "主线 60e1a42f 已前移，排队在 #89 正式合入后。旧 head CI 仅旧基准。需取最新主线，按权威任务生成三份共享记录，再独审、全量、单独获批。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/90",
+        "sha": "60e1a42f174fd9414c04a05819c0ca36347d67ad"
+      },
+      {
+        "at": "2026-11-26T01:29:33.885Z",
+        "agent": "CodexIgnore",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-26T01:30:43.989Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "已普通合入正式基线 e2a33a38，保全 #88 与 #89 快照和进度。合流点提交门禁、交付和两条忽略规则增量通过。阶段送审仅供生成 REVIEW 快照；完整精确验证待完成。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/ignore-user-data/sync-e2a33a38-stage.log",
+        "sha": "6d4dd2cc6c74cf9c7f07f08f642e8330b26ff0b7"
+      },
+      {
+        "at": "2026-11-26T01:30:44.350Z",
+        "agent": "CodexIgnore",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "6d4dd2cc6c74cf9c7f07f08f642e8330b26ff0b7"
+      }
+    ],
+    "lock": {
+      "agent": "CodexIgnore",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-IGNORE-USER-DATA-20261125",
+      "branch": "codex/TASK-KKD-IGNORE-USER-DATA-20261125",
+      "since": "2026-11-26T01:29:33.885Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexIgnore",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25",
+    "reviewedBy": null
   }
 ]

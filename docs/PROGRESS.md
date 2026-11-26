@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-11-25 本机文件 Git 忽略规则候选
+
+从本地发布历史承接仓库根的用户数据目录与 KK Design 启动器忽略规则。12 个 Git 路径用例与其余规则逐字节核验通过。[验证记录](changes/2026-11-25-local-data-ignore/verification.md)
+
 ## 2026-11-25 自进化第一阶段
 
 `TASK-KKD-EVOLUTION-PHASE1-20261125` 已核对官方基线、22 个本机候选提交、现有任务工作树、模块链路和 Pen 映射。首项提交门禁候选来自官方基线并保持独立。现状、执行收据及后续阻断见 [阶段一验收](changes/2026-11-25-kkd-evolution-phase1/verification.md)。
