@@ -178,6 +178,7 @@ export function canPruneGeneratedContent(state) {
     state.current !== true &&
     state.dirty === 0 &&
     state.locked !== true &&
+    state.prunable !== true &&
     state.evidence !== true &&
     state.active !== true,
   );
@@ -217,6 +218,7 @@ export function assessWorktreeRemoval(state) {
     reasons.push(state.primary ? "PRIMARY_WORKTREE" : "CURRENT_WORKTREE");
   if (state.dirty !== 0) reasons.push("DIRTY_WORKTREE");
   if (state.locked) reasons.push("LOCKED_WORKTREE");
+  if (state.prunable) reasons.push("WORKTREE_REGISTRATION_CHANGED");
   if (state.active) reasons.push("ACTIVE_TASK");
   if (state.generatedPaths?.some((candidate) => candidate.evidence))
     reasons.push("WORKTREE_CONTAINS_EVIDENCE");
@@ -300,23 +302,141 @@ export function verifyRecoveryBundle(
   }
 }
 
-function readTaskLedger(repoRoot, worktrees) {
-  const snapshot = path.join(repoRoot, "docs/governance/task-ledger.json");
-  const coordination = worktrees.find(
-    (entry) => entry.branch === "coord/ledger",
+const COORDINATION_BRANCH = "coord/ledger";
+const DEFAULT_COORDINATION_CHECKOUT = ".worktrees/TASK-COORD-LEDGER";
+const COORDINATION_TASK_STATUSES = new Set([
+  "TODO",
+  "IN_PROGRESS",
+  "PARTIAL",
+  "BLOCKED",
+  "REVIEW",
+  "DONE",
+  "OBSOLETE",
+  "READY",
+  "REGRESSION",
+]);
+
+function readCoordinationTasks(repoRoot, worktrees, allowedRoot) {
+  const registered = worktrees.filter(
+    (entry) => entry.branch === COORDINATION_BRANCH,
   );
-  const active = coordination && path.join(coordination.path, "ledger.json");
-  if (active && !fs.existsSync(active))
-    throw new Error("The registered coordination ledger is unavailable");
+  if (!registered.length) return [];
+  try {
+    const [coordination] = registered;
+    const config = path.join(repoRoot, "config", "coord.json");
+    const configFile = fs.lstatSync(config, { throwIfNoEntry: false });
+    if (
+      configFile &&
+      (!configFile.isFile() || !isInsideReclamationRoot(repoRoot, config))
+    )
+      throw new Error("unsafe repository coordination configuration");
+    const relative = configFile
+      ? JSON.parse(fs.readFileSync(config, "utf8"))?.path
+      : DEFAULT_COORDINATION_CHECKOUT;
+    if (typeof relative !== "string" || !relative.trim())
+      throw new Error("invalid configured coordination checkout");
+    const expected = path.resolve(repoRoot, relative);
+    if (
+      registered.length !== 1 ||
+      !coordination?.exists ||
+      coordination.prunable ||
+      !isInsideReclamationRoot(repoRoot, expected) ||
+      !isInsideReclamationRoot(allowedRoot, expected) ||
+      !isInsideReclamationRoot(repoRoot, coordination.path) ||
+      !isInsideReclamationRoot(allowedRoot, coordination.path) ||
+      !fs.lstatSync(coordination.path).isDirectory()
+    )
+      throw new Error(
+        "coordination checkout is outside the approved repository location",
+      );
+    const actualPath = (value) =>
+      normalizeForComparison(fs.realpathSync.native(value));
+    const actual = actualPath(coordination.path);
+    const [topLevel, commonDir] = git(coordination.path, [
+      "rev-parse",
+      "--path-format=absolute",
+      "--show-toplevel",
+      "--git-common-dir",
+    ])
+      .trimEnd()
+      .split(/\r?\n/);
+    const primaryCommon = git(repoRoot, [
+      "rev-parse",
+      "--path-format=absolute",
+      "--git-common-dir",
+    ]).trimEnd();
+    if (
+      actual !== actualPath(expected) ||
+      actual !== actualPath(topLevel) ||
+      actualPath(commonDir) !== actualPath(primaryCommon) ||
+      git(coordination.path, [
+        "symbolic-ref",
+        "--quiet",
+        "--short",
+        "HEAD",
+      ]).trimEnd() !== COORDINATION_BRANCH
+    )
+      throw new Error(
+        "coordination registration does not match the linked checkout",
+      );
+    const file = path.join(coordination.path, "ledger.json");
+    if (
+      !fs.lstatSync(file).isFile() ||
+      !isInsideReclamationRoot(coordination.path, file)
+    )
+      throw new Error("unsafe coordination ledger file");
+    git(coordination.path, [
+      "ls-files",
+      "--error-unmatch",
+      "--",
+      "ledger.json",
+    ]);
+    const tasks = JSON.parse(fs.readFileSync(file, "utf8"));
+    if (
+      !Array.isArray(tasks) ||
+      tasks.some(
+        (task) =>
+          typeof task?.id !== "string" ||
+          !task.id.trim() ||
+          typeof task.branch !== "string" ||
+          !task.branch.trim() ||
+          typeof task.worktree !== "string" ||
+          !task.worktree.trim() ||
+          !COORDINATION_TASK_STATUSES.has(task.status) ||
+          (task.lock != null &&
+            (typeof task.lock !== "object" ||
+              typeof task.lock.branch !== "string" ||
+              !task.lock.branch.trim() ||
+              typeof task.lock.worktree !== "string" ||
+              !(
+                path.posix.isAbsolute(task.lock.worktree) ||
+                path.win32.isAbsolute(task.lock.worktree)
+              ))),
+      ) ||
+      new Set(tasks.map((task) => task.id)).size !== tasks.length
+    )
+      throw new Error("invalid coordination ledger records");
+    return tasks;
+  } catch (cause) {
+    throw new Error(
+      "The registered coordination ledger is unsafe or unavailable",
+      { cause },
+    );
+  }
+}
+
+function readTaskLedger(repoRoot, worktrees, allowedRoot) {
+  const snapshot = path.join(repoRoot, "docs/governance/task-ledger.json");
   const records = new Map();
-  for (const file of [snapshot, active]) {
-    if (!file || !fs.existsSync(file)) continue;
-    const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (fs.existsSync(snapshot)) {
+    const parsed = JSON.parse(fs.readFileSync(snapshot, "utf8"));
     const tasks = Array.isArray(parsed) ? parsed : parsed?.tasks;
     if (!Array.isArray(tasks))
       throw new Error("Invalid reclamation task ledger");
     for (const task of tasks) records.set(task.id, task);
   }
+  for (const task of readCoordinationTasks(repoRoot, worktrees, allowedRoot))
+    records.set(task.id, task);
   return [...records.values()];
 }
 
@@ -349,7 +469,9 @@ function taskStateFor(worktree, records, paths = new Map()) {
       matchesPath(task.lock?.worktree),
   );
   return {
-    taskStatuses: tasks.map((task) => task.status),
+    taskStatuses: tasks
+      .filter((task) => matchesBranch(task.branch))
+      .map((task) => task.status),
     active: tasks.some((task) => task.lock || task.status !== "DONE"),
   };
 }
@@ -376,7 +498,7 @@ function worktreeStatus(worktreePath) {
   }
 }
 
-function parseWorktrees(repoRoot) {
+function parseWorktrees(repoRoot, { inspect = true } = {}) {
   return git(repoRoot, ["worktree", "list", "--porcelain"])
     .split(/\r?\n(?=worktree )/)
     .filter(Boolean)
@@ -386,7 +508,8 @@ function parseWorktrees(repoRoot) {
         lines.find((line) => line.startsWith(prefix))?.slice(prefix.length) ??
         null;
       const worktreePath = get("worktree ");
-      const status = worktreePath ? worktreeStatus(worktreePath) : null;
+      const status =
+        inspect && worktreePath ? worktreeStatus(worktreePath) : null;
       return {
         path: worktreePath ? slash(worktreePath) : null,
         head: get("HEAD "),
@@ -396,7 +519,8 @@ function parseWorktrees(repoRoot) {
         locked:
           lines.some(
             (line) => line === "locked" || line.startsWith("locked "),
-          ) || hasWorktreeLock(worktreePath),
+          ) ||
+          (inspect && hasWorktreeLock(worktreePath)),
         prunable: lines.some((line) => line.startsWith("prunable")),
       };
     });
@@ -429,11 +553,33 @@ function checkoutMatches(worktree, manifest, requireCompletedTask = false) {
       "--abbrev-ref",
       "HEAD",
     ]).trim();
+    const registrations = parseWorktrees(manifest.primaryRepository, {
+      inspect: false,
+    });
+    const paths = new Map();
+    const target = worktreeIdentity(worktree.path, paths);
+    const registration = registrations.find(
+      (entry) => target && worktreeIdentity(entry.path, paths) === target,
+    );
+    if (
+      !registration?.exists ||
+      registration.locked ||
+      registration.prunable ||
+      registration.head !== worktree.head ||
+      registration.branch !== worktree.branch
+    )
+      return false;
+    if (
+      manifest.worktrees.some(({ branch }) => branch === COORDINATION_BRANCH) &&
+      !registrations.some(({ branch }) => branch === COORDINATION_BRANCH)
+    )
+      return false;
     const records = readTaskLedger(
       manifest.primaryRepository,
-      manifest.worktrees,
+      registrations,
+      manifest.allowedWorktreeRoot,
     );
-    const { active, taskStatuses } = taskStateFor(worktree, records);
+    const { active, taskStatuses } = taskStateFor(worktree, records, paths);
     return (
       head === worktree.head &&
       branch === (worktree.branch ?? "HEAD") &&
@@ -538,7 +684,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
   const allowedRoot = absolute(
     process.env.KK_WORKTREE_ROOT || path.join(workspaceRoot, ".worktrees"),
   );
-  const tasks = readTaskLedger(primary, worktrees);
+  const tasks = readTaskLedger(primary, worktrees, allowedRoot);
   const taskPaths = new Map();
   const entries = worktrees.map((worktree) => {
     const pathValue = worktree.path ? absolute(worktree.path) : null;

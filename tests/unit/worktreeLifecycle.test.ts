@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
   assessGeneratedCandidate,
@@ -217,16 +217,24 @@ test("reclamation protects the target index and rejects a plan after HEAD change
   assert.equal(swapped.failed[0]?.reason, "CANDIDATE_IDENTITY_CHANGED");
   assert.ok(fs.existsSync(path.join(target, "test-results/another.txt")));
 
-  const coord = path.join(repo, ".worktrees", "coordination");
+  const coord = path.join(repo, ".worktrees", "TASK-COORD-LEDGER");
   git(repo, "worktree", "add", "-qb", "coord/ledger", coord, "main");
-  const completed = { id: "FIXTURE", branch: "fixture-topic", status: "DONE" };
+  const completed = {
+    id: "FIXTURE",
+    branch: "fixture-topic",
+    worktree: target,
+    status: "DONE",
+  };
   const conflictingLease = {
     id: "OTHER",
     branch: "different-branch",
+    worktree: "unallocated",
     status: "IN_PROGRESS",
     lock: { branch: "different-branch", worktree: target },
   };
   write(coord, "ledger.json", JSON.stringify([completed, conflictingLease]));
+  git(coord, "add", "ledger.json");
+  git(coord, "commit", "-qm", "initial ledger");
   const locked = buildReclamationManifest(repo).worktrees.find(
     (item) => item.branch === "fixture-topic",
   );
@@ -305,6 +313,232 @@ test("reclamation protects the target index and rejects a plan after HEAD change
     { cwd: repo, env: { ...env, KK_CONTAINER_ROOT: unused }, stdio: "pipe" },
   );
   assert.equal(fs.existsSync(unused), false);
+});
+
+function reclamationFixture(t: TestContext) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-worktree-lease-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const repo = path.join(root, "repo");
+  const target = path.join(repo, ".worktrees", "topic");
+  const coord = path.join(repo, ".worktrees", "TASK-COORD-LEDGER");
+  const write = (directory: string, file: string, value: string) => {
+    const destination = path.join(directory, file);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.writeFileSync(destination, value);
+  };
+  const git = (cwd: string, ...args: string[]) =>
+    execFileSync("git", args, { cwd, stdio: "pipe" });
+  fs.mkdirSync(repo);
+  git(repo, "init", "--template=", "-qb", "main");
+  git(repo, "config", "user.email", "fixture@example.test");
+  git(repo, "config", "user.name", "Worktree fixture");
+  git(repo, "config", "commit.gpgsign", "false");
+  write(repo, ".gitignore", ".worktrees/\nnode_modules/\n");
+  git(repo, "add", ".gitignore");
+  git(repo, "commit", "-qm", "fixture");
+  git(repo, "update-ref", "refs/remotes/origin/main", "HEAD");
+  git(repo, "worktree", "add", "-qb", "fixture-topic", target);
+  const snapshot = (...tasks: object[]) =>
+    write(repo, "docs/governance/task-ledger.json", JSON.stringify(tasks));
+  const addCoordinator = (checkout: string, ...tasks: object[]) => {
+    git(repo, "worktree", "add", "-qb", "coord/ledger", checkout, "main");
+    write(checkout, "ledger.json", JSON.stringify(tasks));
+    git(checkout, "add", "ledger.json");
+    git(checkout, "commit", "-qm", "initial ledger");
+  };
+  const done = {
+    id: "LEASE",
+    branch: "fixture-topic",
+    worktree: target,
+    status: "DONE",
+  };
+  const active = {
+    ...done,
+    status: "IN_PROGRESS",
+    lock: { branch: done.branch, worktree: target },
+  };
+  const topic = () =>
+    buildReclamationManifest(repo).worktrees.find(
+      ({ branch }) => branch === done.branch,
+    );
+  const generated = "node_modules/disposable.txt";
+  write(target, generated, "fixture bytes");
+  return {
+    root,
+    repo,
+    target,
+    coord,
+    git,
+    write,
+    snapshot,
+    addCoordinator,
+    done,
+    active,
+    topic,
+    generated,
+  };
+}
+
+test("historical paths protect active leases without proving current branch completion", (t) => {
+  const { root, target, snapshot, done, active, topic } = reclamationFixture(t);
+  const alias = path.join(root, "historic-alias");
+  fs.symlinkSync(target, alias, "junction");
+  snapshot({ ...done, branch: "retired-branch", worktree: alias });
+  assert.deepEqual(topic()?.taskStatuses, []);
+  assert.ok(topic()?.removal.reasons.includes("TASK_NOT_DONE"));
+  assert.equal(topic()?.active, false);
+  snapshot({
+    ...active,
+    branch: "another-branch",
+    lock: { branch: "another-branch", worktree: alias },
+  });
+  assert.ok(topic()?.removal.reasons.includes("ACTIVE_TASK"));
+  snapshot(done);
+  assert.equal(topic()?.removal.allowed, true);
+});
+
+test("only the safe repository coordination checkout can override the snapshot", (t) => {
+  const {
+    root,
+    repo,
+    target,
+    coord,
+    git,
+    write,
+    snapshot,
+    addCoordinator,
+    done,
+    active,
+    topic,
+    generated,
+  } = reclamationFixture(t);
+  snapshot(done);
+  const plan = JSON.parse(
+    fs.readFileSync(
+      writeImmutablePlan(buildReclamationManifest(repo), root),
+      "utf8",
+    ),
+  );
+  const candidate = plan.candidates.find((entry: { path: string }) =>
+    entry.path.endsWith("/node_modules"),
+  );
+  assert.ok(candidate);
+  snapshot(active);
+  const external = path.join(root, "external-coord");
+  addCoordinator(external, done);
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  write(
+    repo,
+    "config/coord.json",
+    JSON.stringify({ path: "../external-coord" }),
+  );
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  assert.throws(
+    () =>
+      applyReclamationPlan(plan, {
+        repoRoot: repo,
+        approvedCandidates: [candidate.id],
+      }),
+    /coordination ledger/i,
+  );
+  assert.equal(
+    fs.readFileSync(path.join(target, generated), "utf8"),
+    "fixture bytes",
+  );
+
+  const other = path.join(repo, ".worktrees", "other-coordinator");
+  git(repo, "worktree", "move", external, other);
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  write(
+    repo,
+    "config/coord.json",
+    JSON.stringify({ path: ".worktrees/other-coordinator" }),
+  );
+  assert.equal(topic()?.removal.allowed, true);
+  git(repo, "worktree", "move", other, coord);
+  write(
+    repo,
+    "config/coord.json",
+    JSON.stringify({ path: ".worktrees/TASK-COORD-LEDGER" }),
+  );
+  write(coord, "ledger.json", JSON.stringify([done, done]));
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  write(coord, "ledger.json", JSON.stringify([{ ...done, status: "OTHER" }]));
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  write(coord, "ledger.json", JSON.stringify([{ ...done, worktree: null }]));
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+  const ledger = path.join(coord, "ledger.json");
+  fs.renameSync(ledger, path.join(coord, "saved-ledger.json"));
+  fs.symlinkSync(root, ledger, "junction");
+  assert.throws(() => buildReclamationManifest(repo), /coordination ledger/i);
+});
+
+function applyAfterInventoryRead(
+  t: TestContext,
+  fixture: ReturnType<typeof reclamationFixture>,
+  changeRegistration: () => void,
+) {
+  const { root, repo, target, snapshot, done, generated } = fixture;
+  snapshot(done);
+  const plan = JSON.parse(
+    fs.readFileSync(
+      writeImmutablePlan(buildReclamationManifest(repo), root),
+      "utf8",
+    ),
+  );
+  const candidate = plan.candidates.find((entry: { path: string }) =>
+    entry.path.endsWith("/node_modules"),
+  );
+  assert.ok(candidate);
+  const receipt = path.join(target, generated);
+  const readFile = fs.readFileSync;
+  let changed = false;
+  t.mock.method(fs, "readFileSync", (...args: Parameters<typeof readFile>) => {
+    if (
+      !changed &&
+      typeof args[0] === "string" &&
+      path.relative(receipt, args[0]) === ""
+    ) {
+      changed = true;
+      changeRegistration();
+    }
+    return readFile(...args);
+  });
+  const result = applyReclamationPlan(plan, {
+    repoRoot: repo,
+    approvedCandidates: [candidate.id],
+  });
+  assert.equal(changed, true);
+  assert.deepEqual(result.removed, []);
+  assert.equal(result.failed[0]?.reason, "WORKTREE_STATE_CHANGED");
+  assert.equal(readFile(receipt, "utf8"), "fixture bytes");
+}
+
+test("apply consults a coordinator registered after the initial reread", (t) => {
+  const fixture = reclamationFixture(t);
+  applyAfterInventoryRead(t, fixture, () =>
+    fixture.addCoordinator(fixture.coord, fixture.active),
+  );
+});
+
+test("apply retains a target whose Git registration becomes prunable", (t) => {
+  const fixture = reclamationFixture(t);
+  const { git, root, repo, target } = fixture;
+  const gitDir = git(target, "rev-parse", "--absolute-git-dir")
+    .toString("utf8")
+    .trim();
+  const head = git(target, "rev-parse", "HEAD").toString("utf8");
+  applyAfterInventoryRead(t, fixture, () => {
+    fs.writeFileSync(
+      path.join(gitDir, "gitdir"),
+      path.join(root, "missing", ".git") + "\n",
+    );
+    assert.match(
+      git(repo, "worktree", "list", "--porcelain").toString("utf8"),
+      /^prunable /m,
+    );
+    assert.equal(git(target, "rev-parse", "HEAD").toString("utf8"), head);
+  });
 });
 
 test("recovery inventory is deterministic and hashes source files", () => {

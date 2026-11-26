@@ -26,6 +26,8 @@ Generated directories (`.tmp`, `node_modules`, `dist`, test output, Rust targets
 
 An immutable plan binds the approval ID to its plan, target path, HEAD and SHA-256 file inventory. Approve IDs from the generated plan file. Apply rechecks the Git registration, branch and HEAD, as well as locks matching the branch or target path in the current ledger. It also checks the target index and policy root. A retained candidate produces a nonzero exit code and a unique `worktree-reclamation-result-*.json` record.
 
+Live coordination records come from the configured repository checkout in `config/coord.json`, which defaults to `.worktrees/TASK-COORD-LEDGER`. The checkout must match the registered `coord/ledger` branch, and its tracked ledger must be a regular file inside the checkout. An invalid registration or ledger blocks reclamation. An active lease on a reused path still protects the checkout. Whole-checkout removal requires completion on the checkout's current branch.
+
 ```text
 node scripts/governance/worktree-reclaim.mjs --apply \
   --plan=.tmp/YYYY-MM-DD-worktree-reclamation/worktree-reclamation-plan-<plan-id>.json \

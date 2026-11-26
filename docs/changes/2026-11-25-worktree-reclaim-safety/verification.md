@@ -14,3 +14,8 @@ parent: TASK-REVIEW-REMEDIATION-001
 - `ca590af2d411aefce2ffe75dec46c8176bfbfeaf` 的 Windows `verify` 在 Node 单测中停止。原日志的 `worktreeLifecycle.test.ts:173` 预期受跟踪的 `dist` 项为 `true`，实际为 `undefined`。Rust 和浏览器阶段未运行。 [托管作业](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/45644014991/job/139309987158?pr=91)
 - 对同一提交使用本机 Windows 运行相同测试。普通 TEMP 通过，指向同一实际目录的联接 TEMP 复现相同失败。Git 返回工作树的实际路径，允许根仍是别名路径，导致工具误判工作树在允许范围外。托管运行器的 TEMP 实际拼写待核实。
 - 计划生成和应用均校验目标的登记路径与实际路径。隔离 Git 回归覆盖工作区根目录别名、指向根外的联接、调整后的审批以及已有源码和证据保留。10 项定向测试通过。原始失败摘录、复现和最终提交的全量收据位于主仓 `.tmp/output/2026-11-25-kkd-evolution-phase1/worktree-safety/`。
+
+## PR #91 实时台账复审
+
+- 在隔离 Git 夹具复现三处失败。根外的 `coord/ledger` 可遮蔽快照租约，历史路径的 DONE 行可误授新分支整树回收资格，应用期间新登记的协调工作树未在最后检查中读取。
+- 计划和应用重新核对受托位置、Git 登记及实时台账文件。隔离回归覆盖正确配置、错误路径、坏记录与联接，保留历史路径上的活动租约。验证仅使用隔离夹具。
