@@ -270,14 +270,13 @@ export function evaluateOssAttributions(entries, ledger, options = {}) {
       continue;
     }
     // Research names explain a denial without ever granting directory admission.
-    const diagnostics = matches.length
-      ? [{ record: matches[0], restricted: false }]
-      : records.filter(
-          ({ record, restricted }) =>
-            (restricted || !isolatable.includes(record.integrationType)) &&
-            (matchesOssDir(record, dir, vendoredRoot) ||
-              slug(record.name) === slug(dir)),
-        );
+    const diagnostics = records.filter(({ record, restricted }) => {
+      if (!restricted && isolatable.includes(record.integrationType))
+        return record === matches[0];
+      const exact = matchesOssDir(record, dir, vendoredRoot);
+      if (!matches.length) return exact || slug(record.name) === slug(dir);
+      return exact && (restricted || !isAllowedLicense(record.license, policy));
+    });
     for (const { record, restricted } of diagnostics) {
       if (restricted)
         issues.push(

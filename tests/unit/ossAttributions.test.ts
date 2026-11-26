@@ -445,6 +445,29 @@ test("R-OSS: research names and descendant paths cannot compete with exact sourc
   }
 });
 
+test("R-OSS: an explicit restricted component link blocks an otherwise valid attribution", () => {
+  const root = makeTempRepo([]);
+  try {
+    const { record } = admitFixture(root);
+    const restricted = makeRecord({
+      name: "Unrelated research name",
+      license: "AGPL-3.0",
+      integrationType: "inspired",
+    });
+    writeFixture(
+      root,
+      ATTRIBUTIONS_FILE,
+      JSON.stringify(withRecords(makeLedger(), [record], [restricted])),
+    );
+    const issues = checkOssAttributions(root).issues.join("\n");
+    assert.match(issues, /copying or bundling its source is forbidden/);
+    assert.match(issues, /non-permissive license AGPL-3.0/);
+    assert.doesNotMatch(issues, /ambiguous attribution/);
+  } finally {
+    cleanup(root);
+  }
+});
+
 test("R-OSS: attribution alone or an unknown legacy flag cannot admit a component", () => {
   const root = makeTempRepo([makeRecord()]);
   try {
