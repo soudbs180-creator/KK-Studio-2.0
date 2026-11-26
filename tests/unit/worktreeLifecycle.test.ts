@@ -393,7 +393,11 @@ function approveGeneratedFixture({
     entry.path.endsWith("/node_modules"),
   );
   assert.ok(candidate);
-  return { plan, approvedCandidates: [candidate.id] };
+  return {
+    plan,
+    candidatePath: candidate.path,
+    approvedCandidates: [candidate.id],
+  };
 }
 
 test("historical paths protect active leases without proving current branch completion", (t) => {
@@ -488,15 +492,21 @@ function applyAfterInventoryRead(
 ) {
   const { repo, target, snapshot, done, generated } = fixture;
   snapshot(done);
-  const { plan, approvedCandidates } = approveGeneratedFixture(fixture);
+  const { plan, candidatePath, approvedCandidates } =
+    approveGeneratedFixture(fixture);
   const receipt = path.join(target, generated);
+  const inventoryReceipt = path.join(candidatePath, path.basename(receipt));
+  assert.equal(
+    fs.realpathSync.native(inventoryReceipt),
+    fs.realpathSync.native(receipt),
+  );
   const readFile = fs.readFileSync;
   let changed = false;
   t.mock.method(fs, "readFileSync", (...args: Parameters<typeof readFile>) => {
     if (
       !changed &&
       typeof args[0] === "string" &&
-      path.relative(receipt, args[0]) === ""
+      path.relative(inventoryReceipt, args[0]) === ""
     ) {
       changed = true;
       changeRegistration();
