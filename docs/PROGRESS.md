@@ -12,6 +12,10 @@
 
 桌面候选新增跟随系统、强制直连和手动代理，原生模型检测、文本与生图使用共享策略。验证和已知边界见[本次记录](changes/2026-11-21-desktop-provider-proxy/verification.md)。
 
+## 2026-11-25 工作树回收安全
+
+2026-11-25 的工作树回收候选新增目标索引、实时台账、HEAD 漂移和目录证据保护。[验收记录](changes/2026-11-25-worktree-reclaim-safety/verification.md)。
+
 ## 2026-11-25 功能编号登记
 
 阶段一编号候选保留 FEAT-040 扩图和 FEAT-052 本地模型商店。正式编号随登记提交进入官方主线。两项功能的运行证据分别由其功能候选提供。[编号验证记录](changes/2026-11-25-kkd-feature-id/verification.md)
