@@ -163,6 +163,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 | TASK-KKD-DESKTOP-PROXY-20261121 | 桌面模型代理与线路显示 | PARTIAL | 进行中 | P1 | none | root | 处理已在主线复现的 Agent 验证阻断后，复跑全量门禁并独立审核。 |
 | TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
+| TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | REVIEW | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3146,6 +3147,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: governance
 - Verification: NOT_VERIFIED — NOT_VERIFIED
 - Evidence: [docs/changes/2026-11-25-kkd-evolution-phase1/verification.md](../../docs/changes/2026-11-25-kkd-evolution-phase1/verification.md)
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-25
+- Updated: 2026-11-25
+
+## TASK-KKD-FEATURE-ID-20261125 — 统一登记功能编号并收敛 FEAT-040 冲突
+
+- Goal: 复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路
+- Scope: 复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexEvolution
+- Acceptance: 两个编号和卡片路径唯一，状态等于官方证据; 并行候选在主线变更后不能改绑或重复分配编号
+- Branch: `codex/TASK-KKD-FEATURE-ID-20261125`
+- Worktree: `D:\KK Design\.worktrees\TASK-KKD-FEATURE-ID-20261125`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: [docs/changes/2026-11-25-kkd-feature-id/verification.md](../../docs/changes/2026-11-25-kkd-feature-id/verification.md)
 - Next action: 按验收条件完成实现、验证和文档同步
 - Last verified: 2026-11-25
 - Updated: 2026-11-25
