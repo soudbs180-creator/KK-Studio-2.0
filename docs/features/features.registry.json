@@ -1689,5 +1689,31 @@
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"]
+  },
+  {
+    "id": "FEAT-040",
+    "title": "扩图",
+    "area": "creation",
+    "status": "PLANNED",
+    "card": "docs/features/feat-040-outpaint.md",
+    "summary": "保留扩图的正式编号。候选实现和历史 ComfyUI 收据待按官方主线集成及复验。",
+    "entryPoints": ["画布图片扩图"],
+    "code": [],
+    "tests": [],
+    "tasks": ["EXT-COMFY"],
+    "updated": "2026-11-25"
+  },
+  {
+    "id": "FEAT-052",
+    "title": "本地模型商店与统一网关路由",
+    "area": "backend",
+    "status": "PLANNED",
+    "card": "docs/features/feat-052-local-model-store-and-gateway-routing.md",
+    "summary": "登记本地模型商店与统一网关路由，待以独立候选验证安装、路由、凭证和实际执行。",
+    "entryPoints": ["设置 → 电脑配置与本地模型"],
+    "code": [],
+    "tests": [],
+    "tasks": ["TASK-AI-GATEWAY-001"],
+    "updated": "2026-11-25"
   }
 ]

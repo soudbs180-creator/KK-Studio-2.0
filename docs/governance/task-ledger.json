@@ -6694,10 +6694,10 @@
     "dependencies": [
       "TASK-GOV-003"
     ],
-    "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
-    "status": "PARTIAL",
+    "owner": "CodexReclaimSync",
+    "branch": "codex/TASK-REVIEW-REMEDIATION-001-worktree-safety",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-REVIEW-REMEDIATION-001",
+    "status": "REVIEW",
     "priority": "P1",
     "affectedModules": [
       "scripts/governance/doc-index.mjs",
@@ -6709,12 +6709,13 @@
     ],
     "evidence": [
       "docs/changes/2026-10-13-review-remediation/verification.md",
-      "docs/changes/2026-10-13-review-remediation/review.md"
+      "docs/changes/2026-10-13-review-remediation/review.md",
+      "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md"
     ],
     "verification": "2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "未完成",
+    "updated": "2026-11-26",
+    "displayStatus": "进行中",
     "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
@@ -6738,7 +6739,236 @@
         "source": "docs/changes/2026-10-17-audit-repair/verification.md",
         "reason": "登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配"
       }
-    ]
+    ],
+    "module": "governance",
+    "kind": "governance",
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T13:42:32.293Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T13:42:34.942Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "治理安全子范围只修改回收工具、定向测试、既有生命周期规范和交付包。回收涉及当前实际索引、工作树 SHA 和原证据保护。本轮不清理并行成果。",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T13:47:54.584Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "编号候选独审发现同一卡片的目录别名，先补修。本任务工作树已建，尚无源码改动。"
+      },
+      {
+        "at": "2026-11-25T13:50:40.229Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:40:36.180Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "回收安全候选已提交，10 项生命周期回归和模拟回收通过。目标工作树索引、实时台账、HEAD 和输出证据均复核。",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "813df5219f07d1dc641471e881c750557801d262"
+      },
+      {
+        "at": "2026-11-25T14:40:36.718Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "代码与收据已提交。只读全量验证期间释放治理写锁以递交已验证编号候选。"
+      },
+      {
+        "at": "2026-11-25T14:49:35.004Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:49:35.254Z",
+        "agent": "CodexEvolution",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "93c714d70ef65932778121e0410d22ee36d71ac7"
+      },
+      {
+        "at": "2026-11-25T14:49:35.527Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "完整验证与交付通过，已提交独立审查，释放治理写锁。当前回收仍只在夹具执行。"
+      },
+      {
+        "at": "2026-11-25T14:52:58.777Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_FAIL",
+        "note": "独审需修改。base e4383a1e323c895286d9f08fe901a27e341a10da head 93c714d70ef65932778121e0410d22ee36d71ac7。夹具复现忽略跨分支台账路径锁、批准ID换目录且成功删除。库导入可能触发CLI写计划。"
+      },
+      {
+        "at": "2026-11-25T14:56:33.147Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:06:37.658Z",
+        "agent": "CodexEvolution",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "1e1ae0640145a63755aa4e97e78ab11208d7fee0"
+      },
+      {
+        "at": "2026-11-25T15:06:37.924Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "路径租约、审批绑定摘要与导入入口修正已全量复验，提交独立复审，释放治理写锁。"
+      },
+      {
+        "at": "2026-11-25T15:08:05.176Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_FAIL",
+        "note": "独审需修改。base e4383a1e323c895286d9f08fe901a27e341a10da head 1e1ae0640145a63755aa4e97e78ab11208d7fee0。原三项均通过。新夹具中目录联接映射同一实际路径，活跃租约仍被忽略，生成目录和整树判可回收。"
+      },
+      {
+        "at": "2026-11-25T15:09:15.830Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:10:06.670Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "已加实际路径身份比对及目录联接租约回归，10 项通过。对精确新提交启动全量验证。",
+        "sha": "ca590af2d411aefce2ffe75dec46c8176bfbfeaf"
+      },
+      {
+        "at": "2026-11-25T15:10:06.912Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "代码已提交。验证期释放治理锁供开源接入证据任务。"
+      },
+      {
+        "at": "2026-11-25T15:18:19.279Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:18:19.532Z",
+        "agent": "CodexEvolution",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "ca590af2d411aefce2ffe75dec46c8176bfbfeaf"
+      },
+      {
+        "at": "2026-11-25T15:18:19.793Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "目录联接租约修订 ca590af2 全量验证及交付通过，已正式重新提交，释放治理锁。"
+      },
+      {
+        "at": "2026-11-25T15:18:41.236Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_PASS",
+        "note": "独审通过。base e4383a1e323c895286d9f08fe901a27e341a10da head ca590af2d411aefce2ffe75dec46c8176bfbfeaf。独立Git夹具4种租约均保护整树和生成目录，旧计划拒绝。10项定向通过，完整verify退出0，交付11文件0违规。"
+      },
+      {
+        "at": "2026-11-25T15:22:49.121Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "Draft PR #91 exact head and official base confirmed. git-guards passed. Hosted quality and formal integration approval pending. No live cleanup applied.",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/91",
+        "sha": "ca590af2d411aefce2ffe75dec46c8176bfbfeaf"
+      },
+      {
+        "at": "2026-11-25T15:33:06.785Z",
+        "agent": "CodexReclaimRepair",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:41:25.978Z",
+        "agent": "CodexReclaimRepair",
+        "action": "PROGRESS",
+        "note": "Base e4383a1e323c895286d9f08fe901a27e341a10da. Real junction fixture reproduced Hosted #91 failure. Exact targeted 10/10, verify and delivery exit 0.",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "d2fd181af7edc9e6cc948e4cbce606d30b37ff9d"
+      },
+      {
+        "at": "2026-11-25T15:41:26.207Z",
+        "agent": "CodexReclaimRepair",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "d2fd181af7edc9e6cc948e4cbce606d30b37ff9d"
+      },
+      {
+        "at": "2026-11-25T15:41:26.453Z",
+        "agent": "CodexReclaimRepair",
+        "action": "RELEASE",
+        "note": "Exact junction-root repair submitted for independent review. Preserve the real worktree."
+      },
+      {
+        "at": "2026-11-25T15:44:06.135Z",
+        "agent": "CodexReclaimAliasReviewer",
+        "action": "REVIEW_PASS",
+        "note": "独审通过。基线 e4383a1e，候选 d2fd181af7edc9e6cc948e4cbce606d30b37ff9d。TEMP junction 精确用例10/10，独立夹具复现旧版路径误拒，候选识别实际目录、禁止逃逸、移用审批和旧收据，刷新后仅清理已审批夹具，交付11/0，完整verify退出0。Hosted待复核。"
+      },
+      {
+        "at": "2026-11-25T15:45:45.280Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "正式独审后普通快进推送原 draft PR，远端实际 head d2fd181a，base e4383a1e。隔离别名回归与本机完整质量已通过。新 Hosted 运行开始，保留旧失败。实时清单 12 树，无候选、未执行清理。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/91",
+        "sha": "d2fd181af7edc9e6cc948e4cbce606d30b37ff9d"
+      },
+      {
+        "at": "2026-11-25T17:08:37.279Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "排队在 #90 后。旧 d2fd 的 Hosted 第二次全绿，但现官基要求更新。当前针对 60e1a42f 只读三路检查无文本冲突。正式合入后按新 SHA 复验。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/91",
+        "sha": "60e1a42f174fd9414c04a05819c0ca36347d67ad"
+      },
+      {
+        "at": "2026-11-26T02:24:27.170Z",
+        "agent": "CodexReclaimSync",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-26T02:25:20.705Z",
+        "agent": "CodexReclaimSync",
+        "action": "PROGRESS",
+        "note": "已普通合入正式基线 5085a92c，保留 #88–#90 进度、原任务与回收逻辑。合流点范围及交付通过；阶段送审仅供生成 REVIEW 快照，完整精确验证待完成。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/worktree-safety/sync-5085a92c-stage.log",
+        "sha": "1dfe6b45fbd50a95152c96dac82b4bcafc42f6ac"
+      },
+      {
+        "at": "2026-11-26T02:25:21.042Z",
+        "agent": "CodexReclaimSync",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "evidence": "docs/changes/2026-11-25-worktree-reclaim-safety/verification.md",
+        "sha": "1dfe6b45fbd50a95152c96dac82b4bcafc42f6ac"
+      }
+    ],
+    "lock": {
+      "agent": "CodexReclaimSync",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-REVIEW-REMEDIATION-001",
+      "branch": "codex/TASK-REVIEW-REMEDIATION-001-worktree-safety",
+      "since": "2026-11-26T02:24:27.170Z"
+    },
+    "handoffTo": null,
+    "reviewedBy": null
   },
   {
     "id": "TASK-UI-CLASSIFY-20261013",
@@ -9978,13 +10208,415 @@
     "ownerRole": "repository-maintainer"
   },
   {
+    "id": "TASK-KKD-EVOLUTION-PHASE1-20261125",
+    "module": "governance",
+    "kind": "research",
+    "title": "KK Design 自进化第一阶段全局审计与治理收口",
+    "goal": "按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据",
+    "scope": "按官方主线、本地候选和并行工作树实证审计，复用现有任务，验证安全回收并为独立审查和后续治理提供证据",
+    "owner": "CodexEvolution",
+    "acceptance": [
+      "逐项核验主线、工作树、测试目录、Pen、开源适配及能力链路",
+      "清理仅限已核验的可回收对象，保留未归并成果",
+      "治理变更在有效模块锁和官方基线下交付，绑定独审及门禁"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "IN_PROGRESS",
+    "branch": "codex/TASK-KKD-EVOLUTION-PHASE1-20261125",
+    "worktree": "D:/KK Design/.worktrees/TASK-KKD-EVOLUTION-PHASE1-20261125",
+    "updated": "2026-11-25",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-kkd-evolution-phase1/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T11:42:45.648Z",
+        "agent": "CodexEvolution",
+        "action": "CREATE",
+        "note": "created TASK-KKD-EVOLUTION-PHASE1-20261125"
+      },
+      {
+        "at": "2026-11-25T11:44:11.828Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "官方基线已 fetch；工作树、模块链路、Pen 与测试治理并行审计。治理锁由 One Root 持有，认领被原子拒绝。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T11:58:26.430Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T11:59:50.722Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "认领后在独立官方基线实施暂存内容与 CI 检查。范围限 .githooks、Git guard 安装器和工作流、交付路径判定、回归测试、正式交付包及生成快照。",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T12:18:03.156Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "绑定已提交的阶段一审计及预提交门禁候选验证文件；后续用官方基线跑精确候选。",
+        "evidence": "docs/changes/2026-11-25-kkd-evolution-phase1/verification.md",
+        "sha": "08fcbb282a0606d7710e1625a7bb6d9f1bc792f1"
+      }
+    ],
+    "lock": {
+      "agent": "CodexEvolution",
+      "worktree": "D:/KK Design/.worktrees/TASK-KKD-EVOLUTION-PHASE1-20261125",
+      "branch": "codex/TASK-KKD-EVOLUTION-PHASE1-20261125",
+      "since": "2026-11-25T11:58:26.430Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexEvolution",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25"
+  },
+  {
+    "id": "TASK-KKD-FEATURE-ID-20261125",
+    "module": "governance",
+    "kind": "governance",
+    "title": "统一登记功能编号并收敛 FEAT-040 冲突",
+    "goal": "复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路",
+    "scope": "复用功能登记册，在官方基线分配并固化 FEAT-040 扩图与 FEAT-052 本地模型商店，不修改产品运行链路",
+    "owner": "CodexFeatureSync",
+    "acceptance": [
+      "两个编号和卡片路径唯一，状态等于官方证据",
+      "并行候选在主线变更后不能改绑或重复分配编号"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "REVIEW",
+    "branch": "codex/TASK-KKD-FEATURE-ID-20261125",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-FEATURE-ID-20261125",
+    "updated": "2026-11-25",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-kkd-feature-id/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T13:23:26.285Z",
+        "agent": "CodexEvolution",
+        "action": "CREATE",
+        "note": "created TASK-KKD-FEATURE-ID-20261125"
+      },
+      {
+        "at": "2026-11-25T13:23:26.531Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T13:23:28.984Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "阶段一编号轨。修改范围限现有 feature registry 门禁、两个保留卡、测试、交付包与生成台账。两个预留功能均以本次官方基线状态记录。",
+        "sha": "e4383a1e323c895286d9f08fe901a27e341a10da"
+      },
+      {
+        "at": "2026-11-25T13:34:31.123Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "39 项登记零违规，10 项定向测试通过，含真实多分支 CLI。绑定候选验收。",
+        "evidence": "docs/changes/2026-11-25-kkd-feature-id/verification.md",
+        "sha": "349e23369e5e371dfa01a336df4ea7489ac374ea"
+      },
+      {
+        "at": "2026-11-25T13:41:14.481Z",
+        "agent": "CodexEvolution",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-feature-id/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-feature-id/verification.md",
+        "sha": "f4215103e9bba9cc5c5186f0aa5b89731cb15cd9"
+      },
+      {
+        "at": "2026-11-25T13:41:14.723Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "本机完整 verify 与交付通过，已提交独审。核验期间释放治理写锁，继续独立工作树安全修复。"
+      },
+      {
+        "at": "2026-11-25T13:45:45.749Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_FAIL",
+        "note": "独审需修改。base e4383a1e323c895286d9f08fe901a27e341a10da head f4215103e9bba9cc5c5186f0aa5b89731cb15cd9。registry.mjs:190 按字面路径查重。隔离Windows junction实测，两编号同一实际卡片仍通过结构与预留校验。按真实路径查重并回归。"
+      },
+      {
+        "at": "2026-11-25T13:47:54.818Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T13:50:39.756Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "采纳独审。以实际卡片路径去重，目录别名回归已通过。精确整体验证进行中。",
+        "sha": "81fef75a0daf5b256858235c03a406abdfae3990"
+      },
+      {
+        "at": "2026-11-25T13:50:39.986Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "代码已提交，等待只读验证期间交回治理锁。禁止改动本候选。"
+      },
+      {
+        "at": "2026-11-25T14:40:36.953Z",
+        "agent": "CodexEvolution",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:40:37.189Z",
+        "agent": "CodexEvolution",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-feature-id/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-feature-id/verification.md",
+        "sha": "81fef75a0daf5b256858235c03a406abdfae3990"
+      },
+      {
+        "at": "2026-11-25T14:40:37.437Z",
+        "agent": "CodexEvolution",
+        "action": "RELEASE",
+        "note": "真实卡片别名问题已修；精确全量验证通过并重新提交独审。"
+      },
+      {
+        "at": "2026-11-25T14:42:00.346Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_PASS",
+        "note": "独审通过。base e4383a1e323c895286d9f08fe901a27e341a10da head 81fef75a0daf5b256858235c03a406abdfae3990。原目录联接夹具拒绝别名，单卡仍通过。11项定向通过，37条旧登记保持，交付15文件0违规，完整verify退出0。"
+      },
+      {
+        "at": "2026-11-25T14:51:04.174Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "精确 81fef75a 完整 verify 与独审通过，已推送并开草稿 PR #89。并行基准冲突与实际卡片路径回归通过，Hosted 待结束。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/89",
+        "sha": "81fef75a0daf5b256858235c03a406abdfae3990"
+      },
+      {
+        "at": "2026-11-25T15:17:17.223Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "当前 SHA 的 Hosted quality 五项与双平台 Git guards 已全部通过。与 #88 和 #90 的实际合流预演发现生成台账冲突，合入需待正式批准及最新基准复验。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/45638108436",
+        "sha": "81fef75a0daf5b256858235c03a406abdfae3990"
+      },
+      {
+        "at": "2026-11-25T17:00:21.931Z",
+        "agent": "CodexFeatureSync",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T17:01:35.286Z",
+        "agent": "CodexFeatureSync",
+        "action": "PROGRESS",
+        "note": "正式 #88 后的真实同步点，基线 60e1a42f，原候选普通 merge 保留。编号、提交门禁与交付定向通过。阶段送审仅供生成 REVIEW 快照，最终完整验证及精确独审待重提。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/feature-id/sync-60e1a42f-intermediate.log",
+        "sha": "2e94747117a7712d9a9f9916bfac0640fa58c925"
+      },
+      {
+        "at": "2026-11-25T17:01:35.529Z",
+        "agent": "CodexFeatureSync",
+        "action": "SUBMIT",
+        "note": "submitted .tmp/output/2026-11-25-kkd-evolution-phase1/feature-id/sync-60e1a42f-intermediate.log",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/feature-id/sync-60e1a42f-intermediate.log",
+        "sha": "2e94747117a7712d9a9f9916bfac0640fa58c925"
+      }
+    ],
+    "lock": {
+      "agent": "CodexFeatureSync",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-FEATURE-ID-20261125",
+      "branch": "codex/TASK-KKD-FEATURE-ID-20261125",
+      "since": "2026-11-25T17:00:21.931Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexEvolution",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25",
+    "reviewedBy": null
+  },
+  {
+    "id": "TASK-KKD-IGNORE-USER-DATA-20261125",
+    "module": "governance",
+    "kind": "governance",
+    "title": "为本机运行数据和 KK Design 启动器补齐 Git 忽略",
+    "goal": "从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则",
+    "scope": "从官方基线 e4383a1e 独立承接 1ef885ba 仅有的两条根目录忽略规则，并验证用户数据路径和既有规则",
+    "owner": "CodexIgnore",
+    "acceptance": [
+      "Git 对两条新增根路径给出预期规则，既有启动器及 .lnk 继续忽略",
+      "运行数据和快捷方式不参与验收写入，候选只含 .gitignore、交付和生成的台账快照"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "REVIEW",
+    "branch": "codex/TASK-KKD-IGNORE-USER-DATA-20261125",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-IGNORE-USER-DATA-20261125",
+    "updated": "2026-11-26",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-25-local-data-ignore/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-25T14:44:32.458Z",
+        "agent": "CodexIgnore",
+        "action": "CREATE",
+        "note": "created TASK-KKD-IGNORE-USER-DATA-20261125"
+      },
+      {
+        "at": "2026-11-25T14:44:32.716Z",
+        "agent": "CodexIgnore",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:47:41.641Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "12 项 Git 路径验证与其余规则逐字节一致检查通过，验收包已提交。",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "0374df03684fc4ba0d118906657ab9947a74c460"
+      },
+      {
+        "at": "2026-11-25T14:48:35.388Z",
+        "agent": "CodexIgnore",
+        "action": "RELEASE",
+        "note": "候选提交已固定，释放治理锁供其他任务提交，继续执行隔离只读验证。"
+      },
+      {
+        "at": "2026-11-25T14:55:35.418Z",
+        "agent": "CodexIgnore",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T14:55:35.657Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "精确 SHA 全量 verify 通过。主测试 1975、Agent 204、浏览器 839、设计 41+8，通过开发插件验证。交付与治理零违规。",
+        "evidence": ".worktrees/TASK-KKD-IGNORE-USER-DATA-20261125/.tmp/ignore-extraction/verify.log",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T14:55:35.908Z",
+        "agent": "CodexIgnore",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T14:55:36.145Z",
+        "agent": "CodexIgnore",
+        "action": "RELEASE",
+        "note": "已固定精确提交和全量核验，任务保留 REVIEW，释放模块锁供其他任务集成。"
+      },
+      {
+        "at": "2026-11-25T14:57:55.368Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_PASS",
+        "note": "独审通过。base e4383a1e323c895286d9f08fe901a27e341a10da head 3f139eba564913b156d5978eade272f526310580。原补丁blob一致，只添两规则，旧内容逐字节保持。12项路径复验，无用户数据纳入。交付11文件0违规，完整verify退出0。"
+      },
+      {
+        "at": "2026-11-25T15:03:14.274Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "已发布同名任务分支。GitHub 草稿 PR 固定 e4383a1e → 3f139eba。git-guards 45640744195 运行中，quality 45640744559 排队。https://github.com/soudbs180-creator/KK-Studio-2.0/pull/90",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T15:45:45.507Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "Draft #90 精确 Hosted quality 45640744559 与 git-guards 45640744195 全部通过。依赖正式 #88 后刷新官基与台账快照，再正式审批。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/90",
+        "sha": "3f139eba564913b156d5978eade272f526310580"
+      },
+      {
+        "at": "2026-11-25T17:08:36.919Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "主线 60e1a42f 已前移，排队在 #89 正式合入后。旧 head CI 仅旧基准。需取最新主线，按权威任务生成三份共享记录，再独审、全量、单独获批。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/90",
+        "sha": "60e1a42f174fd9414c04a05819c0ca36347d67ad"
+      },
+      {
+        "at": "2026-11-26T01:29:33.885Z",
+        "agent": "CodexIgnore",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-26T01:30:43.989Z",
+        "agent": "CodexIgnore",
+        "action": "PROGRESS",
+        "note": "已普通合入正式基线 e2a33a38，保全 #88 与 #89 快照和进度。合流点提交门禁、交付和两条忽略规则增量通过。阶段送审仅供生成 REVIEW 快照；完整精确验证待完成。",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/ignore-user-data/sync-e2a33a38-stage.log",
+        "sha": "6d4dd2cc6c74cf9c7f07f08f642e8330b26ff0b7"
+      },
+      {
+        "at": "2026-11-26T01:30:44.350Z",
+        "agent": "CodexIgnore",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "evidence": "docs/changes/2026-11-25-local-data-ignore/verification.md",
+        "sha": "6d4dd2cc6c74cf9c7f07f08f642e8330b26ff0b7"
+      }
+    ],
+    "lock": {
+      "agent": "CodexIgnore",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-IGNORE-USER-DATA-20261125",
+      "branch": "codex/TASK-KKD-IGNORE-USER-DATA-20261125",
+      "since": "2026-11-26T01:29:33.885Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexIgnore",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-25",
+    "reviewedBy": null
+  },
+  {
     "id": "TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
     "module": "governance",
     "kind": "governance",
     "title": "开源接入证据门禁",
     "goal": "基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。",
     "scope": "基准 e4383a1e。复用历史 R-OSS 配置与门禁，加强新接入版本、许可、依赖输入指纹和运行对拍证据校验。仅治理门禁、配置、定向测试与现有工程规范。",
-    "owner": "CodexOssAdmission",
+    "owner": "CodexOssSync",
     "acceptance": [
       "精确历史 vendor 基线显式保留；新增或变更接入缺证即拒绝；真实证据边界与 PARTIAL 清晰。定向单测和 governance:check 通过。"
     ],
@@ -9993,8 +10625,8 @@
     ],
     "status": "IN_PROGRESS",
     "branch": "codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
-    "worktree": "D:/KK Design/.worktrees/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
-    "updated": "2026-11-25",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+    "updated": "2026-11-26",
     "verification": "NOT_VERIFIED",
     "verificationResult": "NOT_VERIFIED",
     "evidence": [
@@ -10044,19 +10676,186 @@
         "note": "OSS source 7f8e4ab1 targeted 25 PASS, isolated legacy mutation checks PASS, governance PASS. Final exact verify and independent Hosted review pending.",
         "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
         "sha": "26bc5392df9bbcad4df6ef64d77ac542bbfd4c02"
+      },
+      {
+        "at": "2026-11-25T15:31:23.393Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "Exact local verify PASS (Node 2000, Agent 204, browser 839, design 41+8, plugin DEV PASS). Delivery 15/0, #88 guard and diff PASS. Independent/Hosted pending.",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/full-verify-exact.log",
+        "sha": "77b4b6dbd8f041d4b56658dce304450d2b233f61"
+      },
+      {
+        "at": "2026-11-25T15:31:23.624Z",
+        "agent": "CodexOssAdmission",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "77b4b6dbd8f041d4b56658dce304450d2b233f61"
+      },
+      {
+        "at": "2026-11-25T15:31:44.988Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "已在 77b4b6db 完整验证并送独审，释放治理写锁供 #91 修复。"
+      },
+      {
+        "at": "2026-11-25T15:34:20.726Z",
+        "agent": "CodexOssIndependentReview",
+        "action": "REVIEW_FAIL",
+        "note": "独审未通过。base e4383a1e323c895286d9f08fe901a27e341a10da head 77b4b6dbd8f041d4b56658dce304450d2b233f61。P1：2个锁定输入只覆盖1个，精确对照输出1/2仍PASS且0违规。需补齐覆盖、对照判定和UI适用声明。旧运行能力保留PARTIAL。"
+      },
+      {
+        "at": "2026-11-25T15:44:31.119Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:49:04.010Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "独审修订已提交。29 项定向通过，现有归因/覆盖/UI/来源门禁无违规。最终完整验证与独审复核待。",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "14e51ef97a959d1729d77d0b274d97b71448a1b7"
+      },
+      {
+        "at": "2026-11-25T15:49:04.553Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "已提交干净修订和交付包，在完整本机验证期间释放治理写锁。"
+      },
+      {
+        "at": "2026-11-25T15:55:26.216Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T15:55:26.449Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "Exact local verify PASS. Node 2004, Agent 204, browser 839, design 41+8, dev plugins PASS. Targeted 29/29, Delivery 15/0, #88 policy and diff checks clean.",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/semantic-fix-full-verify.log",
+        "sha": "14e51ef97a959d1729d77d0b274d97b71448a1b7"
+      },
+      {
+        "at": "2026-11-25T15:55:26.690Z",
+        "agent": "CodexOssAdmission",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "14e51ef97a959d1729d77d0b274d97b71448a1b7"
+      },
+      {
+        "at": "2026-11-25T15:55:26.926Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "精确 14e51ef9 已完成本机全量验证并提交独审。释放治理写锁。"
+      },
+      {
+        "at": "2026-11-25T15:56:48.145Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_FAIL",
+        "note": "Base e4383a1e323c895286d9f08fe901a27e341a10da head 14e51ef97a959d1729d77d0b274d97b71448a1b7. P1: one upstream log satisfies both run pins. Exact fixture review-repro-14e51ef9.log."
+      },
+      {
+        "at": "2026-11-25T16:00:31.094Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T16:02:38.633Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "双侧独立日志及角色清单修订。31 项定向、治理与索引检查通过，完整验证和独审仍待。",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T16:02:38.869Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "bd9c9643 已提交且工作树干净，释放治理锁给 G4；OSS 进入只读完整验证。"
+      },
+      {
+        "at": "2026-11-25T16:07:12.809Z",
+        "agent": "CodexOssAdmission",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-25T16:07:13.046Z",
+        "agent": "CodexOssAdmission",
+        "action": "PROGRESS",
+        "note": "Exact local verify PASS. Node 2006, Agent 204, browser 839, design 41+8, dev plugins PASS. Role binding targeted 31/31, Delivery 15/0, #88 policy and diff checks clean.",
+        "evidence": ".tmp/output/2026-11-25-kkd-evolution-phase1/oss-admission/role-binding-full-verify.log",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T16:07:13.328Z",
+        "agent": "CodexOssAdmission",
+        "action": "SUBMIT",
+        "note": "submitted docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "evidence": "docs/changes/2026-11-25-kkd-oss-admission/verification.md",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T16:07:13.557Z",
+        "agent": "CodexOssAdmission",
+        "action": "RELEASE",
+        "note": "精确 bd9c9643 完整验证通过并送独审，释放治理组件写锁。"
+      },
+      {
+        "at": "2026-11-25T16:07:43.755Z",
+        "agent": "CodexQualityReview",
+        "action": "REVIEW_PASS",
+        "note": "e4383a1e323c895286d9f08fe901a27e341a10da to bd9c9643cf45acc3ce2864787c991a1029cae79b. Log reuse fixed. 31 tests + 10 independent cases. Verify/delivery 0. Hosted and upstream audit pending."
+      },
+      {
+        "at": "2026-11-25T16:11:23.341Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "来源、锁定输入、重算对照、UI 和双侧日志绑定修订已通过精确本机完整验证及独审，快照针对正式 e4383a1e。已回读草稿 #92 精确 head，Hosted 正常运行。历史能力 PARTIAL 保留；尚无主线集成。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/92",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-25T17:08:37.622Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "排队在 #91 后。bd9c 的旧精确 quality、guards 及安装构建全绿。现官基的三份共享文档已见冲突；最新重生成及独审待前置正式合入。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/92",
+        "sha": "60e1a42f174fd9414c04a05819c0ca36347d67ad"
+      },
+      {
+        "at": "2026-11-26T04:10:07.124Z",
+        "agent": "CodexEvolution",
+        "action": "PROGRESS",
+        "note": "#92 原草稿和旧 SHA 未修改。只读预检确认 Progress 与两份生成台账三处冲突，其他 12 路径可原样保留。#91 当前待新精确授权和实际合入，随后从正式官基同步及复验。",
+        "evidence": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/92",
+        "sha": "bd9c9643cf45acc3ce2864787c991a1029cae79b"
+      },
+      {
+        "at": "2026-11-26T05:56:29.263Z",
+        "agent": "CodexOssSync",
+        "action": "CLAIM",
+        "note": "claimed governance"
       }
     ],
     "lock": {
-      "agent": "CodexOssAdmission",
-      "worktree": "D:/KK Design/.worktrees/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
+      "agent": "CodexOssSync",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
       "branch": "codex/TASK-KKD-OSS-ADMISSION-EVIDENCE-20261125",
-      "since": "2026-11-25T15:18:55.300Z"
+      "since": "2026-11-26T05:56:29.263Z"
     },
     "handoffTo": null,
     "ownerRole": "task-owner:CodexOssAdmission",
     "displayStatus": "进行中",
     "priority": "P2",
     "nextAction": "按验收条件完成实现、验证和文档同步",
-    "lastVerified": "2026-11-25"
+    "lastVerified": "2026-11-25",
+    "reviewedBy": "CodexQualityReview"
   }
 ]

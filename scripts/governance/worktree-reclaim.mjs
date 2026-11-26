@@ -30,10 +30,18 @@ export function defaultReclamationOutputDirectory(
   repositoryRoot = process.cwd(),
   now = new Date(),
 ) {
-  const containerRoot =
-    process.env.KK_CONTAINER_ROOT ?? path.resolve(repositoryRoot, "..");
+  const override = process.env.KK_CONTAINER_ROOT;
+  const containerRoot = override ?? workspaceRootFor(repositoryRoot);
+  const insideRepository =
+    !override &&
+    fs.existsSync(path.join(containerRoot, ".git")) &&
+    fs.existsSync(path.join(containerRoot, ".worktrees"));
   const date = now.toISOString().slice(0, 10);
-  return path.join(containerRoot, "output", `${date}-worktree-reclamation`);
+  return path.join(
+    containerRoot,
+    insideRepository ? ".tmp" : "output",
+    `${date}-worktree-reclamation`,
+  );
 }
 
 function slash(value) {
@@ -81,6 +89,19 @@ function realPath(candidate) {
   return rest ? path.join(resolved, rest) : resolved;
 }
 
+function isInsideReclamationRoot(root, candidate) {
+  const actualRoot = realPath(root);
+  const actualCandidate = realPath(candidate);
+  // Git can report the physical spelling even when the approved root uses an alias.
+  return Boolean(
+    actualRoot &&
+    actualCandidate &&
+    (isContainedPath(root, candidate) ||
+      isContainedPath(actualRoot, candidate)) &&
+    isContainedPath(actualRoot, actualCandidate),
+  );
+}
+
 function hasSymlinkOrReparse(candidate) {
   if (!fs.existsSync(candidate)) return false;
   const pending = [candidate];
@@ -105,13 +126,17 @@ function hasSymlinkOrReparse(candidate) {
 }
 
 function isEvidencePath(candidate) {
-  return slash(candidate)
-    .split("/")
-    .some(
-      (segment) =>
-        PROTECTED_EVIDENCE_SEGMENTS.has(segment.toLowerCase()) ||
-        /evidence/i.test(segment),
-    );
+  return (
+    (path.basename(candidate) === ".tmp" &&
+      fs.existsSync(path.join(candidate, "output"))) ||
+    slash(candidate)
+      .split("/")
+      .some(
+        (segment) =>
+          PROTECTED_EVIDENCE_SEGMENTS.has(segment.toLowerCase()) ||
+          /evidence/i.test(segment),
+      )
+  );
 }
 
 export function generatedPathCandidates(worktreeRoot) {
@@ -153,6 +178,7 @@ export function canPruneGeneratedContent(state) {
     state.current !== true &&
     state.dirty === 0 &&
     state.locked !== true &&
+    state.prunable !== true &&
     state.evidence !== true &&
     state.active !== true,
   );
@@ -162,7 +188,6 @@ export function assessGeneratedCandidate({
   path: candidate,
   worktreeRoot,
   tracked = false,
-  ignored = false,
   locked = false,
   submodule = false,
   evidence = false,
@@ -181,8 +206,7 @@ export function assessGeneratedCandidate({
   if (tracked) reasons.push("TRACKED_CONTENT");
   if (submodule) reasons.push("SUBMODULE_CONTENT");
   if (locked) reasons.push("LOCKED");
-  if (ignored && (evidence || isEvidencePath(candidate)))
-    reasons.push("IGNORED_EVIDENCE");
+  if (evidence || isEvidencePath(candidate)) reasons.push("IGNORED_EVIDENCE");
   return { allowed: reasons.length === 0, reasons, path: candidate };
 }
 
@@ -194,7 +218,10 @@ export function assessWorktreeRemoval(state) {
     reasons.push(state.primary ? "PRIMARY_WORKTREE" : "CURRENT_WORKTREE");
   if (state.dirty !== 0) reasons.push("DIRTY_WORKTREE");
   if (state.locked) reasons.push("LOCKED_WORKTREE");
+  if (state.prunable) reasons.push("WORKTREE_REGISTRATION_CHANGED");
   if (state.active) reasons.push("ACTIVE_TASK");
+  if (state.generatedPaths?.some((candidate) => candidate.evidence))
+    reasons.push("WORKTREE_CONTAINS_EVIDENCE");
   const statuses = Array.isArray(state.taskStatuses) ? state.taskStatuses : [];
   if (statuses.length === 0 || statuses.some((status) => status !== "DONE"))
     reasons.push("TASK_NOT_DONE");
@@ -247,7 +274,11 @@ export function buildRecoveryInventory(root) {
   };
 }
 
-export function verifyRecoveryBundle(bundlePath, repoRoot = process.cwd()) {
+export function verifyRecoveryBundle(
+  bundlePath,
+  repoRoot = process.cwd(),
+  head,
+) {
   if (
     !bundlePath ||
     !fs.existsSync(bundlePath) ||
@@ -260,29 +291,212 @@ export function verifyRecoveryBundle(bundlePath, repoRoot = process.cwd()) {
       encoding: "utf8",
       stdio: "pipe",
     });
-    return true;
+    return (
+      head === undefined ||
+      git(repoRoot, ["bundle", "list-heads", bundlePath])
+        .split(/\r?\n/)
+        .some((line) => line.split(" ")[0] === head)
+    );
   } catch {
     return false;
   }
 }
 
-function readTaskLedger(repoRoot) {
-  const ledgerPath = path.join(repoRoot, "docs/governance/task-ledger.json");
-  if (!fs.existsSync(ledgerPath)) return [];
-  const parsed = JSON.parse(fs.readFileSync(ledgerPath, "utf8"));
-  return Array.isArray(parsed) ? parsed : (parsed.tasks ?? []);
+const COORDINATION_BRANCH = "coord/ledger";
+const DEFAULT_COORDINATION_CHECKOUT = ".worktrees/TASK-COORD-LEDGER";
+const COORDINATION_TASK_STATUSES = new Set([
+  "TODO",
+  "IN_PROGRESS",
+  "PARTIAL",
+  "BLOCKED",
+  "REVIEW",
+  "DONE",
+  "OBSOLETE",
+  "READY",
+  "REGRESSION",
+]);
+
+function readCoordinationTasks(repoRoot, worktrees, allowedRoot) {
+  const registered = worktrees.filter(
+    (entry) => entry.branch === COORDINATION_BRANCH,
+  );
+  try {
+    const [coordination] = registered;
+    const config = path.join(repoRoot, "config", "coord.json");
+    const configFile = fs.lstatSync(config, { throwIfNoEntry: false });
+    if (
+      configFile &&
+      (!configFile.isFile() || !isInsideReclamationRoot(repoRoot, config))
+    )
+      throw new Error("unsafe repository coordination configuration");
+    const relative = configFile
+      ? JSON.parse(fs.readFileSync(config, "utf8"))?.path
+      : DEFAULT_COORDINATION_CHECKOUT;
+    if (typeof relative !== "string" || !relative.trim())
+      throw new Error("invalid configured coordination checkout");
+    const expected = path.resolve(repoRoot, relative);
+    if (!isInsideReclamationRoot(repoRoot, expected))
+      throw new Error("coordination checkout is outside the repository");
+    if (!registered.length) {
+      if (
+        fs.lstatSync(path.join(expected, "ledger.json"), {
+          throwIfNoEntry: false,
+        })
+      )
+        throw new Error("configured coordination ledger has no registration");
+      return [];
+    }
+    if (
+      registered.length !== 1 ||
+      !coordination?.exists ||
+      coordination.prunable ||
+      !isInsideReclamationRoot(allowedRoot, expected) ||
+      !isInsideReclamationRoot(repoRoot, coordination.path) ||
+      !isInsideReclamationRoot(allowedRoot, coordination.path) ||
+      !fs.lstatSync(coordination.path).isDirectory()
+    )
+      throw new Error(
+        "coordination checkout is outside the approved repository location",
+      );
+    const actualPath = (value) =>
+      normalizeForComparison(fs.realpathSync.native(value));
+    const actual = actualPath(coordination.path);
+    const [topLevel, commonDir] = git(coordination.path, [
+      "rev-parse",
+      "--path-format=absolute",
+      "--show-toplevel",
+      "--git-common-dir",
+    ])
+      .trimEnd()
+      .split(/\r?\n/);
+    const primaryCommon = git(repoRoot, [
+      "rev-parse",
+      "--path-format=absolute",
+      "--git-common-dir",
+    ]).trimEnd();
+    if (
+      actual !== actualPath(expected) ||
+      actual !== actualPath(topLevel) ||
+      actualPath(commonDir) !== actualPath(primaryCommon) ||
+      git(coordination.path, [
+        "symbolic-ref",
+        "--quiet",
+        "--short",
+        "HEAD",
+      ]).trimEnd() !== COORDINATION_BRANCH
+    )
+      throw new Error(
+        "coordination registration does not match the linked checkout",
+      );
+    const file = path.join(coordination.path, "ledger.json");
+    if (
+      !fs.lstatSync(file).isFile() ||
+      !isInsideReclamationRoot(coordination.path, file)
+    )
+      throw new Error("unsafe coordination ledger file");
+    git(coordination.path, [
+      "ls-files",
+      "--error-unmatch",
+      "--",
+      "ledger.json",
+    ]);
+    const tasks = JSON.parse(fs.readFileSync(file, "utf8"));
+    if (
+      !Array.isArray(tasks) ||
+      tasks.some(
+        (task) =>
+          typeof task?.id !== "string" ||
+          !task.id.trim() ||
+          typeof task.branch !== "string" ||
+          !task.branch.trim() ||
+          typeof task.worktree !== "string" ||
+          !task.worktree.trim() ||
+          !COORDINATION_TASK_STATUSES.has(task.status) ||
+          (task.lock != null &&
+            (typeof task.lock !== "object" ||
+              typeof task.lock.branch !== "string" ||
+              !task.lock.branch.trim() ||
+              typeof task.lock.worktree !== "string" ||
+              !(
+                path.posix.isAbsolute(task.lock.worktree) ||
+                path.win32.isAbsolute(task.lock.worktree)
+              ))),
+      ) ||
+      new Set(tasks.map((task) => task.id)).size !== tasks.length
+    )
+      throw new Error("invalid coordination ledger records");
+    return tasks;
+  } catch (cause) {
+    throw new Error(
+      "The registered coordination ledger is unsafe or unavailable",
+      { cause },
+    );
+  }
 }
 
-function ledgerStatuses(repoRoot) {
-  const statuses = new Map();
-  for (const task of readTaskLedger(repoRoot)) {
-    if (!task?.branch || !task?.status) continue;
-    const branch = String(task.branch).replace(/^refs\/heads\//, "");
-    const list = statuses.get(branch) ?? [];
-    list.push(String(task.status));
-    statuses.set(branch, list);
+function readTaskLedger(repoRoot, worktrees, allowedRoot) {
+  const snapshot = path.join(repoRoot, "docs/governance/task-ledger.json");
+  const records = new Map();
+  if (fs.existsSync(snapshot)) {
+    const parsed = JSON.parse(fs.readFileSync(snapshot, "utf8"));
+    const tasks = Array.isArray(parsed) ? parsed : parsed?.tasks;
+    if (!Array.isArray(tasks))
+      throw new Error("Invalid reclamation task ledger");
+    for (const task of tasks) records.set(task.id, task);
   }
-  return statuses;
+  for (const task of readCoordinationTasks(repoRoot, worktrees, allowedRoot))
+    records.set(task.id, task);
+  return [...records.values()];
+}
+
+function worktreeIdentity(value, cache) {
+  if (typeof value !== "string" || !path.isAbsolute(value)) return null;
+  if (!cache.has(value)) {
+    try {
+      cache.set(value, normalizeForComparison(fs.realpathSync.native(value)));
+    } catch (error) {
+      if (error.code !== "ENOENT" && error.code !== "ENOTDIR") throw error;
+      cache.set(value, normalizeForComparison(value));
+    }
+  }
+  return cache.get(value);
+}
+
+function retainsCoordinationRegistration(previous, current, paths = new Map()) {
+  const prior = previous.find(({ branch }) => branch === COORDINATION_BRANCH);
+  if (!prior) return true;
+  const expected = worktreeIdentity(prior.path, paths);
+  return Boolean(
+    expected &&
+    current.some(
+      (entry) =>
+        entry.branch === COORDINATION_BRANCH &&
+        worktreeIdentity(entry.path, paths) === expected,
+    ),
+  );
+}
+
+function taskStateFor(worktree, records, paths = new Map()) {
+  const matchesBranch = (value) =>
+    worktree.branch &&
+    typeof value === "string" &&
+    value.replace(/^refs\/heads\//, "") === worktree.branch;
+  const target = worktreeIdentity(worktree.path, paths);
+  const matchesPath = (value) =>
+    target && worktreeIdentity(value, paths) === target;
+  const tasks = records.filter(
+    (task) =>
+      matchesBranch(task.branch) ||
+      matchesBranch(task.lock?.branch) ||
+      matchesPath(task.worktree) ||
+      matchesPath(task.lock?.worktree),
+  );
+  return {
+    taskStatuses: tasks
+      .filter((task) => matchesBranch(task.branch))
+      .map((task) => task.status),
+    active: tasks.some((task) => task.lock || task.status !== "DONE"),
+  };
 }
 
 function git(repoRoot, args, options = {}) {
@@ -307,7 +521,7 @@ function worktreeStatus(worktreePath) {
   }
 }
 
-function parseWorktrees(repoRoot) {
+function parseWorktrees(repoRoot, { inspect = true } = {}) {
   return git(repoRoot, ["worktree", "list", "--porcelain"])
     .split(/\r?\n(?=worktree )/)
     .filter(Boolean)
@@ -317,7 +531,8 @@ function parseWorktrees(repoRoot) {
         lines.find((line) => line.startsWith(prefix))?.slice(prefix.length) ??
         null;
       const worktreePath = get("worktree ");
-      const status = worktreePath ? worktreeStatus(worktreePath) : null;
+      const status =
+        inspect && worktreePath ? worktreeStatus(worktreePath) : null;
       return {
         path: worktreePath ? slash(worktreePath) : null,
         head: get("HEAD "),
@@ -327,7 +542,8 @@ function parseWorktrees(repoRoot) {
         locked:
           lines.some(
             (line) => line === "locked" || line.startsWith("locked "),
-          ) || hasWorktreeLock(worktreePath),
+          ) ||
+          (inspect && hasWorktreeLock(worktreePath)),
         prunable: lines.some((line) => line.startsWith("prunable")),
       };
     });
@@ -352,11 +568,63 @@ function hasWorktreeLock(worktreePath) {
   );
 }
 
+function checkoutMatches(worktree, manifest, requireCompletedTask = false) {
+  try {
+    const head = git(worktree.path, ["rev-parse", "HEAD"]).trim();
+    const branch = git(worktree.path, [
+      "rev-parse",
+      "--abbrev-ref",
+      "HEAD",
+    ]).trim();
+    const registrations = parseWorktrees(manifest.primaryRepository, {
+      inspect: false,
+    });
+    const paths = new Map();
+    const target = worktreeIdentity(worktree.path, paths);
+    const registration = registrations.find(
+      (entry) => target && worktreeIdentity(entry.path, paths) === target,
+    );
+    if (
+      !registration?.exists ||
+      registration.locked ||
+      registration.prunable ||
+      registration.head !== worktree.head ||
+      registration.branch !== worktree.branch
+    )
+      return false;
+    if (
+      !retainsCoordinationRegistration(manifest.worktrees, registrations, paths)
+    )
+      return false;
+    const records = readTaskLedger(
+      manifest.primaryRepository,
+      registrations,
+      manifest.allowedWorktreeRoot,
+    );
+    const { active, taskStatuses } = taskStateFor(worktree, records, paths);
+    return (
+      head === worktree.head &&
+      branch === (worktree.branch ?? "HEAD") &&
+      worktreeStatus(worktree.path) === 0 &&
+      !hasWorktreeLock(worktree.path) &&
+      !active &&
+      (!requireCompletedTask || taskStatuses.length > 0)
+    );
+  } catch {
+    return false;
+  }
+}
+
 function workspaceRootFor(repoRoot) {
   if (process.env.KK_WORKSPACE_ROOT)
     return absolute(process.env.KK_WORKSPACE_ROOT);
   let current = absolute(repoRoot);
   while (current !== path.dirname(current)) {
+    if (
+      fs.existsSync(path.join(current, ".git")) &&
+      fs.existsSync(path.join(current, ".worktrees"))
+    )
+      return current;
     if (
       fs.existsSync(path.join(current, "KK-Studio-2.0")) &&
       fs.existsSync(path.join(current, ".worktrees"))
@@ -369,47 +637,52 @@ function workspaceRootFor(repoRoot) {
 
 function reachableFromMain(repoRoot, head) {
   if (!head) return false;
-  const mainRef = ["origin/main", "main"].find((ref) => {
-    try {
-      git(repoRoot, ["rev-parse", "--verify", ref]);
-      return true;
-    } catch {
-      return false;
-    }
-  });
-  if (!mainRef) return false;
   try {
-    git(repoRoot, ["merge-base", "--is-ancestor", head, mainRef]);
+    git(repoRoot, [
+      "merge-base",
+      "--is-ancestor",
+      head,
+      "refs/remotes/origin/main",
+    ]);
     return true;
   } catch {
     return false;
   }
 }
 
-function isIgnored(repoRoot, candidate) {
+function isIgnored(worktreeRoot, candidate) {
   try {
-    git(repoRoot, ["check-ignore", "-q", "--", candidate]);
+    const relative = slash(path.relative(worktreeRoot, candidate));
+    git(worktreeRoot, ["check-ignore", "-q", "--", `./${relative}`]);
     return true;
   } catch {
     return false;
   }
 }
 
-function hasTrackedContent(repoRoot, worktreeRoot, candidate) {
+function hasTrackedContent(worktreeRoot, candidate) {
   try {
     const relative = path.relative(worktreeRoot, candidate);
-    return Boolean(git(repoRoot, ["ls-files", "--", relative]).trim());
+    return Boolean(
+      git(worktreeRoot, [
+        "--literal-pathspecs",
+        "ls-files",
+        "--",
+        relative,
+      ]).trim(),
+    );
   } catch {
     return true;
   }
 }
 
-function hasSubmoduleContent(repoRoot, worktreeRoot, candidate) {
+function hasSubmoduleContent(worktreeRoot, candidate) {
   try {
     let current = candidate;
     while (isContainedPath(worktreeRoot, current)) {
       const relative = path.relative(worktreeRoot, current);
-      const stage = git(repoRoot, [
+      const stage = git(worktreeRoot, [
+        "--literal-pathspecs",
         "ls-files",
         "--stage",
         "--",
@@ -427,21 +700,18 @@ function hasSubmoduleContent(repoRoot, worktreeRoot, candidate) {
 
 export function buildReclamationManifest(repoRoot = process.cwd()) {
   const workspaceRoot = workspaceRootFor(repoRoot);
-  const primary = absolute(path.join(workspaceRoot, "KK-Studio-2.0"));
+  const worktrees = parseWorktrees(repoRoot);
+  const primary = absolute(worktrees[0]?.path ?? repoRoot);
   const currentWorktree = realPath(repoRoot) ?? absolute(repoRoot);
   const allowedRoot = absolute(
     process.env.KK_WORKTREE_ROOT || path.join(workspaceRoot, ".worktrees"),
   );
-  const statuses = ledgerStatuses(primary);
-  const worktrees = parseWorktrees(repoRoot);
+  const tasks = readTaskLedger(primary, worktrees, allowedRoot);
+  const taskPaths = new Map();
   const entries = worktrees.map((worktree) => {
     const pathValue = worktree.path ? absolute(worktree.path) : null;
-    const resolvedWorktree = pathValue && realPath(pathValue);
     const inWorkspace = Boolean(
-      pathValue &&
-      isContainedPath(allowedRoot, pathValue) &&
-      resolvedWorktree &&
-      isContainedPath(allowedRoot, resolvedWorktree),
+      pathValue && isInsideReclamationRoot(allowedRoot, pathValue),
     );
     const isPrimary = Boolean(
       pathValue &&
@@ -452,34 +722,16 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
       normalizeForComparison(realPath(pathValue) ?? pathValue) ===
         normalizeForComparison(currentWorktree),
     );
-    const taskStatuses = worktree.branch
-      ? (statuses.get(worktree.branch) ?? [])
-      : [];
-    const active =
-      taskStatuses.length > 0 &&
-      taskStatuses.some((status) => status !== "DONE");
+    const { taskStatuses, active } = taskStateFor(worktree, tasks, taskPaths);
     const reachable = reachableFromMain(repoRoot, worktree.head);
-    const removal = assessWorktreeRemoval({
-      ...worktree,
-      inWorkspace,
-      primary: isPrimary,
-      current: isCurrent,
-      active,
-      taskStatuses,
-      reachableFromMain: reachable,
-    });
     const generated =
       pathValue && worktree.exists && inWorkspace
         ? allGeneratedPaths(pathValue)
             .filter((candidate) => fs.existsSync(candidate))
             .map((candidate) => {
-              const ignored = isIgnored(repoRoot, candidate);
-              const tracked = hasTrackedContent(repoRoot, pathValue, candidate);
-              const submodule = hasSubmoduleContent(
-                repoRoot,
-                pathValue,
-                candidate,
-              );
+              const ignored = isIgnored(pathValue, candidate);
+              const tracked = hasTrackedContent(pathValue, candidate);
+              const submodule = hasSubmoduleContent(pathValue, candidate);
               const evidence = isEvidencePath(candidate);
               return {
                 path: slash(candidate),
@@ -491,7 +743,6 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
                   path: candidate,
                   worktreeRoot: pathValue,
                   tracked,
-                  ignored,
                   locked: worktree.locked,
                   submodule,
                   evidence,
@@ -499,6 +750,16 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
               };
             })
         : [];
+    const removal = assessWorktreeRemoval({
+      ...worktree,
+      inWorkspace,
+      primary: isPrimary,
+      current: isCurrent,
+      active,
+      taskStatuses,
+      reachableFromMain: reachable,
+      generatedPaths: generated,
+    });
     return {
       ...worktree,
       path: pathValue ? slash(pathValue) : null,
@@ -527,7 +788,7 @@ export function buildReclamationManifest(repoRoot = process.cwd()) {
           active: entry.active,
         }),
       )
-      .filter((candidate) => candidate.assessment.allowed)
+      .filter((candidate) => candidate.ignored && candidate.assessment.allowed)
       .map((candidate) => ({
         id: hashBuffer(`${candidate.path}:${entry.head}`).slice(0, 16),
         path: candidate.path,
@@ -596,14 +857,30 @@ export function writeImmutablePlan(
   const targetDirectory =
     outputDirectory ?? defaultReclamationOutputDirectory();
   fs.mkdirSync(targetDirectory, { recursive: true });
-  const candidates = (plan.candidates ?? []).map((candidate) => ({
-    ...candidate,
-    sourceInventory:
+  const heads = new Map(
+    (plan.worktrees ?? []).map((entry) => [
+      normalizeForComparison(entry.path),
+      entry.head,
+    ]),
+  );
+  const candidates = (plan.candidates ?? []).map((candidate) => {
+    const sourceInventory =
       candidate.sourceInventory ??
       (fs.existsSync(candidate.path)
         ? buildRecoveryInventory(candidate.path)
-        : null),
-  }));
+        : null);
+    const head = heads.get(normalizeForComparison(candidate.worktreePath));
+    return {
+      ...candidate,
+      id: approvalId(
+        plan.planId,
+        candidate.path,
+        head,
+        sourceInventory?.digest,
+      ),
+      sourceInventory,
+    };
+  });
   const selectedWorktrees = new Set(approvedWorktrees);
   const worktrees = (plan.worktrees ?? []).map((worktree) =>
     selectedWorktrees.has(worktree.path) && fs.existsSync(worktree.path)
@@ -666,6 +943,16 @@ function inventoryMatches(candidate) {
   );
 }
 
+function approvalId(planId, candidatePath, head, inventoryDigest) {
+  const scope = [
+    planId,
+    normalizeForComparison(candidatePath),
+    head,
+    inventoryDigest,
+  ];
+  return hashBuffer(JSON.stringify(scope)).slice(0, 16);
+}
+
 /** Apply only explicitly approved candidates after rechecking containment and source hashes. */
 export function applyReclamationPlan(
   plan,
@@ -675,6 +962,28 @@ export function applyReclamationPlan(
   if (!approval.ok) throw new Error(approval.reason);
   const removed = [];
   const failed = [];
+  const live = buildReclamationManifest(repoRoot);
+  if (!retainsCoordinationRegistration(plan.worktrees ?? [], live.worktrees))
+    throw new Error(
+      "The approved plan's coordination ledger registration changed",
+    );
+  const findLiveWorktree = (planned) => {
+    if (!planned) return null;
+    const current = live.worktrees.find(
+      (item) =>
+        normalizeForComparison(item.path) ===
+        normalizeForComparison(planned.path),
+    );
+    return current?.head &&
+      current.head === planned.head &&
+      current.branch === planned.branch
+      ? current
+      : null;
+  };
+  const liveAllowedRoot = normalizeForComparison(live.allowedWorktreeRoot);
+  const sameScope =
+    plan.allowedWorktreeRoot &&
+    normalizeForComparison(plan.allowedWorktreeRoot) === liveAllowedRoot;
   for (const candidate of approval.candidates) {
     const worktreeRoot = candidate.worktreePath ?? path.dirname(candidate.path);
     const plannedWorktree = (plan.worktrees ?? []).find(
@@ -682,64 +991,39 @@ export function applyReclamationPlan(
         normalizeForComparison(item.path) ===
         normalizeForComparison(worktreeRoot),
     );
-    const currentState = plannedWorktree && {
-      ...plannedWorktree,
-      inWorkspace: isContainedPath(plan.allowedWorktreeRoot, worktreeRoot),
-      primary:
-        normalizeForComparison(worktreeRoot) ===
-        normalizeForComparison(plan.primaryRepository),
-      current:
-        normalizeForComparison(realPath(worktreeRoot) ?? worktreeRoot) ===
-        normalizeForComparison(plan.currentWorktree),
-      dirty: worktreeStatus(worktreeRoot),
-      locked: hasWorktreeLock(worktreeRoot),
-      reachableFromMain: reachableFromMain(repoRoot, plannedWorktree.head),
-    };
-    const tracked =
-      candidate.tracked === true ||
-      hasTrackedContent(repoRoot, worktreeRoot, candidate.path);
-    const submodule =
-      candidate.submodule === true ||
-      hasSubmoduleContent(repoRoot, worktreeRoot, candidate.path);
-    const assessment = assessGeneratedCandidate({
-      path: candidate.path,
-      worktreeRoot,
-      tracked,
-      submodule,
-      ignored: candidate.ignored === true,
-      evidence: candidate.evidence === true,
-    });
-    const realAllowedRoot =
-      plan.allowedWorktreeRoot && realPath(plan.allowedWorktreeRoot);
-    const realCandidate = realPath(candidate.path);
-    const realPathSafe = Boolean(
-      realAllowedRoot &&
-      realCandidate &&
-      isContainedPath(realAllowedRoot, realCandidate),
+    const currentState = findLiveWorktree(plannedWorktree);
+    const observed = currentState?.generatedPaths.find(
+      (entry) =>
+        normalizeForComparison(entry.path) ===
+        normalizeForComparison(candidate.path),
     );
-    if (
-      !currentState ||
-      !canPruneGeneratedContent(currentState) ||
-      !plan.allowedWorktreeRoot ||
-      !isContainedPath(plan.allowedWorktreeRoot, candidate.path) ||
-      !realPathSafe ||
-      !assessment.allowed ||
-      !inventoryMatches(candidate)
-    ) {
-      failed.push({
-        path: candidate.path,
-        reason: !currentState
-          ? "UNKNOWN_WORKTREE"
-          : !canPruneGeneratedContent(currentState)
-            ? "WORKTREE_STATE_CHANGED"
-            : !plan.allowedWorktreeRoot ||
-                !isContainedPath(plan.allowedWorktreeRoot, candidate.path) ||
-                !realPathSafe
-              ? "OUTSIDE_ALLOWED_ROOT"
-              : !assessment.allowed
-                ? assessment.reasons.join(",")
-                : "SOURCE_HASH_CHANGED",
-      });
+    let reason;
+    if (!currentState) reason = "WORKTREE_REGISTRATION_CHANGED";
+    else if (!canPruneGeneratedContent(currentState))
+      reason = "WORKTREE_STATE_CHANGED";
+    else if (
+      !sameScope ||
+      !isInsideReclamationRoot(plan.allowedWorktreeRoot, candidate.path)
+    )
+      reason = "OUTSIDE_ALLOWED_ROOT";
+    else if (observed && !observed.assessment.allowed)
+      reason = observed.assessment.reasons.join(",");
+    else if (!observed?.ignored) reason = "NOT_IGNORED_GENERATED_CONTENT";
+    else if (
+      candidate.id !==
+      approvalId(
+        plan.planId,
+        candidate.path,
+        currentState.head,
+        candidate.sourceInventory?.digest,
+      )
+    )
+      reason = "CANDIDATE_IDENTITY_CHANGED";
+    else if (!inventoryMatches(candidate)) reason = "SOURCE_HASH_CHANGED";
+    else if (!checkoutMatches(currentState, live))
+      reason = "WORKTREE_STATE_CHANGED";
+    if (reason) {
+      failed.push({ path: candidate.path, reason });
       continue;
     }
     try {
@@ -755,26 +1039,25 @@ export function applyReclamationPlan(
   const removedWorktrees = [];
   for (const worktree of plan.worktrees ?? []) {
     if (!approvedWorktrees.includes(worktree.path)) continue;
+    const current = findLiveWorktree(worktree);
+    if (!current || !sameScope) {
+      failed.push({
+        path: worktree.path,
+        reason: "WORKTREE_REGISTRATION_CHANGED",
+      });
+      continue;
+    }
     const liveWorktree = {
-      ...worktree,
-      inWorkspace: Boolean(
-        plan.allowedWorktreeRoot &&
-        isContainedPath(plan.allowedWorktreeRoot, worktree.path) &&
-        realPath(worktree.path) &&
-        isContainedPath(plan.allowedWorktreeRoot, realPath(worktree.path)),
+      ...current,
+      inWorkspace: isInsideReclamationRoot(
+        plan.allowedWorktreeRoot,
+        worktree.path,
       ),
-      primary:
-        normalizeForComparison(worktree.path) ===
-        normalizeForComparison(plan.primaryRepository),
-      current:
-        normalizeForComparison(realPath(worktree.path) ?? worktree.path) ===
-        normalizeForComparison(plan.currentWorktree),
-      dirty: worktreeStatus(worktree.path),
-      locked: hasWorktreeLock(worktree.path),
-      reachableFromMain: reachableFromMain(repoRoot, worktree.head),
-      bundleVerified:
-        worktree.bundleVerified === true ||
-        verifyRecoveryBundle(worktree.recoveryBundle, repoRoot),
+      bundleVerified: verifyRecoveryBundle(
+        worktree.recoveryBundle,
+        repoRoot,
+        current.head,
+      ),
     };
     const check = assessWorktreeRemoval(liveWorktree);
     if (
@@ -783,7 +1066,8 @@ export function applyReclamationPlan(
       !inventoryMatches({
         path: worktree.path,
         sourceInventory: worktree.sourceInventory,
-      })
+      }) ||
+      !checkoutMatches(current, live, true)
     ) {
       failed.push({
         path: worktree.path,
@@ -831,10 +1115,7 @@ export function writeApplyResult(result, plan, outputDirectory) {
   return destination;
 }
 
-const invokedDirectly = process.argv[1]
-  ?.replaceAll("\\", "/")
-  .endsWith("/worktree-reclaim.mjs");
-if (invokedDirectly) {
+if (import.meta.main) {
   try {
     const repoRoot = process.cwd();
     const outputDirectory = defaultReclamationOutputDirectory(repoRoot);
@@ -866,6 +1147,7 @@ if (invokedDirectly) {
       console.log(
         `Removed ${result.removed.length} generated directories; ${result.failed.length} candidates were retained. Result: ${resultPath}`,
       );
+      if (result.failed.length) process.exitCode = 1;
     }
   } catch (error) {
     console.error(error.message);

@@ -1,0 +1,17 @@
+Official base e4383a1e323c895286d9f08fe901a27e341a10da
+Implementation commit 64230c8f7d0842646cba0f5462fd6db96b976215
+Git check-ignore --no-index -q checked effective status.
+Git check-ignore --no-index -v checked the matching rule.
+PASS user-data/project.json => ignored (/user-data/)
+PASS user-data/app/providers/settings.json => ignored (/user-data/)
+PASS KK Design Launcher.exe => ignored (/KK Design Launcher.exe)
+PASS KK Studio Launcher.exe => ignored (/KK Studio Launcher.exe)
+PASS KK Design.lnk => ignored (/*.lnk)
+PASS start-kk-studio.bat.before-ui-runtime-sample.bak => ignored (/start-kk-studio.bat.before-ui-runtime-*.bak)
+PASS tmp/diagnostic.json => ignored (/tmp/)
+PASS .env.local => ignored (.env.*)
+PASS .env.example => trackable (!.env.example)
+PASS docs/user-data/layout.json => trackable
+PASS src/KK Design Launcher.exe => trackable
+PASS KK Design Launcher.exe.notes => trackable
+PASS removing exactly two added rules reconstructs official .gitignore byte-for-byte
