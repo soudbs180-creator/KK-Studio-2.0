@@ -463,6 +463,17 @@ test("R-OSS: an explicit restricted component link blocks an otherwise valid att
     assert.match(issues, /copying or bundling its source is forbidden/);
     assert.match(issues, /non-permissive license AGPL-3.0/);
     assert.doesNotMatch(issues, /ambiguous attribution/);
+
+    const policy = makeLedger();
+    policy.policy.allowedLicenses.push("AGPL-3.0");
+    writeFixture(
+      root,
+      ATTRIBUTIONS_FILE,
+      JSON.stringify(withRecords(policy, [record, restricted])),
+    );
+    const contradictoryPolicy = checkOssAttributions(root).issues.join("\n");
+    assert.match(contradictoryPolicy, /non-permissive license AGPL-3.0/);
+    assert.doesNotMatch(contradictoryPolicy, /ambiguous attribution/);
   } finally {
     cleanup(root);
   }

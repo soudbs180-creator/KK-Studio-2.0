@@ -275,7 +275,12 @@ export function evaluateOssAttributions(entries, ledger, options = {}) {
         return record === matches[0];
       const exact = matchesOssDir(record, dir, vendoredRoot);
       if (!matches.length) return exact || slug(record.name) === slug(dir);
-      return exact && (restricted || !isAllowedLicense(record.license, policy));
+      return (
+        exact &&
+        (restricted ||
+          isDeniedLicense(record.license, policy) ||
+          !isAllowedLicense(record.license, policy))
+      );
     });
     for (const { record, restricted } of diagnostics) {
       if (restricted)
