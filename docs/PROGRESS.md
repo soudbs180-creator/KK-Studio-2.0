@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-11-27 KVIS 功能编号预留
+
+沿远端主线登记 FEAT-041 至 FEAT-051 的 11 个功能编号及对应卡片，状态均为 `PLANNED`。编号进入主线后，KVIS 候选继续提交各自的实现和运行证据。[编号验证记录](changes/2026-11-27-kvis-feature-reservations/verification.md)
+
 ## 2026-11-25 本机文件 Git 忽略规则候选
 
 从本地发布历史承接仓库根的用户数据目录与 KK Design 启动器忽略规则。12 个 Git 路径用例与其余规则逐字节核验通过。[验证记录](changes/2026-11-25-local-data-ignore/verification.md)

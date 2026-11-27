@@ -165,7 +165,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
 | TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | REVIEW | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
 | TASK-KKD-IGNORE-USER-DATA-20261125 | 为本机运行数据和 KK Design 启动器补齐 Git 忽略 | REVIEW | 进行中 | P2 | none | CodexIgnore | 按验收条件完成实现、验证和文档同步 |
-| TASK-KVIS-FEATURE-RESERVE-20261127 | 预留 FEAT-041 至 FEAT-051 并衔接 KVIS 交付 | IN_PROGRESS | 进行中 | P2 | none | CodexKVIS | 按验收条件完成实现、验证和文档同步 |
+| TASK-KVIS-FEATURE-RESERVE-20261127 | 预留 FEAT-041 至 FEAT-051 并衔接 KVIS 交付 | IN_PROGRESS | 进行中 | P2 | none | codex-kvis-reservation | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3205,7 +3205,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:\KK Design\.worktrees\TASK-KVIS-FEATURE-RESERVE-20261127`
 - Modules: governance
 - Verification: NOT_VERIFIED — NOT_VERIFIED
-- Evidence: NOT VERIFIED
+- Evidence: [docs/changes/2026-11-27-kvis-feature-reservations/verification.md](../../docs/changes/2026-11-27-kvis-feature-reservations/verification.md)
 - Next action: 按验收条件完成实现、验证和文档同步
 - Last verified: 2026-11-27
 - Updated: 2026-11-27
