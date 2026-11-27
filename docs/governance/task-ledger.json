@@ -10608,5 +10608,87 @@
     "nextAction": "按验收条件完成实现、验证和文档同步",
     "lastVerified": "2026-11-25",
     "reviewedBy": null
+  },
+  {
+    "id": "TASK-KVIS-FEATURE-RESERVE-20261127",
+    "module": "governance",
+    "kind": "feature",
+    "title": "预留 FEAT-041 至 FEAT-051 并衔接 KVIS 交付",
+    "goal": "parent: TASK-KVIS-CORE-20261126 | 从已核实主线准备仅含 PLANNED 的既有 11 个功能编号，保留身份和卡片路径。随后独审、获批和主线登记，再承接现有实现证据。",
+    "scope": "parent: TASK-KVIS-CORE-20261126 | 从已核实主线准备仅含 PLANNED 的既有 11 个功能编号，保留身份和卡片路径。随后独审、获批和主线登记，再承接现有实现证据。",
+    "owner": "codex-kvis-reservation",
+    "acceptance": [
+      "相对实际主线只新增 11 个 PLANNED 编号，既有编号不动，功能登记和治理通过。"
+    ],
+    "affectedModules": [
+      "governance"
+    ],
+    "status": "IN_PROGRESS",
+    "branch": "codex/TASK-KVIS-FEATURE-RESERVE-20261127",
+    "worktree": "D:\\KK Design\\.worktrees\\TASK-KVIS-FEATURE-RESERVE-20261127",
+    "updated": "2026-11-27",
+    "verification": "NOT_VERIFIED",
+    "verificationResult": "NOT_VERIFIED",
+    "evidence": [
+      "docs/changes/2026-11-27-kvis-feature-reservations/verification.md"
+    ],
+    "dependencies": [],
+    "requirementRefs": [],
+    "featureIds": [],
+    "steps": [],
+    "log": [
+      {
+        "at": "2026-11-27T08:47:00.151Z",
+        "agent": "CodexKVIS",
+        "action": "CREATE",
+        "note": "created TASK-KVIS-FEATURE-RESERVE-20261127"
+      },
+      {
+        "at": "2026-11-27T08:47:09.277Z",
+        "agent": "CodexKVIS",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-27T08:58:18.240Z",
+        "agent": "CodexKVIS",
+        "action": "PROGRESS",
+        "note": "在已实查远端 285c7c65 的干净工作树准备 11 个 PLANNED 编号，登记与治理均 0 违规。KVIS 候选用此提交作预演基线的功能门禁通过，真实主线仍待独审和批准。",
+        "evidence": "docs/changes/2026-11-27-kvis-feature-reservations/verification.md",
+        "sha": "874b649795dddb5a8506e0bce106e02986e2399c"
+      },
+      {
+        "at": "2026-11-27T08:58:19.222Z",
+        "agent": "CodexKVIS",
+        "action": "RELEASE",
+        "note": "候选与本地检查已保留，等待独立审核和主线批准。"
+      },
+      {
+        "at": "2026-11-27T09:24:42.573Z",
+        "agent": "codex-kvis-reservation",
+        "action": "CLAIM",
+        "note": "claimed governance"
+      },
+      {
+        "at": "2026-11-27T09:25:38.468Z",
+        "agent": "codex-kvis-reservation",
+        "action": "PROGRESS",
+        "note": "绑定已提交的编号预留验证记录，供交付门禁核对精确任务和分支。",
+        "evidence": "docs/changes/2026-11-27-kvis-feature-reservations/verification.md",
+        "sha": "874b649795dddb5a8506e0bce106e02986e2399c"
+      }
+    ],
+    "lock": {
+      "agent": "codex-kvis-reservation",
+      "worktree": "D:\\KK Design\\.worktrees\\TASK-KVIS-FEATURE-RESERVE-20261127",
+      "branch": "codex/TASK-KVIS-FEATURE-RESERVE-20261127",
+      "since": "2026-11-27T09:24:42.573Z"
+    },
+    "handoffTo": null,
+    "ownerRole": "task-owner:CodexKVIS",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "nextAction": "按验收条件完成实现、验证和文档同步",
+    "lastVerified": "2026-11-27"
   }
 ]

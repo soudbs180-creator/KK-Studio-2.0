@@ -1704,6 +1704,171 @@
     "updated": "2026-11-25"
   },
   {
+    "id": "FEAT-041",
+    "title": "高清修复",
+    "area": "creation",
+    "status": "PLANNED",
+    "card": "docs/features/feat-041-upscale.md",
+    "summary": "预留高清修复的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-042",
+    "title": "图层拆分",
+    "area": "creation",
+    "status": "PLANNED",
+    "card": "docs/features/feat-042-layer-split.md",
+    "summary": "预留图层拆分的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-043",
+    "title": "进阶画布操作",
+    "area": "canvas",
+    "status": "PLANNED",
+    "card": "docs/features/feat-043-advanced-canvas.md",
+    "summary": "预留进阶画布操作的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-044",
+    "title": "分镜、光学与逐帧拉片",
+    "area": "creation",
+    "status": "PLANNED",
+    "card": "docs/features/feat-044-storyboard-optics-shots.md",
+    "summary": "预留分镜、光学与逐帧拉片的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-045",
+    "title": "反推提示词流程编排",
+    "area": "intelligence",
+    "status": "PLANNED",
+    "card": "docs/features/feat-045-reverse-prompt-flow.md",
+    "summary": "预留反推提示词流程编排的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-046",
+    "title": "视觉反推 vision.caption",
+    "area": "intelligence",
+    "status": "PLANNED",
+    "card": "docs/features/feat-046-vision-caption.md",
+    "summary": "预留视觉反推 vision.caption的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-047",
+    "title": "Agent 调度注册表与预算门",
+    "area": "intelligence",
+    "status": "PLANNED",
+    "card": "docs/features/feat-047-agent-dispatch.md",
+    "summary": "预留Agent 调度注册表与预算门的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-048",
+    "title": "配置代理工具 kk_config_*",
+    "area": "platform",
+    "status": "PLANNED",
+    "card": "docs/features/feat-048-config-tools.md",
+    "summary": "预留配置代理工具 kk_config_*的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-049",
+    "title": "功能开关体系",
+    "area": "system",
+    "status": "PLANNED",
+    "card": "docs/features/feat-049-feature-flags.md",
+    "summary": "预留功能开关体系的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-050",
+    "title": "设置三层导航",
+    "area": "system",
+    "status": "PLANNED",
+    "card": "docs/features/feat-050-settings-three-tier.md",
+    "summary": "预留设置三层导航的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
+    "id": "FEAT-051",
+    "title": "软件更新页",
+    "area": "system",
+    "status": "PLANNED",
+    "card": "docs/features/feat-051-app-update.md",
+    "summary": "预留软件更新页的稳定功能编号，实施及运行证据随对应候选验收。",
+    "entryPoints": [],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-KVIS-FEATURE-RESERVE-20261127"
+    ],
+    "updated": "2026-11-27"
+  },
+  {
     "id": "FEAT-052",
     "title": "本地模型商店与统一网关路由",
     "area": "backend",
