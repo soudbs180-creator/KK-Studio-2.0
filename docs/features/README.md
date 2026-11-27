@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **39** 个功能：REAL（真实可用）2、PARTIAL（部分可用）29、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）3。
+当前共 **50** 个功能：REAL（真实可用）2、PARTIAL（部分可用）29、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）14。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -29,6 +29,7 @@
 | FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001, TASK-UI-011, TASK-CANVAS-SYNC-20261014, TASK-CANVAS-WIDE-PORT-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014, TASK-CODEX-HOME-20261015 |
 | FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002, UI-004 |
 | FEAT-039 | 画布喜欢、标签与分类搜索 | PARTIAL（部分可用） | [卡片](feat-039-canvas-collections.md) | TASK-UI-CONSOLIDATE-20261014, TASK-PROTOCOL-CLI-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014 |
+| FEAT-043 | 进阶画布操作 | PLANNED（仅计划） | [卡片](feat-043-advanced-canvas.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
 
 ## 创作生成
 
@@ -47,6 +48,9 @@
 | FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001, TASK-KK-UNIFIED-20261015 |
 | FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002 |
 | FEAT-040 | 扩图 | PLANNED（仅计划） | [卡片](feat-040-outpaint.md) | EXT-COMFY |
+| FEAT-041 | 高清修复 | PLANNED（仅计划） | [卡片](feat-041-upscale.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
+| FEAT-042 | 图层拆分 | PLANNED（仅计划） | [卡片](feat-042-layer-split.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
+| FEAT-044 | 分镜、光学与逐帧拉片 | PLANNED（仅计划） | [卡片](feat-044-storyboard-optics-shots.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
 
 ## 智能能力
 
@@ -57,6 +61,9 @@
 | FEAT-013 | 连接器目录 | PARTIAL（部分可用） | [卡片](feat-013-connectors.md) | TASK-CAP-001, TASK-MINIMAX-001, TASK-UI-005, PLUGIN-DESKTOP-001, TASK-PLUGIN-DEV-001, TASK-PLUGIN-RECOVERY-001, TASK-PLUGIN-MARKDOWN-001, TASK-DESKTOP-FLUSH-001 |
 | FEAT-030 | Agent 编排与画布交付契约 | PARTIAL（部分可用） | [卡片](feat-030-agent-orchestration.md) | TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001, TASK-UI-CLASSIFY-20261013, TASK-KK-UNIFIED-20261015 |
 | FEAT-032 | 多供应商接入与多目标配置 | PARTIAL（部分可用） | [卡片](feat-032-provider-connectivity.md) | TASK-PROV-002, TASK-PROV-003, TASK-PROV-004, TASK-UI-CONSOLIDATE-20261014, TASK-PROTOCOL-CLI-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014, TASK-KK-UNIFIED-20261015, TASK-AUDIT-REPAIR-20261017 |
+| FEAT-045 | 反推提示词流程编排 | PLANNED（仅计划） | [卡片](feat-045-reverse-prompt-flow.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
+| FEAT-046 | 视觉反推 vision.caption | PLANNED（仅计划） | [卡片](feat-046-vision-caption.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
+| FEAT-047 | Agent 调度注册表与预算门 | PLANNED（仅计划） | [卡片](feat-047-agent-dispatch.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
 
 ## 平台服务
 
@@ -68,6 +75,7 @@
 | FEAT-020 | 长期记忆服务 | PARTIAL（部分可用） | [卡片](feat-020-memory.md) | TASK-MEMORY-001, TASK-MEMORY-002, BACKEND-PLATFORM, T10, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014 |
 | FEAT-021 | 应用内代理 | PARTIAL（部分可用） | [卡片](feat-021-proxy.md) | BACKEND-PLATFORM, TASK-UI-005, TASK-KKD-DESKTOP-PROXY-20261121 |
 | FEAT-037 | Web 本机伴随服务 | PARTIAL（部分可用） | [卡片](feat-037-web-local-service.md) | TASK-LOCAL-SERVICE-001, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014, TASK-KK-UNIFIED-20261015 |
+| FEAT-048 | 配置代理工具 kk_config_* | PLANNED（仅计划） | [卡片](feat-048-config-tools.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
 
 ## 系统与数据
 
@@ -80,6 +88,9 @@
 | FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001, TASK-UI-013, TASK-UI-CONSOLIDATE-20261014, TASK-KK-UNIFIED-20261015 |
 | FEAT-025 | 本地演示素材管线（待替换 seam） | PROTOTYPE（仅演示/UI） | [卡片](feat-025-demo-media.md) | UI-003, BACKEND-MEDIA-001, BACKEND-TEXT-NODE |
 | FEAT-026 | Windows 启动器与分享包 | PARTIAL（部分可用） | [卡片](feat-026-launcher.md) | T7, TASK-DESKTOP-INSTALLER-001, TASK-LAUNCH-001, TASK-PROTOCOL-CLI-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014, TASK-KK-UNIFIED-20261015 |
+| FEAT-049 | 功能开关体系 | PLANNED（仅计划） | [卡片](feat-049-feature-flags.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
+| FEAT-050 | 设置三层导航 | PLANNED（仅计划） | [卡片](feat-050-settings-three-tier.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
+| FEAT-051 | 软件更新页 | PLANNED（仅计划） | [卡片](feat-051-app-update.md) | TASK-KVIS-FEATURE-RESERVE-20261127 |
 
 ## 后端服务
 

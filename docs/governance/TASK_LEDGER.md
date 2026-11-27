@@ -165,6 +165,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-KKD-EVOLUTION-PHASE1-20261125 | KK Design 自进化第一阶段全局审计与治理收口 | IN_PROGRESS | 进行中 | P2 | none | CodexEvolution | 按验收条件完成实现、验证和文档同步 |
 | TASK-KKD-FEATURE-ID-20261125 | 统一登记功能编号并收敛 FEAT-040 冲突 | REVIEW | 进行中 | P2 | none | CodexFeatureSync | 按验收条件完成实现、验证和文档同步 |
 | TASK-KKD-IGNORE-USER-DATA-20261125 | 为本机运行数据和 KK Design 启动器补齐 Git 忽略 | REVIEW | 进行中 | P2 | none | CodexIgnore | 按验收条件完成实现、验证和文档同步 |
+| TASK-KVIS-FEATURE-RESERVE-20261127 | 预留 FEAT-041 至 FEAT-051 并衔接 KVIS 交付 | IN_PROGRESS | 进行中 | P2 | none | CodexKVIS | 按验收条件完成实现、验证和文档同步 |
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 
@@ -3189,3 +3190,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 按验收条件完成实现、验证和文档同步
 - Last verified: 2026-11-25
 - Updated: 2026-11-26
+
+## TASK-KVIS-FEATURE-RESERVE-20261127 — 预留 FEAT-041 至 FEAT-051 并衔接 KVIS 交付
+
+- Goal: parent: TASK-KVIS-CORE-20261126 | 从已核实主线准备仅含 PLANNED 的既有 11 个功能编号，保留身份和卡片路径。随后独审、获批和主线登记，再承接现有实现证据。
+- Scope: parent: TASK-KVIS-CORE-20261126 | 从已核实主线准备仅含 PLANNED 的既有 11 个功能编号，保留身份和卡片路径。随后独审、获批和主线登记，再承接现有实现证据。
+- Display status: 进行中
+- Priority: P2 — 未记录
+- Requirement refs: none
+- Feature IDs: none
+- Owner role: task-owner:CodexKVIS
+- Acceptance: 相对实际主线只新增 11 个 PLANNED 编号，既有编号不动，功能登记和治理通过。
+- Branch: `codex/TASK-KVIS-FEATURE-RESERVE-20261127`
+- Worktree: `D:\KK Design\.worktrees\TASK-KVIS-FEATURE-RESERVE-20261127`
+- Modules: governance
+- Verification: NOT_VERIFIED — NOT_VERIFIED
+- Evidence: NOT VERIFIED
+- Next action: 按验收条件完成实现、验证和文档同步
+- Last verified: 2026-11-27
+- Updated: 2026-11-27
